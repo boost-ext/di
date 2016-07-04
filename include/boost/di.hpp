@@ -38,7 +38,7 @@ BOOST_DI_CFG_FWD
 #define __has_include(...) 0
 #define BOOST_DI_UNUSED
 #define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
-#define BOOST_DI_TYPE_WKND(T) (T && )
+#define BOOST_DI_TYPE_WKND(T) (T &&)
 #endif
 #if !defined(__has_builtin)
 #define __has_builtin(...) 0
@@ -437,7 +437,7 @@ template <class, class>
 struct is_same : false_type {};
 template <class T>
 struct is_same<T, T> : true_type {};
-#if defined(__GCC__)
+#if defined(__GCC__) || defined(__MSVC__)
 template <class T>
 struct is_same<T, const T> : true_type {};
 #endif
@@ -1229,7 +1229,7 @@ class instance {
     template <class>
     using is_referable = aux::true_type;
     template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
-    explicit scope(TInjector&& i) noexcept : injector_((injector*) new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
+    explicit scope(TInjector&& i) noexcept : injector_((injector*)new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
     scope(scope&& other) noexcept : injector_(other.injector_) { other.injector_ = nullptr; }
     ~scope() noexcept { delete injector_; }
     template <class T, class TName, class TProvider>
@@ -1307,7 +1307,7 @@ class unique {
 namespace scopes {
 aux::false_type has_shared_ptr__(...);
 template <class T>
-auto has_shared_ptr__(T && ) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
+auto has_shared_ptr__(T &&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
 class singleton {
  public:
   template <class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
@@ -1417,9 +1417,10 @@ struct provider__ {
 };
 template <class T>
 typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
-                                      typename scope<_, _>::create> scopable_impl(...);
+                                      typename scope<_, _>::create>
+    scopable_impl(...);
 template <class T>
-auto scopable_impl(T && )
+auto scopable_impl(T &&)
     -> aux::is_valid_expr<typename T::template scope<_, _>::template is_referable<_>,
                           decltype(T::template scope<_, _>::template try_create<_, _>(provider__<_>{})),
                           decltype(aux::declval<typename T::template scope<_, _>>().template create<_, _>(provider__<_>{}))>;
@@ -1545,9 +1546,9 @@ template <class T>
 struct is_abstract<true, T> {
   static constexpr auto value = aux::is_abstract<T>::value;
 };
-auto boundable_impl(any_of<> && ) -> aux::true_type;
+auto boundable_impl(any_of<> &&) -> aux::true_type;
 template <class T, class... Ts>
-auto boundable_impl(any_of<T, Ts...> && )
+auto boundable_impl(any_of<T, Ts...> &&)
     -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
                           typename type_<T>::has_disallowed_qualifiers>;
 template <class I, class T>
@@ -1556,26 +1557,25 @@ using boundable_impl__ = aux::conditional_t<
     aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
     typename type_<T>::template is_not_related_to<I>>;
 template <class I, class T>
-auto boundable_impl(I&&, T && ) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, boundable_impl__<I, T>,
-                                                      typename type_<T>::has_disallowed_qualifiers>;
+auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, boundable_impl__<I, T>,
+                                                     typename type_<T>::has_disallowed_qualifiers>;
 template <class I, class T>
-auto boundable_impl(I&&, T&&, aux::valid<> && )
+auto boundable_impl(I&&, T&&, aux::valid<> &&)
     -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
                           typename type_<T>::template is_not_related_to<I>>;
 template <class I, class T>
-auto boundable_impl(I* [], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                        typename type_<I>::has_disallowed_qualifiers>;
+auto boundable_impl(I* [], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                       typename type_<I>::has_disallowed_qualifiers>;
 template <class I, class T>
-auto boundable_impl(I[], T && ) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                      typename type_<I>::has_disallowed_qualifiers>;
+auto boundable_impl(I[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                     typename type_<I>::has_disallowed_qualifiers>;
 template <class... TDeps>
-auto boundable_impl(aux::type_list<TDeps...> && ) -> boundable_bindings<TDeps...>;
+auto boundable_impl(aux::type_list<TDeps...> &&) -> boundable_bindings<TDeps...>;
 template <class T, class... Ts>
-auto boundable_impl(concepts::any_of<Ts...>&&, T && )
+auto boundable_impl(concepts::any_of<Ts...>&&, T &&)
     -> get_any_of_error<decltype(boundable_impl(aux::declval<Ts>(), aux::declval<T>()))...>;
 template <class... TDeps>
-auto boundable_impl(aux::type<TDeps...> && ) ->
-    typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
+auto boundable_impl(aux::type<TDeps...> &&) -> typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 aux::true_type boundable_impl(...);
 template <class... Ts>
 struct boundable__ {
@@ -1620,7 +1620,7 @@ class dependency
     using type = T;
   };
   template <int N>
-  struct ref_traits<const char(&)[N]> {
+  struct ref_traits<const char (&)[N]> {
     using type = TExpected;
   };
   template <class T>
@@ -1656,7 +1656,7 @@ class dependency
     return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
   template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
-  auto in(const T&) noexcept {
+  auto in(const T&)noexcept {
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
   template <class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0,
@@ -2139,9 +2139,9 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
   using injector_t = TInjector;
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
-    return TInjector::config::provider(injector_)
-        .template get<T>(TInitialization{}, memory,
-                         static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
+    return TInjector::config::provider(injector_).template get<T>(
+        TInitialization{}, memory,
+        static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
   }
   const TInjector* injector_;
 };
@@ -2591,7 +2591,7 @@ struct injector {
 };
 aux::false_type configurable_impl(...);
 template <class T>
-auto configurable_impl(T && )
+auto configurable_impl(T &&)
     -> aux::is_valid_expr<decltype(T::provider((injector<T>*)0)), decltype(T::policies((injector<T>*)0))>;
 template <class T1, class T2>
 struct get_configurable_error : aux::type_list<T1, T2> {};
@@ -2829,9 +2829,9 @@ class heap {
 #define BOOST_DI_SIZE(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, ), )
 #define BOOST_DI_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
 #define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n, __VA_ARGS__)
-#define BOOST_DI_IS_EMPTY(...) \
-  BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__))(BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, \
-                                                          BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
+#define BOOST_DI_IS_EMPTY(...)                            \
+  BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__)) \
+  (BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
 #define BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a##b
 #define BOOST_DI_DETAIL_IS_EMPTY_IIF(bit) BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(BOOST_DI_DETAIL_IS_EMPTY_IIF_, bit)
 #define BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C(...) ()
@@ -2964,11 +2964,11 @@ using inject = aux::type_list<Ts...>;
       ::boost::di::v1_0_1::detail::combine_t<::boost::di::v1_0_1::aux::function_traits_t<decltype(ctor)>, \
                                              ::boost::di::v1_0_1::aux::function_traits_t<decltype(name)>>;
 #define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::v1_0_1::aux::type_list<>
-#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                                                                                                                                                                                                                                   \
-  struct boost_di_inject__ {                                                                                                                                                                                                                                                                                               \
-    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))(__VA_ARGS__) static_assert( \
-        BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                                         \
-        "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"); \
+#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                               \
+  struct boost_di_inject__ {                                                                                           \
+    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))                                        \
+    (__VA_ARGS__) static_assert(BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                            \
+                                "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"); \
   }
 #define BOOST_DI_INJECT_TRAITS(...) \
   BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_INJECT_TRAITS_EMPTY_IMPL, BOOST_DI_INJECT_TRAITS_IMPL)(__VA_ARGS__)
