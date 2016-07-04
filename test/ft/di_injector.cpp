@@ -4,8 +4,10 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di.hpp"
+// clang-format off
 #include <initializer_list>  // has to be before, due to the bug in clang < 3.7
+// clang-format on
+#include "boost/di.hpp"
 #include <iterator>
 #include <memory>
 #include <set>
