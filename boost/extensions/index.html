@@ -265,9 +265,7 @@ namespace di = boost::di;
 
 template &lt;typename T&gt;
 concept bool Dummy() {
-  return requires(T a) {
-    { a.dummy() };
-  };
+  return requires(T a) { {a.dummy()}; };
 }
 
 struct DummyImpl {

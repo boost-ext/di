@@ -2900,7 +2900,8 @@ int main() {
 
 namespace di = boost::di;
 
-int main() { struct dummy { };
+int main() {
+  struct dummy {};
   di::make_injector(
     dummy{} /** type&lt;dummy&gt;::is_neither_a_dependency_nor_an_injector **/
   );
@@ -3390,7 +3391,8 @@ concept bool scopable() {
 
 namespace di = boost::di;
 
-int main() { struct dummy { };
+int main() {
+  struct dummy {};
   di::make_injector(
     di::bind&lt;int&gt;().in(dummy{})); /** scope&lt;dummy&gt;::requires_&lt;create&gt; **/
   );
