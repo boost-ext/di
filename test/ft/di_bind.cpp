@@ -910,6 +910,93 @@ test bind_self_lazy_interface_mix = [] {
   }
 };
 
+test bind_movable_only_type = [] {
+  struct c {
+    c(c &&) = default;
+  };
+  di::make_injector().create<c>();
+};
+
+test bind_movable_only_type_with_default_ctor = [] {
+  struct c {
+    c() = default;
+    c(c &&) = default;
+  };
+  di::make_injector().create<c>();
+};
+
+test bind_movable_only_type_with_defined_default_ctor = [] {
+  struct c {
+    c() {}
+    c(c &&) = default;
+  };
+  di::make_injector().create<c>();
+};
+
+test bind_movable_only_type_deleted_copy_ctor = [] {
+  struct c {
+    c(c &&) = default;
+    c(const c &) = delete;
+  };
+  di::make_injector().create<c>();
+};
+
+test bind_deleted_copy_ctor_and_explicit_ctor = [] {
+  static auto called = false;
+  struct a {};
+  struct c {
+    explicit c(a &) { called = true; }
+    c(const c &) = delete;
+  };
+  di::make_injector().create<c &>();
+  expect(called);
+};
+
+test bind_deleted_copy_ctor_and_non_explicit_ctor = [] {
+  static auto called = false;
+  struct a {};
+  struct c {
+    c(a &) {  // non explicit
+      called = true;
+    }
+    c(const c &) = delete;
+  };
+  di::make_injector().create<c &>();
+  expect(called);
+};
+
+test bind_unique_ptr_with_one_explicit_ctor_arg = [] {
+  struct c {
+    explicit c(i1 *ptr) : i1_(ptr) {}
+    std::unique_ptr<i1> i1_;
+  };
+  const auto injector = di::make_injector(di::bind<i1>().to<impl1>());
+  auto object = injector.create<c>();
+  expect(dynamic_cast<impl1 *>(object.i1_.get()));
+};
+
+test bind_unique_ptr_with_one_non_explicit_ctor_arg = [] {
+  struct c {
+    c(i1 *ptr)  // non explicit
+        : i1_(ptr) {}
+    std::unique_ptr<i1> i1_;
+  };
+  const auto injector = di::make_injector(di::bind<i1>().to<impl1>());
+  auto object = injector.create<c>();
+  expect(dynamic_cast<impl1 *>(object.i1_.get()));
+};
+
+test bind_unique_ptr_dtor_defined = [] {
+  struct c {
+    c() {}
+    ~c() {}
+    std::unique_ptr<i1> i1_;
+  };
+  const auto injector = di::make_injector(di::bind<i1>().to<impl1>());
+  auto &&object = injector.create<c &>();
+  expect(nullptr == object.i1_.get());
+};
+
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
   constexpr auto i = 42;
