@@ -591,19 +591,229 @@ template <class T>
 using function_traits_t = typename function_traits<T>::args;
 }
 namespace core {
-template <class = aux::type_list<>>
-struct pool;
-template <class... TArgs>
-using pool_t = pool<aux::type_list<TArgs...>>;
-template <class... TArgs>
-struct pool<aux::type_list<TArgs...>> : TArgs... {
-  template <class... Ts>
-  explicit pool(Ts... args) noexcept : Ts(static_cast<Ts&&>(args))... {}
-  template <class... Ts, class TPool>
-  pool(const aux::type_list<Ts...>&, TPool p) noexcept : pool(static_cast<Ts&&>(p)...) {
-    (void)p;
+template <class T, class = typename aux::is_a<injector_base, T>::type>
+struct bindings_impl;
+template <class T>
+struct bindings_impl<T, aux::true_type> {
+  using type = typename T::deps;
+};
+template <class T>
+struct bindings_impl<T, aux::false_type> {
+  using type = aux::type_list<T>;
+};
+#if defined(__MSVC__)
+template <class... Ts>
+struct bindings : aux::join_t<typename bindings_impl<Ts>::type...> {};
+template <class... Ts>
+using bindings_t = typename bindings<Ts...>::type;
+#else
+template <class... Ts>
+using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
+#endif
+}
+namespace concepts {
+template <class T, class...>
+struct type_ {
+  template <class TName>
+  struct named {
+    struct is_bound_more_than_once : aux::false_type {};
+  };
+  struct is_bound_more_than_once : aux::false_type {};
+  struct is_neither_a_dependency_nor_an_injector : aux::false_type {};
+  struct has_disallowed_qualifiers : aux::false_type {};
+  struct is_abstract :
+#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
+      // clang-format off
+      decltype(
+    T{}
+   ),
+// clang-format on
+#endif
+      aux::false_type {
+  };
+  template <class>
+  struct is_not_related_to : aux::false_type {};
+};
+template <class...>
+struct any_of : aux::false_type {};
+template <class... TDeps>
+struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
+                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
+                                                   (aux::is_a<core::injector_base, TDeps>::value ||
+                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
+template <class...>
+struct get_not_supported;
+template <class T>
+struct get_not_supported<T> {
+  using type = T;
+};
+template <class T, class... TDeps>
+struct get_not_supported<T, TDeps...>
+    : aux::conditional<aux::is_a<core::injector_base, T>::value || aux::is_a<core::dependency_base, T>::value,
+                       typename get_not_supported<TDeps...>::type, T> {};
+template <class>
+struct is_unique;
+template <class T, class = int>
+struct unique_dependency : aux::type<T> {};
+template <class T>
+struct unique_dependency<T, BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
+    : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
+template <class... TDeps>
+struct is_unique<aux::type_list<TDeps...>> : aux::is_unique<typename unique_dependency<TDeps>::type...> {};
+template <class>
+struct get_is_unique_error_impl : aux::true_type {};
+template <class T, class TName, class TPriority>
+struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
+  using type = typename type_<T>::template named<TName>::is_bound_more_than_once;
+};
+template <class T, class TPriority>
+struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, no_name>, TPriority>>> {
+  using type = typename type_<T>::is_bound_more_than_once;
+};
+template <class T>
+struct get_is_unique_error_impl<aux::not_unique<T>> {
+  using type = typename type_<T>::is_bound_more_than_once;
+};
+template <class>
+struct get_is_unique_error;
+template <class... TDeps>
+struct get_is_unique_error<aux::type_list<TDeps...>>
+    : get_is_unique_error_impl<typename aux::is_unique<typename unique_dependency<TDeps>::type...>::type> {};
+template <class... TDeps>
+using boundable_bindings =
+    aux::conditional_t<is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
+                       typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
+template <class... Ts>
+using get_any_of_error = aux::conditional_t<
+    aux::is_same<aux::bool_list<aux::always<Ts>::value...>, aux::bool_list<aux::is_same<aux::true_type, Ts>::value...>>::value,
+    aux::true_type, any_of<Ts...>>;
+template <bool, class...>
+struct is_related {
+  static constexpr auto value = true;
+};
+template <class I, class T>
+struct is_related<true, I, T> {
+  static constexpr auto value =
+      aux::is_callable<T>::value ||
+      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
+};
+template <bool, class>
+struct is_abstract {
+  static constexpr auto value = false;
+};
+template <class T>
+struct is_abstract<true, T> {
+  static constexpr auto value = aux::is_abstract<T>::value;
+};
+auto boundable_impl(any_of<> &&) -> aux::true_type;
+template <class T, class... Ts>
+auto boundable_impl(any_of<T, Ts...> &&)
+    -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
+                          typename type_<T>::has_disallowed_qualifiers>;
+template <class I, class T>
+using boundable_impl__ = aux::conditional_t<
+    is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
+    aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
+    typename type_<T>::template is_not_related_to<I>>;
+template <class I, class T>
+auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, boundable_impl__<I, T>,
+                                                     typename type_<T>::has_disallowed_qualifiers>;
+template <class I, class T>
+auto boundable_impl(I&&, T&&, aux::valid<> &&)
+    -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
+                          typename type_<T>::template is_not_related_to<I>>;
+template <class I, class T>
+auto boundable_impl(I* [], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                       typename type_<I>::has_disallowed_qualifiers>;
+template <class I, class T>
+auto boundable_impl(I[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                     typename type_<I>::has_disallowed_qualifiers>;
+template <class... TDeps>
+auto boundable_impl(aux::type_list<TDeps...> &&) -> boundable_bindings<TDeps...>;
+template <class T, class... Ts>
+auto boundable_impl(concepts::any_of<Ts...>&&, T &&)
+    -> get_any_of_error<decltype(boundable_impl(aux::declval<Ts>(), aux::declval<T>()))...>;
+template <class... TDeps>
+auto boundable_impl(aux::type<TDeps...> &&) -> typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
+aux::true_type boundable_impl(...);
+template <class... Ts>
+struct boundable__ {
+  using type = decltype(boundable_impl(aux::declval<Ts>()...));
+};
+template <class... Ts>
+using boundable = typename boundable__<Ts...>::type;
+}
+namespace type_traits {
+struct stack {};
+struct heap {};
+template <class T, class = int>
+struct memory_traits {
+  using type = stack;
+};
+template <class T>
+struct memory_traits<T*> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<const T&> {
+  using type = typename memory_traits<T>::type;
+};
+template <class T, class TDeleter>
+struct memory_traits<std::unique_ptr<T, TDeleter>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<std::shared_ptr<T>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<boost::shared_ptr<T>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<std::weak_ptr<T>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<T, BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
+  using type = heap;
+};
+template <class T>
+using memory_traits_t = typename memory_traits<T>::type;
+}
+namespace concepts {
+template <class...>
+struct scope {
+  struct is_referable {};
+  struct try_create {};
+  struct create {};
+  template <class...>
+  struct requires_ : aux::false_type {};
+};
+template <class T>
+struct provider__ {
+  template <class TMemory = type_traits::heap>
+  aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, T, T*> try_get(const TMemory& = {}) const;
+  template <class TMemory = type_traits::heap>
+  T* get(const TMemory& = {}) const {
+    return nullptr;
   }
 };
+template <class T>
+typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
+                                      typename scope<_, _>::create>
+    scopable_impl(...);
+template <class T>
+auto scopable_impl(T &&)
+    -> aux::is_valid_expr<typename T::template scope<_, _>::template is_referable<_>,
+                          decltype(T::template scope<_, _>::template try_create<_, _>(provider__<_>{})),
+                          decltype(aux::declval<typename T::template scope<_, _>>().template create<_, _>(provider__<_>{}))>;
+template <class T>
+struct scopable__ {
+  using type = decltype(scopable_impl<T>(aux::declval<T>()));
+};
+template <class T>
+using scopable = typename scopable__<T>::type;
 }
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
@@ -834,6 +1044,54 @@ struct shared<TScope, T&> {
   T* object = nullptr;
 };
 }
+namespace scopes {
+aux::false_type has_shared_ptr__(...);
+template <class T>
+auto has_shared_ptr__(T &&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
+class singleton {
+ public:
+  template <class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
+  class scope {
+   public:
+    template <class T_>
+    using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
+    template <class, class, class TProvider>
+    static decltype(wrappers::shared<singleton, T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
+        const TProvider&);
+    template <class, class, class TProvider>
+    auto create(const TProvider& provider) {
+      return create_impl(provider);
+    }
+
+   private:
+    template <class TProvider>
+    wrappers::shared<singleton, T&> create_impl(const TProvider& provider) {
+      static auto object(provider.get(type_traits::stack{}));
+      return wrappers::shared<singleton, T&>(object);
+    }
+  };
+  template <class _, class T>
+  class scope<_, T, aux::true_type> {
+   public:
+    template <class T_>
+    using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
+    template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
+    static decltype(wrappers::shared<singleton, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    try_create(const TProvider&);
+    template <class, class, class TProvider>
+    auto create(const TProvider& provider) {
+      return create_impl<aux::decay_t<decltype(provider.get())>>(provider);
+    }
+
+   private:
+    template <class T_, class TProvider>
+    auto create_impl(const TProvider& provider) {
+      static std::shared_ptr<T_> object{provider.get()};
+      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
+    }
+  };
+};
+}
 namespace wrappers {
 template <class TScope, class T>
 struct unique {
@@ -880,6 +1138,72 @@ struct unique<TScope, T*> {
     return std::unique_ptr<I, D>{object};
   }
   T* object = nullptr;
+};
+}
+namespace scopes {
+class unique {
+ public:
+  template <class, class>
+  class scope {
+   public:
+    template <class>
+    using is_referable = aux::false_type;
+    template <class T, class, class TProvider>
+    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+    try_create(const TProvider&);
+    template <class T, class, class TProvider>
+    auto create(const TProvider& provider) const {
+      using memory = type_traits::memory_traits_t<T>;
+      using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
+      return wrapper{provider.get(memory{})};
+    }
+  };
+};
+}
+namespace type_traits {
+template <class T>
+struct scope_traits {
+  using type = scopes::unique;
+};
+template <class T>
+struct scope_traits<T&> {
+  using type = scopes::singleton;
+};
+template <class T>
+struct scope_traits<std::shared_ptr<T>> {
+  using type = scopes::singleton;
+};
+template <class T>
+struct scope_traits<boost::shared_ptr<T>> {
+  using type = scopes::singleton;
+};
+template <class T>
+struct scope_traits<std::weak_ptr<T>> {
+  using type = scopes::singleton;
+};
+template <class T>
+using scope_traits_t = typename scope_traits<T>::type;
+}
+namespace scopes {
+class deduce {
+ public:
+  template <class TExpected, class TGiven>
+  class scope {
+   public:
+    template <class T>
+    using is_referable = typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_referable<T>;
+    template <class T, class TName, class TProvider>
+    static decltype(typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}.template try_create<T, TName>(
+        aux::declval<TProvider>()))
+    try_create(const TProvider&);
+    template <class T, class TName, class TProvider>
+    auto create(const TProvider& provider) {
+      using scope_traits = type_traits::scope_traits_t<T>;
+      using scope = typename scope_traits::template scope<TExpected, TGiven>;
+      return scope{}.template create<T, TName>(provider);
+    }
+  };
 };
 }
 namespace concepts {
@@ -1245,345 +1569,6 @@ class instance {
   };
 };
 }
-namespace type_traits {
-struct stack {};
-struct heap {};
-template <class T, class = int>
-struct memory_traits {
-  using type = stack;
-};
-template <class T>
-struct memory_traits<T*> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<const T&> {
-  using type = typename memory_traits<T>::type;
-};
-template <class T, class TDeleter>
-struct memory_traits<std::unique_ptr<T, TDeleter>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<std::shared_ptr<T>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<boost::shared_ptr<T>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<std::weak_ptr<T>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<T, BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
-  using type = heap;
-};
-template <class T>
-using memory_traits_t = typename memory_traits<T>::type;
-}
-namespace scopes {
-class unique {
- public:
-  template <class, class>
-  class scope {
-   public:
-    template <class>
-    using is_referable = aux::false_type;
-    template <class T, class, class TProvider>
-    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
-    try_create(const TProvider&);
-    template <class T, class, class TProvider>
-    auto create(const TProvider& provider) const {
-      using memory = type_traits::memory_traits_t<T>;
-      using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
-      return wrapper{provider.get(memory{})};
-    }
-  };
-};
-}
-namespace scopes {
-aux::false_type has_shared_ptr__(...);
-template <class T>
-auto has_shared_ptr__(T &&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
-class singleton {
- public:
-  template <class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
-  class scope {
-   public:
-    template <class T_>
-    using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
-    template <class, class, class TProvider>
-    static decltype(wrappers::shared<singleton, T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
-        const TProvider&);
-    template <class, class, class TProvider>
-    auto create(const TProvider& provider) {
-      return create_impl(provider);
-    }
-
-   private:
-    template <class TProvider>
-    wrappers::shared<singleton, T&> create_impl(const TProvider& provider) {
-      static auto object(provider.get(type_traits::stack{}));
-      return wrappers::shared<singleton, T&>(object);
-    }
-  };
-  template <class _, class T>
-  class scope<_, T, aux::true_type> {
-   public:
-    template <class T_>
-    using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
-    template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<singleton, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
-    try_create(const TProvider&);
-    template <class, class, class TProvider>
-    auto create(const TProvider& provider) {
-      return create_impl<aux::decay_t<decltype(provider.get())>>(provider);
-    }
-
-   private:
-    template <class T_, class TProvider>
-    auto create_impl(const TProvider& provider) {
-      static std::shared_ptr<T_> object{provider.get()};
-      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
-    }
-  };
-};
-}
-namespace type_traits {
-template <class T>
-struct scope_traits {
-  using type = scopes::unique;
-};
-template <class T>
-struct scope_traits<T&> {
-  using type = scopes::singleton;
-};
-template <class T>
-struct scope_traits<std::shared_ptr<T>> {
-  using type = scopes::singleton;
-};
-template <class T>
-struct scope_traits<boost::shared_ptr<T>> {
-  using type = scopes::singleton;
-};
-template <class T>
-struct scope_traits<std::weak_ptr<T>> {
-  using type = scopes::singleton;
-};
-template <class T>
-using scope_traits_t = typename scope_traits<T>::type;
-}
-namespace scopes {
-class deduce {
- public:
-  template <class TExpected, class TGiven>
-  class scope {
-   public:
-    template <class T>
-    using is_referable = typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>::template is_referable<T>;
-    template <class T, class TName, class TProvider>
-    static decltype(typename type_traits::scope_traits_t<T>::template scope<TExpected, TGiven>{}.template try_create<T, TName>(
-        aux::declval<TProvider>()))
-    try_create(const TProvider&);
-    template <class T, class TName, class TProvider>
-    auto create(const TProvider& provider) {
-      using scope_traits = type_traits::scope_traits_t<T>;
-      using scope = typename scope_traits::template scope<TExpected, TGiven>;
-      return scope{}.template create<T, TName>(provider);
-    }
-  };
-};
-}
-namespace concepts {
-template <class...>
-struct scope {
-  struct is_referable {};
-  struct try_create {};
-  struct create {};
-  template <class...>
-  struct requires_ : aux::false_type {};
-};
-template <class T>
-struct provider__ {
-  template <class TMemory = type_traits::heap>
-  aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, T, T*> try_get(const TMemory& = {}) const;
-  template <class TMemory = type_traits::heap>
-  T* get(const TMemory& = {}) const {
-    return nullptr;
-  }
-};
-template <class T>
-typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
-                                      typename scope<_, _>::create>
-    scopable_impl(...);
-template <class T>
-auto scopable_impl(T &&)
-    -> aux::is_valid_expr<typename T::template scope<_, _>::template is_referable<_>,
-                          decltype(T::template scope<_, _>::template try_create<_, _>(provider__<_>{})),
-                          decltype(aux::declval<typename T::template scope<_, _>>().template create<_, _>(provider__<_>{}))>;
-template <class T>
-struct scopable__ {
-  using type = decltype(scopable_impl<T>(aux::declval<T>()));
-};
-template <class T>
-using scopable = typename scopable__<T>::type;
-}
-namespace core {
-template <class T, class = typename aux::is_a<injector_base, T>::type>
-struct bindings_impl;
-template <class T>
-struct bindings_impl<T, aux::true_type> {
-  using type = typename T::deps;
-};
-template <class T>
-struct bindings_impl<T, aux::false_type> {
-  using type = aux::type_list<T>;
-};
-#if defined(__MSVC__)
-template <class... Ts>
-struct bindings : aux::join_t<typename bindings_impl<Ts>::type...> {};
-template <class... Ts>
-using bindings_t = typename bindings<Ts...>::type;
-#else
-template <class... Ts>
-using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
-#endif
-}
-namespace concepts {
-template <class T, class...>
-struct type_ {
-  template <class TName>
-  struct named {
-    struct is_bound_more_than_once : aux::false_type {};
-  };
-  struct is_bound_more_than_once : aux::false_type {};
-  struct is_neither_a_dependency_nor_an_injector : aux::false_type {};
-  struct has_disallowed_qualifiers : aux::false_type {};
-  struct is_abstract :
-#if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
-      // clang-format off
-      decltype(
-    T{}
-   ),
-// clang-format on
-#endif
-      aux::false_type {
-  };
-  template <class>
-  struct is_not_related_to : aux::false_type {};
-};
-template <class...>
-struct any_of : aux::false_type {};
-template <class... TDeps>
-struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
-                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
-                                                   (aux::is_a<core::injector_base, TDeps>::value ||
-                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
-template <class...>
-struct get_not_supported;
-template <class T>
-struct get_not_supported<T> {
-  using type = T;
-};
-template <class T, class... TDeps>
-struct get_not_supported<T, TDeps...>
-    : aux::conditional<aux::is_a<core::injector_base, T>::value || aux::is_a<core::dependency_base, T>::value,
-                       typename get_not_supported<TDeps...>::type, T> {};
-template <class>
-struct is_unique;
-template <class T, class = int>
-struct unique_dependency : aux::type<T> {};
-template <class T>
-struct unique_dependency<T, BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
-    : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
-template <class... TDeps>
-struct is_unique<aux::type_list<TDeps...>> : aux::is_unique<typename unique_dependency<TDeps>::type...> {};
-template <class>
-struct get_is_unique_error_impl : aux::true_type {};
-template <class T, class TName, class TPriority>
-struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, TName>, TPriority>>> {
-  using type = typename type_<T>::template named<TName>::is_bound_more_than_once;
-};
-template <class T, class TPriority>
-struct get_is_unique_error_impl<aux::not_unique<aux::pair<aux::pair<T, no_name>, TPriority>>> {
-  using type = typename type_<T>::is_bound_more_than_once;
-};
-template <class T>
-struct get_is_unique_error_impl<aux::not_unique<T>> {
-  using type = typename type_<T>::is_bound_more_than_once;
-};
-template <class>
-struct get_is_unique_error;
-template <class... TDeps>
-struct get_is_unique_error<aux::type_list<TDeps...>>
-    : get_is_unique_error_impl<typename aux::is_unique<typename unique_dependency<TDeps>::type...>::type> {};
-template <class... TDeps>
-using boundable_bindings =
-    aux::conditional_t<is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
-                       typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
-template <class... Ts>
-using get_any_of_error = aux::conditional_t<
-    aux::is_same<aux::bool_list<aux::always<Ts>::value...>, aux::bool_list<aux::is_same<aux::true_type, Ts>::value...>>::value,
-    aux::true_type, any_of<Ts...>>;
-template <bool, class...>
-struct is_related {
-  static constexpr auto value = true;
-};
-template <class I, class T>
-struct is_related<true, I, T> {
-  static constexpr auto value =
-      aux::is_callable<T>::value ||
-      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
-};
-template <bool, class>
-struct is_abstract {
-  static constexpr auto value = false;
-};
-template <class T>
-struct is_abstract<true, T> {
-  static constexpr auto value = aux::is_abstract<T>::value;
-};
-auto boundable_impl(any_of<> &&) -> aux::true_type;
-template <class T, class... Ts>
-auto boundable_impl(any_of<T, Ts...> &&)
-    -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, decltype(boundable_impl(aux::declval<any_of<Ts...>>())),
-                          typename type_<T>::has_disallowed_qualifiers>;
-template <class I, class T>
-using boundable_impl__ = aux::conditional_t<
-    is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value,
-    aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
-    typename type_<T>::template is_not_related_to<I>>;
-template <class I, class T>
-auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, boundable_impl__<I, T>,
-                                                     typename type_<T>::has_disallowed_qualifiers>;
-template <class I, class T>
-auto boundable_impl(I&&, T&&, aux::valid<> &&)
-    -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
-                          typename type_<T>::template is_not_related_to<I>>;
-template <class I, class T>
-auto boundable_impl(I* [], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                       typename type_<I>::has_disallowed_qualifiers>;
-template <class I, class T>
-auto boundable_impl(I[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                     typename type_<I>::has_disallowed_qualifiers>;
-template <class... TDeps>
-auto boundable_impl(aux::type_list<TDeps...> &&) -> boundable_bindings<TDeps...>;
-template <class T, class... Ts>
-auto boundable_impl(concepts::any_of<Ts...>&&, T &&)
-    -> get_any_of_error<decltype(boundable_impl(aux::declval<Ts>(), aux::declval<T>()))...>;
-template <class... TDeps>
-auto boundable_impl(aux::type<TDeps...> &&) -> typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
-aux::true_type boundable_impl(...);
-template <class... Ts>
-struct boundable__ {
-  using type = decltype(boundable_impl(aux::declval<Ts>()...));
-};
-template <class... Ts>
-using boundable = typename boundable__<Ts...>::type;
-}
 namespace core {
 template <class, class>
 struct dependency_concept {};
@@ -1698,6 +1683,21 @@ class dependency
   static void try_create(...);
 };
 }
+namespace core {
+template <class = aux::type_list<>>
+struct pool;
+template <class... TArgs>
+using pool_t = pool<aux::type_list<TArgs...>>;
+template <class... TArgs>
+struct pool<aux::type_list<TArgs...>> : TArgs... {
+  template <class... Ts>
+  explicit pool(Ts... args) noexcept : Ts(static_cast<Ts&&>(args))... {}
+  template <class... Ts, class TPool>
+  pool(const aux::type_list<Ts...>&, TPool p) noexcept : pool(static_cast<Ts&&>(p)...) {
+    (void)p;
+  }
+};
+}
 namespace concepts {
 struct call_operator_with_one_argument {};
 template <class>
@@ -1807,6 +1807,80 @@ static constexpr BOOST_DI_UNUSED core::override override{};
 static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
 static constexpr BOOST_DI_UNUSED scopes::unique unique{};
 static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
+namespace concepts {
+struct get {};
+struct is_creatable {};
+template <class>
+struct provider {
+  template <class...>
+  struct requires_ : aux::false_type {};
+};
+template <class T>
+typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
+template <class T>
+auto providable_impl(T&& t)
+    -> aux::is_valid_expr<decltype(t.template get<_>(type_traits::direct{}, type_traits::heap{})),
+                          decltype(t.template get<_>(type_traits::direct{}, type_traits::heap{}, int{})),
+                          decltype(t.template get<_>(type_traits::uniform{}, type_traits::stack{})),
+                          decltype(t.template get<_>(type_traits::uniform{}, type_traits::stack{}, int{})),
+                          decltype(T::template is_creatable<type_traits::direct, type_traits::heap, _>::value),
+                          decltype(T::template is_creatable<type_traits::uniform, type_traits::stack, _, int>::value)>;
+template <class T>
+struct providable__ {
+  using type = decltype(providable_impl<T>(aux::declval<T>()));
+};
+template <class T>
+using providable = typename providable__<T>::type;
+}
+namespace concepts {
+template <class>
+struct policies {};
+struct providable_type {};
+struct callable_type {};
+template <class>
+struct config {
+  template <class...>
+  struct requires_ : aux::false_type {};
+};
+template <class TConfig>
+struct injector {
+  using config = TConfig;
+  using deps = aux::type_list<>;
+  template <class T>
+  T create() const;
+};
+aux::false_type configurable_impl(...);
+template <class T>
+auto configurable_impl(T &&)
+    -> aux::is_valid_expr<decltype(T::provider((injector<T>*)0)), decltype(T::policies((injector<T>*)0))>;
+template <class T1, class T2>
+struct get_configurable_error : aux::type_list<T1, T2> {};
+template <class T>
+struct get_configurable_error<aux::true_type, T> {
+  using type = T;
+};
+template <class T>
+struct get_configurable_error<T, aux::true_type> {
+  using type = T;
+};
+template <>
+struct get_configurable_error<aux::true_type, aux::true_type> : aux::true_type {};
+template <class T>
+auto is_configurable(const aux::true_type&) {
+  return typename get_configurable_error<decltype(providable<decltype(T::provider((injector<T>*)0))>()),
+                                         decltype(callable<decltype(T::policies((injector<T>*)0))>())>::type{};
+}
+template <class T>
+auto is_configurable(const aux::false_type&) {
+  return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
+}
+template <class T>
+struct configurable__ {
+  using type = decltype(is_configurable<T>(decltype(configurable_impl(aux::declval<T>())){}));
+};
+template <class T>
+using configurable = typename configurable__<T>::type;
+}
 namespace core {
 class binder {
   template <class TDefault, class>
@@ -2546,80 +2620,6 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
 };
-}
-namespace concepts {
-struct get {};
-struct is_creatable {};
-template <class>
-struct provider {
-  template <class...>
-  struct requires_ : aux::false_type {};
-};
-template <class T>
-typename provider<T>::template requires_<get, is_creatable> providable_impl(...);
-template <class T>
-auto providable_impl(T&& t)
-    -> aux::is_valid_expr<decltype(t.template get<_>(type_traits::direct{}, type_traits::heap{})),
-                          decltype(t.template get<_>(type_traits::direct{}, type_traits::heap{}, int{})),
-                          decltype(t.template get<_>(type_traits::uniform{}, type_traits::stack{})),
-                          decltype(t.template get<_>(type_traits::uniform{}, type_traits::stack{}, int{})),
-                          decltype(T::template is_creatable<type_traits::direct, type_traits::heap, _>::value),
-                          decltype(T::template is_creatable<type_traits::uniform, type_traits::stack, _, int>::value)>;
-template <class T>
-struct providable__ {
-  using type = decltype(providable_impl<T>(aux::declval<T>()));
-};
-template <class T>
-using providable = typename providable__<T>::type;
-}
-namespace concepts {
-template <class>
-struct policies {};
-struct providable_type {};
-struct callable_type {};
-template <class>
-struct config {
-  template <class...>
-  struct requires_ : aux::false_type {};
-};
-template <class TConfig>
-struct injector {
-  using config = TConfig;
-  using deps = aux::type_list<>;
-  template <class T>
-  T create() const;
-};
-aux::false_type configurable_impl(...);
-template <class T>
-auto configurable_impl(T &&)
-    -> aux::is_valid_expr<decltype(T::provider((injector<T>*)0)), decltype(T::policies((injector<T>*)0))>;
-template <class T1, class T2>
-struct get_configurable_error : aux::type_list<T1, T2> {};
-template <class T>
-struct get_configurable_error<aux::true_type, T> {
-  using type = T;
-};
-template <class T>
-struct get_configurable_error<T, aux::true_type> {
-  using type = T;
-};
-template <>
-struct get_configurable_error<aux::true_type, aux::true_type> : aux::true_type {};
-template <class T>
-auto is_configurable(const aux::true_type&) {
-  return typename get_configurable_error<decltype(providable<decltype(T::provider((injector<T>*)0))>()),
-                                         decltype(callable<decltype(T::policies((injector<T>*)0))>())>::type{};
-}
-template <class T>
-auto is_configurable(const aux::false_type&) {
-  return typename config<T>::template requires_<provider<providable_type(...)>, policies<callable_type(...)>>{};
-}
-template <class T>
-struct configurable__ {
-  using type = decltype(is_configurable<T>(decltype(configurable_impl(aux::declval<T>())){}));
-};
-template <class T>
-using configurable = typename configurable__<T>::type;
 }
 namespace detail {
 template <class>

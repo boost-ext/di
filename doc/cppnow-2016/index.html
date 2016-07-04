@@ -658,7 +658,7 @@ http://melpon.org/wandbox/permlink/KFYmTrdJpTjB6UEr
 template<class TParent>
 struct any_type {
   template<class T, class =
-    std::enable_if_t<!std::is_convertible<TParent, T>{}>
+    std::enable_if_t<!std::is_same<TParent, T>{}>
   > constexpr operator T();
 };
 
@@ -800,7 +800,7 @@ static_assert(is_braces_constructible<example, any_type, any_type>{});
 template<class TInjector, class TParent>
 struct any_type {
   template<class T, class =
-    std::enable_if_t<!std::is_convertible<TParent, T>{}>
+    std::enable_if_t<!std::is_same<TParent, T>{}>
     ... // Concepts
   > constexpr operator T() {
     return injector_.template create<T>();
