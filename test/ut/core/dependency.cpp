@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/core/dependency.hpp"
+#include <type_traits>
 #include "boost/di/concepts/boundable.hpp"
 #include "common/fakes/fake_injector.hpp"
 #include "common/fakes/fake_scope.hpp"
@@ -12,10 +13,10 @@
 namespace core {
 
 test is_dependency_types = [] {
-  expect(!aux::is_base_of<dependency_base, void>::value);
-  expect(!aux::is_base_of<dependency_base, int>::value);
-  expect(aux::is_base_of<dependency_base, dependency<scopes::deduce, int>>::value);
-  expect(aux::is_base_of<dependency_base, dependency<scopes::deduce, double, double>>::value);
+  expect(!std::is_base_of<dependency_base, void>::value);
+  expect(!std::is_base_of<dependency_base, int>::value);
+  expect(std::is_base_of<dependency_base, dependency<scopes::deduce, int>>::value);
+  expect(std::is_base_of<dependency_base, dependency<scopes::deduce, double, double>>::value);
 };
 
 struct name {};

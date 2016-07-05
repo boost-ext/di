@@ -106,7 +106,7 @@ struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typ
 };
 
 template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
+struct ctor_traits<T, BOOST_DI_REQUIRES(!__is_class(T))> {
   using boost_di_inject__ = aux::type_list<>;
 };
 

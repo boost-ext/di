@@ -437,14 +437,6 @@ template <class, class>
 struct is_same : false_type {};
 template <class T>
 struct is_same<T, T> : true_type {};
-template <class T, class U>
-struct is_base_of : integral_constant<bool, __is_base_of(T, U)> {};
-template <class T>
-struct is_class : integral_constant<bool, __is_class(T)> {};
-template <class T>
-struct is_abstract : integral_constant<bool, __is_abstract(T)> {};
-template <class T>
-struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> {};
 template <class...>
 using is_valid_expr = true_type;
 #if __has_extension(is_constructible) && !((__clang_major__ == 3) && (__clang_minor__ == 5))
@@ -495,7 +487,7 @@ template <class T, class U>
 using is_convertible = decltype(test_is_convertible<T, U>(0));
 #endif
 template <class TSrc, class TDst, class U = remove_qualifiers_t<TDst>>
-using is_narrowed = integral_constant<bool, !is_class<TSrc>::value && !is_class<U>::value && !is_same<TSrc, U>::value>;
+using is_narrowed = integral_constant<bool, !__is_class(TSrc) && !__is_class(U) && !is_same<TSrc, U>::value>;
 template <class, class...>
 struct is_array : false_type {};
 template <class T, class... Ts>
@@ -507,7 +499,7 @@ false_type is_complete_impl(...);
 template <class T>
 struct is_complete : decltype(is_complete_impl<T>(0)) {};
 template <class T, class U, class = decltype(sizeof(U))>
-is_base_of<T, U> is_a_impl(int);
+aux::integral_constant<bool, __is_base_of(T, U)> is_a_impl(int);
 template <class T, class U>
 false_type is_a_impl(...);
 template <class T, class U>
@@ -526,14 +518,14 @@ template <class T>
 struct is_unique_impl<T> : not_unique<> {};
 template <class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
-    : conditional_t<is_base_of<type<T2>, T1>::value, not_unique<T2>, is_unique_impl<inherit<T1, type<T2>>, Ts...>> {};
+    : conditional_t<__is_base_of(type<T2>, T1), not_unique<T2>, is_unique_impl<inherit<T1, type<T2>>, Ts...>> {};
 template <class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
 template <class...>
 struct unique;
 template <class... Rs, class T, class... Ts>
-struct unique<type<Rs...>, T, Ts...> : conditional_t<is_base_of<type<T>, inherit<type<Rs>...>>::value,
-                                                     unique<type<Rs...>, Ts...>, unique<type<Rs..., T>, Ts...>> {};
+struct unique<type<Rs...>, T, Ts...>
+    : conditional_t<__is_base_of(type<T>, inherit<type<Rs>...>), unique<type<Rs...>, Ts...>, unique<type<Rs..., T>, Ts...>> {};
 template <class... Rs>
 struct unique<type<Rs...>> : type_list<Rs...> {};
 template <class... Ts>
@@ -550,7 +542,7 @@ struct callable_base_impl {
   void operator()(...) {}
 };
 template <class T>
-struct callable_base : callable_base_impl, aux::conditional_t<aux::is_class<T>::value, T, aux::none_type> {};
+struct callable_base : callable_base_impl, aux::conditional_t<__is_class(T), T, aux::none_type> {};
 template <typename T>
 aux::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(...), &T::operator()>* = 0);
 aux::true_type is_callable_impl(...);
@@ -684,9 +676,8 @@ struct is_related {
 };
 template <class I, class T>
 struct is_related<true, I, T> {
-  static constexpr auto value =
-      aux::is_callable<T>::value ||
-      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
+  static constexpr auto value = aux::is_callable<T>::value ||
+                                (__is_base_of(I, T) || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
 };
 template <bool, class>
 struct is_abstract {
@@ -694,7 +685,7 @@ struct is_abstract {
 };
 template <class T>
 struct is_abstract<true, T> {
-  static constexpr auto value = aux::is_abstract<T>::value;
+  static constexpr auto value = __is_abstract(T);
 };
 auto boundable_impl(any_of<> &&) -> aux::true_type;
 template <class T, class... Ts>
@@ -766,7 +757,7 @@ struct memory_traits<std::weak_ptr<T>> {
   using type = heap;
 };
 template <class T>
-struct memory_traits<T, BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
+struct memory_traits<T, BOOST_DI_REQUIRES(__is_polymorphic(T))> {
   using type = heap;
 };
 template <class T>
@@ -879,7 +870,7 @@ struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typ
   using boost_di_inject__ = aux::type_list<>;
 };
 template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
+struct ctor_traits<T, BOOST_DI_REQUIRES(!__is_class(T))> {
   using boost_di_inject__ = aux::type_list<>;
 };
 namespace type_traits {
@@ -1318,9 +1309,8 @@ using ctor_size_t = ctor_size<typename type_traits::ctor<T, type_traits::ctor_im
 template <class TInitialization, class TName, class _, class TCtor, class T = aux::decay_t<_>>
 struct creatable_error_impl
     : aux::conditional_t<
-          aux::is_polymorphic<T>::value,
-          aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
-                             typename abstract_type<T>::template named<TName>::is_not_bound>,
+          __is_polymorphic(T), aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
+                                                  typename abstract_type<T>::template named<TName>::is_not_bound>,
           aux::conditional_t<ctor_size_t<T>::value == ctor_size<TCtor>::value,
                              typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
                              typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<
@@ -1548,11 +1538,11 @@ class instance {
     scope(scope&& other) noexcept : injector_(other.injector_) { other.injector_ = nullptr; }
     ~scope() noexcept { delete injector_; }
     template <class T, class TName, class TProvider>
-    static aux::conditional_t<aux::is_base_of<injector__<named<TName, T>>, injector>::value, T, void> try_create(
-        const TProvider&);
+    static aux::conditional_t<__is_base_of(injector__<named<TName, T>>, injector), T, void> try_create(const TProvider&);
     template <class T, class TName, class TProvider>
     auto create(const TProvider&) {
-      return wrapper<T>{injector_->create(named<TName, T>{}, aux::is_base_of<injector__<named<TName, T>>, injector>{})};
+      return wrapper<T>{injector_->create(named<TName, T>{},
+                                          aux::integral_constant<bool, __is_base_of(injector__<named<TName, T>>, injector)>{})};
     }
 
    private:
@@ -2697,7 +2687,7 @@ struct apply_impl {
   struct apply : T {};
 };
 template <template <class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!aux::is_base_of<type_op, T<Ts...>>::value)> {
+struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))> {
   template <class TOp, class>
   struct apply_placeholder_impl {
     using type = TOp;
@@ -2714,7 +2704,7 @@ struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!aux::is_base_of<type_op, T<Ts...>
   struct apply : apply_placeholder<T, typename TArg::type, Ts...>::type {};
 };
 template <class T>
-struct apply_impl<T, BOOST_DI_REQUIRES(aux::is_base_of<type_op, T>::value)> {
+struct apply_impl<T, BOOST_DI_REQUIRES(__is_base_of(type_op, T))> {
   template <class TArg>
   struct apply : T::template apply<TArg>::type {};
 };
@@ -2765,7 +2755,7 @@ struct is_bound : detail::type_op {
 template <class T>
 struct is_injected : detail::type_op {
   template <class TArg, class U = aux::decay_t<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>>>
-  struct apply : aux::conditional_t<aux::is_class<U>::value, typename type_traits::is_injectable<U>::type, aux::true_type> {};
+  struct apply : aux::conditional_t<__is_class(U), typename type_traits::is_injectable<U>::type, aux::true_type> {};
 };
 namespace operators {
 template <class X, class Y>
@@ -2792,11 +2782,11 @@ struct constructible_impl {
     return typename type<typename TArg::type>::template not_allowed_by<T>{};
   }
 };
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(aux::is_base_of<detail::type_op, T>::value) = 0>
+template <class T = aux::never<_>, BOOST_DI_REQUIRES(__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<T>{};
 }
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(!aux::is_base_of<detail::type_op, T>::value) = 0>
+template <class T = aux::never<_>, BOOST_DI_REQUIRES(!__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<detail::or_<T>>{};
 }

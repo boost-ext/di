@@ -276,12 +276,12 @@ class instance {
     ~scope() noexcept { delete injector_; }
 
     template <class T, class TName, class TProvider>
-    static aux::conditional_t<aux::is_base_of<injector__<named<TName, T>>, injector>::value, T, void> try_create(
-        const TProvider&);
+    static aux::conditional_t<__is_base_of(injector__<named<TName, T>>, injector), T, void> try_create(const TProvider&);
 
     template <class T, class TName, class TProvider>
     auto create(const TProvider&) {
-      return wrapper<T>{injector_->create(named<TName, T>{}, aux::is_base_of<injector__<named<TName, T>>, injector>{})};
+      return wrapper<T>{injector_->create(named<TName, T>{},
+                                          aux::integral_constant<bool, __is_base_of(injector__<named<TName, T>>, injector)>{})};
     }
 
    private:

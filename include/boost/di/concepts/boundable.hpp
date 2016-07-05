@@ -114,9 +114,8 @@ struct is_related {
 
 template <class I, class T>
 struct is_related<true, I, T> {
-  static constexpr auto value =
-      aux::is_callable<T>::value ||
-      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
+  static constexpr auto value = aux::is_callable<T>::value ||
+                                (__is_base_of(I, T) || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
 };
 
 template <bool, class>
@@ -126,7 +125,7 @@ struct is_abstract {
 
 template <class T>
 struct is_abstract<true, T> {
-  static constexpr auto value = aux::is_abstract<T>::value;
+  static constexpr auto value = __is_abstract(T);
 };
 
 auto boundable_impl(any_of<> &&) -> aux::true_type;

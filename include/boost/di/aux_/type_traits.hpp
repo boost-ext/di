@@ -221,18 +221,6 @@ struct is_same : false_type {};
 template <class T>
 struct is_same<T, T> : true_type {};
 
-template <class T, class U>
-struct is_base_of : integral_constant<bool, __is_base_of(T, U)> {};
-
-template <class T>
-struct is_class : integral_constant<bool, __is_class(T)> {};
-
-template <class T>
-struct is_abstract : integral_constant<bool, __is_abstract(T)> {};
-
-template <class T>
-struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> {};
-
 template <class...>
 using is_valid_expr = true_type;
 
@@ -291,7 +279,7 @@ using is_convertible = decltype(test_is_convertible<T, U>(0));
 #endif  // __pph__
 
 template <class TSrc, class TDst, class U = remove_qualifiers_t<TDst>>
-using is_narrowed = integral_constant<bool, !is_class<TSrc>::value && !is_class<U>::value && !is_same<TSrc, U>::value>;
+using is_narrowed = integral_constant<bool, !__is_class(TSrc) && !__is_class(U) && !is_same<TSrc, U>::value>;
 
 template <class, class...>
 struct is_array : false_type {};
@@ -308,7 +296,7 @@ template <class T>
 struct is_complete : decltype(is_complete_impl<T>(0)) {};
 
 template <class T, class U, class = decltype(sizeof(U))>
-is_base_of<T, U> is_a_impl(int);
+aux::integral_constant<bool, __is_base_of(T, U)> is_a_impl(int);
 
 template <class T, class U>
 false_type is_a_impl(...);
@@ -334,7 +322,7 @@ struct is_unique_impl<T> : not_unique<> {};
 
 template <class T1, class T2, class... Ts>
 struct is_unique_impl<T1, T2, Ts...>
-    : conditional_t<is_base_of<type<T2>, T1>::value, not_unique<T2>, is_unique_impl<inherit<T1, type<T2>>, Ts...>> {};
+    : conditional_t<__is_base_of(type<T2>, T1), not_unique<T2>, is_unique_impl<inherit<T1, type<T2>>, Ts...>> {};
 
 template <class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
@@ -343,8 +331,8 @@ template <class...>
 struct unique;
 
 template <class... Rs, class T, class... Ts>
-struct unique<type<Rs...>, T, Ts...> : conditional_t<is_base_of<type<T>, inherit<type<Rs>...>>::value,
-                                                     unique<type<Rs...>, Ts...>, unique<type<Rs..., T>, Ts...>> {};
+struct unique<type<Rs...>, T, Ts...>
+    : conditional_t<__is_base_of(type<T>, inherit<type<Rs>...>), unique<type<Rs...>, Ts...>, unique<type<Rs..., T>, Ts...>> {};
 
 template <class... Rs>
 struct unique<type<Rs...>> : type_list<Rs...> {};
@@ -359,7 +347,7 @@ struct callable_base_impl {
 };
 
 template <class T>
-struct callable_base : callable_base_impl, aux::conditional_t<aux::is_class<T>::value, T, aux::none_type> {};
+struct callable_base : callable_base_impl, aux::conditional_t<__is_class(T), T, aux::none_type> {};
 
 template <typename T>
 aux::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(...), &T::operator()>* = 0);

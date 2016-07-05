@@ -24,7 +24,7 @@ struct apply_impl {
 };
 
 template <template <class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!aux::is_base_of<type_op, T<Ts...>>::value)> {
+struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))> {
   template <class TOp, class>
   struct apply_placeholder_impl {
     using type = TOp;
@@ -45,7 +45,7 @@ struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!aux::is_base_of<type_op, T<Ts...>
 };
 
 template <class T>
-struct apply_impl<T, BOOST_DI_REQUIRES(aux::is_base_of<type_op, T>::value)> {
+struct apply_impl<T, BOOST_DI_REQUIRES(__is_base_of(type_op, T))> {
   template <class TArg>
   struct apply : T::template apply<TArg>::type {};
 };
@@ -104,7 +104,7 @@ struct is_bound : detail::type_op {
 template <class T>
 struct is_injected : detail::type_op {
   template <class TArg, class U = aux::decay_t<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>>>
-  struct apply : aux::conditional_t<aux::is_class<U>::value, typename type_traits::is_injectable<U>::type, aux::true_type> {};
+  struct apply : aux::conditional_t<__is_class(U), typename type_traits::is_injectable<U>::type, aux::true_type> {};
 };
 
 namespace operators {
@@ -139,12 +139,12 @@ struct constructible_impl {
   }
 };
 
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(aux::is_base_of<detail::type_op, T>::value) = 0>
+template <class T = aux::never<_>, BOOST_DI_REQUIRES(__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<T>{};
 }
 
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(!aux::is_base_of<detail::type_op, T>::value) = 0>
+template <class T = aux::never<_>, BOOST_DI_REQUIRES(!__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<detail::or_<T>>{};
 }
