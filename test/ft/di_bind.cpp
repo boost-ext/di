@@ -999,6 +999,18 @@ test bind_unique_ptr_dtor_defined = [] {
   expect(nullptr == object.i1_.get());
 };
 
+test bind_unique_ptr_dtor_defined_with_move_ctor = [] {
+  struct c {
+    c() {}
+    c(c&&) = default;
+    ~c() = default;
+    std::unique_ptr<i1> i1_;
+  };
+  const auto injector = di::make_injector(di::bind<i1>().to<impl1>());
+  auto &&object = injector.create<c>();
+  expect(nullptr == object.i1_.get());
+};
+
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
   constexpr auto i = 42;
