@@ -529,20 +529,15 @@ struct is_unique_impl<T1, T2, Ts...>
     : conditional_t<is_base_of<type<T2>, T1>::value, not_unique<T2>, is_unique_impl<inherit<T1, type<T2>>, Ts...>> {};
 template <class... Ts>
 using is_unique = is_unique_impl<none_type, Ts...>;
-template <class, class...>
-struct unique_impl;
-template <class T1, class T2, class... Rs, class... Ts>
-struct unique_impl<type<T1, Rs...>, T2, Ts...>
-    : conditional_t<is_base_of<type<T2>, T1>::value, unique_impl<type<inherit<T1>, Rs...>, Ts...>,
-                    unique_impl<type<inherit<T1, type<T2>>, Rs..., T2>, Ts...>> {};
-template <class T1, class... Rs>
-struct unique_impl<type<T1, Rs...>> : type_list<Rs...> {};
+template <class...>
+struct unique;
+template <class... Rs, class T, class... Ts>
+struct unique<type<Rs...>, T, Ts...> : conditional_t<is_base_of<type<T>, inherit<type<Rs>...>>::value,
+                                                     unique<type<Rs...>, Ts...>, unique<type<Rs..., T>, Ts...>> {};
+template <class... Rs>
+struct unique<type<Rs...>> : type_list<Rs...> {};
 template <class... Ts>
-struct unique : unique_impl<type<none_type>, Ts...> {};
-template <class T>
-struct unique<T> : type_list<T> {};
-template <class... Ts>
-using unique_t = typename unique<Ts...>::type;
+using unique_t = typename unique<type<>, Ts...>::type;
 template <class T, class... TArgs>
 decltype(::boost::di::v1_0_1::aux::declval<T>().operator()(::boost::di::v1_0_1::aux::declval<TArgs>()...),
          ::boost::di::v1_0_1::aux::true_type())
