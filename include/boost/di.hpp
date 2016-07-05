@@ -437,10 +437,6 @@ template <class, class>
 struct is_same : false_type {};
 template <class T>
 struct is_same<T, T> : true_type {};
-#if defined(__GCC__) || defined(__MSVC__)
-template <class T>
-struct is_same<T, const T> : true_type {};
-#endif
 template <class T, class U>
 struct is_base_of : integral_constant<bool, __is_base_of(T, U)> {};
 template <class T>
@@ -1929,6 +1925,14 @@ template <class T, class TInjector>
 struct is_creatable__<T, TInjector, aux::false_type> {
   static constexpr auto value = true;
 };
+template <class, class>
+struct is_copy_ctor__ : aux::false_type {};
+template <class T>
+struct is_copy_ctor__<T, T> : aux::true_type {};
+#if defined(__GCC__) || defined(__MSVC__)
+template <class T>
+struct is_copy_ctor__<T, const T> : aux::true_type {};
+#endif
 template <class TParent, class TInjector, class TError = aux::false_type>
 struct any_type {
   template <class T, class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
@@ -1964,7 +1968,7 @@ struct any_type_ref {
 };
 template <class TParent, class TInjector, class TError = aux::false_type>
 struct any_type_1st {
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
@@ -1973,26 +1977,26 @@ struct any_type_1st {
 };
 template <class TParent, class TInjector, class TError = aux::false_type, class TRefError = aux::false_type>
 struct any_type_1st_ref {
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
   }
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
   operator T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
   }
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value),
             class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
   operator const T&() const {
@@ -2033,7 +2037,7 @@ struct any_type_ref {
 };
 template <class TParent, class TInjector>
 struct any_type_1st {
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
@@ -2041,23 +2045,23 @@ struct any_type_1st {
 };
 template <class TParent, class TInjector>
 struct any_type_1st_ref {
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
   }
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
   operator T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
   }
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value),
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
   operator const T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
@@ -2089,24 +2093,24 @@ struct any_type_ref_fwd {
 };
 template <class TParent>
 struct any_type_1st_fwd {
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T();
 
  private:
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator const T&() const;
 };
 template <class TParent>
 struct any_type_1st_ref_fwd {
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T();
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T&() const;
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T &&() const;
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(!aux::is_same<TParent, T>::value)>
+  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator const T&() const;
 };
 }

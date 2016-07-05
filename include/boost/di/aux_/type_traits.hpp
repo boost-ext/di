@@ -220,10 +220,6 @@ template <class, class>
 struct is_same : false_type {};
 template <class T>
 struct is_same<T, T> : true_type {};
-#if defined(__GCC__) || defined(__MSVC__)  // __pph__
-template <class T>
-struct is_same<T, const T> : true_type {};
-#endif  // __pph__
 
 template <class T, class U>
 struct is_base_of : integral_constant<bool, __is_base_of(T, U)> {};
