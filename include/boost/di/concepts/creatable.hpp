@@ -156,8 +156,9 @@ using ctor_size_t = ctor_size<typename type_traits::ctor<T, type_traits::ctor_im
 template <class TInitialization, class TName, class _, class TCtor, class T = aux::decay_t<_>>
 struct creatable_error_impl
     : aux::conditional_t<
-          __is_polymorphic(T), aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
-                                                  typename abstract_type<T>::template named<TName>::is_not_bound>,
+          aux::is_polymorphic<T>::value,
+          aux::conditional_t<aux::is_same<TName, no_name>::value, typename abstract_type<T>::is_not_bound,
+                             typename abstract_type<T>::template named<TName>::is_not_bound>,
           aux::conditional_t<ctor_size_t<T>::value == ctor_size<TCtor>::value,
                              typename type<T>::has_to_many_constructor_parameters::template max<BOOST_DI_CFG_CTOR_LIMIT_SIZE>,
                              typename type<T>::has_ambiguous_number_of_constructor_parameters::template given<
