@@ -35,15 +35,15 @@ template <class... Ts>
 struct type_id : type_id_impl<std::make_index_sequence<sizeof...(Ts)>, Ts...> {};
 
 template <class T, int, int N>
-constexpr auto get_id_impl(type_id_type<N, T>*) {
+auto get_id_impl(type_id_type<N, T>*) {
   return N;
 }
 template <class T, int D>
-constexpr auto get_id_impl(...) {
+auto get_id_impl(...) {
   return D;
 }
 template <class TIds, int D, class T>
-constexpr auto get_id() {
+auto get_id() {
   return get_id_impl<T, D>((TIds*)0);
 }
 
@@ -53,17 +53,18 @@ struct identity {
 };
 
 template <int N, class D, class T>
-constexpr auto get_type_impl(type_id_type<N, T>*) {
+auto get_type_impl(type_id_type<N, T>*) {
   return identity<T>{};
 }
 template <int, class D>
-constexpr auto get_type_impl(...) {
+auto get_type_impl(...) {
   return identity<D>{};
 }
 
 template <class TIds, class D, int N>
 struct get_type {
-  using type = typename decltype(get_type_impl<N, D>((TIds*)0))::type;
+  using underlying_type = decltype(get_type_impl<N, D>((TIds*)0));
+  using type = typename underlying_type::type;
 };
 
 template <class TIds, int N, class D = void>
@@ -133,19 +134,19 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
   void** ptr;                                                                              \
   name() = default;                                                                        \
   template <class T>                                                                       \
-  constexpr inline name(const T& t, int) : self(&t), ptr(vtable<std::decay_t<T>>()) {      \
+  inline name(const T& t, int) : self(&t), ptr(vtable<std::decay_t<T>>()) {      \
     name_impl<std::decay_t<T>, 0>(ptr);                                                    \
   }                                                                                        \
   template <class T, int N, std::enable_if_t<!has_info__<self_t, id + N>::value, int> = 0> \
-  static constexpr void name_impl(void**) {}                                               \
+  static void name_impl(void**) {}                                               \
   template <class T, int N, std::enable_if_t<has_info__<self_t, id + N>::value, int> = 0>  \
-  static constexpr void name_impl(void** ptr) {                                            \
+  static void name_impl(void** ptr) {                                            \
     auto f = &info__<id + N>::template f<T>;                                               \
     ptr[N] = *(void**)(&f);                                                                \
     name_impl<T, N + 1>(ptr);                                                              \
   }                                                                                        \
   template <class T>                                                                       \
-  constexpr inline name(const T& t) : name(t, 0)
+  inline name(const T& t) : name(t, 0)
 
 #define REQUIRES(name, ...) REQUIRES_IMPL(__COUNTER__, name, __VA_ARGS__)
 #define REQUIRES_IMPL(i, name, ...)                                                                                     \
