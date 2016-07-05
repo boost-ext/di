@@ -2097,7 +2097,7 @@ struct T {
   int i;
 };
 
-BOOST_DI_UNUSED auto name = [] {};
+__BOOST_DI_UNUSED auto name = [] {};
 
 di::injector&lt;T, std::unique_ptr&lt;T&gt;, BOOST_DI_EXPOSE((named = name)T)&gt; module(const int&amp; i) noexcept {
   return di::make_injector(

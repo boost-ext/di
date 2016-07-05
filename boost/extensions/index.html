@@ -48,6 +48,10 @@
     
 
     
+        <dt><span class="section"><a href="#generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#lazy">Lazy</a></span></dt>
     
 
@@ -285,7 +289,7 @@ struct example {
 };
 
 int main() {
-  auto injector = di::make_injector&lt;generics_provider_config&gt;(
+  auto injector = di::make_injector&lt;concepts_provider_config&gt;(
     di::bind&lt;int&gt;.to(42)
   , di::bind&lt;di::_&gt;.to(87)
   , di::bind&lt;di::_&gt;().named(dummy_concept).to&lt;DummyImpl&gt;()
@@ -359,6 +363,59 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp</a></li>
+</ul>
+<h3 id="generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+/*&lt;&lt;generic interface&gt;&gt;*/
+struct interface {
+  GENERIC(interface) {}
+  bool update(int i) REQUIRES(update, i);
+};
+
+/*&lt;&lt;implementation without inheritance&gt;&gt;*/
+struct implementation1 {
+  bool update(int i) { return i == 42; }
+};
+
+/*&lt;&lt;implementation without inheritance&gt;&gt;*/
+struct implementation2 {
+  bool update(int i) { return i != 42; }
+};
+
+struct example {
+  BOOST_DI_INJECT(example, interface i) : i(i) {}
+  interface i;
+};
+
+int main() {
+  {
+    const auto injector = di::make_injector&lt;generics_provider_config&gt;(
+      di::bind&lt;interface&gt;().to&lt;implementation1&gt;()
+    );
+
+    auto object = injector.create&lt;example&gt;();
+    assert(!object.i.update(0));  /// calls implementation1.update(0)
+    assert(object.i.update(42));  /// calls implementation1.update(42)
+  }
+
+  {
+    const auto injector = di::make_injector&lt;generics_provider_config&gt;(
+      di::bind&lt;interface&gt;().to&lt;implementation2&gt;()
+    );
+
+    auto object = injector.create&lt;example&gt;();
+    assert(object.i.update(0));    /// calls implementation2.update(0)
+    assert(!object.i.update(42));  /// calls implementation2.update(42)
+  }
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/generics.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/generics.cpp</a></li>
 </ul>
 <h3 id="lazy">Lazy</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
