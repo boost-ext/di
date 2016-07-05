@@ -3,6 +3,7 @@
 * [Assisted Injection](#assisted-injection)
 * [Concepts](#concepts)
 * [Factory](#factory)
+* [Generics / Typed Erasure Interfaces](#generics-typed-erasure-interfaces)
 * [Lazy](#lazy)
 * [Named Parameters](#named-parameters)
 * [XML Injection](#xml-injection)

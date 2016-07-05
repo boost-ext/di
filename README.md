@@ -158,6 +158,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [Assisted Injection](http://boost-experimental.github.io/di/extensions/index.html#assisted-injection)
     * [Concepts](http://boost-experimental.github.io/di/extensions/index.html#concepts)
     * [Factory](http://boost-experimental.github.io/di/extensions/index.html#factory)
+    * [Generics / Typed Erasure Interfaces](http://boost-experimental.github.io/di/extensions/index.html#genericstyped-erasure-interfaces)
     * [Lazy](http://boost-experimental.github.io/di/extensions/index.html#lazy)
     * [Named Parameters](http://boost-experimental.github.io/di/extensions/index.html#named-parameters)
     * [XML Injection](http://boost-experimental.github.io/di/extensions/index.html#xml-injection)
