@@ -134,13 +134,13 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
   void** ptr;                                                                              \
   name() = default;                                                                        \
   template <class T>                                                                       \
-  inline name(const T& t, int) : self(&t), ptr(vtable<std::decay_t<T>>()) {      \
+  inline name(const T& t, int) : self(&t), ptr(vtable<std::decay_t<T>>()) {                \
     name_impl<std::decay_t<T>, 0>(ptr);                                                    \
   }                                                                                        \
   template <class T, int N, std::enable_if_t<!has_info__<self_t, id + N>::value, int> = 0> \
-  static void name_impl(void**) {}                                               \
+  static void name_impl(void**) {}                                                         \
   template <class T, int N, std::enable_if_t<has_info__<self_t, id + N>::value, int> = 0>  \
-  static void name_impl(void** ptr) {                                            \
+  static void name_impl(void** ptr) {                                                      \
     auto f = &info__<id + N>::template f<T>;                                               \
     ptr[N] = *(void**)(&f);                                                                \
     name_impl<T, N + 1>(ptr);                                                              \
