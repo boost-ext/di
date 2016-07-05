@@ -7,6 +7,7 @@
 //<-
 #include <cassert>
 #include <memory>
+#include <type_traits>
 //->
 #include <boost/di.hpp>
 
@@ -31,13 +32,13 @@ class implementation : public interface {
 };
 
 template <class TDependency, class TInjector,
-          BOOST_DI_REQUIRES(std::is_same<typename TDependency::scope, di::scopes::singleton>::value) = 0>
+          std::enable_if_t<std::is_same<typename TDependency::scope, di::scopes::singleton>::value, int> = 0>
 void create_singletons_eagerly_impl(const di::aux::type<TDependency>&, const TInjector& injector) {
   injector.template create<std::shared_ptr<typename TDependency::expected>>();
 }
 
 template <class TDependency, class TInjector,
-          BOOST_DI_REQUIRES(!std::is_same<typename TDependency::scope, di::scopes::singleton>::value) = 0>
+          std::enable_if_t<!std::is_same<typename TDependency::scope, di::scopes::singleton>::value, int> = 0>
 void create_singletons_eagerly_impl(const di::aux::type<TDependency>&, const TInjector&) {}
 
 template <class... TDeps, class TInjector>
