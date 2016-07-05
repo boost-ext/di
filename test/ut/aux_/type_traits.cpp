@@ -15,7 +15,7 @@
 
 namespace aux {
 
-BOOST_DI_HAS_TYPE(has_has, has);
+__BOOST_DI_HAS_TYPE(has_has, has);
 
 test has_type = [] {
   struct a {};
@@ -28,7 +28,7 @@ test has_type = [] {
   static_expect(!has_has<a>::value);
 };
 
-BOOST_DI_HAS_METHOD(has_call, call);
+__BOOST_DI_HAS_METHOD(has_call, call);
 
 test has_method = [] {
   struct a {};

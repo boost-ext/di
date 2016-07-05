@@ -100,14 +100,16 @@ struct has_info__ : std::false_type {};
 template <class T, int N>
 struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : std::true_type {};
 
-#define ARGS_IMPL(i, ...) BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() get_type_t<typename type::args, i> p##i
-#define ARGS(...) \
-  BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_EAT, BOOST_DI_REPEAT)(BOOST_DI_SIZE(__VA_ARGS__), ARGS_IMPL, __VA_ARGS__)
+#define ARGS_IMPL(i, ...) __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT)() get_type_t<typename type::args, i> p##i
+#define ARGS(...)                                                                    \
+  __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_REPEAT) \
+  (__BOOST_DI_SIZE(__VA_ARGS__), ARGS_IMPL, __VA_ARGS__)
 
-#define PASS_IMPL(i, ...) BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() p##i
-#define PASS(...) \
-  BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_EAT, BOOST_DI_REPEAT)(BOOST_DI_SIZE(__VA_ARGS__), PASS_IMPL, __VA_ARGS__)
-#define COMMA_IF(...) BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_EAT, BOOST_DI_COMMA)()
+#define PASS_IMPL(i, ...) __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT)() p##i
+#define PASS(...)                                                                    \
+  __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_REPEAT) \
+  (__BOOST_DI_SIZE(__VA_ARGS__), PASS_IMPL, __VA_ARGS__)
+#define COMMA_IF(...) __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_COMMA)()
 
 #define GENERIC(name)                                                                      \
   static constexpr auto id = __COUNTER__ + 1;                                              \
@@ -127,8 +129,8 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
     static void* fs[count<0>()];                                                           \
     return fs;                                                                             \
   }                                                                                        \
-  void** ptr;                                                                              \
   const void* self;                                                                        \
+  void** ptr;                                                                              \
   name() = default;                                                                        \
   template <class T>                                                                       \
   constexpr inline name(const T& t, int) : self(&t), ptr(vtable<std::decay_t<T>>()) {      \

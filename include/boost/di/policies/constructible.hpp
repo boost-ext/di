@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
-#define BOOS_DI_POLICIES_CONSTRUCTIBLE_HPP
+#ifndef BOOST_DI_POLICIES_CONSTRUCTIBLE_HPP
+#define BOOST_DI_POLICIES_CONSTRUCTIBLE_HPP
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
@@ -24,7 +24,7 @@ struct apply_impl {
 };
 
 template <template <class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))> {
+struct apply_impl<T<Ts...>, __BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))> {
   template <class TOp, class>
   struct apply_placeholder_impl {
     using type = TOp;
@@ -45,7 +45,7 @@ struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))>
 };
 
 template <class T>
-struct apply_impl<T, BOOST_DI_REQUIRES(__is_base_of(type_op, T))> {
+struct apply_impl<T, __BOOST_DI_REQUIRES(__is_base_of(type_op, T))> {
   template <class TArg>
   struct apply : T::template apply<TArg>::type {};
 };
@@ -128,23 +128,23 @@ inline auto operator!(const T&) {
 
 template <class T>
 struct constructible_impl {
-  template <class TArg, BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
+  template <class TArg, __BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
   aux::true_type operator()(const TArg&) const {
     return {};
   }
 
-  template <class TArg, BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
+  template <class TArg, __BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
   aux::false_type operator()(const TArg&) const {
     return typename type<typename TArg::type>::template not_allowed_by<T>{};
   }
 };
 
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(__is_base_of(detail::type_op, T)) = 0>
+template <class T = aux::never<_>, __BOOST_DI_REQUIRES(__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<T>{};
 }
 
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(!__is_base_of(detail::type_op, T)) = 0>
+template <class T = aux::never<_>, __BOOST_DI_REQUIRES(!__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<detail::or_<T>>{};
 }

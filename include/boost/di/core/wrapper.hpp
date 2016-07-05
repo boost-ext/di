@@ -17,7 +17,7 @@ namespace successful {
 
 template <class T, class TWrapper>
 struct wrapper {
-  inline operator T() noexcept { return BOOST_DI_TYPE_WKND(T) wrapper_; }
+  inline operator T() noexcept { return __BOOST_DI_TYPE_WKND(T) wrapper_; }
   TWrapper wrapper_;
 };
 
@@ -31,7 +31,7 @@ struct wrapper_impl {
 
 template <class T, template <class...> class TWrapper, class TScope, class T_, class... Ts>
 struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
-                    BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
+                    __BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
   inline operator T() noexcept {
     return typename concepts::scoped<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
   }

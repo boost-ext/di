@@ -66,7 +66,7 @@ template <class T, class = int>
 struct unique_dependency : aux::type<T> {};
 
 template <class T>
-struct unique_dependency<T, BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
+struct unique_dependency<T, __BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
     : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
 
 template <class... TDeps>

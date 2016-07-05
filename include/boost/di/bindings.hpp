@@ -43,15 +43,15 @@ typename
 #else   // __pph__
 struct bind :
 #endif  // __pph__
-    detail::bind<BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
+    detail::bind<__BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
 #if defined(__cpp_variable_templates)  // __pph__
         bind
 #endif  // __pph__
 {};
 
-static constexpr BOOST_DI_UNUSED core::override override{};
-static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
-static constexpr BOOST_DI_UNUSED scopes::unique unique{};
-static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
+static constexpr __BOOST_DI_UNUSED core::override override{};
+static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
+static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
+static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 
 #endif

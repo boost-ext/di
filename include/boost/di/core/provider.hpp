@@ -61,7 +61,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
     return get_impl(memory, static_cast<const injector__<TInjector>*>(injector_)->create_impl(aux::type<TCtor>{})...);
   }
 
-  template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
+  template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
   auto get_impl(const TMemory& memory, TArgs&&... args) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)  // __pph__
     (void)aux::conditional_t<injector__<TInjector>::template is_creatable<T>::value, _, creating<T>>{};
@@ -70,7 +70,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
     return TInjector::config::provider(injector_).template get<T>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
   }
 
-  template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
+  template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
   T* get_impl(const TMemory&, TArgs&&...) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)  // __pph__
     return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();

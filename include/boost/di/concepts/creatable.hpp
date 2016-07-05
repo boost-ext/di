@@ -12,7 +12,7 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/ctor_traits.hpp"
 
-#define BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+#define __BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG __BOOST_DI_DEPRECATED("creatable constraint not satisfied")
 
 namespace concepts {
 

@@ -97,42 +97,42 @@ class dependency
   template <class T>
   explicit dependency(T&& object) noexcept : scope_t(static_cast<T&&>(object)) {}
 
-  template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
+  template <class T, __BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
 
-  template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
+  template <class T, __BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named(const T&) noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
 
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
+  template <class T, __BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
   auto in(const T&)noexcept {
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
 
-  template <class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
+  template <class T, __BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0,
+            __BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to() noexcept {
     return dependency<TScope, TExpected, T, TName, TPriority>{};
   }
 
-  template <class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
+  template <class... Ts, __BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
   auto to() noexcept {
     using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
     return dependency<TScope, array<type>, array<type, Ts...>, TName, TPriority>{};
   }
 
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
+  template <class T, __BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to(std::initializer_list<T>&& object) noexcept {
     using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
     using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
 
-  template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  template <class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+            __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
         dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;

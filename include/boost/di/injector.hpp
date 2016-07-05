@@ -21,7 +21,7 @@ void create(const aux::true_type&) {}
 
 // clang-format off
 template <class>
-BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG void
+__BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG void
 create
 (const aux::false_type&) {}
 // clang-format on
@@ -60,14 +60,14 @@ create<T> (
 
 template <class T, class... Ts>
 using injector = detail::injector<
-    BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
+    BOOST_DI_CFG, __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
     core::dependency<scopes::instance, aux::unique_t<type_traits::named_decay_t<T>, type_traits::named_decay_t<Ts>...>,
                      aux::type_list<type_traits::add_named_t<T>, type_traits::add_named_t<Ts>...>>>;
 
 // clang-format off
-#define BOOST_DI_EXPOSE_IMPL__(...) decltype(BOOST_DI_NAMESPACE::detail::__VA_ARGS__), // __pph__
-#define BOOST_DI_EXPOSE_IMPL(...) BOOST_DI_NAMESPACE::named<BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__> // __pph__
-#define BOOST_DI_EXPOSE(...) BOOST_DI_IF(BOOST_DI_IBP(__VA_ARGS__), BOOST_DI_EXPOSE_IMPL, BOOST_DI_EXPAND)(__VA_ARGS__) // __pph__
+#define __BOOST_DI_EXPOSE_IMPL__(...) decltype(BOOST_DI_NAMESPACE::detail::__VA_ARGS__), // __pph__
+#define __BOOST_DI_EXPOSE_IMPL(...) BOOST_DI_NAMESPACE::named<__BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__> // __pph__
+#define BOOST_DI_EXPOSE(...) __BOOST_DI_IF(__BOOST_DI_IBP(__VA_ARGS__), __BOOST_DI_EXPOSE_IMPL, __BOOST_DI_EXPAND)(__VA_ARGS__) // __pph__
 // clang-format on
 
 #endif

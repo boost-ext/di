@@ -98,7 +98,7 @@ test inheriting_ctors = [] {
 
 test c_traits_no_limits = [] {
   struct c_no_limits {
-    using boost_di_inject__ BOOST_DI_UNUSED = inject<int, int, int, int, int, int, int, int, int, int, int>;
+    using boost_di_inject__ __BOOST_DI_UNUSED = inject<int, int, int, int, int, int, int, int, int, int, int>;
     c_no_limits(int, int, int, int, int, int, int, int, int, int, int) {}
   };
 

@@ -35,7 +35,7 @@ struct T {
   int i;
 };
 
-BOOST_DI_UNUSED auto name = [] {};
+__BOOST_DI_UNUSED auto name = [] {};
 
 di::injector<T, std::unique_ptr<T>, BOOST_DI_EXPOSE((named = name)T)> module(const int& i) noexcept {
   // clang-format off

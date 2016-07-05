@@ -8,4 +8,4 @@
 
 namespace di = boost::di;
 
-BOOST_DI_UNUSED auto module2 = [] { return di::make_injector(); };
+__BOOST_DI_UNUSED auto module2 = [] { return di::make_injector(); };

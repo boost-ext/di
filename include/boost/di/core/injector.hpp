@@ -7,7 +7,7 @@
 #ifndef BOOST_DI_CORE_INJECTOR_HPP
 #define BOOST_DI_CORE_INJECTOR_HPP
 
-#if !defined(BOOST_DI_CORE_INJECTOR_POLICY)
+#if !defined(__BOOST_DI_CORE_INJECTOR_POLICY)
 
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
@@ -78,14 +78,14 @@ inline auto build(TInjector&& injector) noexcept {
 }
 #endif  // __pph__
 
-#define BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ BOOST_DI_CORE_INJECTOR_POLICY_ELSE
-#define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
-#define BOOST_DI_INJECTOR_ITERATE
+#define __BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ __BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+#define __BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
+#define __BOOST_DI_INJECTOR_ITERATE
 
 #endif
 
-template <class TConfig BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
-class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : injector_base, pool<bindings_t<TDeps...>> {
+template <class TConfig __BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
+class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : injector_base, pool<bindings_t<TDeps...>> {
   friend class binder;
   template <class>
   friend struct pool;
@@ -102,7 +102,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : in
         aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
                                 try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),
                             T>::value
-            BOOST_DI_CORE_INJECTOR_POLICY(
+            __BOOST_DI_CORE_INJECTOR_POLICY(
                 &&policy::template try_call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>,
                                             TPolicies>::value)();
   };
@@ -120,18 +120,18 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : in
   explicit injector(injector<TConfig_, TPolicies_, TDeps_...> && other) noexcept
       : injector{from_injector{}, static_cast<injector<TConfig_, TPolicies_, TDeps_...>&&>(other), deps{}} {}
 
-  template <class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
+  template <class T, __BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
   T create() const {
-    return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
+    return __BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
   }
 
-  template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG T
+  template <class T, __BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
+  __BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG T
       // clang-format off
   create
       // clang-format on
       () const {
-    return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
+    return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
 
  protected:
@@ -261,7 +261,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : in
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
-    BOOST_DI_CORE_INJECTOR_POLICY(
+    __BOOST_DI_CORE_INJECTOR_POLICY(
         using ctor_args_t = typename ctor_t::second::second;
         policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));)
     () return wrapper<T, wrapper_t>{
@@ -277,7 +277,7 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : in
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, dependency__<dependency_t>>;
-    BOOST_DI_CORE_INJECTOR_POLICY(
+    __BOOST_DI_CORE_INJECTOR_POLICY(
         using ctor_args_t = typename ctor_t::second::second;
         policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));)
     () return successful::wrapper<create_t, wrapper_t>{
@@ -285,13 +285,13 @@ class injector BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : in
   }
 };
 
-#if defined(BOOST_DI_INJECTOR_ITERATE)
-#undef BOOST_DI_CORE_INJECTOR_HPP
-#undef BOOST_DI_INJECTOR_ITERATE
-#undef BOOST_DI_CORE_INJECTOR_POLICY
-#undef BOOST_DI_CORE_INJECTOR_POLICY_ELSE
-#define BOOST_DI_CORE_INJECTOR_POLICY(...) BOOST_DI_CORE_INJECTOR_POLICY_ELSE
-#define BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
+#if defined(__BOOST_DI_INJECTOR_ITERATE)
+#undef __BOOST_DI_CORE_INJECTOR_HPP
+#undef __BOOST_DI_INJECTOR_ITERATE
+#undef __BOOST_DI_CORE_INJECTOR_POLICY
+#undef __BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+#define __BOOST_DI_CORE_INJECTOR_POLICY(...) __BOOST_DI_CORE_INJECTOR_POLICY_ELSE
+#define __BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
 #include "boost/di/core/injector.hpp"
 }  // core
 #endif

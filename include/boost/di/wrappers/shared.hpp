@@ -29,14 +29,14 @@ struct shared {
   template <class T_>
   using is_referable = is_referable_impl<aux::remove_qualifiers_t<T_>>;
 
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator std::shared_ptr<I>() const noexcept {
     return object;
   }
 
   inline operator std::shared_ptr<T>&() noexcept { return object; }
 
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator boost::shared_ptr<I>() const noexcept {
     struct sp_holder {
       std::shared_ptr<T> object;
@@ -45,7 +45,7 @@ struct shared {
     return {object.get(), sp_holder{object}};
   }
 
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator std::weak_ptr<I>() const noexcept {
     return object;
   }
@@ -68,7 +68,7 @@ struct shared<TScope, T&> {
   template <class I>
   explicit shared(I);  // compile clean
 
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
     return *object;
   }

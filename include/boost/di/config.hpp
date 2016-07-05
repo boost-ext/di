@@ -17,7 +17,7 @@
 #define BOOST_DI_CFG BOOST_DI_NAMESPACE::config  // __pph__
 #endif                                           // __pph__
 
-template <class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
+template <class... TPolicies, __BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(TPolicies... args) noexcept {
   return core::pool_t<TPolicies...>(static_cast<TPolicies&&>(args)...);
 }

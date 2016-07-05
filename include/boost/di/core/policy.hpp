@@ -4,8 +4,8 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_CORE_POLICY_HPP
-#define BOOST_DI_CORE_POLICY_HPP
+#ifndef __BOOST_DI_CORE_POLICY_HPP
+#define __BOOST_DI_CORE_POLICY_HPP
 
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
@@ -20,13 +20,13 @@ struct arg_wrapper;
 
 template <class T, class TName, class TIsRoot, template <class...> class TList, class... TCtor, class TDependency, class TDeps>
 struct arg_wrapper<T, TName, TIsRoot, TList<TCtor...>, TDependency, TDeps> {
-  using type BOOST_DI_UNUSED = T;
-  using expected BOOST_DI_UNUSED = typename TDependency::expected;
-  using given BOOST_DI_UNUSED = typename TDependency::given;
-  using name BOOST_DI_UNUSED = TName;
-  using arity BOOST_DI_UNUSED = aux::integral_constant<int, sizeof...(TCtor)>;
-  using scope BOOST_DI_UNUSED = typename TDependency::scope;
-  using is_root BOOST_DI_UNUSED = TIsRoot;
+  using type __BOOST_DI_UNUSED = T;
+  using expected __BOOST_DI_UNUSED = typename TDependency::expected;
+  using given __BOOST_DI_UNUSED = typename TDependency::given;
+  using name __BOOST_DI_UNUSED = TName;
+  using arity __BOOST_DI_UNUSED = aux::integral_constant<int, sizeof...(TCtor)>;
+  using scope __BOOST_DI_UNUSED = typename TDependency::scope;
+  using is_root __BOOST_DI_UNUSED = TIsRoot;
 
   template <class T_, class TName_, class TDefault_>
   using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
@@ -56,7 +56,7 @@ class policy {
                                                              aux::bool_list<try_call_impl<TArg, TPolicies>::value...>> {};
 
   template <class TArg, class... TPolicies>
-  static void call(BOOST_DI_UNUSED const pool_t<TPolicies...>& policies) noexcept {
+  static void call(__BOOST_DI_UNUSED const pool_t<TPolicies...>& policies) noexcept {
     int _[]{0, (call_impl<TArg, TPolicies>(policies), 0)...};
     (void)_;
   }

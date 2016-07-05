@@ -25,20 +25,20 @@ BOOST_DI_CFG_FWD
 #endif
 #if defined(__clang__)
 #define __CLANG__
-#define BOOST_DI_UNUSED __attribute__((unused))
-#define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
-#define BOOST_DI_TYPE_WKND(T)
+#define __BOOST_DI_UNUSED __attribute__((unused))
+#define __BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
+#define __BOOST_DI_TYPE_WKND(T)
 #elif defined(__GNUC__)
 #define __GCC__
-#define BOOST_DI_UNUSED __attribute__((unused))
-#define BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
-#define BOOST_DI_TYPE_WKND(T)
+#define __BOOST_DI_UNUSED __attribute__((unused))
+#define __BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
+#define __BOOST_DI_TYPE_WKND(T)
 #elif defined(_MSC_VER)
 #define __MSVC__
 #define __has_include(...) 0
-#define BOOST_DI_UNUSED
-#define BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
-#define BOOST_DI_TYPE_WKND(T) (T &&)
+#define __BOOST_DI_UNUSED
+#define __BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
+#define __BOOST_DI_TYPE_WKND(T) (T &&)
 #endif
 #if !defined(__has_builtin)
 #define __has_builtin(...) 0
@@ -267,8 +267,8 @@ class instance;
 class singleton;
 class unique;
 }
-#define BOOST_DI_REQUIRES(...) typename ::boost::di::v1_0_1::aux::enable_if<__VA_ARGS__, int>::type
-#define BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::v1_0_1::aux::concept_check<__VA_ARGS__>::type
+#define __BOOST_DI_REQUIRES(...) typename ::boost::di::v1_0_1::aux::enable_if<__VA_ARGS__, int>::type
+#define __BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::v1_0_1::aux::concept_check<__VA_ARGS__>::type
 namespace aux {
 template <class T>
 T&& declval();
@@ -639,7 +639,7 @@ struct is_unique;
 template <class T, class = int>
 struct unique_dependency : aux::type<T> {};
 template <class T>
-struct unique_dependency<T, BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
+struct unique_dependency<T, __BOOST_DI_REQUIRES(aux::is_a<core::dependency_base, T>::value)>
     : aux::pair<aux::pair<typename T::expected, typename T::name>, typename T::priority> {};
 template <class... TDeps>
 struct is_unique<aux::type_list<TDeps...>> : aux::is_unique<typename unique_dependency<TDeps>::type...> {};
@@ -757,7 +757,7 @@ struct memory_traits<std::weak_ptr<T>> {
   using type = heap;
 };
 template <class T>
-struct memory_traits<T, BOOST_DI_REQUIRES(__is_polymorphic(T))> {
+struct memory_traits<T, __BOOST_DI_REQUIRES(__is_polymorphic(T))> {
   using type = heap;
 };
 template <class T>
@@ -816,20 +816,20 @@ template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<>> : aux::type_list<> {};
 template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
-                 BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+                 __BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::type_list<core::any_type_1st_fwd<T>> {};
 template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
-                 BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+                 __BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::conditional_t<TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value,
                          aux::type_list<core::any_type_1st_ref_fwd<T>>, aux::type_list<>> {};
 template <template <class...> class TIsConstructible, class T, int... Ns>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
-                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+                 __BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
     : aux::type_list<get<core::any_type_fwd<T>, Ns>...> {};
 template <template <class...> class TIsConstructible, class T, int... Ns>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
-                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+                 __BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
     : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, Ns>...>::value,
                        aux::type_list<get<core::any_type_ref_fwd<T>, Ns>...>,
                        typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(Ns)-1>>::type> {};
@@ -866,11 +866,11 @@ struct ctor_traits<std::tuple<Ts...>> {
   using boost_di_inject__ = aux::type_list<Ts...>;
 };
 template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+struct ctor_traits<T, __BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
   using boost_di_inject__ = aux::type_list<>;
 };
 template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(!__is_class(T))> {
+struct ctor_traits<T, __BOOST_DI_REQUIRES(!__is_class(T))> {
   using boost_di_inject__ = aux::type_list<>;
 };
 namespace type_traits {
@@ -962,8 +962,8 @@ struct array<T(), Ts...> : T {
   using value_type = typename T::value_type;
   using array_t = array_impl<value_type, type_traits::rebind_traits_t<value_type, Ts>...>;
   using boost_di_inject__ = aux::type_list<array_t&&>;
-  template <
-      BOOST_DI_REQUIRES(aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
+  template <__BOOST_DI_REQUIRES(
+                aux::is_constructible<T, std::move_iterator<value_type*>, std::move_iterator<value_type*>>::value) = 0>
   explicit array(array_t&& a)
       : T(std::move_iterator<value_type*>(a.array), std::move_iterator<value_type*>(a.array + sizeof...(Ts))) {}
 };
@@ -989,12 +989,12 @@ struct shared {
   struct is_referable_impl<boost::shared_ptr<I>> : aux::false_type {};
   template <class T_>
   using is_referable = is_referable_impl<aux::remove_qualifiers_t<T_>>;
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator std::shared_ptr<I>() const noexcept {
     return object;
   }
   inline operator std::shared_ptr<T>&() noexcept { return object; }
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator boost::shared_ptr<I>() const noexcept {
     struct sp_holder {
       std::shared_ptr<T> object;
@@ -1002,7 +1002,7 @@ struct shared {
     };
     return {object.get(), sp_holder{object}};
   }
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator std::weak_ptr<I>() const noexcept {
     return object;
   }
@@ -1018,7 +1018,7 @@ struct shared<TScope, T&> {
   explicit shared(T& object) : object(&object) {}
   template <class I>
   explicit shared(I);
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
     return *object;
   }
@@ -1078,7 +1078,7 @@ namespace wrappers {
 template <class TScope, class T>
 struct unique {
   using scope = TScope;
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
     return object;
   }
@@ -1091,7 +1091,7 @@ struct unique<TScope, T*> {
 #if defined(__MSVC__)
   explicit unique(T* object) : object(object) {}
 #endif
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
   inline operator I() const noexcept {
     struct scoped_ptr {
       aux::owner<T*> ptr;
@@ -1099,23 +1099,23 @@ struct unique<TScope, T*> {
     };
     return *scoped_ptr{object}.ptr;
   }
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator aux::owner<I*>() const noexcept {
     return object;
   }
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
   inline operator aux::owner<const I*>() const noexcept {
     return object;
   }
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator std::shared_ptr<I>() const noexcept {
     return std::shared_ptr<I>{object};
   }
-  template <class I, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator boost::shared_ptr<I>() const noexcept {
     return boost::shared_ptr<I>{object};
   }
-  template <class I, class D, BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  template <class I, class D, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator std::unique_ptr<I, D>() const noexcept {
     return std::unique_ptr<I, D>{object};
   }
@@ -1402,7 +1402,7 @@ class instance {
     std::initializer_list<TGiven> object_;
   };
   template <class TExpected, class TGiven>
-  struct scope<TExpected, TGiven&, BOOST_DI_REQUIRES(!aux::is_callable<TGiven>::value)> {
+  struct scope<TExpected, TGiven&, __BOOST_DI_REQUIRES(!aux::is_callable<TGiven>::value)> {
     template <class>
     using is_referable = aux::true_type;
     explicit scope(TGiven& object) : object_{object} {}
@@ -1415,7 +1415,7 @@ class instance {
     wrappers::shared<instance, TGiven&> object_;
   };
   template <class TExpected, class TGiven>
-  struct scope<TExpected, TGiven, BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
+  struct scope<TExpected, TGiven, __BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
     template <class>
     using is_referable = aux::integral_constant<bool, !aux::is_callable<TExpected>::value>;
     explicit scope(const TGiven& object) : object_(object) {}
@@ -1424,43 +1424,43 @@ class instance {
     static T try_create(const TProvider&) noexcept;
 #else
     template <class, class, class TProvider,
-              BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
-                                aux::is_callable<TExpected>::value) = 0>
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
+                                  aux::is_callable<TExpected>::value) = 0>
     static wrappers::unique<instance, TExpected> try_create(const TProvider&) noexcept;
     template <class T, class, class TProvider,
-              BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
-                                !aux::is_callable<TExpected>::value) = 0>
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+                                  !aux::is_callable<TExpected>::value) = 0>
     static auto try_create(const TProvider&) noexcept
         -> detail::wrapper_traits_t<decltype(aux::declval<typename aux::identity<TGiven, T>::type>()())>;
-    template <class, class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
+    template <class, class, class TProvider, __BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>()))>
     try_create(const TProvider&) noexcept;
     template <class T, class, class TProvider,
-              BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+              __BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     static detail::wrapper_traits_t<decltype(aux::declval<TGiven>()(aux::declval<typename TProvider::injector_t>(),
                                                                     aux::declval<detail::arg<T, TExpected, TGiven>>()))>
     try_create(const TProvider&) noexcept;
 #endif
     template <class, class, class TProvider,
-              BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
-                                aux::is_callable<TExpected>::value) = 0>
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable<TGiven>::value &&
+                                  aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const noexcept {
       return wrappers::unique<instance, TExpected>{object_};
     }
     template <class T, class, class TProvider,
-              BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
-                                !aux::is_callable<TExpected>::value) = 0>
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+                                  !aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const noexcept {
       using wrapper = detail::wrapper_traits_t<decltype(aux::declval<TGiven>()())>;
       return wrapper{object_()};
     }
-    template <class, class, class TProvider, BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
+    template <class, class, class TProvider, __BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider>::value) = 0>
     auto create(const TProvider& provider) noexcept {
       using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_))>;
       return wrapper{(object_)(*provider.injector_)};
     }
     template <class T, class, class TProvider,
-              BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
+              __BOOST_DI_REQUIRES(detail::is_expr<TGiven, TProvider, const detail::arg<T, TExpected, TGiven>&>::value) = 0>
     auto create(const TProvider& provider) noexcept {
       using wrapper = detail::wrapper_traits_t<decltype((object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{}))>;
       return wrapper{(object_)(*provider.injector_, detail::arg<T, TExpected, TGiven>{})};
@@ -1533,7 +1533,7 @@ class instance {
    public:
     template <class>
     using is_referable = aux::true_type;
-    template <class TInjector, BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
+    template <class TInjector, __BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>
     explicit scope(TInjector&& i) noexcept : injector_((injector*)new injector_impl<TInjector>{static_cast<TInjector&&>(i)}) {}
     scope(scope&& other) noexcept : injector_(other.injector_) { other.injector_ = nullptr; }
     ~scope() noexcept { delete injector_; }
@@ -1613,36 +1613,36 @@ class dependency
   dependency() noexcept {}
   template <class T>
   explicit dependency(T&& object) noexcept : scope_t(static_cast<T&&>(object)) {}
-  template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
+  template <class T, __BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named() noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
-  template <class T, BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
+  template <class T, __BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named(const T&) noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
+  template <class T, __BOOST_DI_REQUIRES_MSG(concepts::scopable<T>) = 0>
   auto in(const T&)noexcept {
     return dependency<T, TExpected, TGiven, TName, TPriority>{};
   }
-  template <class T, BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
+  template <class T, __BOOST_DI_REQUIRES(!aux::is_array<TExpected, T>::value) = 0,
+            __BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to() noexcept {
     return dependency<TScope, TExpected, T, TName, TPriority>{};
   }
-  template <class... Ts, BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
+  template <class... Ts, __BOOST_DI_REQUIRES(aux::is_array<TExpected, Ts...>::value) = 0>
   auto to() noexcept {
     using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
     return dependency<TScope, array<type>, array<type, Ts...>, TName, TPriority>{};
   }
-  template <class T, BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
+  template <class T, __BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
   auto to(std::initializer_list<T>&& object) noexcept {
     using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
     using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
-  template <class T, BOOST_DI_REQUIRES(externable<T>::value) = 0,
-            BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  template <class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+            __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
         dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
@@ -1749,7 +1749,7 @@ class stack_over_heap {
 #if !defined(BOOST_DI_CFG)
 #define BOOST_DI_CFG ::boost::di::v1_0_1::config
 #endif
-template <class... TPolicies, BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
+template <class... TPolicies, __BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(TPolicies... args) noexcept {
   return core::pool_t<TPolicies...>(static_cast<TPolicies&&>(args)...);
 }
@@ -1779,15 +1779,15 @@ typename
 #else
 struct bind :
 #endif
-    detail::bind<BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
+    detail::bind<__BOOST_DI_REQUIRES_MSG(concepts::boundable<concepts::any_of<Ts...>>), scopes::deduce, Ts...>::type
 #if defined(__cpp_variable_templates)
         bind
 #endif
 {};
-static constexpr BOOST_DI_UNUSED core::override override{};
-static constexpr BOOST_DI_UNUSED scopes::deduce deduce{};
-static constexpr BOOST_DI_UNUSED scopes::unique unique{};
-static constexpr BOOST_DI_UNUSED scopes::singleton singleton{};
+static constexpr __BOOST_DI_UNUSED core::override override{};
+static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
+static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
+static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 namespace concepts {
 struct get {};
 struct is_creatable {};
@@ -1920,7 +1920,7 @@ struct is_copy_ctor__<T, const T> : aux::true_type {};
 #endif
 template <class TParent, class TInjector, class TError = aux::false_type>
 struct any_type {
-  template <class T, class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
@@ -1928,24 +1928,24 @@ struct any_type {
 };
 template <class TParent, class TInjector, class TError = aux::false_type, class TRefError = aux::false_type>
 struct any_type_ref {
-  template <class T, class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
   }
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
   operator T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
   }
-  template <class T, class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
   operator const T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
   }
@@ -1953,8 +1953,8 @@ struct any_type_ref {
 };
 template <class TParent, class TInjector, class TError = aux::false_type>
 struct any_type_1st {
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
@@ -1962,28 +1962,28 @@ struct any_type_1st {
 };
 template <class TParent, class TInjector, class TError = aux::false_type, class TRefError = aux::false_type>
 struct any_type_1st_ref {
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<T, TInjector, TError>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
   }
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
   operator T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
   }
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value),
-            class = BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value),
+            class = __BOOST_DI_REQUIRES(is_creatable__<const T&, TInjector, TError>::value)>
   operator const T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<const T&>{});
   }
@@ -2005,16 +2005,16 @@ struct any_type_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
   }
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
   operator T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
   }
-  template <class T, class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
   operator const T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
   }
@@ -2022,7 +2022,7 @@ struct any_type_ref {
 };
 template <class TParent, class TInjector>
 struct any_type_1st {
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
@@ -2030,24 +2030,24 @@ struct any_type_1st {
 };
 template <class TParent, class TInjector>
 struct any_type_1st_ref {
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T() {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
   }
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
   operator T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
   }
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
-            class = BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
+            class = __BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>
   operator const T&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<const T&>{});
   }
@@ -2078,24 +2078,24 @@ struct any_type_ref_fwd {
 };
 template <class TParent>
 struct any_type_1st_fwd {
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T();
 
  private:
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator const T&() const;
 };
 template <class TParent>
 struct any_type_1st_ref_fwd {
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T();
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T&() const;
 #if defined(__GCC__)
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T &&() const;
 #endif
-  template <class T, class = BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
+  template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator const T&() const;
 };
 }
@@ -2104,13 +2104,13 @@ template <class...>
 struct arg_wrapper;
 template <class T, class TName, class TIsRoot, template <class...> class TList, class... TCtor, class TDependency, class TDeps>
 struct arg_wrapper<T, TName, TIsRoot, TList<TCtor...>, TDependency, TDeps> {
-  using type BOOST_DI_UNUSED = T;
-  using expected BOOST_DI_UNUSED = typename TDependency::expected;
-  using given BOOST_DI_UNUSED = typename TDependency::given;
-  using name BOOST_DI_UNUSED = TName;
-  using arity BOOST_DI_UNUSED = aux::integral_constant<int, sizeof...(TCtor)>;
-  using scope BOOST_DI_UNUSED = typename TDependency::scope;
-  using is_root BOOST_DI_UNUSED = TIsRoot;
+  using type __BOOST_DI_UNUSED = T;
+  using expected __BOOST_DI_UNUSED = typename TDependency::expected;
+  using given __BOOST_DI_UNUSED = typename TDependency::given;
+  using name __BOOST_DI_UNUSED = TName;
+  using arity __BOOST_DI_UNUSED = aux::integral_constant<int, sizeof...(TCtor)>;
+  using scope __BOOST_DI_UNUSED = typename TDependency::scope;
+  using is_root __BOOST_DI_UNUSED = TIsRoot;
   template <class T_, class TName_, class TDefault_>
   using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
 };
@@ -2133,7 +2133,7 @@ class policy {
   struct try_call<TArg, pool_t<TPolicies...>> : aux::is_same<aux::bool_list<aux::always<TPolicies>::value...>,
                                                              aux::bool_list<try_call_impl<TArg, TPolicies>::value...>> {};
   template <class TArg, class... TPolicies>
-  static void call(BOOST_DI_UNUSED const pool_t<TPolicies...>& policies) noexcept {
+  static void call(__BOOST_DI_UNUSED const pool_t<TPolicies...>& policies) noexcept {
     int _[]{0, (call_impl<TArg, TPolicies>(policies), 0)...};
     (void)_;
   }
@@ -2177,14 +2177,14 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
   auto get(const TMemory& memory = {}) const {
     return get_impl(memory, static_cast<const injector__<TInjector>*>(injector_)->create_impl(aux::type<TCtor>{})...);
   }
-  template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
+  template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
   auto get_impl(const TMemory& memory, TArgs&&... args) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
     (void)aux::conditional_t<injector__<TInjector>::template is_creatable<T>::value, _, creating<T>>{};
 #endif
     return TInjector::config::provider(injector_).template get<T>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
   }
-  template <class TMemory, class... TArgs, BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
+  template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
   T* get_impl(const TMemory&, TArgs&&...) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
     return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
@@ -2214,7 +2214,7 @@ namespace core {
 namespace successful {
 template <class T, class TWrapper>
 struct wrapper {
-  inline operator T() noexcept { return BOOST_DI_TYPE_WKND(T) wrapper_; }
+  inline operator T() noexcept { return __BOOST_DI_TYPE_WKND(T) wrapper_; }
   TWrapper wrapper_;
 };
 }
@@ -2225,7 +2225,7 @@ struct wrapper_impl {
 };
 template <class T, template <class...> class TWrapper, class TScope, class T_, class... Ts>
 struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
-                    BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
+                    __BOOST_DI_REQUIRES(!aux::is_convertible<TWrapper<TScope, T_, Ts...>, T>::value)> {
   inline operator T() noexcept {
     return typename concepts::scoped<TScope, aux::remove_qualifiers_t<T_>>::template is_not_convertible_to<T>{};
   }
@@ -2305,18 +2305,18 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   template <class TConfig_, class TPolicies_, class... TDeps_>
   explicit injector(injector<TConfig_, TPolicies_, TDeps_...>&& other) noexcept
       : injector{from_injector{}, static_cast<injector<TConfig_, TPolicies_, TDeps_...>&&>(other), deps{}} {}
-  template <class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
+  template <class T, __BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
   T create() const {
-    return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
+    return __BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
   }
-  template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+  template <class T, __BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
+  __BOOST_DI_DEPRECATED("creatable constraint not satisfied")
   T
       // clang-format off
   create
       // clang-format on
       () const {
-    return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
+    return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
 
  protected:
@@ -2441,170 +2441,6 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
     using create_t = referable_t<T, dependency__<dependency_t>>;
     using ctor_args_t = typename ctor_t::second::second;
     policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(TConfig::policies(this));
-    return successful::wrapper<create_t, wrapper_t>{
-        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
-  }
-};
-template <class TConfig, class... TDeps>
-class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps...>> {
-  friend class binder;
-  template <class>
-  friend struct pool;
-  using pool_t = pool<bindings_t<TDeps...>>;
-
- protected:
-  template <class T, class TName = no_name, class TIsRoot = aux::false_type>
-  struct is_creatable {
-    using dependency_t = binder::resolve_t<injector, T, TName>;
-    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
-    using ctor_args_t = typename ctor_t::second::second;
-    static constexpr auto value =
-        aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
-                                try_provider<ctor_t, injector, decltype(TConfig::provider((injector*)0))>{})),
-                            T>::value;
-  };
-
- public:
-  using deps = bindings_t<TDeps...>;
-  using config = TConfig;
-  injector(injector&&) = default;
-  template <class... TArgs>
-  explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
-  template <class TConfig_, class TPolicies_, class... TDeps_>
-  explicit injector(injector<TConfig_, TPolicies_, TDeps_...>&& other) noexcept
-      : injector{from_injector{}, static_cast<injector<TConfig_, TPolicies_, TDeps_...>&&>(other), deps{}} {}
-  template <class T, BOOST_DI_REQUIRES(is_creatable<T, no_name, aux::true_type>::value) = 0>
-  T create() const {
-    return BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<T>{});
-  }
-  template <class T, BOOST_DI_REQUIRES(!is_creatable<T, no_name, aux::true_type>::value) = 0>
-  BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  T
-      // clang-format off
-  create
-      // clang-format on
-      () const {
-    return BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
-  }
-
- protected:
-  template <class T>
-  struct try_create {
-    using type = aux::conditional_t<is_creatable<T>::value, T, void>;
-  };
-  template <class TParent>
-  struct try_create<any_type_fwd<TParent>> {
-    using type = any_type<TParent, injector, with_error>;
-  };
-  template <class TParent>
-  struct try_create<any_type_ref_fwd<TParent>> {
-    using type = any_type_ref<TParent, injector, with_error>;
-  };
-  template <class TParent>
-  struct try_create<any_type_1st_fwd<TParent>> {
-    using type = any_type_1st<TParent, injector, with_error>;
-  };
-  template <class TParent>
-  struct try_create<any_type_1st_ref_fwd<TParent>> {
-    using type = any_type_1st_ref<TParent, injector, with_error>;
-  };
-  template <class TName, class T>
-  struct try_create<::boost::di::v1_0_1::named<TName, T>> {
-    using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
-  };
-  template <class T>
-  struct try_create<self<T>> {
-    using type = injector;
-  };
-  template <class TIsRoot = aux::false_type, class T>
-  auto create_impl(const aux::type<T>&) const {
-    return create_impl__<TIsRoot, T>();
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_fwd<TParent>>&) const {
-    return any_type<TParent, injector>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
-    return any_type_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
-    return any_type_1st<TParent, injector>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
-    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<::boost::di::v1_0_1::named<TName, T>>&) const {
-    return create_impl__<TIsRoot, T, TName>();
-  }
-  template <class TIsRoot = aux::false_type, class T>
-  auto create_successful_impl(const aux::type<T>&) const {
-    return create_successful_impl__<TIsRoot, T>();
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_fwd<TParent>>&) const {
-    return successful::any_type<TParent, injector>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_ref_fwd<TParent>>&) const {
-    return successful::any_type_ref<TParent, injector>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_1st_fwd<TParent>>&) const {
-    return successful::any_type_1st<TParent, injector>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class TParent>
-  auto create_successful_impl(const aux::type<any_type_1st_ref_fwd<TParent>>&) const {
-    return successful::any_type_1st_ref<TParent, injector>{*this};
-  }
-  template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<::boost::di::v1_0_1::named<TName, T>>&) const {
-    return create_successful_impl__<TIsRoot, T, TName>();
-  }
-  template <class TIsRoot = aux::false_type, class T>
-  decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
-    return *this;
-  }
-
- private:
-  template <class... TArgs>
-  explicit injector(const from_deps&, TArgs... args) noexcept
-      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
-  template <class TInjector, class... TArgs>
-  explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
-#if defined(__MSVC__)
-      : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
-  }
-#else
-      : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
-  }
-#endif
-  {}
-  template <class TIsRoot = aux::false_type, class T, class TName = no_name>
-  auto create_impl__() const {
-    auto&& dependency = binder::resolve<T, TName>((injector*)this);
-    using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
-    using provider_t = core::provider<ctor_t, TName, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
-    return wrapper<T, wrapper_t>{
-        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
-  }
-  template <class TIsRoot = aux::false_type, class T, class TName = no_name>
-  auto create_successful_impl__() const {
-    auto&& dependency = binder::resolve<T, TName>((injector*)this);
-    using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::given, T>::type;
-    using provider_t = successful::provider<ctor_t, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
-    using create_t = referable_t<T, dependency__<dependency_t>>;
     return successful::wrapper<create_t, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
@@ -2615,7 +2451,7 @@ template <class>
 void create(const aux::true_type&) {}
 // clang-format off
 template <class>
-BOOST_DI_DEPRECATED("creatable constraint not satisfied") void
+__BOOST_DI_DEPRECATED("creatable constraint not satisfied") void
 create
 (const aux::false_type&) {}
 // clang-format on
@@ -2648,16 +2484,16 @@ create<T> (
 }
 template <class T, class... Ts>
 using injector = detail::injector<
-    BOOST_DI_CFG, BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
+    BOOST_DI_CFG, __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
     core::dependency<scopes::instance, aux::unique_t<type_traits::named_decay_t<T>, type_traits::named_decay_t<Ts>...>,
                      aux::type_list<type_traits::add_named_t<T>, type_traits::add_named_t<Ts>...>>>;
 // clang-format off
-#define BOOST_DI_EXPOSE_IMPL__(...) decltype(::boost::di::v1_0_1::detail::__VA_ARGS__),
-#define BOOST_DI_EXPOSE_IMPL(...) ::boost::di::v1_0_1::named<BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
-#define BOOST_DI_EXPOSE(...) BOOST_DI_IF(BOOST_DI_IBP(__VA_ARGS__), BOOST_DI_EXPOSE_IMPL, BOOST_DI_EXPAND)(__VA_ARGS__)
+#define __BOOST_DI_EXPOSE_IMPL__(...) decltype(::boost::di::v1_0_1::detail::__VA_ARGS__),
+#define __BOOST_DI_EXPOSE_IMPL(...) ::boost::di::v1_0_1::named<__BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
+#define BOOST_DI_EXPOSE(...) __BOOST_DI_IF(__BOOST_DI_IBP(__VA_ARGS__), __BOOST_DI_EXPOSE_IMPL, __BOOST_DI_EXPAND)(__VA_ARGS__)
 // clang-format on
 #if defined(__MSVC__)
-#define BOOST_DI_MAKE_INJECTOR(...) __VA_ARGS__
+#define __BOOST_DI_MAKE_INJECTOR(...) __VA_ARGS__
 #else
 namespace detail {
 static auto make_injector = [](auto injector) {
@@ -2668,13 +2504,13 @@ static auto make_injector = [](auto injector) {
   return i{static_cast<injector_t&&>(injector)};
 };
 }
-#define BOOST_DI_MAKE_INJECTOR(...) detail::make_injector(__VA_ARGS__)
+#define __BOOST_DI_MAKE_INJECTOR(...) detail::make_injector(__VA_ARGS__)
 #endif
 template <class TConfig = BOOST_DI_CFG, class... TDeps,
-          BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
-          BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
+          __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type_list<TDeps...>>) = 0,
+          __BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
 inline auto make_injector(TDeps... args) noexcept {
-  return BOOST_DI_MAKE_INJECTOR(
+  return __BOOST_DI_MAKE_INJECTOR(
       core::injector<TConfig, decltype(((TConfig*)0)->policies((concepts::injector<TConfig>*)0)), TDeps...>{
           core::init{}, static_cast<TDeps&&>(args)...});
 }
@@ -2687,7 +2523,7 @@ struct apply_impl {
   struct apply : T {};
 };
 template <template <class...> class T, class... Ts>
-struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))> {
+struct apply_impl<T<Ts...>, __BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))> {
   template <class TOp, class>
   struct apply_placeholder_impl {
     using type = TOp;
@@ -2704,7 +2540,7 @@ struct apply_impl<T<Ts...>, BOOST_DI_REQUIRES(!__is_base_of(type_op, T<Ts...>))>
   struct apply : apply_placeholder<T, typename TArg::type, Ts...>::type {};
 };
 template <class T>
-struct apply_impl<T, BOOST_DI_REQUIRES(__is_base_of(type_op, T))> {
+struct apply_impl<T, __BOOST_DI_REQUIRES(__is_base_of(type_op, T))> {
   template <class TArg>
   struct apply : T::template apply<TArg>::type {};
 };
@@ -2773,20 +2609,20 @@ inline auto operator!(const T&) {
 }
 template <class T>
 struct constructible_impl {
-  template <class TArg, BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
+  template <class TArg, __BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
   aux::true_type operator()(const TArg&) const {
     return {};
   }
-  template <class TArg, BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
+  template <class TArg, __BOOST_DI_REQUIRES(!TArg::is_root::value && !T::template apply<TArg>::value) = 0>
   aux::false_type operator()(const TArg&) const {
     return typename type<typename TArg::type>::template not_allowed_by<T>{};
   }
 };
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(__is_base_of(detail::type_op, T)) = 0>
+template <class T = aux::never<_>, __BOOST_DI_REQUIRES(__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<T>{};
 }
-template <class T = aux::never<_>, BOOST_DI_REQUIRES(!__is_base_of(detail::type_op, T)) = 0>
+template <class T = aux::never<_>, __BOOST_DI_REQUIRES(!__is_base_of(detail::type_op, T)) = 0>
 inline auto constructible(const T& = {}) {
   return constructible_impl<detail::or_<T>>{};
 }
@@ -2808,101 +2644,101 @@ class heap {
   }
 };
 }
-#define BOOST_DI_IF(cond, t, f) BOOST_DI_IF_I(cond, t, f)
-#define BOOST_DI_REPEAT(i, m, ...) BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
-#define BOOST_DI_CAT(a, ...) BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
-#define BOOST_DI_EMPTY()
-#define BOOST_DI_COMMA() ,
-#define BOOST_DI_EAT(...)
-#define BOOST_DI_EXPAND(...) __VA_ARGS__
-#define BOOST_DI_SIZE(...) BOOST_DI_CAT(BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, ), )
-#define BOOST_DI_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
-#define BOOST_DI_ELEM(n, ...) BOOST_DI_ELEM_I(n, __VA_ARGS__)
-#define BOOST_DI_IS_EMPTY(...)                            \
-  BOOST_DI_DETAIL_IS_EMPTY_IIF(BOOST_DI_IBP(__VA_ARGS__)) \
-  (BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
-#define BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a##b
-#define BOOST_DI_DETAIL_IS_EMPTY_IIF(bit) BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(BOOST_DI_DETAIL_IS_EMPTY_IIF_, bit)
-#define BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C(...) ()
-#define BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO(...) 0
-#define BOOST_DI_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
-#define BOOST_DI_IF_I(cond, t, f) BOOST_DI_IIF(cond, t, f)
-#define BOOST_DI_IIF_0(t, f) f
-#define BOOST_DI_IIF_1(t, f) t
-#define BOOST_DI_IIF_2(t, f) t
-#define BOOST_DI_IIF_3(t, f) t
-#define BOOST_DI_IIF_4(t, f) t
-#define BOOST_DI_IIF_5(t, f) t
-#define BOOST_DI_IIF_6(t, f) t
-#define BOOST_DI_IIF_7(t, f) t
-#define BOOST_DI_IIF_8(t, f) t
-#define BOOST_DI_IIF_9(t, f) t
-#define BOOST_DI_ELEM_I(n, ...) BOOST_DI_CAT(BOOST_DI_CAT(BOOST_DI_ELEM, n)(__VA_ARGS__, ), )
-#define BOOST_DI_ELEM0(p1, ...) p1
-#define BOOST_DI_ELEM1(p1, p2, ...) p2
-#define BOOST_DI_ELEM2(p1, p2, p3, ...) p3
-#define BOOST_DI_ELEM3(p1, p2, p3, p4, ...) p4
-#define BOOST_DI_ELEM4(p1, p2, p3, p4, p5, ...) p5
-#define BOOST_DI_ELEM5(p1, p2, p3, p4, p5, p6, ...) p6
-#define BOOST_DI_ELEM6(p1, p2, p3, p4, p5, p6, p7, ...) p7
-#define BOOST_DI_ELEM7(p1, p2, p3, p4, p5, p6, p7, p8, ...) p8
-#define BOOST_DI_ELEM8(p1, p2, p3, p4, p5, p6, p7, p8, p9, ...) p9
-#define BOOST_DI_ELEM9(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ...) p10
-#define BOOST_DI_REPEAT_N(i, m, ...) BOOST_DI_REPEAT_##i(m, __VA_ARGS__)
-#define BOOST_DI_REPEAT_1(m, ...) m(0, __VA_ARGS__)
-#define BOOST_DI_REPEAT_2(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__)
-#define BOOST_DI_REPEAT_3(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__)
-#define BOOST_DI_REPEAT_4(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__)
-#define BOOST_DI_REPEAT_5(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__)
-#define BOOST_DI_REPEAT_6(m, ...) \
+#define __BOOST_DI_IF(cond, t, f) __BOOST_DI_IF_I(cond, t, f)
+#define __BOOST_DI_REPEAT(i, m, ...) __BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
+#define __BOOST_DI_CAT(a, ...) __BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define __BOOST_DI_EMPTY()
+#define __BOOST_DI_COMMA() ,
+#define __BOOST_DI_EAT(...)
+#define __BOOST_DI_EXPAND(...) __VA_ARGS__
+#define __BOOST_DI_SIZE(...) __BOOST_DI_CAT(__BOOST_DI_VARIADIC_SIZE_I(__VA_ARGS__, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, ), )
+#define __BOOST_DI_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
+#define __BOOST_DI_ELEM(n, ...) __BOOST_DI_ELEM_I(n, __VA_ARGS__)
+#define __BOOST_DI_IS_EMPTY(...)                              \
+  __BOOST_DI_DETAIL_IS_EMPTY_IIF(__BOOST_DI_IBP(__VA_ARGS__)) \
+  (__BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO, __BOOST_DI_DETAIL_IS_EMPTY_PROCESS)(__VA_ARGS__)
+#define __BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(a, b) a##b
+#define __BOOST_DI_DETAIL_IS_EMPTY_IIF(bit) __BOOST_DI_DETAIL_IS_EMPTY_PRIMITIVE_CAT(__BOOST_DI_DETAIL_IS_EMPTY_IIF_, bit)
+#define __BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C(...) ()
+#define __BOOST_DI_DETAIL_IS_EMPTY_GEN_ZERO(...) 0
+#define __BOOST_DI_VARIADIC_SIZE_I(e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, size, ...) size
+#define __BOOST_DI_IF_I(cond, t, f) __BOOST_DI_IIF(cond, t, f)
+#define __BOOST_DI_IIF_0(t, f) f
+#define __BOOST_DI_IIF_1(t, f) t
+#define __BOOST_DI_IIF_2(t, f) t
+#define __BOOST_DI_IIF_3(t, f) t
+#define __BOOST_DI_IIF_4(t, f) t
+#define __BOOST_DI_IIF_5(t, f) t
+#define __BOOST_DI_IIF_6(t, f) t
+#define __BOOST_DI_IIF_7(t, f) t
+#define __BOOST_DI_IIF_8(t, f) t
+#define __BOOST_DI_IIF_9(t, f) t
+#define __BOOST_DI_ELEM_I(n, ...) __BOOST_DI_CAT(__BOOST_DI_CAT(__BOOST_DI_ELEM, n)(__VA_ARGS__, ), )
+#define __BOOST_DI_ELEM0(p1, ...) p1
+#define __BOOST_DI_ELEM1(p1, p2, ...) p2
+#define __BOOST_DI_ELEM2(p1, p2, p3, ...) p3
+#define __BOOST_DI_ELEM3(p1, p2, p3, p4, ...) p4
+#define __BOOST_DI_ELEM4(p1, p2, p3, p4, p5, ...) p5
+#define __BOOST_DI_ELEM5(p1, p2, p3, p4, p5, p6, ...) p6
+#define __BOOST_DI_ELEM6(p1, p2, p3, p4, p5, p6, p7, ...) p7
+#define __BOOST_DI_ELEM7(p1, p2, p3, p4, p5, p6, p7, p8, ...) p8
+#define __BOOST_DI_ELEM8(p1, p2, p3, p4, p5, p6, p7, p8, p9, ...) p9
+#define __BOOST_DI_ELEM9(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, ...) p10
+#define __BOOST_DI_REPEAT_N(i, m, ...) __BOOST_DI_REPEAT_##i(m, __VA_ARGS__)
+#define __BOOST_DI_REPEAT_1(m, ...) m(0, __VA_ARGS__)
+#define __BOOST_DI_REPEAT_2(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__)
+#define __BOOST_DI_REPEAT_3(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__)
+#define __BOOST_DI_REPEAT_4(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__)
+#define __BOOST_DI_REPEAT_5(m, ...) m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__)
+#define __BOOST_DI_REPEAT_6(m, ...) \
   m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__)
-#define BOOST_DI_REPEAT_7(m, ...) \
+#define __BOOST_DI_REPEAT_7(m, ...) \
   m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) m(6, __VA_ARGS__)
-#define BOOST_DI_REPEAT_8(m, ...)                                                                             \
+#define __BOOST_DI_REPEAT_8(m, ...)                                                                           \
   m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) \
       m(6, __VA_ARGS__) m(7, __VA_ARGS__)
-#define BOOST_DI_REPEAT_9(m, ...)                                                                             \
+#define __BOOST_DI_REPEAT_9(m, ...)                                                                           \
   m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) \
       m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__)
-#define BOOST_DI_REPEAT_10(m, ...)                                                                            \
+#define __BOOST_DI_REPEAT_10(m, ...)                                                                          \
   m(0, __VA_ARGS__) m(1, __VA_ARGS__) m(2, __VA_ARGS__) m(3, __VA_ARGS__) m(4, __VA_ARGS__) m(5, __VA_ARGS__) \
       m(6, __VA_ARGS__) m(7, __VA_ARGS__) m(8, __VA_ARGS__) m(9, __VA_ARGS__)
 #if defined(__MSVC__)
-#define BOOST_DI_VD_IBP_CAT(a, b) BOOST_DI_VD_IBP_CAT_I(a, b)
-#define BOOST_DI_VD_IBP_CAT_I(a, b) BOOST_DI_VD_IBP_CAT_II(a##b)
-#define BOOST_DI_VD_IBP_CAT_II(res) res
-#define BOOST_DI_IBP_SPLIT(i, ...) \
-  BOOST_DI_VD_IBP_CAT(BOOST_DI_IBP_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__), BOOST_DI_EMPTY())
-#define BOOST_DI_IBP_IS_VARIADIC_C(...) 1 1
-#define BOOST_DI_IBP_SPLIT_0(a, ...) a
-#define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
-#define BOOST_DI_IBP_CAT(a, ...) BOOST_DI_IBP_PRIMITIVE_CAT(a, __VA_ARGS__)
-#define BOOST_DI_IBP_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
-#define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
-#define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
-#define BOOST_DI_IBP(...) \
-  BOOST_DI_IBP_SPLIT(0, BOOST_DI_IBP_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
-#define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_OO((bit, t, f))
-#define BOOST_DI_IIF_OO(par) BOOST_DI_IIF_I##par
-#define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_##bit(t, f)
-#define BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, b) b
-#define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, b) t
-#define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__())
+#define __BOOST_DI_VD_IBP_CAT(a, b) __BOOST_DI_VD_IBP_CAT_I(a, b)
+#define __BOOST_DI_VD_IBP_CAT_I(a, b) __BOOST_DI_VD_IBP_CAT_II(a##b)
+#define __BOOST_DI_VD_IBP_CAT_II(res) res
+#define __BOOST_DI_IBP_SPLIT(i, ...) \
+  __BOOST_DI_VD_IBP_CAT(__BOOST_DI_IBP_PRIMITIVE_CAT(__BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__), __BOOST_DI_EMPTY())
+#define __BOOST_DI_IBP_IS_VARIADIC_C(...) 1 1
+#define __BOOST_DI_IBP_SPLIT_0(a, ...) a
+#define __BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+#define __BOOST_DI_IBP_CAT(a, ...) __BOOST_DI_IBP_PRIMITIVE_CAT(a, __VA_ARGS__)
+#define __BOOST_DI_IBP_PRIMITIVE_CAT(a, ...) a##__VA_ARGS__
+#define __BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+#define __BOOST_DI_IBP_IS_VARIADIC_R___BOOST_DI_IBP_IS_VARIADIC_C 0,
+#define __BOOST_DI_IBP(...) \
+  __BOOST_DI_IBP_SPLIT(0, __BOOST_DI_IBP_CAT(__BOOST_DI_IBP_IS_VARIADIC_R_, __BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+#define __BOOST_DI_IIF(bit, t, f) __BOOST_DI_IIF_OO((bit, t, f))
+#define __BOOST_DI_IIF_OO(par) __BOOST_DI_IIF_I##par
+#define __BOOST_DI_IIF_I(bit, t, f) __BOOST_DI_IIF_##bit(t, f)
+#define __BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, b) b
+#define __BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, b) t
+#define __BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) __BOOST_DI_IBP(__BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__())
 #else
-#define BOOST_DI_IBP_SPLIT(i, ...) BOOST_DI_PRIMITIVE_CAT(BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
-#define BOOST_DI_IBP_SPLIT_0(a, ...) a
-#define BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
-#define BOOST_DI_IBP_IS_VARIADIC_C(...) 1
-#define BOOST_DI_IBP_IS_VARIADIC_R_1 1,
-#define BOOST_DI_IBP_IS_VARIADIC_R_BOOST_DI_IBP_IS_VARIADIC_C 0,
-#define BOOST_DI_IBP(...) \
-  BOOST_DI_IBP_SPLIT(0, BOOST_DI_CAT(BOOST_DI_IBP_IS_VARIADIC_R_, BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
-#define BOOST_DI_IIF(bit, t, f) BOOST_DI_IIF_I(bit, t, f)
-#define BOOST_DI_IIF_I(bit, t, f) BOOST_DI_IIF_II(BOOST_DI_IIF_##bit(t, f))
-#define BOOST_DI_IIF_II(id) id
-#define BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, ...) __VA_ARGS__
-#define BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
-#define BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) BOOST_DI_IBP(BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__())
+#define __BOOST_DI_IBP_SPLIT(i, ...) __BOOST_DI_PRIMITIVE_CAT(__BOOST_DI_IBP_SPLIT_, i)(__VA_ARGS__)
+#define __BOOST_DI_IBP_SPLIT_0(a, ...) a
+#define __BOOST_DI_IBP_SPLIT_1(a, ...) __VA_ARGS__
+#define __BOOST_DI_IBP_IS_VARIADIC_C(...) 1
+#define __BOOST_DI_IBP_IS_VARIADIC_R_1 1,
+#define __BOOST_DI_IBP_IS_VARIADIC_R___BOOST_DI_IBP_IS_VARIADIC_C 0,
+#define __BOOST_DI_IBP(...) \
+  __BOOST_DI_IBP_SPLIT(0, __BOOST_DI_CAT(__BOOST_DI_IBP_IS_VARIADIC_R_, __BOOST_DI_IBP_IS_VARIADIC_C __VA_ARGS__))
+#define __BOOST_DI_IIF(bit, t, f) __BOOST_DI_IIF_I(bit, t, f)
+#define __BOOST_DI_IIF_I(bit, t, f) __BOOST_DI_IIF_II(__BOOST_DI_IIF_##bit(t, f))
+#define __BOOST_DI_IIF_II(id) id
+#define __BOOST_DI_DETAIL_IS_EMPTY_IIF_0(t, ...) __VA_ARGS__
+#define __BOOST_DI_DETAIL_IS_EMPTY_IIF_1(t, ...) t
+#define __BOOST_DI_DETAIL_IS_EMPTY_PROCESS(...) __BOOST_DI_IBP(__BOOST_DI_DETAIL_IS_EMPTY_NON_FUNCTION_C __VA_ARGS__())
 #endif
 template <class, class>
 struct named;
@@ -2911,7 +2747,7 @@ struct named_impl {
   template <class T>
   T operator=(const T&) const;
 };
-static constexpr BOOST_DI_UNUSED named_impl named{};
+static constexpr __BOOST_DI_UNUSED named_impl named{};
 template <class T, class TName>
 struct combine_impl {
   using type = ::boost::di::v1_0_1::named<TName, T>;
@@ -2931,39 +2767,42 @@ using combine_t = typename combine<T1, T2>::type;
 }
 template <class... Ts>
 using inject = aux::type_list<Ts...>;
-#define BOOST_DI_HAS_NAME(i, ...) BOOST_DI_IF(BOOST_DI_IBP(BOOST_DI_ELEM(i, __VA_ARGS__, )), 1, )
-#define BOOST_DI_HAS_NAMES(...) \
-  BOOST_DI_IF(BOOST_DI_IS_EMPTY(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_HAS_NAME, __VA_ARGS__)), 0, 1)
-#define BOOST_DI_GEN_CTOR_IMPL(p, i) \
-  BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_EAT p, p)
-#define BOOST_DI_GEN_CTOR(i, ...) BOOST_DI_GEN_CTOR_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
-#define BOOST_DI_GEN_ARG_NAME(p) BOOST_DI_GEN_ARG_NAME_IMPL p )
-#define BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::v1_0_1::aux::none_type
-#define BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::v1_0_1::detail::p) BOOST_DI_EAT(
-#define BOOST_DI_GEN_NAME_IMPL(p, i) \
-  BOOST_DI_IF(i, BOOST_DI_COMMA, BOOST_DI_EAT)() BOOST_DI_IF(BOOST_DI_IBP(p), BOOST_DI_GEN_ARG_NAME, BOOST_DI_GEN_NONE_TYPE)(p)
-#define BOOST_DI_GEN_NAME(i, ...) BOOST_DI_GEN_NAME_IMPL(BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
-#define BOOST_DI_INJECT_TRAITS_IMPL_0(...)                                                       \
-  static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__)); \
-  using type BOOST_DI_UNUSED = ::boost::di::v1_0_1::aux::function_traits_t<decltype(ctor)>;
-#define BOOST_DI_INJECT_TRAITS_IMPL_1(...)                                                                \
-  static void ctor(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__));          \
-  static void name(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_NAME, __VA_ARGS__));          \
-  using type BOOST_DI_UNUSED =                                                                            \
+#define __BOOST_DI_HAS_NAME(i, ...) __BOOST_DI_IF(__BOOST_DI_IBP(__BOOST_DI_ELEM(i, __VA_ARGS__, )), 1, )
+#define __BOOST_DI_HAS_NAMES(...) \
+  __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_HAS_NAME, __VA_ARGS__)), 0, 1)
+#define __BOOST_DI_GEN_CTOR_IMPL(p, i) \
+  __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT)() __BOOST_DI_IF(__BOOST_DI_IBP(p), __BOOST_DI_EAT p, p)
+#define __BOOST_DI_GEN_CTOR(i, ...) __BOOST_DI_GEN_CTOR_IMPL(__BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
+#define __BOOST_DI_GEN_ARG_NAME(p) __BOOST_DI_GEN_ARG_NAME_IMPL p )
+#define __BOOST_DI_GEN_NONE_TYPE(p) ::boost::di::v1_0_1::aux::none_type
+#define __BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::di::v1_0_1::detail::p) __BOOST_DI_EAT(
+#define __BOOST_DI_GEN_NAME_IMPL(p, i)               \
+  __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT) \
+  () __BOOST_DI_IF(__BOOST_DI_IBP(p), __BOOST_DI_GEN_ARG_NAME, __BOOST_DI_GEN_NONE_TYPE)(p)
+#define __BOOST_DI_GEN_NAME(i, ...) __BOOST_DI_GEN_NAME_IMPL(__BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
+#define __BOOST_DI_INJECT_TRAITS_IMPL_0(...)                                                           \
+  static void ctor(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_CTOR, __VA_ARGS__)); \
+  using type __BOOST_DI_UNUSED = ::boost::di::v1_0_1::aux::function_traits_t<decltype(ctor)>;
+#define __BOOST_DI_INJECT_TRAITS_IMPL_1(...)                                                              \
+  static void ctor(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_CTOR, __VA_ARGS__));    \
+  static void name(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_NAME, __VA_ARGS__));    \
+  using type __BOOST_DI_UNUSED =                                                                          \
       ::boost::di::v1_0_1::detail::combine_t<::boost::di::v1_0_1::aux::function_traits_t<decltype(ctor)>, \
                                              ::boost::di::v1_0_1::aux::function_traits_t<decltype(name)>>;
-#define BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) using boost_di_inject__ BOOST_DI_UNUSED = ::boost::di::v1_0_1::aux::type_list<>
-#define BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                               \
+#define __BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
+  using boost_di_inject__ __BOOST_DI_UNUSED = ::boost::di::v1_0_1::aux::type_list<>
+#define __BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                             \
   struct boost_di_inject__ {                                                                                           \
-    BOOST_DI_CAT(BOOST_DI_INJECT_TRAITS_IMPL_, BOOST_DI_HAS_NAMES(__VA_ARGS__))                                        \
-    (__VA_ARGS__) static_assert(BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                            \
+    __BOOST_DI_CAT(__BOOST_DI_INJECT_TRAITS_IMPL_, __BOOST_DI_HAS_NAMES(__VA_ARGS__))                                  \
+    (__VA_ARGS__) static_assert(__BOOST_DI_SIZE(__VA_ARGS__) <= BOOST_DI_CFG_CTOR_LIMIT_SIZE,                          \
                                 "Number of constructor arguments is out of range - see BOOST_DI_CFG_CTOR_LIMIT_SIZE"); \
   }
-#define BOOST_DI_INJECT_TRAITS(...) \
-  BOOST_DI_IF(BOOST_DI_IS_EMPTY(__VA_ARGS__), BOOST_DI_INJECT_TRAITS_EMPTY_IMPL, BOOST_DI_INJECT_TRAITS_IMPL)(__VA_ARGS__)
+#define BOOST_DI_INJECT_TRAITS(...)                                                                                   \
+  __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_INJECT_TRAITS_EMPTY_IMPL, __BOOST_DI_INJECT_TRAITS_IMPL) \
+  (__VA_ARGS__)
 #define BOOST_DI_INJECT(T, ...)        \
   BOOST_DI_INJECT_TRAITS(__VA_ARGS__); \
-  T(BOOST_DI_REPEAT(BOOST_DI_SIZE(__VA_ARGS__), BOOST_DI_GEN_CTOR, __VA_ARGS__))
+  T(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_CTOR, __VA_ARGS__))
 BOOST_DI_NAMESPACE_END
 #endif
 #if defined(__CLANG__)

@@ -17,7 +17,7 @@
 
 namespace type_traits {
 
-BOOST_DI_HAS_TYPE(is_injectable, boost_di_inject__);
+__BOOST_DI_HAS_TYPE(is_injectable, boost_di_inject__);
 
 struct direct {};
 struct uniform {};
@@ -33,23 +33,23 @@ struct ctor_impl<TIsConstructible, T, aux::index_sequence<>> : aux::type_list<> 
 
 template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
-                 BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+                 __BOOST_DI_REQUIRES(TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::type_list<core::any_type_1st_fwd<T>> {};
 
 template <template <class...> class TIsConstructible, class T>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<0>,
-                 BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
+                 __BOOST_DI_REQUIRES(!TIsConstructible<T, core::any_type_1st_fwd<T>>::value)>
     : aux::conditional_t<TIsConstructible<T, core::any_type_1st_ref_fwd<T>>::value,
                          aux::type_list<core::any_type_1st_ref_fwd<T>>, aux::type_list<>> {};
 
 template <template <class...> class TIsConstructible, class T, int... Ns>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
-                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+                 __BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
     : aux::type_list<get<core::any_type_fwd<T>, Ns>...> {};
 
 template <template <class...> class TIsConstructible, class T, int... Ns>
 struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
-                 BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
+                 __BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
     : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, Ns>...>::value,
                        aux::type_list<get<core::any_type_ref_fwd<T>, Ns>...>,
                        typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(Ns)-1>>::type> {};
@@ -101,12 +101,12 @@ struct ctor_traits<std::tuple<Ts...>> {
 };
 
 template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
+struct ctor_traits<T, __BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
   using boost_di_inject__ = aux::type_list<>;
 };
 
 template <class T>
-struct ctor_traits<T, BOOST_DI_REQUIRES(!__is_class(T))> {
+struct ctor_traits<T, __BOOST_DI_REQUIRES(!__is_class(T))> {
   using boost_di_inject__ = aux::type_list<>;
 };
 
