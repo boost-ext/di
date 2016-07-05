@@ -31,6 +31,9 @@
 ###Factory
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp)
 
+###Generics / Typed Erasure Interfaces
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/generics.cpp)
+
 ###Lazy
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp)
 

@@ -41,94 +41,94 @@ di::aux::type_list<> ctor__(...);
       di::detail::combine_t<decltype(ctor__<boost_di_inject__>(0)), di::aux::function_traits_t<decltype(name)>>;
 
 template <class T, class>
-struct generic_traits {
+struct concept_traits {
   using type = T;
 };
 
 template <class T>
-struct generic_traits<di::_, T> {
+struct concept_traits<di::_, T> {
   using type = T;
 };
 
 template <class T>
-struct generic_traits<di::_&, T> {
+struct concept_traits<di::_&, T> {
   using type = T&;
 };
 
 template <class T>
-struct generic_traits<const di::_&, T> {
+struct concept_traits<const di::_&, T> {
   using type = const T&;
 };
 
 template <class T>
-struct generic_traits<di::_&&, T> {
+struct concept_traits<di::_&&, T> {
   using type = T&&;
 };
 
 template <class T>
-struct generic_traits<di::_*, T> {
+struct concept_traits<di::_*, T> {
   using type = T*;
 };
 
 template <class T>
-struct generic_traits<const di::_*, T> {
+struct concept_traits<const di::_*, T> {
   using type = const T*;
 };
 
 template <class T, template <class...> class TDeleter>
-struct generic_traits<std::unique_ptr<di::_, TDeleter<di::_>>, T> {
+struct concept_traits<std::unique_ptr<di::_, TDeleter<di::_>>, T> {
   using type = std::unique_ptr<T, TDeleter<T>>;
 };
 
 template <class T, template <class...> class TDeleter>
-struct generic_traits<const std::unique_ptr<di::_, TDeleter<di::_>>&, T> {
+struct concept_traits<const std::unique_ptr<di::_, TDeleter<di::_>>&, T> {
   using type = const std::unique_ptr<T, TDeleter<T>>&;
 };
 
 template <class T>
-struct generic_traits<std::shared_ptr<di::_>, T> {
+struct concept_traits<std::shared_ptr<di::_>, T> {
   using type = std::shared_ptr<T>;
 };
 
 template <class T>
-struct generic_traits<const std::shared_ptr<di::_>&, T> {
+struct concept_traits<const std::shared_ptr<di::_>&, T> {
   using type = std::shared_ptr<T>;
 };
 
 template <class T>
-struct generic_traits<boost::shared_ptr<di::_>, T> {
+struct concept_traits<boost::shared_ptr<di::_>, T> {
   using type = boost::shared_ptr<T>;
 };
 
 template <class T>
-struct generic_traits<const boost::shared_ptr<di::_>&, T> {
+struct concept_traits<const boost::shared_ptr<di::_>&, T> {
   using type = boost::shared_ptr<T>;
 };
 
 template <class T>
-struct generic_traits<std::weak_ptr<di::_>, T> {
+struct concept_traits<std::weak_ptr<di::_>, T> {
   using type = std::weak_ptr<T>;
 };
 
 template <class T>
-struct generic_traits<const std::weak_ptr<di::_>&, T> {
+struct concept_traits<const std::weak_ptr<di::_>&, T> {
   using type = std::weak_ptr<T>;
 };
 
 template <class T, class U>
-using generic_traits_t = typename generic_traits<T, U>::type;
+using concept_traits_t = typename concept_traits<T, U>::type;
 
 template <template <class...> class TWrapper, class T, class... Ts, template <class...> class X, class TScope, class Y>
-auto generic_cast(const TWrapper<T, X<TScope, Y>>& arg) {
-  return arg.wrapper_.operator generic_traits_t<T, di::aux::remove_qualifiers_t<Y>>();
+auto concept_cast(const TWrapper<T, X<TScope, Y>>& arg) {
+  return arg.wrapper_.operator concept_traits_t<T, di::aux::remove_qualifiers_t<Y>>();
 }
 
 template <class T>
-decltype(auto) generic_cast(const T& arg) {
+decltype(auto) concept_cast(const T& arg) {
   return arg;
 }
 
-struct generics_provider {
+struct concepts_provider {
   template <class TInitialization, class T, class... TArgs>
   struct is_creatable {
     static constexpr auto value = true;
@@ -138,21 +138,21 @@ struct generics_provider {
   auto get(const di::type_traits::direct&, const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
-    return new T(generic_cast(args)...);
+    return new T(concept_cast(args)...);
   }
 
   template <class T, class TMemory, class... TArgs>
   auto get(const di::type_traits::uniform&, const TMemory&  // stack/heap
            ,
            TArgs&&... args) const {
-    return new T{generic_cast(args)...};
+    return new T{concept_cast(args)...};
   }
 };
 
 /*<override `di` provider configuration>*/
-class generics_provider_config : public di::config {
+class concepts_provider_config : public di::config {
  public:
-  static auto provider(...) noexcept { return generics_provider{}; }
+  static auto provider(...) noexcept { return concepts_provider{}; }
 };
 //->
 
@@ -179,7 +179,7 @@ struct example {
 
 int main() {
   // clang-format off
-  auto injector = di::make_injector<generics_provider_config>(
+  auto injector = di::make_injector<concepts_provider_config>(
     di::bind<int>.to(42)
   , di::bind<di::_>.to(87)
   , di::bind<di::_>().named(dummy_concept).to<DummyImpl>()

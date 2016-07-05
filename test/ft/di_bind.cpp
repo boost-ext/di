@@ -1002,7 +1002,7 @@ test bind_unique_ptr_dtor_defined = [] {
 test bind_unique_ptr_dtor_defined_with_move_ctor = [] {
   struct c {
     c() {}
-    c(c&&) = default;
+    c(c &&) = default;
     ~c() = default;
     std::unique_ptr<i1> i1_;
   };
