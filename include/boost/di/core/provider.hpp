@@ -71,11 +71,11 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
   }
 
   template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
-  T* get_impl(const TMemory&, TArgs&&...) const {
+  auto get_impl(const TMemory&, TArgs&&...) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)  // __pph__
     return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
 #else   // __pph__
-    return {};
+    return nullptr;
 #endif  // __pph__
   }
 

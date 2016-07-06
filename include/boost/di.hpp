@@ -2196,11 +2196,11 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
     return TInjector::config::provider(injector_).template get<T>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
   }
   template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
-  T* get_impl(const TMemory&, TArgs&&...) const {
+  auto get_impl(const TMemory&, TArgs&&...) const {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL > 0)
     return concepts::creatable_error<TInitialization, TName, T*, TArgs...>();
 #else
-    return {};
+    return nullptr;
 #endif
   }
   const TInjector* injector_;
