@@ -508,6 +508,14 @@ test bind_to_function_ptr = [] {
   expect(d == object.fd());
 };
 
+test bind_to_function = [] {
+  using f_t = std::function<double(double)>;
+  const auto injector = di::make_injector(di::bind<f_t>().to(return_double));
+  const auto object = injector.create<f_t>();
+
+  expect(42.0 == object(42.0));
+};
+
 test runtime_factory_impl = [] {
   constexpr auto i = 42;
 

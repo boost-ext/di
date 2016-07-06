@@ -1600,6 +1600,10 @@ class dependency
   struct ref_traits<const char (&)[N]> {
     using type = TExpected;
   };
+  template <class R, class... Ts>
+  struct ref_traits<R (&)(Ts...)> {
+    using type = TExpected;
+  };
   template <class T>
   struct ref_traits<std::shared_ptr<T>&> {
     using type = std::shared_ptr<T>;
