@@ -604,6 +604,46 @@ test bind_non_owning_ptr = [] {
   delete ptr;
 };
 
+test bind_to_function_via_interface = [] {
+  struct i {
+    virtual ~i() = default;
+    virtual void operator()() = 0;
+  };
+
+  struct impl : i {
+    void operator()() override {}
+  };
+
+  struct c {
+    c(i &object) { expect(dynamic_cast<impl *>(&object)); }
+  };
+
+  const auto injector =
+      di::make_injector(di::bind<i>().to([&](const auto &injector) -> i & { return injector.template create<impl &>(); }));
+
+  injector.create<c>();
+};
+
+test bind_to_function_via_interface_inject = [] {
+  struct i {
+    virtual ~i() = default;
+    virtual void operator()() = 0;
+  };
+
+  struct impl : i {
+    void operator()() override {}
+  };
+
+  struct c {
+    BOOST_DI_INJECT(c, i &object) { expect(dynamic_cast<impl *>(&object)); }
+  };
+
+  const auto injector =
+      di::make_injector(di::bind<i>().to([&](const auto &injector) -> i & { return injector.template create<impl &>(); }));
+
+  injector.create<c>();
+};
+
 test multi_bindings_empty = [] {
   struct c {
     c(std::vector<int> v, const std::set<std::unique_ptr<i1>> &s) {

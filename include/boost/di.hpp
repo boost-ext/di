@@ -1427,7 +1427,8 @@ class instance {
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, __BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
     template <class>
-    using is_referable = aux::integral_constant<bool, !aux::is_callable<TExpected>::value>;
+    using is_referable =
+        aux::integral_constant<bool, !aux::is_callable<TExpected>::value || !detail::has_result_type<TExpected>::value>;
     explicit scope(const TGiven& object) : object_(object) {}
 #if defined(__MSVC__)
     template <class T, class, class TProvider>
