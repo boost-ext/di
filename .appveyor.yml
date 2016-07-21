@@ -32,6 +32,10 @@ environment:
     os: Visual Studio 2015
     env: BS=bjam GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=x86
 
+  - platform: x64
+    os: Visual Studio 2015 Update 2
+    env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=amd64
+
 matrix:
   fast_finish: true
 
