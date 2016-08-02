@@ -68,7 +68,7 @@ class dependency
   };
 
   template <class R, class... Ts>
-  struct ref_traits<R(&)(Ts...)> {
+  struct ref_traits<R (&)(Ts...)> {
     using type = TExpected;
   };
 
