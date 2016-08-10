@@ -38,7 +38,8 @@ class binder {
   static TDependency resolve_impl__(aux::pair<TConcept, TDependency>*);
 
   template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName>
-  static dependency<TScope, TExpected, TGiven, TName, override> resolve_impl__(aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>*);
+  static dependency<TScope, TExpected, TGiven, TName, override> resolve_impl__(
+      aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>*);
 
   template <class TDeps, class T, class TName, class TDefault>
   struct resolve__ {
@@ -46,17 +47,17 @@ class binder {
   };
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
-#if (defined(__CLANG__) && __CLANG__ >= 3'9) // __pph__
-  template<class TDeps, class T>
+#if (defined(__CLANG__) && __CLANG__ >= 3'9)  // __pph__
+  template <class TDeps, class T>
   static T& resolve_(TDeps* deps, const aux::type<T&>&) noexcept {
     return static_cast<T&>(*deps);
   }
 
-  template<class TDeps, class T>
+  template <class TDeps, class T>
   static T resolve_(TDeps*, const aux::type<T>&) noexcept {
     return {};
   }
-#endif // __pph__
+#endif  // __pph__
 
  public:
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
@@ -64,11 +65,11 @@ class binder {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
-#if (defined(__CLANG__) && __CLANG__ >= 3'9) // __pph__
+#if (defined(__CLANG__) && __CLANG__ >= 3'9)  // __pph__
     return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>{});
-#else // __pph__
+#else   // __pph__
     return resolve_impl<TDefault, dependency>(deps);
-#endif // __pph__
+#endif  // __pph__
   }
 
   template <class TDeps, class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>>
