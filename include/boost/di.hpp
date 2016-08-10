@@ -23,8 +23,10 @@
 #if defined(BOOST_DI_CFG_FWD)
 BOOST_DI_CFG_FWD
 #endif
+#define __BOOST_DI_COMPILER(arg, ...) __BOOST_DI_COMPILER_IMPL(arg, __VA_ARGS__)
+#define __BOOST_DI_COMPILER_IMPL(arg, ...) arg##__VA_ARGS__
 #if defined(__clang__)
-#define __CLANG__
+#define __CLANG__ __BOOST_DI_COMPILER(__clang_major__, __clang_minor__)
 #define __BOOST_DI_UNUSED __attribute__((unused))
 #define __BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define __BOOST_DI_TYPE_WKND(T)
@@ -1770,8 +1772,14 @@ inline auto make_policies(TPolicies... args) noexcept {
   return core::pool_t<TPolicies...>(static_cast<TPolicies&&>(args)...);
 }
 struct config {
-  static auto provider(...) noexcept { return providers::stack_over_heap{}; }
-  static auto policies(...) noexcept { return make_policies(); }
+  template <class T>
+  static auto provider(T*) noexcept {
+    return providers::stack_over_heap{};
+  }
+  template <class T>
+  static auto policies(T*) noexcept {
+    return make_policies();
+  }
 };
 namespace detail {
 template <class...>
@@ -1893,17 +1901,36 @@ class binder {
       aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>* dep) noexcept {
     return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
   }
+  template <class TDefault, class>
+  static TDefault resolve_impl__(...);
+  template <class, class TConcept, class TDependency>
+  static TDependency resolve_impl__(aux::pair<TConcept, TDependency>*);
+  template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName>
+  static dependency<TScope, TExpected, TGiven, TName, override> resolve_impl__(
+      aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>*);
   template <class TDeps, class T, class TName, class TDefault>
   struct resolve__ {
-    using dependency = dependency_concept<aux::decay_t<T>, TName>;
-    using type = aux::remove_reference_t<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>;
+    using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>((TDeps*)0));
   };
-
+#if (defined(__CLANG__) && __CLANG__ >= 3'9)  //
+  template <class TDeps, class T>
+  static T& resolve_(TDeps* deps, const aux::type<T&>&) noexcept {
+    return static_cast<T&>(*deps);
+  }
+  template <class TDeps, class T>
+  static T resolve_(TDeps*, const aux::type<T>&) noexcept {
+    return {};
+  }
+#endif
  public:
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
+#if (defined(__CLANG__) && __CLANG__ >= 3'9)  //
+    return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>{});
+#else
     return resolve_impl<TDefault, dependency>(deps);
+#endif
   }
   template <class TDeps, class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>>
   using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;

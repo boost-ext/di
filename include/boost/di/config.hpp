@@ -23,8 +23,8 @@ inline auto make_policies(TPolicies... args) noexcept {
 }
 
 struct config {
-  static auto provider(...) noexcept { return providers::stack_over_heap{}; }
-  static auto policies(...) noexcept { return make_policies(); }
+  template<class T> static auto provider(T*) noexcept { return providers::stack_over_heap{}; }
+  template<class T> static auto policies(T*) noexcept { return make_policies(); }
 };
 
 #endif

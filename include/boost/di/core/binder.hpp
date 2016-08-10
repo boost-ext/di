@@ -31,17 +31,44 @@ class binder {
     return static_cast<dependency<TScope, TExpected, TGiven, TName, override>&>(*dep);
   }
 
+  template <class TDefault, class>
+  static TDefault resolve_impl__(...);
+
+  template <class, class TConcept, class TDependency>
+  static TDependency resolve_impl__(aux::pair<TConcept, TDependency>*);
+
+  template <class, class TConcept, class TScope, class TExpected, class TGiven, class TName>
+  static dependency<TScope, TExpected, TGiven, TName, override> resolve_impl__(aux::pair<TConcept, dependency<TScope, TExpected, TGiven, TName, override>>*);
+
   template <class TDeps, class T, class TName, class TDefault>
   struct resolve__ {
-    using dependency = dependency_concept<aux::decay_t<T>, TName>;
-    using type = aux::remove_reference_t<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>;
+    using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>((TDeps*)0));
   };
+
+/// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
+#if (defined(__CLANG__) && __CLANG__ >= 3'9) // __pph__
+  template<class TDeps, class T>
+  static T& resolve_(TDeps* deps, const aux::type<T&>&) noexcept {
+    return static_cast<T&>(*deps);
+  }
+
+  template<class TDeps, class T>
+  static T resolve_(TDeps*, const aux::type<T>&) noexcept {
+    return {};
+  }
+#endif // __pph__
 
  public:
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
+
+/// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
+#if (defined(__CLANG__) && __CLANG__ >= 3'9) // __pph__
+    return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>{});
+#else // __pph__
     return resolve_impl<TDefault, dependency>(deps);
+#endif // __pph__
   }
 
   template <class TDeps, class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>>

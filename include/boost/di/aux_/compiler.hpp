@@ -7,8 +7,11 @@
 #ifndef BOOST_DI_AUX_COMPILER_HPP
 #define BOOST_DI_AUX_COMPILER_HPP
 
+#define __BOOST_DI_COMPILER(arg, ...) __BOOST_DI_COMPILER_IMPL(arg, __VA_ARGS__)
+#define __BOOST_DI_COMPILER_IMPL(arg, ...) arg##__VA_ARGS__
+
 #if defined(__clang__)  // clang, clang-cl
-#define __CLANG__
+#define __CLANG__ __BOOST_DI_COMPILER(__clang_major__, __clang_minor__)
 #define __BOOST_DI_UNUSED __attribute__((unused))
 #define __BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define __BOOST_DI_TYPE_WKND(T)
