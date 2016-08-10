@@ -6,6 +6,7 @@
 //
 #include "boost/di/config.hpp"
 #include <type_traits>
+#include "common/fakes/fake_injector.hpp"
 
 struct policy1 {
   template <class T>
@@ -23,6 +24,6 @@ test make_policies_types = [] {
 };
 
 test default_config = [] {
-  expect(std::is_same<providers::stack_over_heap, decltype(config::provider(0))>{});
-  expect(std::is_same<core::pool<aux::type_list<>>, decltype(config::policies(0))>{});
+  expect(std::is_same<providers::stack_over_heap, decltype(config::provider((fake_injector<>*)0))>{});
+  expect(std::is_same<core::pool<aux::type_list<>>, decltype(config::policies((fake_injector<>*)0))>{});
 };
