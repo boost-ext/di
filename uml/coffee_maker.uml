@@ -4,12 +4,12 @@
 ' Distributed under the Boost Software License, Version 1.0.
 ' (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 '
-@startuml uml_dumper.png
+@startuml coffee_maker.png
 
 "coffee_maker" ..> "electric_heater"
 "coffee_maker" ..> "heat_pump"
 
-"iheater" ..|> "electric_heater"
+"iheater" <|.. "electric_heater"
 "iheater" : on() : void
 "iheater" : off() : void
 "iheater" : is_on() : boolean
