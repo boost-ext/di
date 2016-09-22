@@ -216,7 +216,7 @@ matrix:
 
 before_install:
   - git config --global user.name "Continuous Integration"
-  - git config --global user.email "krzysztof@jusiak.net"
+  - git config --global user.email "kris@jusiak.net"
   - git config --global push.default simple
 
 install:

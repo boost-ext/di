@@ -7,6 +7,7 @@
 VALGRIND:=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 DRMEMORY:=--memcheck="drmemory -light -batch -exit_code_if_errors 1"
 BS?=cmake
+CMAKE?=cmake
 TOOLSET?=clang
 CLANG_FORMAT?=clang-format
 CLANG_TIDY?=clang-tidy
@@ -27,7 +28,7 @@ all_bjam:
 
 all_cmake:
 	@-mkdir build
-	@cd build && cmake .. && cmake --build . && ctest --output-on-failure
+	@cd build && $(CMAKE) .. $(CMAKE_FLAGS) && $(CMAKE) --build . && ctest --output-on-failure
 
 clean: clean_$(BS)
 
