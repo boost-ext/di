@@ -43,7 +43,7 @@ environment:
   - platform: x64
     os: Visual Studio 2015 Update 2
     BS: cmake
-    CMAKE: "C:\\cmake-3.6.1-win32-x86"
+    CMAKE: "C:\\cmake-3.6.1-win32-x86\\bin\\cmake"
     CMAKE_FLAGS: "-T v140_clang_c2"
     MEMCHECK: DRMEMORY
 
