@@ -42,12 +42,11 @@ environment:
 
   - platform: x64
     os: Visual Studio 2015 Update 2
-    -BS: cmake
-    -CMAKE: "C:\cmake-3.6.1-win32-x86"
-    -CMAKE_FLAGS: "-T v140_clang_c2" 
-    -GENERATOR: "MinGW Makefiles"
-    -MEMCHECK: DRMEMORY
-    -PLATFROM: amd64
+    - platform: x64
+      BS: cmake
+      CMAKE: "C:\cmake-3.6.1-win32-x86"
+      CMAKE_FLAGS: "-T v140_clang_c2"
+      MEMCHECK: DRMEMORY
 
 matrix:
   fast_finish: true
