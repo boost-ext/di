@@ -20,30 +20,25 @@ environment:
   fast_finish: true
 
   matrix:
-  #- platform: x64
-    #os: Previous Visual Studio 2015
-    #env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFORM=amd64
+  - platform: x64
+    os: Previous Visual Studio 2015
+    BS: cmake
+    MEMCHECK: DRMEMORY
 
-  #- platform: x64
-    #os: Visual Studio 2015
-    #env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=amd64
-
-  #- platform: x86
-    #os: Visual Studio 2015
-    #env: BS=bjam GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=x86
-
-  #- platform: x86
-    #os: Visual Studio 2015
-    #env: BS=bjam GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=x86
-
-  #- platform: x64
-    #os: Visual Studio 2015 Update 2
-    #env: BS=cmake GENERATOR="MinGW Makefiles" MEMCHECK=DRMEMORY PLATFROM=amd64
+  - platform: x64
+    os: Visual Studio 2015
+    BS: cmake
+    MEMCHECK: DRMEMORY
 
   - platform: x64
     os: Visual Studio 2015 Update 2
     BS: cmake
     CMAKE_FLAGS: "-T v140_clang_c2"
+    MEMCHECK: DRMEMORY
+
+  - platform: x86
+    os: Visual Studio 2015 Update 2
+    BS: cmake
     MEMCHECK: DRMEMORY
 
 matrix:
