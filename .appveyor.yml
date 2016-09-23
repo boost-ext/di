@@ -30,16 +30,16 @@ environment:
     #BS: cmake
     #MEMCHECK: DRMEMORY
 
-  #- platform: x64
-    #os: Visual Studio 2015 Update 2
-    #BS: cmake
-    #CMAKE_FLAGS: "-T v140_clang_c2"
-    #MEMCHECK: DRMEMORY
-
-  - platform: x86
+  - platform: x64
     os: Visual Studio 2015 Update 2
     BS: cmake
+    CMAKE_FLAGS: "-T v140_clang_c2"
     MEMCHECK: DRMEMORY
+
+  #- platform: x86
+    #os: Visual Studio 2015 Update 2
+    #BS: cmake
+    #MEMCHECK: DRMEMORY
 
 matrix:
   fast_finish: true
