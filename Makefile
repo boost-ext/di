@@ -28,7 +28,7 @@ all_bjam:
 
 all_cmake:
 	@-mkdir build
-	cd build && $(CMAKE) .. $(CMAKE_FLAGS) && $(CMAKE) --build . && ctest --output-on-failure
+	cd build && $(CMAKE) -DCMAKE_VERBOSE_MAKEFILE=ON .. $(CMAKE_FLAGS) && $(CMAKE) --build . && ctest --output-on-failure
 
 clean: clean_$(BS)
 
