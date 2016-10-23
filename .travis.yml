@@ -18,6 +18,11 @@ branches:
 matrix:
   fast_finish: true
 
+  allow_failures:
+    - env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.9
+    - env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.9
+    - env: BS=cmake CXX=clang++-3.9
+
   include:
   - os: linux
     env: DOCUMENTATION=ON
