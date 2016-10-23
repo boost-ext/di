@@ -2,18 +2,19 @@ copyright: Copyright &copy; 2016
 
 site_name: Boost.DI
 site_url: http://boost-experimental.github.io/di
-site_author: Krzysztof Jusiak
+site_author: Kris Jusiak
 repo_url: https://github.com/boost-experimental/di
 repo_name: di
 docs_dir: .
 use_directory_urls: false
-theme_dir: themes/boost
+theme_dir: themes/boost-experimental
 google_analytics: ['UA-73083568-1', 'auto']
 extra_javascript: []
 extra_css: []
 
 pages:
 - Introduction: index.md
+- Materials/Videos: materials.md
 - Overview: overview.md
 - Benchmarks: benchmarks.md
 - Tutorial: tutorial.md

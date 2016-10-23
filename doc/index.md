@@ -25,9 +25,13 @@ Introduction
 **[Dependency Injection](http://www.youtube.com/watch?v=IKD2-MAkXyQ) (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.
 
+<center>
+In short, DI is all about construction!
+
 > **"Let's make some coffee!"**
 
-<center>[![Coffee Maker](images/coffee_maker.png)](images/coffee_maker.png)</center>
+[![Coffee Maker](images/coffee_maker.png)](images/coffee_maker.png)
+</center>
 
 ```cpp
                       No Dependency injection                 | Dependency Injection
@@ -52,14 +56,76 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
                                                               | };
 ```
 
-###Do I need Dependency Injection?
+###Do I use a Dependency Injection already?
+
+* If you are using constructors in your code then you are probably using some form of Dependency Injection too!
+
+```cpp
+class Button {
+ public:
+  Button(const std::string& name, Position position); // Dependency Injection!
+};
+```
+
+###Do I use Dependency Injection correctly?
+
+Common mistakes when using Dependency Injection are:
+
+  * Passing a dependency to create another dependency inside your object
+
+```cpp
+class Model {
+ public:
+   Model(int width, int height) 
+     : board(std::make_unique<Board>(width, height)) // Bad
+   { } 
+
+   explicit Model(std::unique_ptr<IBoard> board) // Better
+     : board(std::move(board))
+   { } 
+
+   ...
+
+ private:
+  std::unique_ptr<IBoard> board;
+};
+```
+
+  * Carrying dependencies
+
+```cpp
+class Model : public Service { // Bad
+ public:
+   explicit Model(std::unique_ptr<IBoard> board) // Bad
+     : Service(std::move(board))
+   { } 
+
+   void update() {
+     Service::do_something_with_board(); // Bad
+   }
+};
+
+class Model { // Better
+ public:
+   explicit Model(std::unique_ptr<Service> service) // Better
+     : service(std::move(service))
+   { } 
+
+   void update() {
+     service.do_something_with_board(); // Better
+   }
+
+ private:
+   std::unique_ptr<Service> service;
+};
+```
+
+###Do I need a Dependency Injection?
 
 * DI provides loosely coupled code (separation of business logic and object creation)
 * DI provides easier to maintain code (different objects might be easily injected)
 * DI provides easier to test code (fakes objects might be injected)
 
-    * [The Clean Code Talks - Don't Look For Things!](http://www.youtube.com/watch?v=RlfLCWKxHJ0)
-    * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
 
 ###Do I need a DI Framework/Library?
 
@@ -215,10 +281,6 @@ but also can help you with...
 * Guarantee object creation at compile-time (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
 * Be as non-intrusive as possible (See [Injections](user_guide.md#injections))
 * Be easy to extend (See [Extensions](extensions.md))
-
-###Related materials
-
-* [CppNow-2016:](https://cppnow2016.sched.org/event/6Sfx/c14-dependency-injection-library-with-no-overhead-and-compile-time-guarantee-of-object-creation) [C++14 Dependency Injection Library with no overhead and compile time guarantee of object creation](http://boost-experimental.github.io/di/cppnow-2016)
 
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`
