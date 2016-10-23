@@ -85,6 +85,8 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 
 ---------------------------------------
 
+###Documentation
+
 [](GENERATE_TOC_BEGIN)
 
 * [Introduction](http://boost-experimental.github.io/di/index.html)
