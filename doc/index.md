@@ -181,8 +181,8 @@ but also can help you with...
 
 >
 
-* [Experimental Boost.MSM-lite](http://boost-experimental.github.io/msm-lite/)
-    * C++14 header only eUML-like Meta State Machine library with no dependencies
+* [Experimental Boost.SML](http://boost-experimental.github.io/sml)
+    * C++14 header only Meta State Machine library with no dependencies
 
 ###Why Boost.DI?
 
