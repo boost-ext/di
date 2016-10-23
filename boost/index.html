@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 
-<meta name="author" content="Krzysztof Jusiak">
+<meta name="author" content="Kris Jusiak">
 <link rel="canonical" href="http://boost-experimental.github.io/di/index.html">
 <title>Boost.DI</title>
 
@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="overview/index.html"><img src="./images/next.png" alt="Next"></a>
+<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="materials/index.html"><img src="./images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -29,7 +29,7 @@
 <div><h2 class="title">
 <a></a>Boost.DI</h2></div>
 <div><div class="author"><h3 class="author">
-Krzysztof Jusiak
+Kris Jusiak
 </h3></div></div>
 <div><p class="copyright">Copyright &copy; 2016</p></div>
 <div><div class="legalnotice">
@@ -46,6 +46,10 @@ Krzysztof Jusiak
 
     
         <dt><span class="section"><a href="index.html">Introduction</a></span></dt>
+    
+
+    
+        <dt><span class="section"><a href="materials/index.html">Materials/Videos</a></span></dt>
     
 
     
@@ -127,10 +131,13 @@ Krzysztof Jusiak
 </blockquote>
 <p><strong><a href="http://www.youtube.com/watch?v=IKD2-MAkXyQ">Dependency Injection</a> (DI)</strong> involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.</p>
+<p><center>
+In short, DI is all about construction!</p>
 <blockquote>
 <p><strong>"Let's make some coffee!"</strong></p>
 </blockquote>
-<p><center><a href="./images/coffee_maker.png"><img alt="Coffee Maker" src="./images/coffee_maker.png" /></a></center></p>
+<p><a href="./images/coffee_maker.png"><img alt="Coffee Maker" src="./images/coffee_maker.png" /></a>
+</center></p>
 <pre><code class="cpp">                      No Dependency injection                 | Dependency Injection
                       ----------------------------------------|-------------------------------------------
                       class coffee_maker {                    | class coffee_maker {
@@ -153,17 +160,72 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
                                                               | };
 </code></pre>
 
-<h3 id="do-i-need-dependency-injection">Do I need Dependency Injection?</h3>
+<h3 id="do-i-use-a-dependency-injection-already">Do I use a Dependency Injection already?</h3>
+<ul>
+<li>If you are using constructors in your code then you are probably using some form of Dependency Injection too!</li>
+</ul>
+<pre><code class="cpp">class Button {
+ public:
+  Button(const std::string&amp; name, Position position); // Dependency Injection!
+};
+</code></pre>
+
+<h3 id="do-i-use-dependency-injection-correctly">Do I use Dependency Injection correctly?</h3>
+<p>Common mistakes when using Dependency Injection are:</p>
+<ul>
+<li>Passing a dependency to create another dependency inside your object</li>
+</ul>
+<pre><code class="cpp">class Model {
+ public:
+   Model(int width, int height) 
+     : board(std::make_unique&lt;Board&gt;(width, height)) // Bad
+   { } 
+
+   explicit Model(std::unique_ptr&lt;IBoard&gt; board) // Better
+     : board(std::move(board))
+   { } 
+
+   ...
+
+ private:
+  std::unique_ptr&lt;IBoard&gt; board;
+};
+</code></pre>
+
+<ul>
+<li>Carrying dependencies</li>
+</ul>
+<pre><code class="cpp">class Model : public Service { // Bad
+ public:
+   explicit Model(std::unique_ptr&lt;IBoard&gt; board) // Bad
+     : Service(std::move(board))
+   { } 
+
+   void update() {
+     Service::do_something_with_board(); // Bad
+   }
+};
+
+class Model { // Better
+ public:
+   explicit Model(std::unique_ptr&lt;Service&gt; service) // Better
+     : service(std::move(service))
+   { } 
+
+   void update() {
+     service.do_something_with_board(); // Better
+   }
+
+ private:
+   std::unique_ptr&lt;Service&gt; service;
+};
+</code></pre>
+
+<h3 id="do-i-need-a-dependency-injection">Do I need a Dependency Injection?</h3>
 <ul>
 <li>DI provides loosely coupled code (separation of business logic and object creation)</li>
 <li>DI provides easier to maintain code (different objects might be easily injected)</li>
-<li>
-<p>DI provides easier to test code (fakes objects might be injected)</p>
-<ul>
-<li><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0">The Clean Code Talks - Don't Look For Things!</a></li>
-<li><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw">A New Type of dependency injection</a></li>
-</ul>
-</li>
+<li>DI provides easier to test code (fakes objects might be injected)</li>
 </ul>
 <h3 id="do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</h3>
 <p>Depending on a project and its scale you may put up with or without a DI library, however, in any project
@@ -321,10 +383,6 @@ but also can help you with...</p>
 <li>Be as non-intrusive as possible (See <a href="user_guide/index.html#injections">Injections</a>)</li>
 <li>Be easy to extend (See <a href="extensions/index.html">Extensions</a>)</li>
 </ul>
-<h3 id="related-materials">Related materials</h3>
-<ul>
-<li><a href="https://cppnow2016.sched.org/event/6Sfx/c14-dependency-injection-library-with-no-overhead-and-compile-time-guarantee-of-object-creation">CppNow-2016:</a> <a href="http://boost-experimental.github.io/di/cppnow-2016">C++14 Dependency Injection Library with no overhead and compile time guarantee of object creation</a></li>
-</ul>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
 <li>Thanks to Bartosz Kalinczuk for code review and tips how to improve <code>Boost.DI</code></li>
@@ -351,7 +409,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="overview/index.html"><img src="./images/next.png" alt="Next"></a>
+<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="materials/index.html"><img src="./images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

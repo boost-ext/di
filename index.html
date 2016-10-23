@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <meta name="author" content="Krzysztof Jusiak">
+  <meta name="author" content="Kris Jusiak">
   
   <title>Boost.DI</title>
   
@@ -89,7 +89,11 @@
             
                 <li class="toctree-l3"><a href="#what-is-dependency-injection">What is Dependency Injection?</a></li>
                 
-                    <li><a class="toctree-l4" href="#do-i-need-dependency-injection">Do I need Dependency Injection?</a></li>
+                    <li><a class="toctree-l4" href="#do-i-use-a-dependency-injection-already">Do I use a Dependency Injection already?</a></li>
+                
+                    <li><a class="toctree-l4" href="#do-i-use-dependency-injection-correctly">Do I use Dependency Injection correctly?</a></li>
+                
+                    <li><a class="toctree-l4" href="#do-i-need-a-dependency-injection">Do I need a Dependency Injection?</a></li>
                 
                     <li><a class="toctree-l4" href="#do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</a></li>
                 
@@ -99,12 +103,17 @@
                 
                     <li><a class="toctree-l4" href="#boostdi-design-goals">Boost.DI design goals</a></li>
                 
-                    <li><a class="toctree-l4" href="#related-materials">Related materials</a></li>
-                
                     <li><a class="toctree-l4" href="#acknowledgements">Acknowledgements</a></li>
                 
             
             </ul>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="materials/index.html">Materials/Videos</a>
         
     </li>
 <li>
@@ -246,10 +255,13 @@
 </blockquote>
 <p><strong><a href="http://www.youtube.com/watch?v=IKD2-MAkXyQ">Dependency Injection</a> (DI)</strong> involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
 It is like the Strategy Pattern, except the strategy is set once, at construction. DI enables loosely coupled designs, which are easier to maintain and test.</p>
+<p><center>
+In short, DI is all about construction!</p>
 <blockquote>
 <p><strong>"Let's make some coffee!"</strong></p>
 </blockquote>
-<p><center><a href="./images/coffee_maker.png"><img alt="Coffee Maker" src="./images/coffee_maker.png" /></a></center></p>
+<p><a href="./images/coffee_maker.png"><img alt="Coffee Maker" src="./images/coffee_maker.png" /></a>
+</center></p>
 <pre><code class="cpp">                      No Dependency injection                 | Dependency Injection
                       ----------------------------------------|-------------------------------------------
                       class coffee_maker {                    | class coffee_maker {
@@ -272,17 +284,72 @@ It is like the Strategy Pattern, except the strategy is set once, at constructio
                                                               | };
 </code></pre>
 
-<h3 id="do-i-need-dependency-injection">Do I need Dependency Injection?</h3>
+<h3 id="do-i-use-a-dependency-injection-already">Do I use a Dependency Injection already?</h3>
+<ul>
+<li>If you are using constructors in your code then you are probably using some form of Dependency Injection too!</li>
+</ul>
+<pre><code class="cpp">class Button {
+ public:
+  Button(const std::string&amp; name, Position position); // Dependency Injection!
+};
+</code></pre>
+
+<h3 id="do-i-use-dependency-injection-correctly">Do I use Dependency Injection correctly?</h3>
+<p>Common mistakes when using Dependency Injection are:</p>
+<ul>
+<li>Passing a dependency to create another dependency inside your object</li>
+</ul>
+<pre><code class="cpp">class Model {
+ public:
+   Model(int width, int height) 
+     : board(std::make_unique&lt;Board&gt;(width, height)) // Bad
+   { } 
+
+   explicit Model(std::unique_ptr&lt;IBoard&gt; board) // Better
+     : board(std::move(board))
+   { } 
+
+   ...
+
+ private:
+  std::unique_ptr&lt;IBoard&gt; board;
+};
+</code></pre>
+
+<ul>
+<li>Carrying dependencies</li>
+</ul>
+<pre><code class="cpp">class Model : public Service { // Bad
+ public:
+   explicit Model(std::unique_ptr&lt;IBoard&gt; board) // Bad
+     : Service(std::move(board))
+   { } 
+
+   void update() {
+     Service::do_something_with_board(); // Bad
+   }
+};
+
+class Model { // Better
+ public:
+   explicit Model(std::unique_ptr&lt;Service&gt; service) // Better
+     : service(std::move(service))
+   { } 
+
+   void update() {
+     service.do_something_with_board(); // Better
+   }
+
+ private:
+   std::unique_ptr&lt;Service&gt; service;
+};
+</code></pre>
+
+<h3 id="do-i-need-a-dependency-injection">Do I need a Dependency Injection?</h3>
 <ul>
 <li>DI provides loosely coupled code (separation of business logic and object creation)</li>
 <li>DI provides easier to maintain code (different objects might be easily injected)</li>
-<li>
-<p>DI provides easier to test code (fakes objects might be injected)</p>
-<ul>
-<li><a href="http://www.youtube.com/watch?v=RlfLCWKxHJ0">The Clean Code Talks - Don't Look For Things!</a></li>
-<li><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw">A New Type of dependency injection</a></li>
-</ul>
-</li>
+<li>DI provides easier to test code (fakes objects might be injected)</li>
 </ul>
 <h3 id="do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</h3>
 <p>Depending on a project and its scale you may put up with or without a DI library, however, in any project
@@ -436,10 +503,6 @@ but also can help you with...</p>
 <li>Be as non-intrusive as possible (See <a href="user_guide/index.html#injections">Injections</a>)</li>
 <li>Be easy to extend (See <a href="extensions/index.html">Extensions</a>)</li>
 </ul>
-<h3 id="related-materials">Related materials</h3>
-<ul>
-<li><a href="https://cppnow2016.sched.org/event/6Sfx/c14-dependency-injection-library-with-no-overhead-and-compile-time-guarantee-of-object-creation">CppNow-2016:</a> <a href="http://boost-experimental.github.io/di/cppnow-2016">C++14 Dependency Injection Library with no overhead and compile time guarantee of object creation</a></li>
-</ul>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
 <li>Thanks to Bartosz Kalinczuk for code review and tips how to improve <code>Boost.DI</code></li>
@@ -459,7 +522,7 @@ but also can help you with...</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="overview/index.html" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="materials/index.html" class="btn btn-neutral float-right" title="Materials/Videos">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -503,7 +566,7 @@ but also can help you with...</p>
       
       
       
-        <span style="margin-left: 15px"><a href="overview/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="materials/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -515,5 +578,5 @@ but also can help you with...</p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-10-17 16:37:25.280640
+Build Date UTC : 2016-10-23 16:54:56.355262
 -->
