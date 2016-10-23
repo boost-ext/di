@@ -36,6 +36,9 @@ def update_md(filename):
     elif line.find("[IFRAME]") != -1:
       src = line.split("(")[1].split(")")[0]
       print "[" + src + "](" + src + ")"
+    elif line.find("[YOUTUBE]") != -1:
+      src = line.split("(")[1].split(")")[0]
+      print "[" + src + "](" + src + ")"
     else:
       print(line),
 
