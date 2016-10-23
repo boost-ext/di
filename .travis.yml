@@ -225,7 +225,7 @@ before_install:
   - git config --global push.default simple
 
 install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew install cmake); fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew uninstall cmake; brew install cmake); fi
   - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
     && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh)
     && touch Jamroot && export BOOST_ROOT="$PWD/build-boost-1.59.0" && export PATH="$PATH:$BOOST_ROOT"; fi
