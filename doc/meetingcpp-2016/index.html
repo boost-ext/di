@@ -70,33 +70,23 @@ Kris Jusiak
 
 > "Don't call us, we'll call you", Hollywood principle
 
-#####No DI
-```cpp
-class Widget {
- public:
-  Widget() {
-    button_ = make_unique<Button>("name");
-  }
-};
-```
+####No DI
 
-#####DI
 ```cpp
-class Widget {
- public:
-  Widget(const Button& button) { }
+struct Widget {
+  Widget() : button_("widget") {}
   Button button_;
 };
 ```
 
-----
-##In short, DI is all about construction!
+####DI - It's all about the construction!
 
----
-
-###DI produces...
-* loosely coupled code
-* easy to test code
+```cpp
+struct Widget {
+  Widget(const Button& button) : button_(button) {}
+  Button button_;
+};
+```
 
 ----
 
@@ -104,12 +94,9 @@ class Widget {
 
 https://github.com/boost-experimental/di
 
-* One header (boost/di.hpp) / generated
-* 3k LOC
+* One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
-* No 'if' branches
-* No 'virtual' methods (-fno-rtti)
-* No 'exceptions' (-fno-exceptions)
+* No 'if's, 'virtual', 'exceptions' (-fno-rtti, -fno-exceptions)
 * Non-intrusive
 * Blazing fast (no overhead)
 * Nice and short error messages
@@ -118,35 +105,7 @@ https://github.com/boost-experimental/di
 
 ----
 
-##C++ vs Java
-
-| **Library** | Boost.DI | Guice | Dagger2 |
-| ----------  | -------- | ------------ | ------- |
-| Language    | C++14    | Java | Java |
-| License     | Boost 1.0 | Apache 2.0 | Apache 2.0 |
-| Linkage     | header only | jar | jar |
-| Approach    | compile-time | run-time | compile-time (annotation processor) |
-| Errors      | compile-time errors | exceptions | compile-time errors |
-
-----
-
-##Benchmarks (clang-3.8/Java8)
-
-| 64 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
-| --------------------- | ------------ | ---------------- | ------------- |
-| Compilation time    | 0.376s       |  0.570s            | 1.411s        |
-| Execution time      | 0.002s       |  0.528s            | 0.157s        |
-
----
-
-| 256 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
-| --------------------- | ------------ | ---------------- | ------------- |
-| Compilation time    | 0.706s       | 0.642s             | 1.903s        |
-| Execution time      | 0.002s       | 0.544s             | 0.210s        |
-
-----
-
-##Hello World
+##Boost.DI - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -173,6 +132,34 @@ int main() {
   injector.create<hello_world>();
 }
 ```
+
+----
+
+##Boost.DI vs Java
+
+| **Library** | Boost.DI | Guice | Dagger2 |
+| ----------  | -------- | ------------ | ------- |
+| Language    | C++14    | Java | Java |
+| License     | Boost 1.0 | Apache 2.0 | Apache 2.0 |
+| Linkage     | header only | jar | jar |
+| Approach    | compile-time | run-time | compile-time (annotation processor) |
+| Errors      | compile-time errors | exceptions | compile-time errors |
+
+----
+
+##Benchmarks (clang-3.8/Java8)
+
+| 64 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
+| --------------------- | ------------ | ---------------- | ------------- |
+| Compilation time    | 0.376s       |  0.570s            | 1.411s        |
+| Execution time      | 0.002s       |  0.528s            | 0.157s        |
+
+---
+
+| 256 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
+| --------------------- | ------------ | ---------------- | ------------- |
+| Compilation time    | 0.706s       | 0.642s             | 1.903s        |
+| Execution time      | 0.002s       | 0.544s             | 0.210s        |
 
 ==============================================================================
 
@@ -286,7 +273,7 @@ struct mocks_provider {
 };
 ```
 
-----
+==============================================================================
 
 ##Questions?
 
