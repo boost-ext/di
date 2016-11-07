@@ -4,7 +4,7 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>Experimental Boost.DI</title>
+		<title>TDD/BDD and Dependency Injection</title>
 
 		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
 		<meta name="author" content="Hakim El Hattab">
@@ -46,25 +46,32 @@ Kris Jusiak
 
 ==============================================================================
 
-TDD - Test Driven Development
-  * unit tests (When)
+##Testing
 
-BDD - Behaviour Driven Development
-  * integration tests (How)
+> TDD - Test Driven Development
 
-Red-Green-Refactor
+> Unit Tests / when
 
-Depeneency Injection
+---
+
+> BDD - Behaviour Driven Development
+
+> Integration Tests / how
+
+----
+
+##Red-Green-Refactor
+
+![TDD](images/tdd.gif)
+
+==============================================================================
+
+##Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
 
-In short, DI is all about construction!
-
-  * loosely copupled coded
-  * easy to test
-
+#####No DI
 ```cpp
-NO DI
 class Widget {
  public:
   Widget() {
@@ -73,8 +80,8 @@ class Widget {
 };
 ```
 
+#####DI
 ```cpp
-DI
 class Widget {
  public:
   Widget(const Button& button) { }
@@ -82,7 +89,18 @@ class Widget {
 };
 ```
 
-Boost.DI
+----
+##In short, DI is all about construction!
+
+---
+
+###DI produces...
+* loosely coupled code
+* easy to test code
+
+----
+
+##Experimental Boost.DI
 
 https://github.com/boost-experimental/di
 
@@ -92,63 +110,74 @@ https://github.com/boost-experimental/di
 * No 'if' branches
 * No 'virtual' methods (-fno-rtti)
 * No 'exceptions' (-fno-exceptions)
-* Supported compilers (C++14)
-  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
-  * [XCode-6.1+](https://travis-ci.org/boost-experimental/di)
-  * [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
-  * [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
-
 * Non-intrusive
 * Blazing fast (no overhead)
 * Nice and short error messages
+* Supported compilers (C++14)
+  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+----
 
 ##C++ vs Java
 
-| **Library** | Boost.DI | [Google.Guice] | [Dagger2] |
+| **Library** | Boost.DI | Guice | Dagger2 |
 | ----------  | -------- | ------------ | ------- |
 | Language    | C++14    | Java | Java |
-| Version     | 1.0.1    | 4.0 | 2.4 |
 | License     | Boost 1.0 | Apache 2.0 | Apache 2.0 |
 | Linkage     | header only | jar | jar |
 | Approach    | compile-time | run-time | compile-time (annotation processor) |
 | Errors      | compile-time errors | exceptions | compile-time errors |
 
-Small
-| **Clang-3.7 / Java8** | **Boost.DI** | **[Google.Guice]** | **[Dagger2]** |
+----
+
+##Benchmarks (clang-3.8/Java8)
+Small (64 ctors)
+
+|  | **Boost.DI** | **Guice** | **Dagger2** |
+| --------------------- | ------------ | ---------------- | ------------- |
 | Compilation time    | 0.376s       |  0.570s            | 1.411s        |
 | Execution time      | 0.002s       |  0.528s            | 0.157s        |
 
-Medium
+Medium (256 ctors)
+
+|  | | | |
+| --------------------- | ------------ | ---------------- | ------------- |
 | Compilation time    | 0.706s       | 0.642s             | 1.903s        |
 | Execution time      | 0.002s       | 0.544s             | 0.210s        |
 
+----
 
 ##Hello World
 
 ```cpp
 #include <boost/di.hpp>
-
 namespace di = boost::di;
+```
 
+```cpp
 struct iworld { virtual ~iworld() noexcept = default; };
 struct world : iworld {};
 struct ihello { virtual ~ihello() noexcept = default; };
 struct hello : ihello {};
+```
 
+```cpp
 struct hello_world {
   hello_world(const ihello&, const iworld&);
 };
 
 int main() {
   const auto injector = di::make_injector(
-    di::bind<ihello>.to<hello>()
-  , di::bind<iworld>.to<world>()
+     di::bind<ihello>.to<hello>()
+   , di::bind<iworld>.to<world>()
   );
   injector.create<hello_world>();
 }
 ```
 
-###ASM x86-64
+----
+
+##Hello World - ASM x86-64
 
 ```
 push   %rbx
@@ -162,42 +191,47 @@ pop    %rbx
 retq
 ```
 
-How's that related to TDD/BDD?
+==============================================================================
 
-TDD - Unit tests
-  * in asolation
+###TDD - Unit testing (in isolation)
 
 ```cpp
 "Parse SingleToken ReturnsEqualToeknValue"_test = [] {
-
+  auto bankAccount = make_unique<BankAccount>("Mr. Kent Beck", 100_$);
+  CreditCheck credit_check{bankAccount,
 };
 ```
 
-* Problems
-  - no functional changes require a test change
-    * order of parameters
-    * parameter type change
-    * mocks have to be added and maintained
+----
 
-BDD - Integration Tests***
-  * from user perspective
+###Problems
+
+* No functional changes require a test change
+  * Constructor parameters order change
+  * Constructor type change (unique_ptr->const&)
+
+----
+
+###TDD with DI
 
 ```cpp
-class CanvasMock : public ICanvas {
-public:
-  MOCK_METHOD1(load_image, texture());
-  ...
+"Parse SingleToken ReturnsEqualToeknValue"_test = [] {
+  const CreditCheck cd{di::make_injector()};
 };
 ```
+
+==============================================================================
+
+###BDD - Integration Tests* (from user point of view)
 
 ```cpp
 "Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
-  //given (simplified!)
-  CanvasMock canvas_mock;                                // -
-  Config config{8/*width*/, 10/*height*/, 1/*moves*/};   //  \ 
-  Board board{config, {{3,5,1,4,3,2,2, ...}}};           //   - boilderplate, hard to maintain
-  Contoller controller{config, board};                   //  /
-  Game game{controller, canvas_mock};                    // -
+  //given (simplified!) <- boilerpalte
+  CanvasMock canvas_mock;
+  Config config{8/*width*/, 10/*height*/, 1/*moves*/};
+  Board board{config, {{3,5,1,4,3,2,2, ...}}};
+  Contoller controller{config, board};
+  Game game{controller, canvas_mock};
 
   EXPECT(canvas_mock, show_moves).
 
@@ -206,16 +240,49 @@ public:
 };
 ```
 
-* Problems
-  - whole objects tree has to be created and maintained!
-    * causing a wiring mess!
-  - + all problems from unit tests
+----
 
-How?
+###Problems
+* Whole objects tree has to be created and maintained!
+  * causing a wiring mess!
+  * mocks have to be added and maintained (gmock)
+* Plus all problems from unit tests
 
-##Automatic mocks injection
+----
 
-example from match3
+###BDD with DI
+
+```cpp
+"Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
+  const auto injector = di::make_injector<mocks_provider>(
+     di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
+   , di::bind<colors_t[]>.to({3,5,1,4,3,2,2, ...})
+  );
+
+  auto&& canvas = mocks_provider::get_mock<icanvas>();
+  When(Method(canvas, load_image)).AlwaysReturn(empty_texture{});
+  auto&& random = mocks_provider::get_mock<irandom>();
+  When(Method(random, get)).AlwaysReturn(42);
+  auto game = injector.create<game>();
+```
+
+```cpp
+  game.swipe({3, 5}, {3, 6});
+```
+
+```cpp
+  Verify(Method(canvas, show_moves).Using(1).Using(0));
+  Verify(Method(canvas, show_board).Using({3,5,1,4,3,2,2...})
+                                   .Using({5,2,42,42,42,2...});
+```
+
+----
+
+#How?
+
+----
+
+##Automatic mocks injector
 
 ```cpp
 struct mocks_provider {
@@ -236,55 +303,33 @@ struct mocks_provider {
 };
 ```
 
-```cpp
-"Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
-  //given
-  const auto injector = di::make_injector<mocks_provider>(
-     di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
-   , di::bind<colors_t[]>.to({3,5,1,4,3,2,2, ...})
-  );
+----
 
-  auto&& canvas = mocks_provider::get_mock<icanvas>();
-  When(Method(canvas, load_image)).AlwaysReturn(empty_texture{});
+##Questions?
 
-  auto&& random = mocks_provider::get_mock<irandom>();
-  When(Method(random, get)).AlwaysReturn(42);
-  auto game = injector.create<game>();
+* https://github.com/boost-experimental/di
 
-  // when
-  game.swipe({3, 5}, {3, 6});
+* https://github.com/eranpeer/FakeIt
 
-  //then
-  Verify(Method(canvas, show_moves).Using(1).Using(0));
-  Verify(Method(canvas, show_board).Using({3,5,1,4,3,2,2...}).Using({5,2,42,42,42,2...});
-```
+==============================================================================
 
-> https://github.com/eranpeer/FakeIt
+##Bonus - Simplest test framework
 
-Questions?
-
-https://github.com/boost-experimental/di
-https://github.com/eranpeer/FakeIt
-
-Bonus
-
-##Simplest test lanucher
-
+####Implementation
 ```cpp
 template <char...>
 struct test {
   template <class Test>
-  auto operator=(const Test& test) {
-    test();
-    return true;
-  }
+  auto operator=(const Test& test) { test(); return true; }
 };
-template <class T, T... Chars>
+
+template <class T, T... Chars> // GNU extension for now, maybe C++20
 constexpr auto operator""_test() {
   return test<Chars...>{};
 }
 ```
 
+####Usage
 ```cpp
 "first test" = [] {
   assert(0 == 0);
@@ -294,9 +339,6 @@ constexpr auto operator""_test() {
   assert(1 == 0);
 };
 ```
-
-==============================================================================
-
 					</script>
 				</section>
 			</div>
@@ -370,7 +412,7 @@ constexpr auto operator""_test() {
         hideAddressBar: true,
 
         // Opens links in an iframe preview overlay
-        previewLinks: false,
+        previewLinks: true,
 
         // Transition style
         transition: 'convex', // none/fade/slide/convex/concave/zoom
