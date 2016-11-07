@@ -111,6 +111,7 @@ struct _ {
   _(...) {}
 };
 namespace aux {
+using swallow = int[];
 template <class T>
 using owner = T;
 template <class...>
@@ -2177,8 +2178,7 @@ class policy {
                                                              aux::bool_list<try_call_impl<TArg, TPolicies>::value...>> {};
   template <class TArg, class... TPolicies>
   static void call(__BOOST_DI_UNUSED const pool_t<TPolicies...>& policies) noexcept {
-    int _[]{0, (call_impl<TArg, TPolicies>(policies), 0)...};
-    (void)_;
+    (void)aux::swallow{0, (call_impl<TArg, TPolicies>(policies), 0)...};
   }
 };
 }

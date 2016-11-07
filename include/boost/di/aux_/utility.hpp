@@ -13,6 +13,8 @@ struct _ {
 
 namespace aux {
 
+using swallow = int[];
+
 template <class T>
 using owner = T;
 
