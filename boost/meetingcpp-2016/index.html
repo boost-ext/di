@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Experimental Boost.DI</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+          <section data-markdown=""
+                   data-separator="^====+$"
+                   data-separator-vertical="^----+$"
+                   data-notes="^Note:">
+					<script type="text/template">
+
+#TDD/BDD and Dependency Injection
+
+Kris Jusiak
+
+==============================================================================
+
+TDD - Test Driven Development
+  * unit tests (When)
+
+BDD - Behaviour Driven Development
+  * integration tests (How)
+
+Red-Green-Refactor
+
+Depeneency Injection
+
+> "Don't call us, we'll call you", Hollywood principle
+
+In short, DI is all about construction!
+
+  * loosely copupled coded
+  * easy to test
+
+```cpp
+NO DI
+class Widget {
+ public:
+  Widget() {
+    button_ = make_unique<Button>("name");
+  }
+};
+```
+
+```cpp
+DI
+class Widget {
+ public:
+  Widget(const Button& button) { }
+  Button button_;
+};
+```
+
+Boost.DI
+
+https://github.com/boost-experimental/di
+
+* One header (boost/di.hpp) / generated
+* 3k LOC
+* Neither Boost nor STL is required
+* No 'if' branches
+* No 'virtual' methods (-fno-rtti)
+* No 'exceptions' (-fno-exceptions)
+* Supported compilers (C++14)
+  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
+  * [XCode-6.1+](https://travis-ci.org/boost-experimental/di)
+  * [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
+  * [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+* Non-intrusive
+* Blazing fast (no overhead)
+* Nice and short error messages
+
+##C++ vs Java
+
+| **Library** | Boost.DI | [Google.Guice] | [Dagger2] |
+| ----------  | -------- | ------------ | ------- |
+| Language    | C++14    | Java | Java |
+| Version     | 1.0.1    | 4.0 | 2.4 |
+| License     | Boost 1.0 | Apache 2.0 | Apache 2.0 |
+| Linkage     | header only | jar | jar |
+| Approach    | compile-time | run-time | compile-time (annotation processor) |
+| Errors      | compile-time errors | exceptions | compile-time errors |
+
+Small
+| **Clang-3.7 / Java8** | **Boost.DI** | **[Google.Guice]** | **[Dagger2]** |
+| Compilation time    | 0.376s       |  0.570s            | 1.411s        |
+| Execution time      | 0.002s       |  0.528s            | 0.157s        |
+
+Medium
+| Compilation time    | 0.706s       | 0.642s             | 1.903s        |
+| Execution time      | 0.002s       | 0.544s             | 0.210s        |
+
+
+##Hello World
+
+```cpp
+#include <boost/di.hpp>
+
+namespace di = boost::di;
+
+struct iworld { virtual ~iworld() noexcept = default; };
+struct world : iworld {};
+struct ihello { virtual ~ihello() noexcept = default; };
+struct hello : ihello {};
+
+struct hello_world {
+  hello_world(const ihello&, const iworld&);
+};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<ihello>.to<hello>()
+  , di::bind<iworld>.to<world>()
+  );
+  injector.create<hello_world>();
+}
+```
+
+###ASM x86-64
+
+```
+push   %rbx
+mov    %rdi,%rbx
+mov    $0x8,%edi
+callq  0x4009f0 <_Znwm@plt>
+movq   $0x400e78,(%rax)
+mov    %rax,(%rbx)
+mov    %rbx,%rax
+pop    %rbx
+retq
+```
+
+How's that related to TDD/BDD?
+
+TDD - Unit tests
+  * in asolation
+
+```cpp
+"Parse SingleToken ReturnsEqualToeknValue"_test = [] {
+
+};
+```
+
+* Problems
+  - no functional changes require a test change
+    * order of parameters
+    * parameter type change
+    * mocks have to be added and maintained
+
+BDD - Integration Tests***
+  * from user perspective
+
+```cpp
+class CanvasMock : public ICanvas {
+public:
+  MOCK_METHOD1(load_image, texture());
+  ...
+};
+```
+
+```cpp
+"Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
+  //given (simplified!)
+  CanvasMock canvas_mock;                                // -
+  Config config{8/*width*/, 10/*height*/, 1/*moves*/};   //  \ 
+  Board board{config, {{3,5,1,4,3,2,2, ...}}};           //   - boilderplate, hard to maintain
+  Contoller controller{config, board};                   //  /
+  Game game{controller, canvas_mock};                    // -
+
+  EXPECT(canvas_mock, show_moves).
+
+  //when
+  game.swipe({3, 5}, {3, 6});
+};
+```
+
+* Problems
+  - whole objects tree has to be created and maintained!
+    * causing a wiring mess!
+  - + all problems from unit tests
+
+How?
+
+##Automatic mocks injection
+
+example from match3
+
+```cpp
+struct mock_provider {
+  template <class T, class... TArgs>
+  auto get(TArgs&&... args) const {
+    if constexpr(std::is_polymorphic<T>{}) {
+      return get_mock<T>()
+    } else {
+      return make_unique<T>(std::forward<TArgs>(args)...);
+    }
+  }
+};
+```
+
+```cpp
+"Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
+  //given
+  const auto injector = di::make_injector<mocks_provider>(
+     di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
+   , di::bind<colors_t[]>.to({3,5,1,4,3,2,2, ...})
+  );
+
+  auto&& canvas = mocks_provider::get_mock<icanvas>();
+  When(Method(canvas, load_image)).AlwaysReturn(empty_texture{});
+
+  auto&& random = mocks_provider::get_mock<irandom>();
+  When(Method(random, get)).AlwaysReturn(42);
+  auto game = injector.create<game>();
+
+  // when
+  game.swipe({3, 5}, {3, 6});
+
+  //then
+  Verify(Method(canvas, show_moves).Using(1).Using(0));
+  Verify(Method(canvas, show_board).Using({3,5,1,4,3,2,2...}).Using({5,2,42,42,42,2...});
+```
+
+> https://github.com/eranpeer/FakeIt
+
+Questions?
+
+https://github.com/boost-experimental/di
+https://github.com/eranpeer/FakeIt
+
+Bonus
+
+##Simplest test lanucher
+
+```cpp
+template <char...>
+struct test {
+  template <class Test>
+  auto operator=(const Test& test) {
+    test();
+    return true;
+  }
+};
+template <class T, T... Chars>
+constexpr auto operator""_test() {
+  return test<Chars...>{};
+}
+```
+
+```cpp
+"first test" = [] {
+  assert(0 == 0);
+};
+
+"second test" = [] {
+  assert(1 == 0);
+};
+```
+
+==============================================================================
+
+					</script>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // Turns fragments on and off globally
+        fragments: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: true,
+
+        // Hides the address bar on mobile devices
+        hideAddressBar: true,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Parallax background image
+        parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+        // Parallax background size
+        parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+        // Number of pixels to move the parallax background per slide
+        // - Calculated automatically unless specified
+        // - Set to 0 to disable movement along an axis
+        parallaxBackgroundHorizontal: null,
+        parallaxBackgroundVertical: null,
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
