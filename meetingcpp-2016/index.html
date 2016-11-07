@@ -131,16 +131,15 @@ https://github.com/boost-experimental/di
 ----
 
 ##Benchmarks (clang-3.8/Java8)
-Small (64 ctors)
 
-|  | **Boost.DI** | **Guice** | **Dagger2** |
+| 64 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
 | Compilation time    | 0.376s       |  0.570s            | 1.411s        |
 | Execution time      | 0.002s       |  0.528s            | 0.157s        |
 
-Medium (256 ctors)
+---
 
-|  | | | |
+| 256 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
 | Compilation time    | 0.706s       | 0.642s             | 1.903s        |
 | Execution time      | 0.002s       | 0.544s             | 0.210s        |
@@ -173,22 +172,6 @@ int main() {
   );
   injector.create<hello_world>();
 }
-```
-
-----
-
-##Hello World - ASM x86-64
-
-```
-push   %rbx
-mov    %rdi,%rbx
-mov    $0x8,%edi
-callq  0x4009f0 <_Znwm@plt>
-movq   $0x400e78,(%rax)
-mov    %rax,(%rbx)
-mov    %rbx,%rax
-pop    %rbx
-retq
 ```
 
 ==============================================================================
