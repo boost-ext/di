@@ -46,29 +46,31 @@ Kris Jusiak
 
 ==============================================================================
 
-##Testing
+##TDD - Test Driven Development (the when)
 
-> TDD - Test Driven Development
-
-> Unit Tests / when
-
----
-
-> BDD - Behaviour Driven Development
-
-> Integration Tests / how
+> Unit Tests (the what)
 
 ----
 
-##Red-Green-Refactor
+##TDD Mantra - Red-Green-Refactor
 
 ![TDD](images/tdd.gif)
+
+----
+
+##BDD - Behaviour Driven Development
+
+> Unit/Integration Tests (the how)
 
 ==============================================================================
 
 ##Dependency Injection
 
 > "Don't call us, we'll call you", Hollywood principle
+
+----
+
+## It's all about the construction!
 
 ####No DI
 
@@ -79,7 +81,7 @@ struct Widget {
 };
 ```
 
-####DI - It's all about the construction!
+####DI
 
 ```cpp
 struct Widget {
@@ -140,7 +142,6 @@ int main() {
 | **Library** | Boost.DI | Guice | Dagger2 |
 | ----------  | -------- | ------------ | ------- |
 | Language    | C++14    | Java | Java |
-| License     | Boost 1.0 | Apache 2.0 | Apache 2.0 |
 | Linkage     | header only | jar | jar |
 | Approach    | compile-time | run-time | compile-time (annotation processor) |
 | Errors      | compile-time errors | exceptions | compile-time errors |
@@ -163,7 +164,11 @@ int main() {
 
 ==============================================================================
 
-###TDD - Unit testing (in isolation)
+##TDD By Example
+
+----
+
+##Unit testing (isolation)
 
 ```cpp
 "Parse SingleToken ReturnsEqualToeknValue"_test = [] {
@@ -182,7 +187,7 @@ int main() {
 
 ----
 
-###TDD with DI
+###Unit testing with DI
 
 ```cpp
 "Parse SingleToken ReturnsEqualToeknValue"_test = [] {
@@ -192,7 +197,11 @@ int main() {
 
 ==============================================================================
 
-###BDD - Integration Tests* (from user point of view)
+##BDD By Example
+
+----
+
+###Integration Testing (behaviour)
 
 ```cpp
 "Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
@@ -220,7 +229,7 @@ int main() {
 
 ----
 
-###BDD with DI
+###Integration Testing with DI
 
 ```cpp
 "Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
@@ -246,13 +255,32 @@ int main() {
                                    .Using({5,2,42,42,42,2...});
 ```
 
-----
-
-#How?
-
-----
+==============================================================================
 
 ##Automatic mocks injector
+
+> Create and inject mocks automatically with Boost.DI and FakeIt!
+
+----
+
+##Showcase
+
+```cpp
+"showcase"_test = [] {
+  // create injector with mocks provider
+  const auto injector = di::make_injector<mocks_provider>();
+
+  // get the mock to setup expectations
+  auto&& mock = mocks_provider::get_mock<interface>();
+
+  // create an app and inject all dependencies
+  injector.create<app>();
+};
+```
+
+----
+
+##Mocks Provider - Implementation
 
 ```cpp
 struct mocks_provider {
@@ -285,6 +313,8 @@ struct mocks_provider {
 
 ##Bonus - Simplest test framework
 
+----
+
 ####Implementation
 ```cpp
 template <char...>
@@ -293,7 +323,7 @@ struct test {
   auto operator=(const Test& test) { test(); return true; }
 };
 
-template <class T, T... Chars> // GNU extension for now, maybe C++20
+template <class T, T... Chars> // GNU extension for now, maybe in C++20
 constexpr auto operator""_test() {
   return test<Chars...>{};
 }
