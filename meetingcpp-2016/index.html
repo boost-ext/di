@@ -218,7 +218,7 @@ How?
 example from match3
 
 ```cpp
-struct mock_provider {
+struct mocks_provider {
   template <class T, class... TArgs>
   auto get(TArgs&&... args) const {
     if constexpr(std::is_polymorphic<T>{}) {
@@ -226,6 +226,12 @@ struct mock_provider {
     } else {
       return make_unique<T>(std::forward<TArgs>(args)...);
     }
+  }
+
+  template <class T>
+  static auto& get_mock() {
+    static fakeit::Mock<T> mock;
+    return mock;
   }
 };
 ```
