@@ -186,11 +186,13 @@ int main() {
 
 ----
 
-###Problems
+###Non-functional code changes
 
-* No functional changes require a test change
-  * Constructor parameters order change
-  * Constructor type change (unique_ptr->const&)
+| Code change  | Test will work without changes |
+| - | - |
+| Constructor order change | - |
+| Constructor parmater type change | - |
+| Mocks change | - |
 
 ----
 
@@ -201,6 +203,16 @@ int main() {
   const CreditCheck cd{di::make_injector()};
 };
 ```
+
+----
+
+###Non-functional code changes (DI)
+
+| Code change  | Test will work without changes |
+| - | - |
+| Constructor order change | ✔ |
+| Constructor parmater type change | ✔ |
+| Mocks change | ✔ |
 
 ==============================================================================
 
@@ -228,11 +240,14 @@ int main() {
 
 ----
 
-###Problems
-* Whole objects tree has to be created and maintained!
-  * causing a wiring mess!
-  * mocks have to be added and maintained (gmock)
-* Plus all problems from unit tests
+###Non-functional code changes
+
+| Code change  | Test will work without changes |
+| - | - |
+| Dependencies tree change (wiring mess!) | - |
+| Constructor order change | - |
+| Constructor parmater type change | - |
+| Mocks change | - |
 
 ----
 
@@ -261,6 +276,17 @@ int main() {
   Verify(Method(canvas, show_board).Using({3,5,1,4,3,2,2...})
                                    .Using({5,2,42,42,42,2...});
 ```
+
+----
+
+###Non-functional code changes (DI)
+
+| Code change  | Test will work without changes |
+| - | - |
+| Dependencies tree change (wiring mess!) | ✔ |
+| Constructor order change | ✔ |
+| Constructor parmater type change | ✔ |
+| Mocks change | ✔ |
 
 ==============================================================================
 
@@ -310,14 +336,29 @@ struct mocks_provider {
 
 ==============================================================================
 
+##Summary
+
+* Think large scale (x1000 more work in big projects)
+
+* Non-functional changes casuing tests modifications
+  * Tedious changes
+  * Leads into an argument that unit-testing are pointless
+
+* Wiring mess
+  * Boilerplate code, hard to maintain (order of initializing dependencies is important)
+  * Usually leads into a bad design
+    * Breaks Single Responsibily Principle as it's easier to do a workaround
+
+==============================================================================
+
 ##Questions?
 
-* https://github.com/boost-experimental/di
+> * https://github.com/boost-experimental/di
 * https://github.com/eranpeer/FakeIt
 
----
+-
 
-* [kris@jusiak.net](mailto:kris@jusiak.net)
+> * [kris@jusiak.net](mailto:kris@jusiak.net)
 * [@krisjusiak](https://twitter.com/krisjusiak)
 * https://www.linkedin.com/in/kris-jusiak
 
