@@ -338,14 +338,25 @@ struct mocks_provider {
 
 ##Summary
 
-* Think large scale (x1000 more work in big projects)
+----
 
-* Non-functional changes cause tests modifications
-  * Tedious changes
+###Think large scale
+> x1000 more work in big projects
+
+----
+
+###Non-functional changes cause tests modifications
+
+> * Tedious changes
   * Leads into an argument that unit-testing are pointless
 
-* Wiring mess
-  * Boilerplate code, hard to maintain (order of initializing dependencies is important)
+----
+
+###Wiring mess
+
+> * Boilerplate code
+  * Hard to maintain
+    * Order of initializing dependencies is important
   * Usually leads into a bad design
     * Breaks Single Responsibily Principle as it's easier to do a workaround
 
@@ -353,8 +364,10 @@ struct mocks_provider {
 
 ##Questions?
 
-> * https://github.com/boost-experimental/di
-* https://github.com/eranpeer/FakeIt
+|   |   |
+| - | - |
+| Boost.DI | https://github.com/boost-experimental/di |
+| FakeIt   | https://github.com/eranpeer/FakeIt |
 
 -
 
