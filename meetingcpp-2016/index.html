@@ -84,24 +84,24 @@ Kris Jusiak
 
 ## It's all about the construction!
 
-####No DI
-
 ```cpp
-struct Widget {
-  Widget() : button_("widget") {}
-  Button button_;
-};
+No Dependency injection                  | Dependency Injection
+-----------------------------------------|------------------------------
+class coffee_maker {                     | class coffee_maker {
+public:                                  | public:
+ coffee_maker()                          |  coffee_maker(
+ : heater(make_shared<electric_heater>())|    shared_ptr<iheater> heater
+ , pump(make_unique<heat_pump>(heater))  |  , unique_ptr<ipump> pump) :
+ { }                                     |    : heater(heater)
+                                         |    , pump(move(pump)) { }
+  void brew();                           |
+                                         |   void brew();
+private:                                 |
+  shared_ptr<iheater> heater;            | private:
+  unique_ptr<ipump> pump;                |   shared_ptr<iheater> heater;
+};                                       |   unique_ptr<ipump> pump;
+                                         |};
 ```
-
-####DI
-
-```cpp
-struct Widget {
-  Widget(const Button& button) : button_(button) {}
-  Button button_;
-};
-```
-
 ----
 
 ##Experimental Boost.DI
