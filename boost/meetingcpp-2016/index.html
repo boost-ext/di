@@ -44,7 +44,6 @@ Meeting C++ 2016 - Lightning talk
 
 #TDD/BDD and Dependency Injection
 
-
 Kris Jusiak
 
 ---
@@ -73,7 +72,7 @@ Kris Jusiak
 
 ##BDD - Behaviour Driven Development
 
-> Unit/Integration Tests (the how)
+> Unit/Integration/Functional Tests (the how)
 
 ==============================================================================
 
@@ -85,24 +84,23 @@ Kris Jusiak
 
 ## It's all about the construction!
 
+####No DI
 ```cpp
-No Dependency injection                  | Dependency Injection
------------------------------------------|------------------------------
-class coffee_maker {                     | class coffee_maker {
-public:                                  | public:
- coffee_maker()                          |  coffee_maker(
- : heater(make_shared<electric_heater>())|    shared_ptr<iheater> heater
- , pump(make_unique<heat_pump>(heater))  |  , unique_ptr<ipump> pump) :
- { }                                     |    : heater(heater)
-                                         |    , pump(move(pump)) { }
-  void brew();                           |
-                                         |   void brew();
-private:                                 |
-  shared_ptr<iheater> heater;            | private:
-  unique_ptr<ipump> pump;                |   shared_ptr<iheater> heater;
-};                                       |   unique_ptr<ipump> pump;
-                                         |};
+coffee_maker()                          
+  : heater(make_shared<electric_heater>()) // construct dependencies
+  , pump(make_unique<heat_pump>(heater))  
+{ }                                     
 ```
+
+####DI
+```cpp
+coffee_maker(shared_ptr<iheater> heater // inject dependencies
+           , unique_ptr<ipump> pump)
+  : heater(heater)
+  , pump(move(pump))
+{ }
+```
+
 ----
 
 ##Experimental Boost.DI
@@ -137,15 +135,17 @@ struct hello : ihello {};
 
 ```cpp
 struct hello_world {
-  hello_world(const ihello&, const iworld&);
-};
-
-int main() {
-  const auto injector = di::make_injector(
-     di::bind<ihello>.to<hello>()
-   , di::bind<iworld>.to<world>()
+  hello_world(const ihello&, const iworld&); // DI handles order
+};                  ^              ^         // and types
+                    |              \------------\
+                    \----------------------\    |
+int main() {                               |    |
+  const auto injector = di::make_injector( |    |
+     di::bind<ihello>.to<hello>() ---------/    |
+   , di::bind<iworld>.to<world>() -------------/
   );
-  injector.create<hello_world>();
+
+  auto hw = injector.create<unique_ptr<hello_world>>();
 }
 ```
 
@@ -227,7 +227,7 @@ int main() {
 
 ----
 
-###Integration Testing (behaviour)
+###Integration/Functional Testing (behaviour)
 
 ```cpp
 "Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
@@ -258,7 +258,7 @@ int main() {
 
 ----
 
-###Integration Testing with DI
+###Integration/Functional Testing with DI
 
 ```cpp
 "Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
@@ -306,12 +306,22 @@ int main() {
 ##Showcase
 
 ```cpp
-"showcase"_test = [] {
+class app {
+ public:
+  app(const interface& i) {
+    assert(i.do_it());
+  }
+};
+```
+
+```cpp
+"app do_it showcase"_test = [] {
   // create injector with mocks provider
   const auto injector = di::make_injector<mocks_provider>();
 
   // get the mock to setup expectations
   auto&& mock = mocks_provider::get_mock<interface>();
+  When(Method(mock, do_it)).AlwaysReturn(true);
 
   // create an app and inject all dependencies
   injector.create<app>();
