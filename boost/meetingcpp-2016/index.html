@@ -105,15 +105,15 @@ coffee_maker(shared_ptr<iheater> heater // inject dependencies
 
 ##Experimental Boost.DI
 
+> Dependency Injection Library
+
 https://github.com/boost-experimental/di
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
 * No 'if's, 'virtual', 'exceptions' (-fno-rtti, -fno-exceptions)
-* Non-intrusive
-* No run-time overhead
-* Quick compilation times
-* Short and informative error messages
+* Non-intrusive, no run-time overhead
+* Quick compilation times and short error messages
 * Supported compilers (C++14)
   * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
@@ -145,7 +145,7 @@ int main() {                               |    |
    , di::bind<iworld>.to<world>() -------------/
   );
 
-  auto hw = injector.create<unique_ptr<hello_world>>();
+  auto hw = injector.create<hello_world>();
 }
 ```
 
@@ -153,28 +153,13 @@ int main() {                               |    |
 
 ##Boost.DI vs Java
 
-| **Library** | Boost.DI | Guice | Dagger2 |
-| ----------  | -------- | ------------ | ------- |
+|    | **Boost.DI** | **Guice** | **Dagger2** |
+| ------------------- | ------------ | ---------------- | ------------- |
 | Language    | C++14    | Java | Java |
-| Linkage     | header only | jar | jar |
-| Approach    | compile-time | run-time | compile-time (annotation processor) |
-| Errors      | compile-time errors | exceptions | compile-time errors |
-
-----
-
-##Benchmarks (clang-3.8/Java8)
-
-| 64 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
-| --------------------- | ------------ | ---------------- | ------------- |
+| Errors      | compile-time | exceptions (reflection) | compile-time (annotations) |
+| [Test - 64 unique types](http://boost-experimental.github.io/di/benchmarks/index.html) | | | |
 | Compilation time    | 0.376s       |  0.570s            | 1.411s        |
 | Execution time      | 0.002s       |  0.528s            | 0.157s        |
-
----
-
-| 256 types, 1-4 ctor params, 1024 iterations | **Boost.DI** | **Guice** | **Dagger2** |
-| --------------------- | ------------ | ---------------- | ------------- |
-| Compilation time    | 0.706s       | 0.642s             | 1.903s        |
-| Execution time      | 0.002s       | 0.544s             | 0.210s        |
 
 ==============================================================================
 
@@ -193,7 +178,7 @@ int main() {                               |    |
 
 ----
 
-###Non-functional code changes
+###Potenitally Non-functional code changes
 
 | Code change  | Test will work without changes |
 | - | - |
@@ -213,7 +198,7 @@ int main() {                               |    |
 
 ----
 
-###Non-functional code changes (DI)
+###Potenitally Non-functional code changes (DI)
 
 | Code change  | Test will work without changes |
 | - | - |
@@ -247,7 +232,7 @@ int main() {                               |    |
 
 ----
 
-###Non-functional code changes
+###Potenitally Non-functional code changes
 
 | Code change  | Test will work without changes |
 | - | - |
@@ -286,7 +271,7 @@ int main() {                               |    |
 
 ----
 
-###Non-functional code changes (DI)
+###Potenitally Non-functional code changes (DI)
 
 | Code change  | Test will work without changes |
 | - | - |
@@ -363,7 +348,7 @@ struct mocks_provider {
 
 ----
 
-###Non-functional changes cause tests modifications
+###Potenitally Non-functional changes cause tests modifications
 
 > * Tedious changes
   * Leads into an argument that unit-testing are pointless
