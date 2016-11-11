@@ -66,9 +66,9 @@ Kris Jusiak
 
 ##TDD Mantra - Red-Green-Refactor
 
-![TDD](images/tdd.gif)
+<img src="images/tdd.gif" width="40%" />
 
-> Refactor -> remove duplicates!
+> Refactor => remove duplicates!
 
 ----
 
@@ -109,131 +109,259 @@ coffee_maker(shared_ptr<iheater> heater // inject dependencies
 
 ----
 
-idep1 {
-};
+##0. Use Case
 
-idep1 {
-};
-Board(idep1, idep2);
+> Let's make some coffee!
 
-Usual Approach
+![coffee_maker](images/coffee_maker.png)
 
-1. Mock for IDep1
-    gmock{}
+----
 
-2. Mock for IDep2
-    gmock{}
- 
-3. Test
-{
-    Idep1 d1;
-    Idep2 d2;
-    Board b{d1, d2};
+##Usual approach
 
-    b.update();
+----
 
-    expect(...);
-}
-
-4. Implementation
-
-  blah....
-
-5. Refactor
-
-  nothing much here...
-
-6. Test 2
-{
-}
-
-7. Implementatio 
-
-8. Refactor (remove duplicates)
-
-  b = make_board()
-
----
-
-With DI
-
-1. Mock For IDep1
-  no thank you...
-2. Mock For IDep2
-  no thank you...
-3. Test
-{
-
-    auto b = make_injector().create<Board>();
-    ...
-}
-
-4. Implementation
-5. Refactor
-6. Test 2
-8. Refactor
-Done
-
----
-
-1. Change the ctor and split dep2 into dep3, dep4
-  Board b{dep3, dep3, unique_ptr<dep4>);
-
-No DI
-   1. New Mock
-   2. adapt make_board()...
-
-DI
-  BOarding... no changes
-
-Summary...
-
----
-
-Functional Tests
-
-tree diagram
-
-most of dpe but some 
-
-##Unit testing (isolation)
+##1. Make a brew (test)
 
 ```cpp
-"Parse SingleToken ReturnsEqualToeknValue"_test = [] {
-  auto bankAccount = make_unique<BankAccount>("Mr. Kent Beck", 100_$);
-  CreditCheck credit_check{bankAccount,
+"when brew then heat and pump coffee"_test = [] {
+  StrictMock<heater_mock> heater;
+  StrictMock<pump_mock> pump;
+  coffee_maker cm{heater, pump};
+
+  EXPECT_CALL(heater, on());
+  EXPECT_CALL(pump, pump());
+  EXPECT_CALL(heater, off());
+
+  cm.brew();
 };
 ```
 
 ----
 
-###Potenitally Non-functional code changes
-
-| Code change  | Test will work without changes |
-| - | - |
-| Constructor order change | - |
-| Constructor parmater type change | - |
-| Mocks change | - |
-
-----
-
-###Unit testing with DI
+##2. Create coffee_maker stub
 
 ```cpp
-"Parse SingleToken ReturnsEqualToeknValue"_test = [] {
-  const CreditCheck cd{di::make_injector()};
+class coffee_maker {
+public:
+  coffee_maker(iheater&, ipump&);
+  void brew();
 };
 ```
 
 ----
 
-###Potenitally Non-functional code changes (DI)
+##3. Create `iheater` interface
 
-| Code change  | Test will work without changes |
-| - | - |
-| Constructor order change | ✔ |
-| Constructor parmater type change | ✔ |
-| Mocks change | ✔ |
+```cpp
+struct iheater {
+  virtual ~iheater() noexcept = default;
+  virtual void on() = 0;
+  virtual void off() = 0;
+};
+```
+
+----
+
+##4. Create `iheater` mock (gmock)
+
+```cpp
+struct heater_mock : iheater {
+  MOCK_METHOD0(on, void());
+  MOCK_METHOD0(off, void());
+};
+```
+
+----
+
+##5. Create `ipump` interface
+
+```cpp
+struct ipump {
+    virtual ~ipump() noexcept = default;
+    virtual void pump() = 0;
+};
+```
+
+----
+
+##6. Create `ipump` mock
+
+```cpp
+struct pump_mock : imock {
+  MOCK_METHOD0(pump, void());
+};
+```
+
+----
+
+##Test is compiling but not passing... (Red)
+
+----
+
+##7. Write the simplest implementation
+
+```cpp
+void coffee_maker::brew() {
+  heater.on();
+  pump.pump();
+  heater.off();
+}
+```
+
+----
+
+##Test is passing... (Green)
+
+###7 steps
+
+----
+
+##Refactor
+
+> No duplicates yet
+
+----
+
+##DI + mocks injector approach
+
+----
+
+##1. Make a brew (test)
+
+```cpp
+"when brew then heat and pump coffee"_test = [] {
+  auto cm = di::make_injector().create<coffee_maker>();
+
+  Verify(Method(mock<iheater>, on));
+  Verify(Method(mock<ipump>, pump));
+  Verify(Method(mock<iheater>, off));
+
+  cm.brew();
+};
+```
+
+----
+
+##2. Create coffee_maker stub
+
+###As before...
+
+```cpp
+class coffee_maker {
+public:
+  coffee_maker(iheater&, ipump&);
+  void brew();
+};
+```
+
+----
+
+##3. Create `iheater` interface
+
+###As before...
+
+```cpp
+struct iheater {
+  virtual ~iheater() noexcept = default;
+  virtual void on() = 0;
+  virtual void off() = 0;
+};
+```
+
+----
+
+##4. Create `ipump` interface
+
+###As before...
+
+```cpp
+struct ipump {
+    virtual ~ipump() noexcept = default;
+    virtual void pump() = 0;
+};
+```
+
+----
+
+##Test is compiling but not passing... (Red)
+
+----
+
+##5. Write the simplest implementation
+
+###As before...
+
+```cpp
+void coffee_maker::brew() {
+  heater.on();
+  pump.pump();
+  heater.off();
+}
+```
+
+----
+
+##Test is passing... (Green)
+
+###5 steps
+
+----
+
+##Refactor
+
+###As Before...
+
+--- 
+
+> No duplicates yet
+
+----
+
+##Usual appraoch vs DI + mocks injector approach
+
+# 5 < 7
+
+----
+
+##But what if...?
+
+###Coffee Maker Constructor
+
+```cpp
+coffee_maker(iheater&, ipump&);
+```
+
+```cpp
+1. Usual: coffee_maker cm{heater_mock{}, pump_mock{}}; 
+2. DI:    auto cm = make_injector().create<coffee_maker>();
+```
+
+----
+
+###Will have a new filter dependency?
+
+```cpp
+coffee_maker(iheater&, ipump&, ifilter&); 
+```
+
+```cpp
+3. Usual: coffee_maker cm{heater_mock{}, pump_mock{}, filter_mock{}}; 
+4. DI:    same as in line 2!
+```
+
+----
+
+###Will change the constructor order?
+
+```cpp
+coffee_maker(ipump&, iheater&, ifilter&);
+```
+
+```cpp
+5. Usual: coffee_maker cm{pump_mock{}, heater_mock{}, filter_mock{}}; 
+6. DI:    same as in line 2!
+```
 
 ==============================================================================
 
@@ -241,73 +369,65 @@ most of dpe but some
 
 ----
 
-###Integration/Functional Testing (behaviour)
+##Use case
+
+>Let's make a match-3 game and swipe items
+
+![game](images/game.png)
+
+----
+
+###Usual approach (Integration/Functional tests)
 
 ```cpp
-"Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
-  //given (simplified!) <- boilerpalte
-  CanvasMock canvas_mock;
+"given: player has 1 move, when: swipe, then: no moves"_test = [] {
+  StrictMock<canvas_mock> canvas;
   Config config{8/*width*/, 10/*height*/, 1/*moves*/};
   Board board{config, {{3,5,1,4,3,2,2, ...}}};
   Contoller controller{config, board};
-  Game game{controller, canvas_mock};
+  Game game{controller, canvas};
 
-  EXPECT(canvas_mock, show_moves).
+  EXPECT(canvas, show_moves(1));
+  EXPECT(canvas, show_board({3,5,1,4,3,2,2...}));
+  game.start();
 
-  //when
+  EXPECT(canvas, show_moves(0));
+  EXPECT(canvas, show_board({5,2,1,1,4,2,2...});
   game.swipe({3, 5}, {3, 6});
 };
 ```
 
 ----
 
-###Potenitally Non-functional code changes
-
-| Code change  | Test will work without changes |
-| - | - |
-| Dependencies tree change (wiring mess!) | - |
-| Constructor order change | - |
-| Constructor parmater type change | - |
-| Mocks change | - |
-
-----
-
 ###Integration/Functional Testing with DI
 
 ```cpp
-"Given:PlayerHas1MoveLeft When:WinningSwipe Then:NoMoves"_test = [] {
+"given: player has 1 move, when: swipe, then: no moves"_test = [] {
   const auto injector = di::make_injector<mocks_provider>(
      di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
    , di::bind<colors_t[]>.to({3,5,1,4,3,2,2, ...})
   );
+  auto game = injector.create<Game>();
 
-  auto&& canvas = mocks_provider::get_mock<icanvas>();
-  When(Method(canvas, load_image)).AlwaysReturn(empty_texture{});
-  auto&& random = mocks_provider::get_mock<irandom>();
-  When(Method(random, get)).AlwaysReturn(42);
-  auto game = injector.create<game>();
-```
+  Verify(Method(mock<icanvas>, show_moves).Using(1);
+  Verify(Method(mock<icanvas>, show_board).Using({3,5,1,4,3,2,2...});
+  game.start();
 
-```cpp
+  Verify(Method(mock<icanvas>, show_moves).Using(0);
+  Verify(Method(mock<icanvas>, show_board).Using({5,2,1,1,4,2,2...});
   game.swipe({3, 5}, {3, 6});
-```
-
-```cpp
-  Verify(Method(canvas, show_moves).Using(1).Using(0));
-  Verify(Method(canvas, show_board).Using({3,5,1,4,3,2,2...})
-                                   .Using({5,2,42,42,42,2...});
 ```
 
 ----
 
-###Potenitally Non-functional code changes (DI)
+##But what if...?
 
-| Code change  | Test will work without changes |
+###Anything in the following diagram will change?
+<img src="images/game.png" width="20%" />
+
+| Usual appraoch | DI + mocks injector approach |
 | - | - |
-| Dependencies tree change (wiring mess!) | ✔ |
-| Constructor order change | ✔ |
-| Constructor parmater type change | ✔ |
-| Mocks change | ✔ |
+| BOOM!!! | No changes in the test required! |
 
 ==============================================================================
 
@@ -320,6 +440,8 @@ most of dpe but some
 > Dependency Injection Library
 
 https://github.com/boost-experimental/di
+
+---
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
@@ -381,9 +503,11 @@ int main() {                               |    |
 
 https://github.com/eranpeer/FakeIt
 
-> Not standard, depening on vtable layout
+---
 
-supported by ...
+* Not standard, depening on vtable layout
+* Supported compilers (C++11)
+  * GCC/Clang/MSVC
 
 ----
 
@@ -399,19 +523,18 @@ supported by ...
 class app {
  public:
   app(const interface& i) {
-    assert(i.do_it());
+    assert(i.update());
   }
 };
 ```
 
 ```cpp
-"app do_it showcase"_test = [] {
+"update app"_test = [] {
   // create injector with mocks provider
   const auto injector = di::make_injector<mocks_provider>();
 
   // get the mock to setup expectations
-  auto&& mock = mocks_provider::get_mock<interface>();
-  When(Method(mock, do_it)).AlwaysReturn(true);
+  When(Method(mock<interface>, update)).AlwaysReturn(true);
 
   // create an app and inject all dependencies
   injector.create<app>();
@@ -423,20 +546,20 @@ class app {
 ##Mocks Provider - Implementation
 
 ```cpp
+template <class T>
+static auto& mock() {
+  static fakeit::Mock<T> mock;
+  return mock;
+}
+
 struct mocks_provider {
   template <class T, class... TArgs>
   auto get(TArgs&&... args) const {
     if constexpr(std::is_polymorphic<T>{}) {
-      return get_mock<T>()
+      return mock<T>();
     } else {
       return make_unique<T>(std::forward<TArgs>(args)...);
     }
-  }
-
-  template <class T>
-  static auto& get_mock() {
-    static fakeit::Mock<T> mock;
-    return mock;
   }
 };
 ```
@@ -444,6 +567,10 @@ struct mocks_provider {
 ==============================================================================
 
 ##Summary
+
+----
+
+###Less work is better than more work
 
 ----
 
