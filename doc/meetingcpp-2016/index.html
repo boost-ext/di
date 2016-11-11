@@ -40,7 +40,7 @@
                    data-notes="^Note:">
 					<script type="text/template">
 
-Meeting C++ 2016 - Lightning talk
+Meeting C++ 2016
 
 #TDD/BDD and Dependency Injection
 
@@ -67,6 +67,8 @@ Kris Jusiak
 ##TDD Mantra - Red-Green-Refactor
 
 ![TDD](images/tdd.gif)
+
+> Refactor -> remove duplicates!
 
 ----
 
@@ -101,71 +103,98 @@ coffee_maker(shared_ptr<iheater> heater // inject dependencies
 { }
 ```
 
-----
-
-##Experimental Boost.DI
-
-> Dependency Injection Library
-
-https://github.com/boost-experimental/di
-
-* One header - 3k LOC - (boost/di.hpp) / generated
-* Neither Boost nor STL is required
-* No 'if's, 'virtual', 'exceptions' (-fno-rtti, -fno-exceptions)
-* Non-intrusive, no run-time overhead
-* Quick compilation times and short error messages
-* Supported compilers (C++14)
-  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
-
-----
-
-##Boost.DI - Hello World
-
-```cpp
-#include <boost/di.hpp>
-namespace di = boost::di;
-```
-
-```cpp
-struct iworld { virtual ~iworld() noexcept = default; };
-struct world : iworld {};
-struct ihello { virtual ~ihello() noexcept = default; };
-struct hello : ihello {};
-```
-
-```cpp
-struct hello_world {
-  hello_world(const ihello&, const iworld&); // DI handles order
-};                  ^              ^         // and types
-                    |              \------------\
-                    \----------------------\    |
-int main() {                               |    |
-  const auto injector = di::make_injector( |    |
-     di::bind<ihello>.to<hello>() ---------/    |
-   , di::bind<iworld>.to<world>() -------------/
-  );
-
-  auto hw = injector.create<hello_world>();
-}
-```
-
-----
-
-##Boost.DI vs Java
-
-|    | **Boost.DI** | **Guice** | **Dagger2** |
-| ------------------- | ------------ | ---------------- | ------------- |
-| Language    | C++14    | Java | Java |
-| Errors      | compile-time | exceptions (reflection) | compile-time (annotations) |
-| [Test - 64 unique types](http://boost-experimental.github.io/di/benchmarks/index.html) | | | |
-| Compilation time    | 0.376s       |  0.570s            | 1.411s        |
-| Execution time      | 0.002s       |  0.528s            | 0.157s        |
-
 ==============================================================================
 
 ##TDD By Example
 
 ----
+
+idep1 {
+};
+
+idep1 {
+};
+Board(idep1, idep2);
+
+Usual Approach
+
+1. Mock for IDep1
+    gmock{}
+
+2. Mock for IDep2
+    gmock{}
+ 
+3. Test
+{
+    Idep1 d1;
+    Idep2 d2;
+    Board b{d1, d2};
+
+    b.update();
+
+    expect(...);
+}
+
+4. Implementation
+
+  blah....
+
+5. Refactor
+
+  nothing much here...
+
+6. Test 2
+{
+}
+
+7. Implementatio 
+
+8. Refactor (remove duplicates)
+
+  b = make_board()
+
+---
+
+With DI
+
+1. Mock For IDep1
+  no thank you...
+2. Mock For IDep2
+  no thank you...
+3. Test
+{
+
+    auto b = make_injector().create<Board>();
+    ...
+}
+
+4. Implementation
+5. Refactor
+6. Test 2
+8. Refactor
+Done
+
+---
+
+1. Change the ctor and split dep2 into dep3, dep4
+  Board b{dep3, dep3, unique_ptr<dep4>);
+
+No DI
+   1. New Mock
+   2. adapt make_board()...
+
+DI
+  BOarding... no changes
+
+Summary...
+
+---
+
+Functional Tests
+
+tree diagram
+
+most of dpe but some 
 
 ##Unit testing (isolation)
 
@@ -282,13 +311,89 @@ int main() {                               |    |
 
 ==============================================================================
 
+##Brought you by...
+
+----
+
+##Boost.DI (Proposed)
+
+> Dependency Injection Library
+
+https://github.com/boost-experimental/di
+
+* One header - 3k LOC - (boost/di.hpp) / generated
+* Neither Boost nor STL is required
+* No 'if's, 'virtual', 'exceptions' (-fno-rtti, -fno-exceptions)
+* Non-intrusive, no run-time overhead
+* Quick compilation times and short error messages
+* Supported compilers (C++14)
+  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+----
+
+##Boost.DI - Hello World
+
+```cpp
+#include <boost/di.hpp>
+namespace di = boost::di;
+```
+
+```cpp
+struct iworld { virtual ~iworld() noexcept = default; };
+struct world : iworld {};
+struct ihello { virtual ~ihello() noexcept = default; };
+struct hello : ihello {};
+```
+
+```cpp
+struct hello_world {
+  hello_world(const ihello&, const iworld&); // DI handles order
+};                  ^              ^         // and types
+                    |              \------------\
+                    \----------------------\    |
+int main() {                               |    |
+  const auto injector = di::make_injector( |    |
+     di::bind<ihello>.to<hello>() ---------/    |
+   , di::bind<iworld>.to<world>() -------------/
+  );
+
+  auto hw = injector.create<hello_world>();
+}
+```
+
+----
+
+##Boost.DI vs Java
+
+|    | **Boost.DI** | **Guice** | **Dagger2** |
+| ------------------- | ------------ | ---------------- | ------------- |
+| Language    | C++14    | Java | Java |
+| Errors      | compile-time | exceptions (reflection) | compile-time (annotations) |
+| [Test - 64 unique types](http://boost-experimental.github.io/di/benchmarks/index.html) | | | |
+| Compilation time    | 0.376s       |  0.570s            | 1.411s        |
+| Execution time      | 0.002s       |  0.528s            | 0.157s        |
+
+----
+
+##FakeIt
+
+> Mocking library
+
+https://github.com/eranpeer/FakeIt
+
+> Not standard, depening on vtable layout
+
+supported by ...
+
+----
+
 ##Automatic mocks injector
 
 > Create and inject mocks automatically with Boost.DI and FakeIt!
 
 ----
 
-##Showcase
+##Automatic mocks injector
 
 ```cpp
 class app {
