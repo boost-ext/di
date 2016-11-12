@@ -76,6 +76,8 @@ Kris Jusiak
 
 > Unit/Integration/Functional Tests (the how)
 
+Extension of TDD
+
 ==============================================================================
 
 ##Dependency Injection
@@ -124,7 +126,7 @@ coffee_maker(shared_ptr<iheater> heater // inject dependencies
 ##1. Make a brew (test)
 
 ```cpp
-"when brew then heat and pump coffee"_test = [] {
+"brew should pump and heat water"_test = [] {
   StrictMock<heater_mock> heater;
   StrictMock<pump_mock> pump;
   coffee_maker cm{heater, pump};
@@ -230,7 +232,7 @@ void coffee_maker::brew() {
 ##1. Make a brew (test)
 
 ```cpp
-"when brew then heat and pump coffee"_test = [] {
+"brew should pump and heat water"_test = [] {
   auto cm = di::make_injector().create<coffee_maker>();
 
   Verify(Method(mock<iheater>, on));
@@ -312,8 +314,6 @@ void coffee_maker::brew() {
 
 ###As Before...
 
---- 
-
 > No duplicates yet
 
 ----
@@ -363,24 +363,46 @@ coffee_maker(ipump&, iheater&, ifilter&);
 6. DI:    same as in line 2!
 ```
 
+----
+
+##Usual appraoch vs DI + mocks injector approach
+
+# 0 < 1
+
 ==============================================================================
 
 ##BDD By Example
 
 ----
 
-##Use case
-
->Let's make a match-3 game and swipe items
+##Feature - Player plays match-3 game
 
 ![game](images/game.png)
 
 ----
 
-###Usual approach (Integration/Functional tests)
+##0. Scenario - Player swipe items
+
+* GIVEN
+  * Player has 1 move left
+
+* WHEN
+  * Player swipe 2 items resulting in a match-3
+
+* THEN
+  * Player has no more moves
+  * Player see updated board
+
+----
+
+##Usual approach
+
+----
+
+###1. Player swipe items (Integration/Functional test)
 
 ```cpp
-"given: player has 1 move, when: swipe, then: no moves"_test = [] {
+"given player has 1 move, when player swipes then no moves"_test = [] {
   StrictMock<canvas_mock> canvas;
   Config config{8/*width*/, 10/*height*/, 1/*moves*/};
   Board board{config, {{3,5,1,4,3,2,2, ...}}};
@@ -399,10 +421,16 @@ coffee_maker(ipump&, iheater&, ifilter&);
 
 ----
 
-###Integration/Functional Testing with DI
+##2. Red
+##3. Green
+##4. Refactor
+
+----
+
+###1. Player swipe items (Integration/Functional test with DI)
 
 ```cpp
-"given: player has 1 move, when: swipe, then: no moves"_test = [] {
+"given player has 1 move, when player swipes then no moves"_test = [] {
   const auto injector = di::make_injector<mocks_provider>(
      di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
    , di::bind<colors_t[]>.to({3,5,1,4,3,2,2, ...})
@@ -420,6 +448,12 @@ coffee_maker(ipump&, iheater&, ifilter&);
 
 ----
 
+##2. Red
+##3. Green
+##4. Refactor
+
+----
+
 ##But what if...?
 
 ###Anything in the following diagram will change?
@@ -427,7 +461,13 @@ coffee_maker(ipump&, iheater&, ifilter&);
 
 | Usual appraoch | DI + mocks injector approach |
 | - | - |
-| BOOM!!! | No changes in the test required! |
+| BOOM! | No changes in the test required! |
+
+----
+
+##Usual appraoch vs DI + mocks injector approach
+
+# No changes > BOOM!
 
 ==============================================================================
 
