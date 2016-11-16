@@ -164,7 +164,7 @@ struct app {
 ```
 
 ```cpp
-"update app"_test = [] {
+"should update app"_test = [] {
   // given
   const auto injector = di::make_injector<mocks_provider>();
 
@@ -179,7 +179,7 @@ struct app {
 
 ----
 
-##Libraries
+##Requiremnts
 
 ----
 
@@ -325,13 +325,16 @@ struct mocks_provider {
 
 ```cpp
 "brew should pump and heat water"_test = [] {
+  // given
   auto cm = di::make_injector().create<coffee_maker>();
 
+  // when
+  cm.brew();
+
+  // then
   Verify(Method(mock<iheater>, on));
   Verify(Method(mock<ipump>, pump));
   Verify(Method(mock<iheater>, off));
-
-  cm.brew();
 };
 ```
 
@@ -341,14 +344,14 @@ struct mocks_provider {
 
 ####Constructor (As Usual)
 ```cpp
-struct coffee_maker {                   struct coffee_maker {
-  coffee_maker(iheater&, ipump&);         coffee_maker(ipump&, iheater&);
-  void brew();                            void brew();
-};                                      };
+struct coffee_maker {                struct coffee_maker {
+  coffee_maker(iheater&, ipump&);      coffee_maker(ipump&, iheater&);
+  void brew();                         void brew();
+};                                   };
 
 struct coffee_maker {
   coffee_maker(
-    unique_ptr<ipump>,                  etc...
+    unique_ptr<ipump>,               etc...
     const shared_ptr<iheater>&);
   void brew();
 };
@@ -528,7 +531,8 @@ struct test {
   auto operator=(const Test& test) { test(); return true; }
 };
 
-template <class T, T... Chars> // GNU extension for now, maybe in C++20
+// GNU extension for now, maybe in C++20
+template <class T, T... Chars>
 constexpr auto operator""_test() {
   return test<Chars...>{};
 }
@@ -536,12 +540,12 @@ constexpr auto operator""_test() {
 
 ####Usage
 ```cpp
-"first test" = [] {
+"should be equal"_test = [] {
   assert(0 == 0);
 };
 
-"second test" = [] {
-  assert(1 == 0);
+"should not be equal"_test = [] {
+  assert(!(1 == 0));
 };
 ```
 					</script>
