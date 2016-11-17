@@ -111,7 +111,7 @@ struct interface_mock : interface {
   // when
   mock.foo(true); mock.foo(false);
   // then
-  mock.call(foo(true)).call(foo(false));
+  expect_call(mock, foo(true)); expect_call(mock, foo(false));
 };
 ```
 
