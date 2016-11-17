@@ -88,7 +88,7 @@ Complementary with TDD
 
 ###Mocking (Example)
 
-####Interface
+####Interface/Mock
 ```cpp
 struct interface {
   virtual ~interface() noexcept = default;
@@ -96,7 +96,6 @@ struct interface {
 };
 ```
 
-####Mock
 ```cpp
 struct interface_mock : interface {
   void foo(bool) override { magic...; }
@@ -105,7 +104,7 @@ struct interface_mock : interface {
 
 ####Test
 ```cpp
-"mocking"_test = [] {
+"should mock foo call"_test = [] {
   // given
   interface_mock mock;
   // when
