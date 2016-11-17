@@ -315,13 +315,13 @@ struct mocks_provider {
 
 ##Use Case
 
-> Let's test some coffee!
+> Let's put coffee to the test!
 
 ![coffee_maker](images/coffee_maker.png)
 
 ----
 
-##Test making a brew
+##Making a brew Test
 
 ```cpp
 "brew should pump and heat water"_test = [] {
@@ -357,7 +357,7 @@ struct coffee_maker {
 };
 ```
 
-###However, with DI constructor types and order doesn't matter! (Easy refactor)
+###With DI constructor types and its order doesn't matter! (Easy refactor)
 
 ----
 
@@ -412,7 +412,7 @@ struct ipump {
   // given
   const auto injector = di::make_injector<mocks_provider>(
      di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
-   , di::bind<colors_t[]>.to({3,5,1,4,3,2,2, ...})
+   , di::bind<board::colors_t[]>.to({3,5,1,4,3,2,2,...})
   );
   auto game = injector.create<Game>();
 ```
@@ -423,16 +423,16 @@ struct ipump {
 
   // then
   Verify(Method(mock<icanvas>, show_moves).Using(1);
-  Verify(Method(mock<icanvas>, show_board).Using({3,5,1,4,3,2,2...});
+  Verify(Method(mock<icanvas>, show_board).Using({3,5,1,4,3,2,2,...});
 ```
 
 ```cpp
   // when
-  game.swipe({3, 5}, {3, 6});
+  game.swipe({3, 5}, {3, 6}); // a winning swipe
 
   // then
   Verify(Method(mock<icanvas>, show_moves).Using(0);
-  Verify(Method(mock<icanvas>, show_board).Using({5,2,1,1,4,2,2...});
+  Verify(Method(mock<icanvas>, show_board).Using({5,2,1,1,4,2,2,...});
 };
 ```
 
@@ -440,15 +440,15 @@ struct ipump {
 
 ##DI - Wiring mess
 
-####Make a game
+####Create a game (Simplified)
 ```cpp
  Manual DI                                   | Boost.DI
 ---------------------------------------------+----------------------------------
-StrictMock<canvas_mock> canvas;              | auto game = di::make_injector(
-Config config{8, 10, 1};                     |   di::bind<>.to(config{8, 10, 1})
-Board board{config, {{3,5,1,4,3,2,2, ...}}}; | ).create<Game>()
-Contoller controller{config, board};         |
-Game game{controller, canvas};               |
+ StrictMock<canvas_mock> canvas;             | auto game = di::make_injector(
+ Config config{8, 10, 1};                    |   di::bind<>.to(config{8, 10, 1})
+ Board board{config, {{3,5,1,4,3,2,2, ...}}};| ).create<Game>();
+ Contoller controller{config, board};        |
+ Game game{controller, canvas};              |
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
@@ -465,14 +465,14 @@ Game(Contoller&, const icanvas&)             -> Game(const icanvas&, unique_ptr<
 
 ####Make a game
 ```cpp
- Manual DI                                           | Boost.DI (No changes required!)
------------------------------------------------------+----------------------------------------
-StrictMock<canvas_mock> canvas;                      |
-Config config{8, 10, 1};                             | auto game = di::make_injector(
-Board board{{{3,5,1,4,3,2,2, ...}}, config}; // DIFF |   di::bind<>.to(config{8, 10, 1})
-auto controller =                                    | ).create<Game>()
-  make_unique<Contoller>(board, config); // DIFF     |
-Game game{canvas, controller}; // DIFF               |
+ Manual DI                                            | Boost.DI (No changes required!)
+------------------------------------------------------+----------------------------------
+ StrictMock<canvas_mock> canvas;                      |
+ Config config{8, 10, 1};                             | auto game = di::make_injector(
+ Board board{{{3,5,1,4,3,2,2, ...}}, config}; /*DIFF*/|   di::bind<>.to(config{8, 10, 1})
+ auto controller =                                    | ).create<Game>(); // same old
+   make_unique<Contoller>(board, config); /*DIFF*/    |
+ Game game{canvas, controller}; /*DIFF*/              |
 ```
 <!-- .element: style="margin-left:-10%; width:120%" -->
 
@@ -483,7 +483,7 @@ Game game{canvas, controller}; // DIFF               |
 ----
 
 ###Less work is better than more work
-> * x1000 harder in bigger projects
+> * Think scale
 > * Treat testing code as production code
 
 ----
@@ -523,6 +523,8 @@ Game game{canvas, controller}; // DIFF               |
 
 ----
 
+###'Test Framework'
+
 ####Implementation
 ```cpp
 template <char...>
@@ -533,9 +535,7 @@ struct test {
 
 // GNU extension for now, maybe in C++20
 template <class T, T... Chars>
-constexpr auto operator""_test() {
-  return test<Chars...>{};
-}
+constexpr auto operator""_test() { return test<Chars...>{}; }
 ```
 
 ####Usage
