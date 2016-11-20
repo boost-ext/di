@@ -145,7 +145,7 @@ coffee_maker(shared_ptr<iheater> heater // inject dependencies
 
 ##Automatic mocks injector
 
-> Create and inject mocks automatically using Boost.DI and FakeIt!
+> Create and inject mocks automatically using [Boost].DI and FakeIt!
 
 ----
 
@@ -222,7 +222,7 @@ Verify(Method(mock,foo).Using(true));
 
 ----
 
-##Boost.DI (Proposed)
+##[Boost].DI
 
 > Dependency Injection Library
 
@@ -230,7 +230,7 @@ https://github.com/boost-experimental/di
 
 ----
 
-##Boost.DI
+##[Boost].DI
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
@@ -242,7 +242,7 @@ https://github.com/boost-experimental/di
 
 ----
 
-##Boost.DI - Hello World
+##[Boost].DI - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -274,9 +274,9 @@ int main() {                               |    |
 
 ----
 
-##Boost.DI vs Java
+##[Boost].DI vs Java
 
-|    | **Boost.DI** | **Guice** | **Dagger2** |
+|    | **[Boost].DI** | **Guice** | **Dagger2** |
 | ------------------- | ------------ | ---------------- | ------------- |
 | Language    | C++14    | Java | Java |
 | Errors      | compile-time | exceptions (reflection) | compile-time (annotations) |
@@ -441,7 +441,7 @@ struct ipump {
 
 ####Create a game (Simplified)
 ```cpp
- Manual DI                                   | Boost.DI
+ Manual DI                                   | [Boost].DI
 ---------------------------------------------+----------------------------------
  StrictMock<canvas_mock> canvas;             | auto game = di::make_injector(
  Config config{8, 10, 1};                    |   di::bind<>.to(config{8, 10, 1})
@@ -464,7 +464,7 @@ Game(Contoller&, const icanvas&)             -> Game(const icanvas&, unique_ptr<
 
 ####Make a game
 ```cpp
- Manual DI                                            | Boost.DI (No changes required!)
+ Manual DI                                            | [Boost].DI (No changes required!)
 ------------------------------------------------------+----------------------------------
  StrictMock<canvas_mock> canvas;                      |
  Config config{8, 10, 1};                             | auto game = di::make_injector(
@@ -507,7 +507,7 @@ Game(Contoller&, const icanvas&)             -> Game(const icanvas&, unique_ptr<
 
 |   |   |
 | - | - |
-| Boost.DI | https://github.com/boost-experimental/di |
+| [Boost].DI | https://github.com/boost-experimental/di |
 | FakeIt   | https://github.com/eranpeer/FakeIt |
 
 -
