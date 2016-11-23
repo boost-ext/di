@@ -15,6 +15,9 @@ branches:
     - gh-pages
     - benchmarks
 
+git:
+  depth: 1
+
 matrix:
   fast_finish: true
 
@@ -128,6 +131,14 @@ matrix:
       apt:
         packages: ["clang-3.9", "libstdc++-5-dev", "gdb"]
         sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise"]
+  - os: linux
+    env: BS=cmake CXX=clang++-4.0
+    addons:
+      apt:
+        packages: ["clang-4.0", "gdb"]
+        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise"]
+        sourceline: 'deb http://apt.llvm.org/trusty/ llvm-toolchain-trusty main'
+        key_url: 'http://apt.llvm.org/llvm-snapshot.gpg.key'
   - os: linux
     env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=VALGRIND CXX=g++-5
     addons:
