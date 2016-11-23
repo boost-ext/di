@@ -5,7 +5,7 @@
 
 <meta name="author" content="Kris Jusiak">
 <link rel="canonical" href="http://boost-experimental.github.io/di/FAQ/index.html">
-<title>FAQ - Boost.DI</title>
+<title>FAQ - [Boost].DI</title>
 
 <link href="../css/boostbook.css" rel="stylesheet">
 <link href="../css/github.css" rel="stylesheet">
@@ -32,7 +32,7 @@
     
 
     
-        <dt><span class="section"><a href="#why-c14-is-required-for-boostdi">Why C++14 is required for Boost.DI?</a></span></dt>
+        <dt><span class="section"><a href="#why-c14-is-required-for-boostdi">Why C++14 is required for [Boost].DI?</a></span></dt>
     
 
     
@@ -44,7 +44,7 @@
     
 
     
-        <dt><span class="section"><a href="#since-boostdi-has-a-compile-time-approach-can-i-have-dynamic-bindings">Since Boost.DI has a compile time approach can I have dynamic bindings?</a></span></dt>
+        <dt><span class="section"><a href="#since-boostdi-has-a-compile-time-approach-can-i-have-dynamic-bindings">Since [Boost].DI has a compile time approach can I have dynamic bindings?</a></span></dt>
     
 
 </dl>
@@ -64,8 +64,8 @@ DI, on the other hand, is less intrusive and easier to follow than SL.</li>
 <blockquote></blockquote>
 <ul>
 <li>
-<h3 id="why-c14-is-required-for-boostdi">Why C++14 is required for Boost.DI?</h3>
-At first Boost.DI was implemented using C++03 standard with a switch to C++11 when available/possible.
+<h3 id="why-c14-is-required-for-boostdi">Why C++14 is required for [Boost].DI?</h3>
+At first [Boost].DI was implemented using C++03 standard with a switch to C++11 when available/possible.
 However, this approach, although was/is working just fine, was/is really slow to compile and hard to maintain too.
 Moreover, interface for <code>modules</code> wasn't perfect due to missing return type deduction for functions in C++11.
 Therefore, I made a decision to reimplement the core using C++14 features which sped up compilation times dramatically
@@ -84,14 +84,14 @@ Please check out <a href="../overview/index.html#nutshell">injection</a> design.
 <ul>
 <li>
 <h3 id="can-i-use-xml-in-order-to-set-up-bindings-configuration">Can I use XML in order to set-up bindings configuration?</h3>
-Yes, however, XML injection is not part of the Boost.DI release.
+Yes, however, XML injection is not part of the [Boost].DI release.
 Please, check out <a href="../extensions/index.html#xml-injection">XML Extension</a>.</li>
 </ul>
 <blockquote></blockquote>
 <ul>
 <li>
-<h3 id="since-boostdi-has-a-compile-time-approach-can-i-have-dynamic-bindings">Since Boost.DI has a compile time approach can I have dynamic bindings?</h3>
-Yes, Boost.DI supports dynamic bindings.</li>
+<h3 id="since-boostdi-has-a-compile-time-approach-can-i-have-dynamic-bindings">Since [Boost].DI has a compile time approach can I have dynamic bindings?</h3>
+Yes, [Boost].DI supports dynamic bindings.</li>
 </ul>
 <pre><code class="cpp">auto use_gui_view = ...;
 
