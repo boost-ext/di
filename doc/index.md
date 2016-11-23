@@ -10,7 +10,7 @@
 Introduction
 ============
 
-| **Experimental Boost.DI** | |
+| **[Boost].DI** | |
 | - | - |
 | Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/try_it/index.html)) | <a class="github-button" href="https://github.com/boost-experimental/di" data-style="mega" data-count-href="/boost-experimental/di/stargazers" data-count-api="/repos/boost-experimental/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-experimental/di on GitHub">GitHub</a> |
 
@@ -184,16 +184,16 @@ but also can help you with...
 * [Experimental Boost.SML](http://boost-experimental.github.io/sml)
     * C++14 header only Meta State Machine library with no dependencies
 
-###Why Boost.DI?
+###Why [Boost].DI?
 
-* Boost.DI has none or minimal run-time overhead (See [Performance](overview.md#performance))
-* Boost.DI compiles fast / **Faster than Java-[Dagger2]!** (See [Benchmarks](overview.md#benchmarks))
-* Boost.DI gives short diagnostic messages (See [Error messages](overview.md#error-messages))
-* Boost.DI is non-intrusive (See [Injections](user_guide.md#injections))
-* Boost.DI reduces boilerplate code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
-* Boost.DI reduces testing effort (See [Mocks Provider](extensions.md#mocks-provider))
-* Boost.DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
-* Boost.DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
+* [Boost].DI has none or minimal run-time overhead (See [Performance](overview.md#performance))
+* [Boost].DI compiles fast / **Faster than Java-[Dagger2]!** (See [Benchmarks](overview.md#benchmarks))
+* [Boost].DI gives short diagnostic messages (See [Error messages](overview.md#error-messages))
+* [Boost].DI is non-intrusive (See [Injections](user_guide.md#injections))
+* [Boost].DI reduces boilerplate code (See [Create Objects Tree](tutorial.md#1-basic-create-objects-tree))
+* [Boost].DI reduces testing effort (See [Mocks Provider](extensions.md#mocks-provider))
+* [Boost].DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
+* [Boost].DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
 
 ```cpp
 +---------------------------------------------------+
@@ -273,7 +273,7 @@ but also can help you with...
 
 <br /><br />
 
-###Boost.DI design goals
+###[Boost].DI design goals
 
 * Be as fast as possible (See [Performance](overview.md#performance))
 * Compile as fast as possible (See [Benchmarks](overview.md#benchmarks))
@@ -283,8 +283,8 @@ but also can help you with...
 * Be easy to extend (See [Extensions](extensions.md))
 
 ###Acknowledgements
-* Thanks to Bartosz Kalinczuk for code review and tips how to improve `Boost.DI`
-* Thanks to Sohail Somani for support and tips how to improve `Boost.DI`
+* Thanks to Bartosz Kalinczuk for code review and tips how to improve `[Boost].DI`
+* Thanks to Sohail Somani for support and tips how to improve `[Boost].DI`
 * Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it
 
 [Dagger2]: https://github.com/google/dagger

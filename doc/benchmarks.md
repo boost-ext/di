@@ -1,6 +1,6 @@
 ##C++ Libraries
 
-| **Library** | Boost.DI ([See Performance](overview.md#performance)) | [dicpp] | [Google.Fruit] |
+| **Library** | [Boost].DI ([See Performance](overview.md#performance)) | [dicpp] | [Google.Fruit] |
 | ----------- | -------- | ----- | ------------ |
 | Version     | 1.0.1 | HEAD | 2.0.2 |
 | Language    | C++14 | C++11 | C++11 |
@@ -16,7 +16,7 @@
 
 | Create a unique objects tree for each iteration<br /><br />`TYPES: 64`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 |  ------------------------ | ------------ | -------- | ---------- | -------------- |
-| **Clang-3.7**             | **Baseline** | **Boost.DI** | **[dicpp]**    | **[Google.Fruit]**              |
+| **Clang-3.7**             | **Baseline** | **[Boost].DI** | **[dicpp]**    | **[Google.Fruit]**              |
 | Compilation time          |              | 3.082s       | 1m14.080s      | 34.461s / FRUIT_NO_LOOP_CHECK |
 | Execution time            |              | 0.002s       | -              | -                               |
 | Memory usage (stack/heap) |              | 1b/0b        | -              | -                               |
@@ -36,7 +36,7 @@ cd benchmark && make
 
 ##C++ vs Java vs C# Libraries
 
-| **Library** | Boost.DI | [Google.Guice] | [Dagger2] | [Ninject] |
+| **Library** | [Boost].DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------  | -------- | ------------ | ------- | ------- |
 | Language    | C++14    | Java | Java | C# |
 | Version     | 1.0.1    | 4.0 | 2.4 | 3.2 |
@@ -56,7 +56,7 @@ cd benchmark && make
 
 | Create a unique objects tree for each iteration<br /><br />`TYPES: 64`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
 | ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| **Clang-3.7 -O2 / Java8 / Mono4.2 --aot** | **Baseline** | **Boost.DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
+| **Clang-3.7 -O2 / Java8 / Mono4.2 --aot** | **Baseline** | **[Boost].DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
 | Compilation time                    | 0.063s       | 0.376s       | 2.329s / FRUIT_NO_LOOP_CHECK   | 0.570s             | 1.411s        | 0.144s + 0.079s |
 | Executable size                     | 4.2K         | 8.5K         | 213K                           | -                  | -             | -               |
 | Execution time                      | 0.002s       | 0.002s       | 0.037s                         | 0.528s             | 0.157s        | 1.131s          |
@@ -87,7 +87,7 @@ cd benchmark && make
 
 | Library | Bind Interface | Performance |
 | ------- | -------------- | ----------- |
-| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
+| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
 | [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
 | [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) |
 | [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.java) |
@@ -96,7 +96,7 @@ cd benchmark && make
 
 | Library | Bind Value | Performance |
 | ------- | ---------- | ----------- |
-| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
+| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
 | [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
 | [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) |
 | [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.java) |
@@ -105,7 +105,7 @@ cd benchmark && make
 
 | Library | Missing Bindings Error |
 | ------- | ---------- |
-| Boost.DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
+| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
 | [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp) |
 | [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp) |
 | [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.java) |

@@ -10,11 +10,17 @@
 
 ---
 
-* C++Now 2016: **C++14 Dependency Injection Library (Boost.DI)**
+* C++Now 2016: **C++14 Dependency Injection Library ([Boost].DI)**
 
 ![YOUTUBE](https://www.youtube.com/embed/comZthFv3PM)
 
 [Slides](http://boost-experimental.github.io/di/cppnow-2016)
+
+---
+
+* MeetingC++ 2016: **TDD/BDD and Dependency Injection**
+
+[Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
 
 ---
 

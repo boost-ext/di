@@ -213,7 +213,7 @@ Check out also [instance] scope to read more about binding to values: `di::bind<
 ###Injections
 
 *Constructor Injection* is the most powerful of available injections.
-It guarantees initialized state of data members. Boost.DI constructor injection is achieved without any additional work from the user.
+It guarantees initialized state of data members. [Boost].DI constructor injection is achieved without any additional work from the user.
 
 <a id="di_automatic"></a>
 --- ***automatic (default)*** ---
@@ -224,7 +224,7 @@ It guarantees initialized state of data members. Boost.DI constructor injection 
 
 ***Description***
 
-Boost.DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
+[Boost].DI will deduce the best available constructor to be used for injection - unique constructor with the longest parameter list.
 If the default behavior should be changed constructor has to be explicitly marked with
 [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or di::ctor_traits] or [di::inject].
 
@@ -244,7 +244,7 @@ Automatic constructor parameters deduction is limited to [BOOST_DI_CFG_CTOR_LIMI
 | `parameter1-parameterN` | - | `N` constructor parameter | - |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-Boost.DI is not able to automatically distinguish between ambiguous constructors with the same (longest) number of parameters.
+[Boost].DI is not able to automatically distinguish between ambiguous constructors with the same (longest) number of parameters.
 Use [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or [di::ctor_traits] or [di::inject] to explicitly mark constructor to be injected.
 </span>
 
@@ -271,9 +271,9 @@ Use [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or [di::ctor_traits] or [di::i
 
 ***Description***
 
-BOOST_DI_INJECT is a macro definition used to explicitly say Boost.DI which constructor should be used as well as to annotate types - see [annotations] for further reding.
-When class has more than one constructor Boost.DI will by default choose the one with the longest parameter list.
-In case of constructors ambiguity, Boost.DI is not able to choose the best one.
+BOOST_DI_INJECT is a macro definition used to explicitly say [Boost].DI which constructor should be used as well as to annotate types - see [annotations] for further reding.
+When class has more than one constructor [Boost].DI will by default choose the one with the longest parameter list.
+In case of constructors ambiguity, [Boost].DI is not able to choose the best one.
 Then BOOST_DI_INJECT becomes handy to point which constructor should be used.
 
 ***Semantics***
@@ -344,7 +344,7 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 
 ***Description***
 
-`di::inject` informs Boost.DI about constructor parameters.
+`di::inject` informs [Boost].DI about constructor parameters.
 It's useful for generated/generic classes as it doesn't have constructor parameters size limitations.
 
 ***Semantics***
@@ -360,7 +360,7 @@ It's useful for generated/generic classes as it doesn't have constructor paramet
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 `di::inject` has no limitations if it comes to constructor parameters, however, [named] parameters are not allowed.
-Moreover, you can replace `di::inject` with any variadic type list type to remove dependency to Boost.DI.
+Moreover, you can replace `di::inject` with any variadic type list type to remove dependency to [Boost].DI.
 For example, `template<class...> struct type_list{};` `using boost_di_inject__ = type_list<...>;`
 </span>
 
@@ -425,7 +425,7 @@ Named parameters are handy to distinguish different constructor parameters of th
 ```
 
 In order to inject proper values into `value1` and `value2` they have to be differentiate somehow.
-Boost.DI solution for this problem are annotations.
+[Boost].DI solution for this problem are annotations.
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Annotations might be set only when constructor is marked using [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS].
@@ -592,7 +592,7 @@ Default scope which will be converted to one of the scopes depending on the type
 ***Description***
 
 Scope representing values - passed externally. The life time of the object depends on the user.
-Boost.DI is not maintaining the life time of these objects, however, values and strings will be copied and managed by the library.
+[Boost].DI is not maintaining the life time of these objects, however, values and strings will be copied and managed by the library.
 
 | Type | instance[in] (`bind<>.to(in)`) | instance[out] (`injector.create<out>()`) |
 | ---- | ------------ | ------------- |
@@ -1000,7 +1000,7 @@ Policies operates on dependencies in order to limit allowed behaviour or visit c
 Policies are set up via [Configuration].
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-By default Boost.DI has no policies enabled.
+By default [Boost].DI has NO policies enabled.
 </span>
 
 ***Semantics***
@@ -1104,7 +1104,7 @@ In order to allow logic operators using namespace `boost::di::policies::operator
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-STL type traits are supported and might be combined with Boost.DI traits in order to limit constructor types
+STL type traits are supported and might be combined with [Boost].DI traits in order to limit constructor types
 For example, `std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || std::is_base_of<int, _>{}`, etc...
 </span>
 

@@ -6,8 +6,8 @@ DI, on the other hand, is less intrusive and easier to follow than SL.
 
 >
 
-* ### Why C++14 is required for Boost.DI?
-At first Boost.DI was implemented using C++03 standard with a switch to C++11 when available/possible.
+* ### Why C++14 is required for [Boost].DI?
+At first [Boost].DI was implemented using C++03 standard with a switch to C++11 when available/possible.
 However, this approach, although was/is working just fine, was/is really slow to compile and hard to maintain too.
 Moreover, interface for `modules` wasn't perfect due to missing return type deduction for functions in C++11.
 Therefore, I made a decision to reimplement the core using C++14 features which sped up compilation times dramatically
@@ -24,13 +24,13 @@ Please check out [injection](overview.md#nutshell) design.
 >
 
 * ### Can I use XML in order to set-up bindings configuration?
-Yes, however, XML injection is not part of the Boost.DI release.
+Yes, however, XML injection is not part of the [Boost].DI release.
 Please, check out [XML Extension](extensions.md#xml-injection).
 
 >
 
-* ### Since Boost.DI has a compile time approach can I have dynamic bindings?
-Yes, Boost.DI supports dynamic bindings.
+* ### Since [Boost].DI has a compile time approach can I have dynamic bindings?
+Yes, [Boost].DI supports dynamic bindings.
 
 ```cpp
 auto use_gui_view = ...;

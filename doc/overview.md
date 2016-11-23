@@ -34,7 +34,7 @@ git clone https://github.com/boost-experimental/di && cd di && make
 ###Configuration
 | Macro                             | Description |
 | --------------------------------- | ----------- |
-| `BOOST_DI_VERSION`                | Current version of Boost.DI (ex. 1'0'0) |
+| `BOOST_DI_VERSION`                | Current version of [Boost].DI (ex. 1'0'0) |
 | `BOOST_DI_CFG`                    | Global configuration allows to customize provider and policies (See [Config](user_guide.md#di_config)) |
 | `BOOST_DI_CFG_CTOR_LIMIT_SIZE`    | Limits number of allowed constructor parameters [0-10, default=10] (See [Injections](user_guide.md#injections)) |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`  | Gives more information with error messages (See [Error messages](#error-messages)) |
@@ -43,12 +43,12 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 ###Exception Safety
 
-* Boost.DI is not using exceptions internally and therefore might be compiled with `-fno-exceptions`.
+* [Boost].DI is not using exceptions internally and therefore might be compiled with `-fno-exceptions`.
 * Check [User Guide](user_guide.md) to verify which API's are marked `noexcept`.
 
 ###Thread Safety
 
-* Boost.DI is thread safe.
+* [Boost].DI is thread safe.
 
 ###Design
 
@@ -154,7 +154,7 @@ conversion constructors `template<class I> T(I)` are not supported and have to b
         * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
         * clang++3.4 -O2 -fno-exceptions
 
-Boost.DI header           | Time [s]
+[Boost].DI header         | Time [s]
 --------------------------|----------
 `#include <boost/di.hpp>` | 0.050s
 
