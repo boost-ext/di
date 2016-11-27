@@ -138,7 +138,7 @@ renderer renderer_;
 view view_{renderer_, logger_};
 model model_{logger_};
 controller controller_{model_, view_, logger_};
-user user_{loger_};
+user user_{logger_};
 app app_{controller_, user_};
 ```
 Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
