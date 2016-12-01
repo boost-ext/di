@@ -40,7 +40,15 @@
                    data-notes="^Note:">
 					<script type="text/template">
 
+##Dependency Injection
+
+> "Don't call us, we'll call you", Hollywood principle
+
+----
+
 ##Dependency Injection vs Service Locator
+
+> It's all about the construction!
 
 ####SL
 ```cpp
@@ -61,13 +69,13 @@ coffee_maker(shared_ptr<iheater> heater // tell
 
 ----
 
-## It's all about the construction!
-
-> "Don't call us, we'll call you", Hollywood principle
-
-----
-
 A Composition Root is a (preferably) unique location in an application where modules are composed together.
+
+```cpp
+int main() {
+  injector{}.create<app>();
+}
+```
 
 ==============================================================================
 
@@ -729,11 +737,6 @@ Game(Contoller&, const icanvas&)             -> Game(const icanvas&, unique_ptr<
  Game game{canvas, controller}; /*DIFF*/              |
 ```
 <!-- .element: style="margin-left:-10%; width:120%" -->
-
-
-
-
-
 
 ==============================================================================
 
