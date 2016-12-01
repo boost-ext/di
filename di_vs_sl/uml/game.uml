@@ -1,0 +1,15 @@
+@startuml
+
+class Canvas
+class Config
+class Board
+class Controller
+class Game
+
+Game .. Controller
+Game .. Canvas
+Controller .. Config
+Controller .. Board
+Board .. Config
+
+@enduml

@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>[Boost].DI</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+          <section data-markdown=""
+                   data-separator="^====+$"
+                   data-separator-vertical="^----+$"
+                   data-notes="^Note:">
+					<script type="text/template">
+
+##Dependency Injection vs Service Locator
+
+####SL
+```cpp
+coffee_maker(ServiceLocator& sl) // ask
+  : heater(sl.Resolve<shared_ptr<iheater>>()) 
+  , pump(sl.Resolve<unique_ptr<ipump>>()) 
+{ }
+```
+
+####DI
+```cpp
+coffee_maker(shared_ptr<iheater> heater // tell
+           , unique_ptr<ipump> pump)
+  : heater(heater)
+  , pump(move(pump))
+{ }
+```
+
+----
+
+## It's all about the construction!
+
+> "Don't call us, we'll call you", Hollywood principle
+
+----
+
+A Composition Root is a (preferably) unique location in an application where modules are composed together.
+
+==============================================================================
+
+##[Boost].DI
+
+* One header - 3k LOC - (boost/di.hpp) / generated
+* Neither Boost nor STL is required
+* No 'if's, 'virtual', 'exceptions' (-fno-rtti, -fno-exceptions)
+* Non-intrusive (constructor parameters deduction)
+* Compile-time creation guarantee (no run-time errors)
+* Supported compilers (C++14)
+  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+----
+
+##[Boost].DI - Hello World
+
+```cpp
+#include <boost/di.hpp>
+namespace di = boost::di;
+```
+
+```cpp
+struct iworld { virtual ~iworld() noexcept = default; };
+struct world : iworld {};
+struct ihello { virtual ~ihello() noexcept = default; };
+struct hello : ihello {};
+```
+
+```cpp
+struct hello_world {
+  hello_world(const ihello&, const iworld&); // DI handles
+};                  ^              ^         // order and types
+                    |              \------------\
+                    \----------------------\    |
+int main() {                               |    |
+  const auto injector = di::make_injector( |    |
+     di::bind<ihello>.to<hello>() ---------/    |
+   , di::bind<iworld>.to<world>() -------------/
+  );
+
+  auto hw = injector.create<unique_ptr<hello_world>>();
+}
+```
+
+----
+
+##[Boost].DI - Hello World
+
+```sh
+time $CXX -std=c++14 hello_world.cpp # 0.102s
+```
+
+####ASM x86-64
+
+```
+push   %rbx
+mov    %rdi,%rbx
+mov    $0x8,%edi
+callq  0x4009f0 <_Znwm@plt>
+movq   $0x400e78,(%rax)
+mov    %rax,(%rbx)
+mov    %rbx,%rax
+pop    %rbx
+retq
+```
+
+####Same as
+
+```cpp
+return make_unique<hello_world>(...);
+```
+
+----
+
+##Hello World - Errors
+
+```cpp
+const auto injector = di::make_injector(
+// di::bind<ihello>.to<hello>() // missing 'ihello' binding
+ , di::bind<iworld>.to<world>()
+);
+auto hw = injector.create<hello_world>();
+```
+
+####Full Compilation-Time Error Message
+
+```cpp
+error: 'create<hello_world>' is deprecated: creatable constraint
+  injector.create<hello_world>();           not satisfied
+           ^
+note 'create<hello_world>' has been explicitly marked deprecated here
+  create
+  ^
+error: inline function 'abstract_type<ihello>::is_not_bound::error'
+ error(_ = "type is not bound, did you forget to add:
+           'di::bind<interface>.to<implementation>()'?");
+```
+
+----
+
+##Benchmarks (GCC-5/Java8)
+
+| 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
+| --------------------- | ------------ | ---------------- | ------------- |
+| Compilation time    | 0.376s       |  0.570s            | 1.411s        |
+| Execution time      | 0.002s       |  0.528s            | 0.157s        |
+
+---
+
+| 256 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
+| --------------------- | ------------ | ---------------- | ------------- |
+| Compilation time    | 0.706s       | 0.642s             | 1.903s        |
+| Execution time      | 0.002s       | 0.544s             | 0.210s        |
+
+==============================================================================
+
+##User Guide
+
+----
+
+###Injector
+```cpp
+template<class... TDeps> requires boundable<TDeps...>()
+class injector {
+public:
+  explicit injector(TDeps&&...) noexcept;
+  injector(injector&&) = default;
+  injector& operator=(injector&&) = default;
+
+  template<class T> requires creatable<T>()
+  constexpr T create() const;
+};
+```
+
+###Make injector
+```cpp
+template<class TConfig = di::config, class... TDeps>
+  requires configurable<TConfig>() && boundable<TDeps...>()
+auto make_injector(TDeps&&...) noexcept;
+```
+
+----
+
+###Injections
+
+####App
+```cpp
+struct renderer { int device; };
+```
+```cpp
+class iview {
+public:
+  virtual ~iview() = default;
+  virtual void update() = 0;
+};
+```
+```cpp
+class model {};
+```
+```cpp
+class controller {
+public:
+  controller(model&, view&) {}
+};
+```
+```cpp
+class user {};
+```
+```cpp
+class app {
+public:
+  app(controller&, user&) {}
+};
+```
+
+----
+
+###Injections
+
+####Usual approach
+```cpp
+renderer renderer_;
+view view_{"title", renderer_};
+model model_;
+controller controller_{model_, view_};
+user user_;
+app app_{controller_, user_};
+```
+
+####With [Boost].DI
+
+```cpp
+auto app = di::make_injector().create<app>();
+```
+
+----
+
+###Injections: Aggregates
+```cpp
+struct T { int& a; double b; };
+```
+
+```cpp
+ auto i = 42;
+ auto injector = di::make_injector(
+    di::bind<int>.to(i),
+    di::bind<double>.to(87.0)
+ );
+```
+
+####Test
+```cpp
+assert(42 == injector.create<T>().a);
+assert(87.0 == injector.create<T>().b);
+```
+
+----
+
+###Bindings: Interface -> Implementations
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<iview>.to<gui_view>()
+);
+```
+
+####Test
+```cpp
+assert(dynamic_cast<gui_view*>(
+  injector.create<unique_ptr<iview>().get())
+);
+```
+
+----
+
+###Bindings: Type -> value
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<int>.to<42>
+);
+```
+
+####Test
+```cpp
+assert(42 == injector.create<int>());
+```
+
+----
+
+###Bindings: Containers
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<int[]>().to({1, 2, 3})
+);
+```
+
+####Test
+```cpp
+auto v = injector.create<vector<int>>();
+         // or array / set
+
+assert(3 == v.size());
+assert(1 == v[0]);
+assert(2 == v[1]);
+assert(3 == v[2]);
+```
+
+----
+
+###Bindings: containers (interface)
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<interface[]>().to<implementation1, implementation2>()
+);
+```
+
+####Test
+```cpp
+auto v = injector.create<
+  vector<unique_ptr<interface>>>();
+    // or array / set with
+    // shared_ptr, raw pointer, reference, ...
+
+assert(2 == v.size());
+assert(dynamic_cast<implementation1*>(v[0].get()));
+assert(dynamic_cast<implementation2*>(v[1].get()));
+```
+
+----
+
+###Bindings: Dynamic
+
+```cpp
+auto use_gui_view = true/false;
+
+auto injector = di::make_injector(
+  di::bind<iview>.to([&](const auto& injector) -> iview& {
+    return use_gui_view ?
+      injector.create<gui_view&>() : injector.create<text_view&>();
+  })
+);
+```
+
+####Test
+```cpp
+use_gui_view = true;
+assert(dynamic_cast<gui_view*>(
+  injector.create<unique_ptr<iview>().get())
+);
+
+use_gui_view = false;
+assert(dynamic_cast<text_view*>(
+  injector.create<unique_ptr<iview>().get())
+);
+```
+
+----
+
+###Bindings: Factories
+
+```cpp
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy1() = 0;
+};
+
+struct implementation : interface {
+  implementation(int i, double d) {
+    assert(42 == i);
+    assert(87.0 == d);
+  }
+  void dummy1() override {}
+};
+```
+
+####Test
+```cpp
+const auto injector = di::make_injector(
+  di::bind<>.to(42),
+  di::bind<>.to(87.0),
+  di::bind<ifactory<interface>>.to(factory<implementation>)
+);
+auto f = injector.create<ifactory<interface>();
+assert(dynamic_cast<implementation*>(f.create().get()));
+```
+
+----
+
+###Bindings: Dynamic Factories
+
+```cpp
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy1() = 0;
+};
+
+struct implementation : interface {
+  implementation(int i, double d) {
+    assert(42 == i);
+    assert(87.0 == d);
+  }
+  void dummy1() override {}
+};
+```
+
+####Test
+```cpp
+const auto injector = di::make_injector(
+  di::bind<>.to(42)
+  di::bind<ifactory<interface(double)>>.to(factory<implementation>)
+);
+auto f = injector.create<ifactory<interface(double)>();
+assert(dynamic_cast<implementation*>(f.create(87.0).get()));
+```
+
+----
+
+###Bindings: Factories - Assisted Injection
+
+```cpp
+struct interface {
+  virtual ~interface() noexcept = default;
+  virtual void dummy1() = 0;
+};
+
+struct implementation : interface {
+  implementation(int i, di::named<assited, float> f, double d) {
+    assert(42 == i);
+    assert(123.0 == f);
+    assert(87.0 == d);
+  }
+  void dummy1() override {}
+};
+```
+
+####Test
+```cpp
+const auto injector = di::make_injector(
+  di::bind<float>.to(123.0),
+  di::bind<ifactory<interface(int,double)>>.to(factory<implementation>)
+);
+auto f = injector.create<ifactory<interface(int, double)>();
+assert(dynamic_cast<implementation*>(f.create(42, 87.0).get()));
+```
+
+----
+
+##Scopes
+
+* [Deduce scope](http://boost-experimental.github.io//di/user_guide/index.html#di_deduce) (default)
+* [Instance scope](http://boost-experimental.github.io//di/user_guide/index.html#di_instance) (bind<>.to(value) where value is maintained by the user)
+* [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) (one instance per request)
+* [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) (shared instance)
+
+----
+
+##Scopes: Life time
+
+```
++----------------------------------------------+ Singleton scope
+|
+|          Unique scope     Unique scope
+|          +---+            +------+
+|          |                |
++--+-------+----------------+------------------> Application life time
+   |
+   |
+   +------------------------+ Instance / User scope
+                             (is not controlled by DI)
+```
+
+----
+
+###Scopes deduction
+
+----
+
+| Type | Scope |
+|------|-------|
+| `T`, `T&&`, `T*`, `const T*`, `unique_ptr<T>` | [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) |
+| `T&`, `const T&`, `shared_ptr<T>`, `boost::shared_ptr<T>`, `weak_ptr<T>` | [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) |
+
+----
+
+###Scopes
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<iview>.to<gui_view>().in(di::singleton) // explicitly
+);
+```
+
+####Test
+
+```cpp
+assert(&injector.create<iview&>() == &injector.create<iview&>());
+```
+
+----
+
+##Modules
+
+```cpp
+auto view_module = [] {
+  return di::make_injector(
+    di::bind<icanvas>.to<sdl_canvas>()
+  , di::bind<irenderer>.to<gui_renderer>()
+  );
+};
+```
+
+```cpp
+auto model_module = [] {
+  return di::make_injector(
+    di::bind<config>.to({6, 8})
+  , di::bind<irandom>.to<mt19937_random>()
+  );
+};
+```
+
+```cpp
+auto injector = di::make_injector(
+  view_module(), model_module()
+);
+
+injector.create<app>();
+```
+
+----
+
+###Modules: exposed (cpp)
+
+####Expose Modules
+
+```cpp
+di::injector<view&> view_module() { // expose view
+  return di::make_injector(
+    di::bind<icanvas>.to<sdl_canvas>()
+  , di::bind<irenderer>.to<gui_renderer>()
+  );
+}
+```
+
+```cpp
+di::injector<model&> model_module() { // expose model
+  return di::make_injector(
+    di::bind<config>.to({6, 8})
+  , di::bind<irandom>.to<mt19937_random>()
+  );
+}
+```
+
+```cpp
+auto injector = di::make_injector(
+  view_module(), model_module()
+);
+
+injector.create<app>();
+```
+
+==============================================================================
+
+##Testing
+
+> "If you liked it then you should have put a test on it", Beyonce rule
+
+----
+
+##DI - Automatic Mocks injection
+
+----
+
+> Create and inject mocks automatically using [Boost].DI and FakeIt!
+
+----
+
+##Automatic mocks injector - Goal
+
+```cpp
+struct app {
+  app(const interface1& i1, interface2& i2);
+  void update() {
+    if (i1.foo()) {
+      i2.bar();
+    }
+  }
+};
+```
+
+```cpp
+"should update app"_test = [] {
+  // given
+  const auto injector = di::make_injector<mocks_provider>();
+
+  // when
+  When(Method(mock<interface1>, foo)).Return(true);
+  injector.create<app>().update();
+
+  // then
+  Verify(Method(mock<interface2>, bar).Times(1);
+};
+```
+
+----
+
+##Mocks Provider
+
+```cpp
+template <class T>
+auto& mock() {
+  return fakeit::Mock<T>();
+}
+
+struct mocks_provider {
+  template <class T, class... TArgs>
+  auto get(TArgs&&... args) const {
+    if constexpr(is_polymorphic<T>{} && !is_bound<T>{}) {
+      return mock<T>();
+    } else {
+      return make_unique<T>(forward<TArgs>(args)...);
+    }
+  }
+};
+```
+
+----
+
+##Example (Integration Test)
+
+```cpp
+"given player has 1 move, when player swipes then no moves"_test = [] {
+  // given
+  const auto injector = di::make_injector<mocks_provider>(
+     di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
+   , di::bind<board::colors_t[]>.to({3,5,1,4,3,2,2,...})
+  );
+  auto game = injector.create<Game>();
+```
+
+```cpp
+  // when
+  game.start();
+
+  // then
+  Verify(Method(mock<icanvas>, show_moves).Using(1);
+  Verify(Method(mock<icanvas>, show_board).Using({3,5,1,4,3,2,2,...});
+```
+
+```cpp
+  // when
+  game.swipe({3, 5}, {3, 6}); // a winning swipe
+
+  // then
+  Verify(Method(mock<icanvas>, show_moves).Using(0);
+  Verify(Method(mock<icanvas>, show_board).Using({5,2,1,1,4,2,2,...});
+};
+```
+
+----
+
+##DI - Wiring mess
+
+####Create a game (Simplified)
+```cpp
+ Manual DI                                   | [Boost].DI
+---------------------------------------------+----------------------------------
+ StrictMock<canvas_mock> canvas;             | auto game = di::make_injector(
+ Config config{8, 10, 1};                    |   di::bind<>.to(config{8, 10, 1})
+ Board board{config, {{3,5,1,4,3,2,2, ...}}};| ).create<Game>();
+ Contoller controller{config, board};        |
+ Game game{controller, canvas};              |
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+##DI - Wiring mess
+
+####Simple Refactor
+```cpp
+Board(const config&, initializer_list<int>); -> Board(initializer_list<int>, const config&);
+Game(Contoller&, const icanvas&)             -> Game(const icanvas&, unique_ptr<Contoller>);
+```
+<!-- .element: style="margin-left:-10%; width:120%" -->
+
+####Make a game
+```cpp
+ Manual DI                                            | [Boost].DI (No changes required!)
+------------------------------------------------------+----------------------------------
+ StrictMock<canvas_mock> canvas;                      |
+ Config config{8, 10, 1};                             | auto game = di::make_injector(
+ Board board{{{3,5,1,4,3,2,2, ...}}, config}; /*DIFF*/|   di::bind<>.to(config{8, 10, 1})
+ auto controller =                                    | ).create<Game>(); // same old
+   make_unique<Contoller>(board, config); /*DIFF*/    |
+ Game game{canvas, controller}; /*DIFF*/              |
+```
+<!-- .element: style="margin-left:-10%; width:120%" -->
+
+
+
+
+
+
+==============================================================================
+
+##Bonus - Simplest test framework
+
+----
+
+###'Test Framework'
+
+####Implementation
+```cpp
+template <char...>
+struct test {
+  template <class Test>
+  auto operator=(const Test& test) { test(); return true; }
+};
+
+// GNU extension for now, maybe in C++20
+template <class T, T... Chars>
+constexpr auto operator""_test() { return test<Chars...>{}; }
+```
+
+####Usage
+```cpp
+"should be equal"_test = [] {
+  assert(0 == 0);
+};
+
+"should not be equal"_test = [] {
+  assert(!(1 == 0));
+};
+```
+					</script>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // Turns fragments on and off globally
+        fragments: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: true,
+
+        // Hides the address bar on mobile devices
+        hideAddressBar: true,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Parallax background image
+        parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+        // Parallax background size
+        parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+        // Number of pixels to move the parallax background per slide
+        // - Calculated automatically unless specified
+        // - Set to 0 to disable movement along an axis
+        parallaxBackgroundHorizontal: null,
+        parallaxBackgroundVertical: null,
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
