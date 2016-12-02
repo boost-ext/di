@@ -69,7 +69,9 @@ coffee_maker(shared_ptr<iheater> heater // tell
 
 ----
 
-A Composition Root is a (preferably) unique location in an application where modules are composed together.
+##Composition Root
+
+> (preferably) unique location in an application where modules are composed together
 
 ```cpp
 int main() {
@@ -193,7 +195,7 @@ error: inline function 'abstract_type<ihello>::is_not_bound::error'
 
 ==============================================================================
 
-##User Guide
+##[Boost].DI - User Guide
 
 ----
 
@@ -274,7 +276,7 @@ auto app = di::make_injector().create<app>();
 
 ----
 
-###Injections: Aggregates
+###Injections - Aggregates
 ```cpp
 struct T { int& a; double b; };
 ```
@@ -295,7 +297,27 @@ assert(87.0 == injector.create<T>().b);
 
 ----
 
-###Bindings: Interface -> Implementations
+###Injections - Annotations
+
+```cpp
+struct T {
+  T(int i1, NAMED("some_name"_s, int) i2) {
+    assert(87 == i1);
+    assert(42 == i2);
+  }
+};
+```
+
+```cpp
+ auto injector = di::make_injector(
+    di::bind<int>.named("some_name"_s).to(87),
+    di::bind<int>.to(42)
+ );
+```
+
+----
+
+###Bindings - Interface -> Implementations
 
 ```cpp
 auto injector = di::make_injector(
@@ -305,18 +327,19 @@ auto injector = di::make_injector(
 
 ####Test
 ```cpp
-assert(dynamic_cast<gui_view*>(
-  injector.create<unique_ptr<iview>().get())
-);
+assert(dynamic_cast<gui_view*>(injector.create<unique_ptr<iview>().get()));
+assert(dynamic_cast<gui_view*>(injector.create<shared_ptr<iview>().get()));
+assert(dynamic_cast<const gui_view*>(&injector.create<const iview&>());
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 
-###Bindings: Type -> value
+###Bindings - Type -> value
 
 ```cpp
 auto injector = di::make_injector(
-  di::bind<int>.to<42>
+  di::bind<int>.to(42) // or di::bind<>.to(42)
 );
 ```
 
@@ -327,7 +350,7 @@ assert(42 == injector.create<int>());
 
 ----
 
-###Bindings: Containers
+###Bindings - Containers
 
 ```cpp
 auto injector = di::make_injector(
@@ -348,7 +371,7 @@ assert(3 == v[2]);
 
 ----
 
-###Bindings: containers (interface)
+###Bindings - containers (interface)
 
 ```cpp
 auto injector = di::make_injector(
@@ -370,7 +393,7 @@ assert(dynamic_cast<implementation2*>(v[1].get()));
 
 ----
 
-###Bindings: Dynamic
+###Bindings - Dynamic Conditions
 
 ```cpp
 auto use_gui_view = true/false;
@@ -398,7 +421,29 @@ assert(dynamic_cast<text_view*>(
 
 ----
 
-###Bindings: Factories
+##Bindings - Lazy providers
+
+```cpp
+class example {
+ public:
+  explicit example(lazy<std::unique_ptr<interface>> l) {
+    assert(dynamic_cast<implementation*>(l.get()));
+  }
+};
+```
+
+####Test
+```cpp
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<interface>().to<implementation>()
+  );
+}
+```
+
+----
+
+###Bindings - Factories
 
 ```cpp
 struct interface {
@@ -428,7 +473,7 @@ assert(dynamic_cast<implementation*>(f.create().get()));
 
 ----
 
-###Bindings: Dynamic Factories
+###Bindings - Dynamic Factories
 
 ```cpp
 struct interface {
@@ -457,7 +502,7 @@ assert(dynamic_cast<implementation*>(f.create(87.0).get()));
 
 ----
 
-###Bindings: Factories - Assisted Injection
+###Bindings - Factories - Assisted Injection
 
 ```cpp
 struct interface {
@@ -466,7 +511,7 @@ struct interface {
 };
 
 struct implementation : interface {
-  implementation(int i, di::named<assited, float> f, double d) {
+  implementation(int i, NAMED("assisted"_s, float) f, double d) {
     assert(42 == i);
     assert(123.0 == f);
     assert(87.0 == d);
@@ -496,7 +541,7 @@ assert(dynamic_cast<implementation*>(f.create(42, 87.0).get()));
 
 ----
 
-##Scopes: Life time
+##Scopes - Life time
 
 ```
 +----------------------------------------------+ Singleton scope
@@ -514,8 +559,6 @@ assert(dynamic_cast<implementation*>(f.create(42, 87.0).get()));
 ----
 
 ###Scopes deduction
-
-----
 
 | Type | Scope |
 |------|-------|
@@ -570,7 +613,7 @@ injector.create<app>();
 
 ----
 
-###Modules: exposed (cpp)
+###Modules - exposed (cpp)
 
 ####Expose Modules
 
@@ -602,15 +645,13 @@ injector.create<app>();
 
 ==============================================================================
 
-##Testing
+##DI and Testing
 
 > "If you liked it then you should have put a test on it", Beyonce rule
 
 ----
 
 ##DI - Automatic Mocks injection
-
-----
 
 > Create and inject mocks automatically using [Boost].DI and FakeIt!
 
@@ -712,7 +753,7 @@ struct mocks_provider {
  Contoller controller{config, board};        |
  Game game{controller, canvas};              |
 ```
-<!-- .element: style="margin-left:0%; width:100%" -->
+<!-- .element: style="margin-left:-5%; width:110%" -->
 
 ----
 
