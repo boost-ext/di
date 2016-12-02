@@ -53,8 +53,8 @@
 ####SL
 ```cpp
 coffee_maker(ServiceLocator& sl) // ask
-  : heater(sl.Resolve<shared_ptr<iheater>>()) 
-  , pump(sl.Resolve<unique_ptr<ipump>>()) 
+  : heater(sl.Resolve<shared_ptr<iheater>>())
+  , pump(sl.Resolve<unique_ptr<ipump>>())
 { }
 ```
 
