@@ -120,6 +120,26 @@ class Model { // Better
 };
 ```
 
+  * Carrying injector (Service Locator pattern)
+
+```cpp
+class Model {
+ public:
+   explicit Model(service_locator& sl) // Bad (ask)
+     : service(sl.resolve<unique_ptr<Service>>())
+   { } 
+
+   explicit Model(std::unique_ptr<Service> service) // Better (tell)
+     : service(std::move(service))
+   { } 
+
+   ...
+
+ private:
+   std::unique_ptr<Service> service;
+};
+```
+
 ###Do I need a Dependency Injection?
 
 * DI provides loosely coupled code (separation of business logic and object creation)
