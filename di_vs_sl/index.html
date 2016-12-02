@@ -421,12 +421,12 @@ assert(dynamic_cast<text_view*>(
 
 ----
 
-##Bindings - Lazy providers
+##Bindings - providers
 
 ```cpp
 class example {
  public:
-  explicit example(lazy<std::unique_ptr<interface>> l) {
+  explicit example(di::provider<std::unique_ptr<interface>> l) {
     assert(dynamic_cast<implementation*>(l.get()));
   }
 };
@@ -436,10 +436,11 @@ class example {
 ```cpp
 int main() {
   const auto injector = di::make_injector(
-    di::bind<interface>().to<implementation>()
+    di::bind<interface>.to<implementation>() // might be dynamically chosen
   );
 }
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 

@@ -345,6 +345,26 @@ class Model { // Better
 };
 </code></pre>
 
+<ul>
+<li>Carrying injector (Service Locator pattern)</li>
+</ul>
+<pre><code class="cpp">class Model {
+ public:
+   explicit Model(service_locator&amp; sl) // Bad (ask)
+     : service(sl.resolve&lt;unique_ptr&lt;Service&gt;&gt;())
+   { } 
+
+   explicit Model(std::unique_ptr&lt;Service&gt; service) // Better (tell)
+     : service(std::move(service))
+   { } 
+
+   ...
+
+ private:
+   std::unique_ptr&lt;Service&gt; service;
+};
+</code></pre>
+
 <h3 id="do-i-need-a-dependency-injection">Do I need a Dependency Injection?</h3>
 <ul>
 <li>DI provides loosely coupled code (separation of business logic and object creation)</li>
@@ -578,5 +598,5 @@ but also can help you with...</p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-12-02 03:22:28.045741
+Build Date UTC : 2016-12-02 12:13:03.138545
 -->
