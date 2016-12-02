@@ -50,17 +50,17 @@
 
 > It's all about the construction!
 
-####SL
+####No DI
 ```cpp
-coffee_maker(ServiceLocator& sl) // ask
-  : heater(sl.Resolve<shared_ptr<iheater>>())
-  , pump(sl.Resolve<unique_ptr<ipump>>())
+coffee_maker()
+  : heater(make_shared<electric_heater>()) // construct dependencies
+  , pump(make_unique<heat_pump>(heater))
 { }
 ```
 
 ####DI
 ```cpp
-coffee_maker(shared_ptr<iheater> heater // tell
+coffee_maker(shared_ptr<iheater> heater // inject dependencies
            , unique_ptr<ipump> pump)
   : heater(heater)
   , pump(move(pump))
@@ -77,6 +77,85 @@ coffee_maker(shared_ptr<iheater> heater // tell
 int main() {
   injector{}.create<app>();
 }
+```
+
+----
+
+##Common mistakes when using DI
+
+----
+
+##Passing a dependency to create another dependency inside your object
+
+```cpp
+class Model {
+ public:
+   Model(int width, int height) 
+     : board(std::make_unique<Board>(width, height)) // Bad
+   { } 
+
+   explicit Model(std::unique_ptr<IBoard> board) // Better
+     : board(std::move(board))
+   { } 
+
+   ...
+
+ private:
+  std::unique_ptr<IBoard> board;
+};
+```
+
+----
+
+##Carrying dependencies
+
+```cpp
+class Model : public Service { // Bad
+ public:
+   explicit Model(std::unique_ptr<IBoard> board) // Bad
+     : Service(std::move(board))
+   { } 
+   void update() {
+     Service::do_something_with_board(); // Bad
+   }
+};
+```
+
+```cpp
+class Model { // Better
+ public:
+   explicit Model(std::unique_ptr<Service> service) // Better
+     : service(std::move(service))
+   { } 
+   void update() {
+     service.do_something_with_board(); // Better
+   }
+
+ private:
+   std::unique_ptr<Service> service;
+};
+```
+
+----
+
+##Carrying injector (Service Locator pattern)
+
+```cpp
+class Model {
+ public:
+   explicit Model(service_locator& sl) // Bad (ask)
+     : service(sl.resolve<unique_ptr<Service>>())
+   { } 
+
+   explicit Model(std::unique_ptr<Service> service) // Better (tell)
+     : service(std::move(service))
+   { } 
+
+   ...
+
+ private:
+   std::unique_ptr<Service> service;
+};
 ```
 
 ==============================================================================
