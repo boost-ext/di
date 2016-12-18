@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../benchmarks/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../try_it/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../materials/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -133,10 +133,50 @@ int main() {
 }
 </code></pre>
 
+<p>Additionally, you can consider using <code>strong typedefs</code> which will make your constructor interface cleaner/stronger.</p>
+<pre><code class="cpp">class button {
+public:
+  button(int, int); // weak constructor interface (cpp file has to checked in order to figure out the meaning of int's)
+};
+</code></pre>
+
+<p><code>button</code> constructor is not clear because <code>int's</code> are ambiguous and both present just a number.
+It can be seen more clearly in the following example.</p>
+<pre><code class="cpp">button{10, 15}; // OK, but what's 10? what's 15? Can I swap them?
+button{15, 10}; // Hmm, potenial missue of the constructor
+</code></pre>
+
+<p>A better approach would be to introduce a strong typedefs for both numbers
+in order to avoid potential misuse of the constructor, especially when used by other/external teams.</p>
+<pre><code class="cpp">struct width {
+  int value;
+  constexpr operator int() const { return value; }
+};
+struct height {
+  int value;
+  constexpr operator int() const { return value; }
+};
+class button {
+public:
+  button(width, height); // strong constructor interface
+};
+</code></pre>
+
+<p>Right now, <code>button</code> constructor is much easier to follow (no need to check cpp file) because
+it expresses the intention.</p>
+<pre><code class="cpp">button{width{10}, height{15}}; // OK, declartive approach
+button{height{10}, with{15}}; // Compile Error
+button{10, 15}; // Compile Error
+</code></pre>
+
+<p>Similar mechanism is used by [Boost].DI to achieve <a href="../user_guide/index.html#di_named">named</a> parameters which and it will be presented in this tutorial later on.</p>
 <h3 id="1-basic-create-objects-tree">1. [Basic] Create objects tree</h3>
 <p>Before we will get into creating objects tree, let's first create a 'dummy' example.
-In order to do so, firstly, we have to include (one and only) <code>boost/di.hpp</code> header and
-declare a convenient <code>di</code> namespace alias.</p>
+In order to do so, firstly, we have to include (one and only) <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp">boost/di.hpp</a> header</p>
+<pre><code class="sh">wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
+</code></pre>
+
+<p>and declare a convenient <code>di</code> namespace alias.</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 namespace di = boost::di;
 </code></pre>
@@ -171,11 +211,15 @@ or, even worse, we refactored the code and dependencies order has changed - yea 
 Not fun, not fun at all :(</p>
 <p>Right now imagine that your maintain effort will be minimized almost to none. How does it sound?
 Well, that might be simply achieved with <code>[Boost].DI</code>!</p>
-<p>The same result might be achieved with one liner. Doesn't matter how big the hierarchy will be.
-We just have to create <a href="../user_guide/index.html#di_make_injector">injector</a> using <a href="../user_guide/index.html#make_injector">make_injector</a> and create the <code>app</code>.</p>
-<pre><code class="cpp">auto app_{make_injector().create&lt;app&gt;()};
+<p>The same result might be achieved with [Boost].DI. All, non-ambiguous, dependencies will be automatically
+resolved and injected properly. It doesn't matter how big the hierarchy will be and/or if the order of constructor parameters will be changed in the future.
+We just have to create <a href="../user_guide/index.html#di_make_injector">injector</a> using <a href="../user_guide/index.html#make_injector">make_injector</a>, create the <code>app</code> and DI will take care of injecting proper types for us.</p>
+<pre><code class="cpp">auto app_ = make_injector().create&lt;app&gt;(); // It will create an `app` on stack and call its copy constructor
 </code></pre>
 
+<p>How is that possible? [Boost].DI is able to figure out what parameters are required for the constructor of type T.
+Also, [Boost].DI is able to do it recursively for all required types by the constructor T. Hence, NO information
+about constructors parameters is required to be registered.</p>
 <p>Moreover, changes in the constructor of created objects will be handled automatically, so in our case
 when we add a <code>window</code> to <code>view</code> or change <code>view&amp;</code> to <code>std::shared_ptr&lt;view&gt;</code> required effort will be
 exactly '0'. <code>[Boost].DI</code> will take care of everything for us!</p>
@@ -244,7 +288,7 @@ exactly '0'. <code>[Boost].DI</code> will take care of everything for us!</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 [Boost].DI can <a href="../user_guide/index.html#di_automatic">inject</a> dependencies using direct initialization <code>T(...)</code> or uniform initialization <code>T{...}</code> for aggregate types.
 </span></p>
-<p>Check it out yourself!</p>
+<p>And full example!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -321,7 +365,7 @@ public:
 
 <p>Please, notice that <code>text_view</code> doesn't require any constructor parameters, whilst <code>gui_view</code> does.</p>
 <p>So, what will happen right now, when we try to create an <code>app</code>?</p>
-<pre><code class="cpp">auto app_{make_injector().create&lt;app&gt;()};
+<pre><code class="cpp">auto app = make_injector().create&lt;app&gt;();
 </code></pre>
 
 <p>COMPILE error! (See also: <a href="../overview/index.html#error-messages">Error Messages</a>)</p>
@@ -343,7 +387,14 @@ Well, it's really simple to fix it, we just follow suggestion provided.</p>
 </code></pre>
 
 <p>Let's try again. Yay! It's compiling.</p>
-<p>But what about values? <code>renderer</code> requires <code>device</code>, which, by default, was value initialized.</p>
+<p>But what about <code>render.device</code> value? So far, it was value initialized by default(=0).
+What, if you we want to initialize it with a user defined value instead?
+We've already seen how to bind interface to implementation.
+The same approach might be used in order to bind a type to a value.</p>
+<pre><code class="cpp">di::bind&lt;T&gt;.to(value) // bind type T to given value
+</code></pre>
+
+<p>Moving back to our <code>render.device</code>...</p>
 <pre><code class="cpp">struct renderer {
   int device;
 };
@@ -355,7 +406,7 @@ take a look at <a href="../user_guide/index.html#di_constructible">constructible
 </span></p>
 <pre><code class="cpp">auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;()
-, di::bind&lt;int&gt;.to(42) // renderer device | [Boost].DI can also deduce 'int' type for you -&gt; 'di::bind&lt;&gt;.to(42)'
+, di::bind&lt;int&gt;.to(42) // renderer.device | [Boost].DI can also deduce 'int' type for you -&gt; 'di::bind&lt;&gt;.to(42)'
 );
 </code></pre>
 
@@ -363,7 +414,7 @@ take a look at <a href="../user_guide/index.html#di_constructible">constructible
 [Boost].DI is a compile time beast which means that it guarantees that if your code compiles, all dependencies will be resolved
 correctly. No runtime exceptions or runtime asserts, EVER!
 </span></p>
-<p>Check it out yourself!</p>
+<p>And full example!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -408,7 +459,7 @@ int main() {
 </ul>
 <p>Great, but my code is more dynamic than that! I mean that I want to choose <code>gui_view</code> or <code>text_view</code> at runtime.
 <code>[Boost].DI</code> can handle that too!</p>
-<pre><code class="cpp">auto use_gui_view = ...;
+<pre><code class="cpp">auto use_gui_view = true/false;
 
 auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
@@ -423,7 +474,7 @@ auto injector = di::make_injector(
 
 <p>Notice, that <a href="../user_guide/index.html#di_make_injector">injector</a> was passed to lambda expression in order to create <code>gui_view</code> / <code>text_view</code>.
 This way <code>[Boost].DI</code> can inject appropriate dependencies into chosen types. See <a href="../user_guide/index.html#bindings">bindings</a> for more details.</p>
-<p>Check it out yourself!</p>
+<p>And full example!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -484,7 +535,7 @@ class app {
 <pre><code class="cpp">di::bind&lt;iclient*[]&gt;.to&lt;user, client&gt;()
 </code></pre>
 
-<p>Check it out yourself!</p>
+<p>And full example!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -582,7 +633,7 @@ int main() {
 </ul>
 <p><br /><br /><br /><hr /></p>
 <h3 id="3-basic-decide-the-life-times">3. [Basic] Decide the life times</h3>
-<p>So far so good but where these objects are stored?
+<p>So far so good but where are these objects stored?
 Well, <code>[Boost].DI</code> supports <a href="../user_guide/index.html#scopes">scopes</a> which are response for maintaining the life time of created objects.
 By default there are 4 scopes</p>
 <ul>
@@ -643,8 +694,8 @@ For instance, reference, shared_ptr will be deduced as <a href="../user_guide/in
 </tr>
 </tbody>
 </table>
-<p>Coming back to our example, we got quite a lot <code>singletons</code> there as we just needed one instance per application life time.
-Although scope deduction is very useful, it's not always what we need and therefore <code>[Boost].DI</code> allows changing the scope for given type.</p>
+<p>Coming back to our example, we got quite a few <code>singletons</code> there as we just needed one instance per application life time.
+Although scope deduction is very useful, it's not always what we need and therefore <code>[Boost].DI</code> allows changing the scope for a given type.</p>
 <pre><code class="cpp">auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::singleton) // explicitly specify singleton scope
 );
@@ -753,7 +804,7 @@ To do so, we just need add scope when binding it, like this...</p>
 );
 </code></pre>
 
-<p>Check out full example here.</p>
+<p>Check out the full example here.</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -792,10 +843,10 @@ int main() {
 <h3 id="4-basic-annotations-to-the-rescue">4. [Basic] Annotations to the rescue</h3>
 <p>Above example are fine and dandy, nonetheless, they don't cover one important thing.
 How <code>[Boost].DI</code> knows which constructor to choose and what if they are ambiguous?</p>
-<p>Well, algorithm is very simple. The longest (most parameters), unique constructor will be chosen.
-Otherwise, <code>[Boost].DI</code> will give up with compile time error. However, which constructor should
+<p>Well, the algorithm is very simple. The longest (most parameters), unique constructor will be chosen.
+Otherwise, <code>[Boost].DI</code> will give up with a compile time error. However, which constructor should
 be chosen is configurable by <a href="../user_guide/index.html#BOOST_DI_INJECT">BOOST_DI_INJECT</a>.</p>
-<p>To illustrate this, let modify <code>model</code> constructor.</p>
+<p>To illustrate this, let's modify <code>model</code> constructor.</p>
 <pre><code class="cpp">class model {
  public:
    model(int size, double precision) { }
@@ -811,7 +862,7 @@ boost/di.hpp:942:4: error: 'type&lt;model&gt;::has_ambiguous_number_of_construct
   error(_ = &quot;verify BOOST_DI_INJECT_TRAITS or di::ctor_traits&quot;);
 </code></pre>
 
-<p>Let's fixed it using <a href="../user_guide/index.html#BOOST_DI_INJECT">BOOST_DI_INJECT</a> then!</p>
+<p>Let's fix it using <a href="../user_guide/index.html#BOOST_DI_INJECT">BOOST_DI_INJECT</a> then!</p>
 <pre><code class="cpp">class model {
  public:
    model(int size, double precision) { }
@@ -823,7 +874,7 @@ boost/di.hpp:942:4: error: 'type&lt;model&gt;::has_ambiguous_number_of_construct
 We can also write <code>model(int rows, int cols, ...)</code> to get the same result.
 </span></p>
 <p>Okay, right now it compiles but, wait a minute, <code>123</code> (renderer device) was injected for both <code>rows</code> and <code>cols</code>!
-Well, it wasn't even closed to what we would like to, but we can fix it easily using <a href="../user_guide/index.html#di_named">named</a> annotations.</p>
+Well, it wasn't even close to what we wanted, but we can fix it easily using <a href="../user_guide/index.html#di_named">named</a> annotations.</p>
 <p>Firstly, we have to create names. That's easy as names are just unique objects.</p>
 <pre><code class="cpp">auto Rows = []{};
 auto Cols = []{};
@@ -902,7 +953,7 @@ int main() {
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp</a></li>
 </ul>
-<p>Check out also.</p>
+<p>Check out also...</p>
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp"> Constructor Injection Example</a></li>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp"> Constructor Signature Example</a></li>
@@ -911,7 +962,7 @@ int main() {
 <p><br /><br /><hr /></p>
 <h3 id="5-basic-split-your-configuration">5. [Basic] Split your configuration</h3>
 <p>But my project has hundreds of interfaces and I would like to split my bindings into separate components.
-There is nothing simpler than that with <code>[Boost].DI</code> as <a href="../user_guide/index.html#di_make_injector">injector</a> might be extended by other <a href="../user_guide/index.html#di_make_injector">injector</a>.</p>
+This is simple to do with [Boost.DI] as an <a href="../user_guide/index.html#di_make_injector">injector</a> can be extended by other injectors.</p>
 <p>Let's split our configuration then and keep our <code>model</code> bindings separately from <code>app</code> bindings.</p>
 <pre><code class="cpp">auto model_module = [] {
   return di::make_injector(
@@ -941,7 +992,9 @@ auto app_module = [](const bool&amp; use_gui_view) {
   );
 </code></pre>
 
-<p>Check it out yourself!</p>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+Gluing many <a href="../user_guide/index.html#di_make_injector">injector</a>s into one is order independent.</p>
+<p>And full example!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -1215,7 +1268,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../benchmarks/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../try_it/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../materials/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

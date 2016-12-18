@@ -14,10 +14,10 @@ extra_css: []
 
 pages:
 - Introduction: index.md
-- Materials/Videos: materials.md
 - Overview: overview.md
-- Benchmarks: benchmarks.md
+- Materials/Videos: materials.md
 - Tutorial: tutorial.md
+- Benchmarks: benchmarks.md
 - Try It!: try_it.md
 - User Guide: user_guide.md
 - Examples: examples.md

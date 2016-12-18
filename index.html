@@ -113,13 +113,6 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="materials/index.html">Materials/Videos</a>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
         <a class="" href="overview/index.html">Overview</a>
         
     </li>
@@ -127,7 +120,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="benchmarks/index.html">Benchmarks</a>
+        <a class="" href="materials/index.html">Materials/Videos</a>
         
     </li>
 <li>
@@ -135,6 +128,13 @@
             <li>
     <li class="toctree-l1 ">
         <a class="" href="tutorial/index.html">Tutorial</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="benchmarks/index.html">Benchmarks</a>
         
     </li>
 <li>
@@ -337,7 +337,7 @@ class Model { // Better
    { } 
 
    void update() {
-     service.do_something_with_board(); // Better
+     service-&gt;do_something_with_board(); // Better
    }
 
  private:
@@ -391,7 +391,7 @@ app app_{controller_, user_};
 which has to be fixed ASAP. Unfortunately, in order to fix the bug properly a new non-trivial dependency has to be
 introduced.</p>
 <p>Now, imagine that a 'smart' dev figured out that it will be much easier to extend the functionally
-of already passed object and snick a workaround/'solution' this way. Such approach will possibly break a <strong><a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">single responsibility principle</a></strong>
+of already passed object and sneak a workaround/'solution' this way. Such approach will possibly break the <strong><a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">single responsibility principle</a></strong>
 of the changed object but no worries though, it might be refactored later on (meaning: most likely, the workaround will stay unchanged forever and that there are no tests).</p>
 <p><strong>If that sounds familiar</strong>, take a look into DI library as it helps to solve developer dilemma by taking care
 of creating all required dependencies whereas dev may focus on fixing and testing the issue.</p>
@@ -526,6 +526,7 @@ but also can help you with...</p>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
 <li>Thanks to Bartosz Kalinczuk for code review and tips how to improve <code>[Boost].DI</code></li>
+<li>Thanks to Olof Edlund for very useful feedback and for all the improvements to the documentation</li>
 <li>Thanks to Sohail Somani for support and tips how to improve <code>[Boost].DI</code></li>
 <li>Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it</li>
 </ul>
@@ -542,7 +543,7 @@ but also can help you with...</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="materials/index.html" class="btn btn-neutral float-right" title="Materials/Videos">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="overview/index.html" class="btn btn-neutral float-right" title="Overview">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
     </div>
@@ -586,7 +587,7 @@ but also can help you with...</p>
       
       
       
-        <span style="margin-left: 15px"><a href="materials/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="overview/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
@@ -598,5 +599,5 @@ but also can help you with...</p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-12-02 13:57:29.362779
+Build Date UTC : 2016-12-18 19:24:05.345183
 -->

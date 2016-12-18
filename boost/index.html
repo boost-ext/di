@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="materials/index.html"><img src="./images/next.png" alt="Next"></a>
+<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="overview/index.html"><img src="./images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -49,19 +49,19 @@ Kris Jusiak
     
 
     
-        <dt><span class="section"><a href="materials/index.html">Materials/Videos</a></span></dt>
-    
-
-    
         <dt><span class="section"><a href="overview/index.html">Overview</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="benchmarks/index.html">Benchmarks</a></span></dt>
+        <dt><span class="section"><a href="materials/index.html">Materials/Videos</a></span></dt>
     
 
     
         <dt><span class="section"><a href="tutorial/index.html">Tutorial</a></span></dt>
+    
+
+    
+        <dt><span class="section"><a href="benchmarks/index.html">Benchmarks</a></span></dt>
     
 
     
@@ -213,7 +213,7 @@ class Model { // Better
    { } 
 
    void update() {
-     service.do_something_with_board(); // Better
+     service-&gt;do_something_with_board(); // Better
    }
 
  private:
@@ -269,7 +269,7 @@ app app_{controller_, user_};
 which has to be fixed ASAP. Unfortunately, in order to fix the bug properly a new non-trivial dependency has to be
 introduced.</p>
 <p>Now, imagine that a 'smart' dev figured out that it will be much easier to extend the functionally
-of already passed object and snick a workaround/'solution' this way. Such approach will possibly break a <strong><a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">single responsibility principle</a></strong>
+of already passed object and sneak a workaround/'solution' this way. Such approach will possibly break the <strong><a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">single responsibility principle</a></strong>
 of the changed object but no worries though, it might be refactored later on (meaning: most likely, the workaround will stay unchanged forever and that there are no tests).</p>
 <p><strong>If that sounds familiar</strong>, take a look into DI library as it helps to solve developer dilemma by taking care
 of creating all required dependencies whereas dev may focus on fixing and testing the issue.</p>
@@ -406,6 +406,7 @@ but also can help you with...</p>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
 <li>Thanks to Bartosz Kalinczuk for code review and tips how to improve <code>[Boost].DI</code></li>
+<li>Thanks to Olof Edlund for very useful feedback and for all the improvements to the documentation</li>
 <li>Thanks to Sohail Somani for support and tips how to improve <code>[Boost].DI</code></li>
 <li>Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it</li>
 </ul>
@@ -429,7 +430,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="materials/index.html"><img src="./images/next.png" alt="Next"></a>
+<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="overview/index.html"><img src="./images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

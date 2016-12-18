@@ -86,13 +86,6 @@
 <li>
           
             <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../materials/index.html">Materials/Videos</a>
-        
-    </li>
-<li>
-          
-            <li>
     <li class="toctree-l1 current">
         <a class="current" href="index.html">Overview</a>
         
@@ -132,7 +125,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../benchmarks/index.html">Benchmarks</a>
+        <a class="" href="../materials/index.html">Materials/Videos</a>
         
     </li>
 <li>
@@ -140,6 +133,13 @@
             <li>
     <li class="toctree-l1 ">
         <a class="" href="../tutorial/index.html">Tutorial</a>
+        
+    </li>
+<li>
+          
+            <li>
+    <li class="toctree-l1 ">
+        <a class="" href="../benchmarks/index.html">Benchmarks</a>
         
     </li>
 <li>
@@ -347,8 +347,10 @@ namespace di = boost::di;
 </tr>
 </tbody>
 </table>
-<p><a id="nutshell"></a>
-* In a nutshell</p>
+<p><a id="nutshell"></a></p>
+<ul>
+<li>In a nutshell</li>
+</ul>
 <pre><code class="cpp">struct direct; // T(...)
 struct uniform; // T{...}
 
@@ -371,7 +373,7 @@ struct core::injector : TBindings... {
 };
 
 template&lt;class TInjector, class TConfig&gt;
-sturct provider {
+struct provider {
   template&lt;class T&gt; auto get() const noexcept {
     using pair&lt;TInitialization, TCtor...&gt; = decltype(ctor_traits&lt;TInjector, T&gt;());
     return TConfig::provider().get(TInitialization{}, TCtor...);
@@ -567,10 +569,10 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../benchmarks/index.html" class="btn btn-neutral float-right" title="Benchmarks">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../materials/index.html" class="btn btn-neutral float-right" title="Materials/Videos">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../materials/index.html" class="btn btn-neutral" title="Materials/Videos"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -612,10 +614,10 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../materials/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../benchmarks/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../materials/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../materials/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../materials/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -189,8 +189,10 @@ namespace di = boost::di;
 </tr>
 </tbody>
 </table>
-<p><a id="nutshell"></a>
-* In a nutshell</p>
+<p><a id="nutshell"></a></p>
+<ul>
+<li>In a nutshell</li>
+</ul>
 <pre><code class="cpp">struct direct; // T(...)
 struct uniform; // T{...}
 
@@ -213,7 +215,7 @@ struct core::injector : TBindings... {
 };
 
 template&lt;class TInjector, class TConfig&gt;
-sturct provider {
+struct provider {
   template&lt;class T&gt; auto get() const noexcept {
     using pair&lt;TInitialization, TCtor...&gt; = decltype(ctor_traits&lt;TInjector, T&gt;());
     return TConfig::provider().get(TInitialization{}, TCtor...);
@@ -657,7 +659,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../materials/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../materials/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
