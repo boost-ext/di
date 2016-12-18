@@ -67,7 +67,15 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 <a id="nutshell"></a>
 
-* In a nutshell
+* In a nutshell (Implementation details)
+
+The main interface of the injector is a `create` method. 
+When `create` method is called for type `T` the magic happens.
+Firstly, policies are verified (for example, whether the type `T` is allowed to be created).
+Then, the constructor traits are deduced (`ctor_traits` ) for type `T` and dependencies of the constructor
+parameters are resolved (`binder`). `wrapper` is used to convert internal representation
+of the dependency into a required type (ex. `shared_ptr<T>`). Whole process is repeated
+recursively for all required parameters of `T` constructor.
 
 ```cpp
 struct direct; // T(...)
@@ -190,6 +198,8 @@ Legend:
 
 ###Error messages
 
+[Boost].DI is designed to give great diagnostic errors. The examples below will show you the actual error messages for different scenarios.
+
 | Error | `type<T>::is_abstract` |
 | ---------- | ----------- |
 | Description | type `T` is abstract |
@@ -208,6 +218,54 @@ Legend:
 | Suggestion  | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
 | Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
 | Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) |
+
+###Materials/Videos
+
+* **Dependency Injection**
+
+![YOUTUBE](https://www.youtube.com/embed/IKD2-MAkXyQ)
+
+---
+
+* **Design Patterns in C++: Creational**
+
+[https://www.pluralsight.com/courses/design-patterns-cpp-creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
+
+---
+
+* **The Clean Code Talks - Don't Look For Things!**
+
+![YOUTUBE](https://www.youtube.com/embed/RlfLCWKxHJ0)
+
+---
+
+* C++Now 2016: **C++14 Dependency Injection Library ([Boost].DI)**
+
+![YOUTUBE](https://www.youtube.com/embed/comZthFv3PM)
+
+[Slides](http://boost-experimental.github.io/di/cppnow-2016)
+
+---
+
+* MeetingC++ 2016: **TDD/BDD and Dependency Injection**
+
+![YOUTUBE](https://www.youtube.com/watch?v=T3uMcxhzRUE)
+
+[Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
+
+---
+
+* **A New Type of dependency injection**
+
+![YOUTUBE](http://www.youtube.com/embed/oK_XtfXPkqw)
+
+---
+
+* **The Future of Dependency Injection with Dagger 2**
+
+![YOUTUBE](https://www.youtube.com/embed/plK0zyRLIP8)
+
+---
 
 [Bindings]: user_guide.md#bindings
 [Scopes]: user_guide.md#scopes

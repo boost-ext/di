@@ -71,7 +71,11 @@ class Button {
 
 Common mistakes when using Dependency Injection are:
 
-  * Passing a dependency to create another dependency inside your object
+  * **Passing a dependency to create another dependency inside your object**
+
+    It's a bad practice to pass dependencies to an object just in order
+    to create another one with those dependencies.
+    It's much cleaner to create the latter object beforehand and pass it to the former.
 
 ```cpp
 class Model {
@@ -91,7 +95,10 @@ class Model {
 };
 ```
 
-  * Carrying dependencies
+  * **Carrying dependencies**
+
+    It's also important NOT to pass depenencies through layers of constructors (carrying them).
+    It's much better to always pass only dependecies which are required ONLY by the given constructor.
 
 ```cpp
 class Model : public Service { // Bad
@@ -120,7 +127,12 @@ class Model { // Better
 };
 ```
 
-  * Carrying injector (Service Locator pattern)
+  * **Carrying injector (Service Locator pattern)**
+
+    Service locator is consider to be an anti-pattern because its instance
+    is required to be passed as the ONLY constructor parameter into all
+    constructors. Such approach makes the code highly coupled to the Service Locator framework.
+    It's better to pass required dependencies direclty instead and use a DI framework to inject them.
 
 ```cpp
 class Model {
@@ -137,6 +149,24 @@ class Model {
 
  private:
    std::unique_ptr<Service> service;
+};
+```
+
+  * **Not using strong typedefs for consturctor parameters**
+
+    Being explicit and declarative is always better than being impilicit.
+    Using common types (ex. numbers) in order to define any common-like type may cause
+    missusage of the constructor interface. Using `strong typedefs` is easier to follow and
+    protects against missusage of the constructor interface.
+
+```cpp
+class Board {
+ public:
+   Board(int /*width*/, int /*height*/)  // Bad; Board{2, 3} vs Board{3, 2}?
+
+   Board(width, height) // Better, explicit; Board{width{2}, height{3}};
+
+   ...
 };
 ```
 
@@ -206,7 +236,7 @@ but also can help you with...
 
 ###Why [Boost].DI?
 
-* [Boost].DI has none or minimal run-time overhead (See [Performance](overview.md#performance))
+* [Boost].DI has none run-time overhead (See [Performance](overview.md#performance))
 * [Boost].DI compiles fast / **Faster than Java-[Dagger2]!** (See [Benchmarks](overview.md#benchmarks))
 * [Boost].DI gives short diagnostic messages (See [Error messages](overview.md#error-messages))
 * [Boost].DI is non-intrusive (See [Injections](user_guide.md#injections))
@@ -303,9 +333,9 @@ but also can help you with...
 * Be easy to extend (See [Extensions](extensions.md))
 
 ###Acknowledgements
-* Thanks to Bartosz Kalinczuk for code review and tips how to improve `[Boost].DI`
-* Thanks to Olof Edlund for very useful feedback and for all the improvements to the documentation
-* Thanks to Sohail Somani for support and tips how to improve `[Boost].DI`
-* Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it
+* Thanks to **Bartosz Kalinczuk** for code review and tips how to improve `[Boost].DI`
+* Thanks to **Sohail Somani** for support and tips how to improve `[Boost].DI`
+* Thanks to **Olof Edlund** for very useful feedback and for all the improvements to the documentation
+* Thanks to **Rob Stewart** and **Robert Ramey** for documentation feedback and tips how to improve it
 
 [Dagger2]: https://github.com/google/dagger

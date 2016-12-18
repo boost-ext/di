@@ -377,7 +377,7 @@ And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp)
 
 The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
-With `[Boost].DI` you can easily do that with [override] specifier.
+With `[Boost].DI` you can easily do that with [override] specifier (Implemented using `operator[](override)`).
 
 ```cpp
 auto injector = di::make_injector(
@@ -451,7 +451,8 @@ auto injector = di::make_injector(
 );
 ```
 
-It's NOT compiling!
+We will get a COMPILATION TIME ERROR because a unique scope can't be converted to a reference.
+In other words, having a reference to a copy is forbidden and it won't compile!
 
 ```cpp
 warning: 'create<app>' is deprecated: creatable constraint not satisfied
@@ -548,6 +549,8 @@ class model {
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 We can also write `model(int rows, int cols, ...)` to get the same result.
+By adding `...` as the last parameter of the constructor it's guaranteed by [Boost].DI
+that it will be used for injection as it will have the highest number of constructor parameters (infinite number).
 </span>
 
 Okay, right now it compiles but, wait a minute, `123` (renderer device) was injected for both `rows` and `cols`!
@@ -646,13 +649,50 @@ And glue them into one injector the same way...
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Gluing many [injector]s into one is order independent.
+</span>
 
 And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp)
 
 But I would like to have a module in `cpp` file, how can I do that?
 Such design might be achieved with `[Boost].DI` using [injector] and exposing given types.
-Let's refactor it then.
+
+* Expose all types (default)
+```cpp
+const auto injector = // auto exposes all types
+di::make_injector(
+  di::bind<int>.to(42)
+, di::bind<double>.to(87.0)
+);
+
+injector.create<int>(); OK
+injector.create<double>(); // OK
+```
+
+* Expose only specific types
+```cpp
+const di::injector<int> injector = // only int is exposed
+di::make_injector(
+  di::bind<int>.to(42)
+, di::bind<double>.to(87.0)
+);
+
+injector.create<int>(); OK
+injector.create<double>(); // COMPILE TIME ERROR, double is not exposed by the injector
+```
+
+When exposing all types using `auto` modules have to be implemented in a header file.
+With `di::injector<T...>` a definition might be put in a cpp file as it’s just a regular type.
+
+Such approach has a few benefits:
+* It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
+* May also speed compilation times in case of extend usage of cpp files
+
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+There is no performance (compile-time, run-time) overhead between exposing all types or just a specific ones.
+</span>
+
+Moving back to our example. Let's refactor it then.
 
 ```cpp
 di::injector<model&> model_module() {
@@ -679,16 +719,15 @@ di::injector<app> app_module(const bool& use_gui_view) {
 
 Right now you can easily separate definition and declaration between `hpp` and `cpp` files.
 
-Check it out here!
+Check the full example here!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp)
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 You can also expose named parameters using `di::injector<BOOST_DI_EXPOSE((named = Rows) int)>`.
 Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
-Expose uses type erasure and therefore it has small performance overhead!
-</span>
+Type erasure is used under the hood when types are exposed explicitly (`di::injector<T…>`).
 
-More examples.
+Check out more examples here!
 
 ![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
 ![CPP(BTN)](Run_Exposed_Annotated_Type_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)

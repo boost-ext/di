@@ -108,7 +108,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [Design](http://boost-experimental.github.io/di/overview/index.html#design)
     * [Performance](http://boost-experimental.github.io/di/overview/index.html#performance)
     * [Error messages](http://boost-experimental.github.io/di/overview/index.html#error-messages)
-* [Materials/Videos](http://boost-experimental.github.io/di/materials/index.html)
+    * [Materials/Videos](http://boost-experimental.github.io/di/overview/index.html#materialsvideos)
 * [Tutorial](http://boost-experimental.github.io/di/tutorial/index.html)
     * [0. [Pre] Refactor towards DI](http://boost-experimental.github.io/di/tutorial/index.html#0-pre-refactor-towards-di)
     * [1. [Basic] Create objects tree](http://boost-experimental.github.io/di/tutorial/index.html#1-basic-create-objects-tree)
