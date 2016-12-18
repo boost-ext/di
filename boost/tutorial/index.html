@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../materials/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../overview/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -582,7 +582,7 @@ int main() {
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp</a></li>
 </ul>
 <p>The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
-With <code>[Boost].DI</code> you can easily do that with <a href="../user_guide/index.html#di_bind">override</a> specifier.</p>
+With <code>[Boost].DI</code> you can easily do that with <a href="../user_guide/index.html#di_bind">override</a> specifier (Implemented using <code>operator[](override)</code>).</p>
 <pre><code class="cpp">auto injector = di::make_injector(
   di::bind&lt;int&gt;.to(42) // renderer device
 , di::bind&lt;int&gt;.to(123) [di::override] // override renderer device
@@ -707,7 +707,8 @@ Although scope deduction is very useful, it's not always what we need and theref
 );
 </code></pre>
 
-<p>It's NOT compiling!</p>
+<p>We will get a COMPILATION TIME ERROR because a unique scope can't be converted to a reference.
+In other words, having a reference to a copy is forbidden and it won't compile!</p>
 <pre><code class="cpp">warning: 'create&lt;app&gt;' is deprecated: creatable constraint not satisfied
   injector.create&lt;app&gt;();
            ^
@@ -872,6 +873,8 @@ boost/di.hpp:942:4: error: 'type&lt;model&gt;::has_ambiguous_number_of_construct
 
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 We can also write <code>model(int rows, int cols, ...)</code> to get the same result.
+By adding <code>...</code> as the last parameter of the constructor it's guaranteed by [Boost].DI
+that it will be used for injection as it will have the highest number of constructor parameters (infinite number).
 </span></p>
 <p>Okay, right now it compiles but, wait a minute, <code>123</code> (renderer device) was injected for both <code>rows</code> and <code>cols</code>!
 Well, it wasn't even close to what we wanted, but we can fix it easily using <a href="../user_guide/index.html#di_named">named</a> annotations.</p>
@@ -993,7 +996,8 @@ auto app_module = [](const bool&amp; use_gui_view) {
 </code></pre>
 
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
-Gluing many <a href="../user_guide/index.html#di_make_injector">injector</a>s into one is order independent.</p>
+Gluing many <a href="../user_guide/index.html#di_make_injector">injector</a>s into one is order independent.
+</span></p>
 <p>And full example!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
@@ -1038,8 +1042,42 @@ int main() {
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp</a></li>
 </ul>
 <p>But I would like to have a module in <code>cpp</code> file, how can I do that?
-Such design might be achieved with <code>[Boost].DI</code> using <a href="../user_guide/index.html#di_make_injector">injector</a> and exposing given types.
-Let's refactor it then.</p>
+Such design might be achieved with <code>[Boost].DI</code> using <a href="../user_guide/index.html#di_make_injector">injector</a> and exposing given types.</p>
+<ul>
+<li>Expose all types (default)</li>
+</ul>
+<pre><code class="cpp">const auto injector = // auto exposes all types
+di::make_injector(
+  di::bind&lt;int&gt;.to(42)
+, di::bind&lt;double&gt;.to(87.0)
+);
+
+injector.create&lt;int&gt;(); OK
+injector.create&lt;double&gt;(); // OK
+</code></pre>
+
+<ul>
+<li>Expose only specific types</li>
+</ul>
+<pre><code class="cpp">const di::injector&lt;int&gt; injector = // only int is exposed
+di::make_injector(
+  di::bind&lt;int&gt;.to(42)
+, di::bind&lt;double&gt;.to(87.0)
+);
+
+injector.create&lt;int&gt;(); OK
+injector.create&lt;double&gt;(); // COMPILE TIME ERROR, double is not exposed by the injector
+</code></pre>
+
+<p>When exposing all types using <code>auto</code> modules have to be implemented in a header file.
+With <code>di::injector&lt;T...&gt;</code> a definition might be put in a cpp file as it’s just a regular type.</p>
+<p>Such approach has a few benefits:
+<em> It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
+</em> May also speed compilation times in case of extend usage of cpp files</p>
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+There is no performance (compile-time, run-time) overhead between exposing all types or just a specific ones.
+</span></p>
+<p>Moving back to our example. Let's refactor it then.</p>
 <pre><code class="cpp">di::injector&lt;model&amp;&gt; model_module() {
   return di::make_injector(
     di::bind&lt;int&gt;.named(Rows).to(6)
@@ -1063,7 +1101,7 @@ di::injector&lt;app&gt; app_module(const bool&amp; use_gui_view) {
 </code></pre>
 
 <p>Right now you can easily separate definition and declaration between <code>hpp</code> and <code>cpp</code> files.</p>
-<p>Check it out here!</p>
+<p>Check the full example here!</p>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
 
 namespace di = boost::di;
@@ -1108,9 +1146,8 @@ int main() {
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 You can also expose named parameters using <code>di::injector&lt;BOOST_DI_EXPOSE((named = Rows) int)&gt;</code>.
 Different variations of the same type have to be exposed explicitly using <code>di::injector&lt;model&amp;, std::unique_ptr&lt;model&gt;&gt;</code>.
-Expose uses type erasure and therefore it has small performance overhead!
-</span></p>
-<p>More examples.</p>
+Type erasure is used under the hood when types are exposed explicitly (<code>di::injector&lt;T…&gt;</code>).</p>
+<p>Check out more examples here!</p>
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp"> Modules Example</a></li>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp"> Exposed Annotated Type Example</a></li>
@@ -1268,7 +1305,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../materials/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../overview/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../benchmarks/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

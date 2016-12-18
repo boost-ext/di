@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../materials/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../tutorial/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -61,6 +61,10 @@
 
     
         <dt><span class="section"><a href="#error-messages">Error messages</a></span></dt>
+    
+
+    
+        <dt><span class="section"><a href="#materialsvideos">Materials/Videos</a></span></dt>
     
 
 </dl>
@@ -191,8 +195,15 @@ namespace di = boost::di;
 </table>
 <p><a id="nutshell"></a></p>
 <ul>
-<li>In a nutshell</li>
+<li>In a nutshell (Implementation details)</li>
 </ul>
+<p>The main interface of the injector is a <code>create</code> method. 
+When <code>create</code> method is called for type <code>T</code> the magic happens.
+Firstly, policies are verified (for example, whether the type <code>T</code> is allowed to be created).
+Then, the constructor traits are deduced (<code>ctor_traits</code> ) for type <code>T</code> and dependencies of the constructor
+parameters are resolved (<code>binder</code>). <code>wrapper</code> is used to convert internal representation
+of the dependency into a required type (ex. <code>shared_ptr&lt;T&gt;</code>). Whole process is repeated
+recursively for all required parameters of <code>T</code> constructor.</p>
 <pre><code class="cpp">struct direct; // T(...)
 struct uniform; // T{...}
 
@@ -495,6 +506,7 @@ auto test() {
 </code></pre>
 
 <h3 id="error-messages">Error messages</h3>
+<p>[Boost].DI is designed to give great diagnostic errors. The examples below will show you the actual error messages for different scenarios.</p>
 <table>
 <thead>
 <tr>
@@ -639,6 +651,44 @@ int main() {
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp</a></li>
 </ul>
+<h3 id="materialsvideos">Materials/Videos</h3>
+<ul>
+<li><strong>Dependency Injection</strong></li>
+</ul>
+<p><a href="https://www.youtube.com/embed/IKD2-MAkXyQ">https://www.youtube.com/embed/IKD2-MAkXyQ</a></p>
+<hr />
+<ul>
+<li><strong>Design Patterns in C++: Creational</strong></li>
+</ul>
+<p><a href="https://www.pluralsight.com/courses/design-patterns-cpp-creational">https://www.pluralsight.com/courses/design-patterns-cpp-creational</a></p>
+<hr />
+<ul>
+<li><strong>The Clean Code Talks - Don't Look For Things!</strong></li>
+</ul>
+<p><a href="https://www.youtube.com/embed/RlfLCWKxHJ0">https://www.youtube.com/embed/RlfLCWKxHJ0</a></p>
+<hr />
+<ul>
+<li>C++Now 2016: <strong>C++14 Dependency Injection Library ([Boost].DI)</strong></li>
+</ul>
+<p><a href="https://www.youtube.com/embed/comZthFv3PM">https://www.youtube.com/embed/comZthFv3PM</a></p>
+<p><a href="http://boost-experimental.github.io/di/cppnow-2016">Slides</a></p>
+<hr />
+<ul>
+<li>MeetingC++ 2016: <strong>TDD/BDD and Dependency Injection</strong></li>
+</ul>
+<p><a href="https://www.youtube.com/watch?v=T3uMcxhzRUE">https://www.youtube.com/watch?v=T3uMcxhzRUE</a></p>
+<p><a href="http://boost-experimental.github.io/di/meetingcpp-2016">Slides</a></p>
+<hr />
+<ul>
+<li><strong>A New Type of dependency injection</strong></li>
+</ul>
+<p><a href="http://www.youtube.com/embed/oK_XtfXPkqw">http://www.youtube.com/embed/oK_XtfXPkqw</a></p>
+<hr />
+<ul>
+<li><strong>The Future of Dependency Injection with Dagger 2</strong></li>
+</ul>
+<p><a href="https://www.youtube.com/embed/plK0zyRLIP8">https://www.youtube.com/embed/plK0zyRLIP8</a></p>
+<hr />
 </div>
 
 <script src="../js/highlight.pack.js"></script>
@@ -659,7 +709,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../materials/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../tutorial/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

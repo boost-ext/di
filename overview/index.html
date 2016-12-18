@@ -118,14 +118,10 @@
                 <li class="toctree-l3"><a href="#error-messages">Error messages</a></li>
                 
             
+                <li class="toctree-l3"><a href="#materialsvideos">Materials/Videos</a></li>
+                
+            
             </ul>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../materials/index.html">Materials/Videos</a>
         
     </li>
 <li>
@@ -349,8 +345,15 @@ namespace di = boost::di;
 </table>
 <p><a id="nutshell"></a></p>
 <ul>
-<li>In a nutshell</li>
+<li>In a nutshell (Implementation details)</li>
 </ul>
+<p>The main interface of the injector is a <code>create</code> method. 
+When <code>create</code> method is called for type <code>T</code> the magic happens.
+Firstly, policies are verified (for example, whether the type <code>T</code> is allowed to be created).
+Then, the constructor traits are deduced (<code>ctor_traits</code> ) for type <code>T</code> and dependencies of the constructor
+parameters are resolved (<code>binder</code>). <code>wrapper</code> is used to convert internal representation
+of the dependency into a required type (ex. <code>shared_ptr&lt;T&gt;</code>). Whole process is repeated
+recursively for all required parameters of <code>T</code> constructor.</p>
 <pre><code class="cpp">struct direct; // T(...)
 struct uniform; // T{...}
 
@@ -486,6 +489,7 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
 </code></pre>
 
 <h3 id="error-messages">Error messages</h3>
+<p>[Boost].DI is designed to give great diagnostic errors. The examples below will show you the actual error messages for different scenarios.</p>
 <table>
 <thead>
 <tr>
@@ -556,6 +560,44 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
 </tr>
 </tbody>
 </table>
+<h3 id="materialsvideos">Materials/Videos</h3>
+<ul>
+<li><strong>Dependency Injection</strong></li>
+</ul>
+<p><img alt="YOUTUBE" src="https://www.youtube.com/embed/IKD2-MAkXyQ" /></p>
+<hr />
+<ul>
+<li><strong>Design Patterns in C++: Creational</strong></li>
+</ul>
+<p><a href="https://www.pluralsight.com/courses/design-patterns-cpp-creational">https://www.pluralsight.com/courses/design-patterns-cpp-creational</a></p>
+<hr />
+<ul>
+<li><strong>The Clean Code Talks - Don't Look For Things!</strong></li>
+</ul>
+<p><img alt="YOUTUBE" src="https://www.youtube.com/embed/RlfLCWKxHJ0" /></p>
+<hr />
+<ul>
+<li>C++Now 2016: <strong>C++14 Dependency Injection Library ([Boost].DI)</strong></li>
+</ul>
+<p><img alt="YOUTUBE" src="https://www.youtube.com/embed/comZthFv3PM" /></p>
+<p><a href="http://boost-experimental.github.io/di/cppnow-2016">Slides</a></p>
+<hr />
+<ul>
+<li>MeetingC++ 2016: <strong>TDD/BDD and Dependency Injection</strong></li>
+</ul>
+<p><img alt="YOUTUBE" src="https://www.youtube.com/watch?v=T3uMcxhzRUE" /></p>
+<p><a href="http://boost-experimental.github.io/di/meetingcpp-2016">Slides</a></p>
+<hr />
+<ul>
+<li><strong>A New Type of dependency injection</strong></li>
+</ul>
+<p><img alt="YOUTUBE" src="http://www.youtube.com/embed/oK_XtfXPkqw" /></p>
+<hr />
+<ul>
+<li><strong>The Future of Dependency Injection with Dagger 2</strong></li>
+</ul>
+<p><img alt="YOUTUBE" src="https://www.youtube.com/embed/plK0zyRLIP8" /></p>
+<hr />
               
             </div>
           </div>
@@ -569,7 +611,7 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../materials/index.html" class="btn btn-neutral float-right" title="Materials/Videos">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../tutorial/index.html" class="btn btn-neutral float-right" title="Tutorial">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../index.html" class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -617,7 +659,7 @@ conversion constructors <code>template&lt;class I&gt; T(I)</code> are not suppor
         <span><a href="../index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../materials/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../tutorial/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>

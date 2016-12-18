@@ -15,7 +15,6 @@ extra_css: []
 pages:
 - Introduction: index.md
 - Overview: overview.md
-- Materials/Videos: materials.md
 - Tutorial: tutorial.md
 - Benchmarks: benchmarks.md
 - Try It!: try_it.md

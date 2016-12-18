@@ -19,14 +19,6 @@
 
     
     <url>
-     <loc>http://boost-experimental.github.io/di/materials/index.html</loc>
-     <lastmod>2016-12-18</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
      <loc>http://boost-experimental.github.io/di/tutorial/index.html</loc>
      <lastmod>2016-12-18</lastmod>
      <changefreq>daily</changefreq>
