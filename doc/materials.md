@@ -4,6 +4,12 @@
 
 ---
 
+* **Design Patterns in C++: Creational**
+
+[https://www.pluralsight.com/courses/design-patterns-cpp-creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
+
+---
+
 * **The Clean Code Talks - Don't Look For Things!**
 
 ![YOUTUBE](https://www.youtube.com/embed/RlfLCWKxHJ0)
@@ -19,6 +25,8 @@
 ---
 
 * MeetingC++ 2016: **TDD/BDD and Dependency Injection**
+
+![YOUTUBE](https://www.youtube.com/watch?v=T3uMcxhzRUE)
 
 [Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
 

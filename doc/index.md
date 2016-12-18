@@ -112,7 +112,7 @@ class Model { // Better
    { } 
 
    void update() {
-     service.do_something_with_board(); // Better
+     service->do_something_with_board(); // Better
    }
 
  private:
@@ -172,7 +172,7 @@ which has to be fixed ASAP. Unfortunately, in order to fix the bug properly a ne
 introduced.
 
 Now, imagine that a 'smart' dev figured out that it will be much easier to extend the functionally
-of already passed object and snick a workaround/'solution' this way. Such approach will possibly break a **[single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle)**
+of already passed object and sneak a workaround/'solution' this way. Such approach will possibly break the **[single responsibility principle](https://en.wikipedia.org/wiki/Single_responsibility_principle)**
 of the changed object but no worries though, it might be refactored later on (meaning: most likely, the workaround will stay unchanged forever and that there are no tests).
 
 **If that sounds familiar**, take a look into DI library as it helps to solve developer dilemma by taking care
@@ -304,6 +304,7 @@ but also can help you with...
 
 ###Acknowledgements
 * Thanks to Bartosz Kalinczuk for code review and tips how to improve `[Boost].DI`
+* Thanks to Olof Edlund for very useful feedback and for all the improvements to the documentation
 * Thanks to Sohail Somani for support and tips how to improve `[Boost].DI`
 * Thanks to Rob Stewart and Robert Ramey for documentation feedback and tips how to improve it
 

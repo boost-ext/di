@@ -71,11 +71,62 @@ int main() {
 }
 ```
 
+Additionally, you can consider using `strong typedefs` which will make your constructor interface cleaner/stronger.
+
+```cpp
+class button {
+public:
+  button(int, int); // weak constructor interface (cpp file has to checked in order to figure out the meaning of int's)
+};
+```
+
+`button` constructor is not clear because `int's` are ambiguous and both present just a number.
+It can be seen more clearly in the following example.
+
+```cpp
+button{10, 15}; // OK, but what's 10? what's 15? Can I swap them?
+button{15, 10}; // Hmm, potenial missue of the constructor
+```
+
+A better approach would be to introduce a strong typedefs for both numbers
+in order to avoid potential misuse of the constructor, especially when used by other/external teams.
+
+```cpp
+struct width {
+  int value;
+  constexpr operator int() const { return value; }
+};
+struct height {
+  int value;
+  constexpr operator int() const { return value; }
+};
+class button {
+public:
+  button(width, height); // strong constructor interface
+};
+```
+
+Right now, `button` constructor is much easier to follow (no need to check cpp file) because
+it expresses the intention.
+
+```cpp
+button{width{10}, height{15}}; // OK, declartive approach
+button{height{10}, with{15}}; // Compile Error
+button{10, 15}; // Compile Error
+```
+
+Similar mechanism is used by [Boost].DI to achieve [named] parameters which and it will be presented in this tutorial later on.
+
 ###1. [Basic] Create objects tree
 
 Before we will get into creating objects tree, let's first create a 'dummy' example.
-In order to do so, firstly, we have to include (one and only) `boost/di.hpp` header and
-declare a convenient `di` namespace alias.
+In order to do so, firstly, we have to include (one and only) [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp) header
+
+```sh
+wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
+```
+
+and declare a convenient `di` namespace alias.
 
 ```cpp
 #include <boost/di.hpp>
@@ -125,12 +176,17 @@ Not fun, not fun at all :(
 Right now imagine that your maintain effort will be minimized almost to none. How does it sound?
 Well, that might be simply achieved with `[Boost].DI`!
 
-The same result might be achieved with one liner. Doesn't matter how big the hierarchy will be.
-We just have to create [injector] using [make_injector] and create the `app`.
+The same result might be achieved with [Boost].DI. All, non-ambiguous, dependencies will be automatically
+resolved and injected properly. It doesn't matter how big the hierarchy will be and/or if the order of constructor parameters will be changed in the future.
+We just have to create [injector] using [make_injector], create the `app` and DI will take care of injecting proper types for us.
 
 ```cpp
-auto app_{make_injector().create<app>()};
+auto app_ = make_injector().create<app>(); // It will create an `app` on stack and call its copy constructor
 ```
+
+How is that possible? [Boost].DI is able to figure out what parameters are required for the constructor of type T.
+Also, [Boost].DI is able to do it recursively for all required types by the constructor T. Hence, NO information
+about constructors parameters is required to be registered.
 
 Moreover, changes in the constructor of created objects will be handled automatically, so in our case
 when we add a `window` to `view` or change `view&` to `std::shared_ptr<view>` required effort will be
@@ -155,7 +211,7 @@ Furthermore, there is no performance penalty for using `[Boost].DI` (see [Perfor
 [Boost].DI can [inject] dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
 </span>
 
-Check it out yourself!
+And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
 
 Check out also other examples. Please, notice that the diagram was also generated using `[Boost].DI` but we will get into that a bit later.
@@ -197,7 +253,7 @@ Please, notice that `text_view` doesn't require any constructor parameters, whil
 So, what will happen right now, when we try to create an `app`?
 
 ```cpp
-auto app_{make_injector().create<app>()};
+auto app = make_injector().create<app>();
 ```
 
 COMPILE error! (See also: [Error Messages](overview.md#error-messages))
@@ -225,7 +281,16 @@ auto injector = di::make_injector(
 
 Let's try again. Yay! It's compiling.
 
-But what about values? `renderer` requires `device`, which, by default, was value initialized.
+But what about `render.device` value? So far, it was value initialized by default(=0).
+What, if you we want to initialize it with a user defined value instead?
+We've already seen how to bind interface to implementation.
+The same approach might be used in order to bind a type to a value.
+
+```cpp
+di::bind<T>.to(value) // bind type T to given value
+```
+
+Moving back to our `render.device`...
 
 ```cpp
 struct renderer {
@@ -241,7 +306,7 @@ take a look at [constructible] policy.
 ```cpp
 auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>()
-, di::bind<int>.to(42) // renderer device | [Boost].DI can also deduce 'int' type for you -> 'di::bind<>.to(42)'
+, di::bind<int>.to(42) // renderer.device | [Boost].DI can also deduce 'int' type for you -> 'di::bind<>.to(42)'
 );
 ```
 
@@ -250,14 +315,14 @@ auto injector = di::make_injector(
 correctly. No runtime exceptions or runtime asserts, EVER!
 </span>
 
-Check it out yourself!
+And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp)
 
 Great, but my code is more dynamic than that! I mean that I want to choose `gui_view` or `text_view` at runtime.
 `[Boost].DI` can handle that too!
 
 ```cpp
-auto use_gui_view = ...;
+auto use_gui_view = true/false;
 
 auto injector = di::make_injector(
   di::bind<iview>.to([&](const auto& injector) -> iview& {
@@ -273,7 +338,7 @@ auto injector = di::make_injector(
 Notice, that [injector] was passed to lambda expression in order to create `gui_view` / `text_view`.
 This way `[Boost].DI` can inject appropriate dependencies into chosen types. See [bindings] for more details.
 
-Check it out yourself!
+And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp)
 
 Okay, so what about the input. We have `user`, however, in the real life, we will have more clients.
@@ -308,7 +373,7 @@ And our bindings...
 di::bind<iclient*[]>.to<user, client>()
 ```
 
-Check it out yourself!
+And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp)
 
 The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
@@ -344,7 +409,7 @@ Check out also.
 
 ###3. [Basic] Decide the life times
 
-So far so good but where these objects are stored?
+So far so good but where are these objects stored?
 Well, `[Boost].DI` supports [scopes] which are response for maintaining the life time of created objects.
 By default there are 4 scopes
 
@@ -369,8 +434,8 @@ For instance, reference, shared_ptr will be deduced as [singleton] scope and poi
 | boost::shared_ptr<T> | [singleton] |
 | std::weak_ptr<T> | [singleton] |
 
-Coming back to our example, we got quite a lot `singletons` there as we just needed one instance per application life time.
-Although scope deduction is very useful, it's not always what we need and therefore `[Boost].DI` allows changing the scope for given type.
+Coming back to our example, we got quite a few `singletons` there as we just needed one instance per application life time.
+Although scope deduction is very useful, it's not always what we need and therefore `[Boost].DI` allows changing the scope for a given type.
 
 ```cpp
 auto injector = di::make_injector(
@@ -431,7 +496,7 @@ auto injector = di::make_injector(
 );
 ```
 
-Check out full example here.
+Check out the full example here.
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp)
 
 See also.
@@ -447,11 +512,11 @@ See also.
 Above example are fine and dandy, nonetheless, they don't cover one important thing.
 How `[Boost].DI` knows which constructor to choose and what if they are ambiguous?
 
-Well, algorithm is very simple. The longest (most parameters), unique constructor will be chosen.
-Otherwise, `[Boost].DI` will give up with compile time error. However, which constructor should
+Well, the algorithm is very simple. The longest (most parameters), unique constructor will be chosen.
+Otherwise, `[Boost].DI` will give up with a compile time error. However, which constructor should
 be chosen is configurable by [BOOST_DI_INJECT].
 
-To illustrate this, let modify `model` constructor.
+To illustrate this, let's modify `model` constructor.
 
 ```cpp
 class model {
@@ -471,7 +536,7 @@ boost/di.hpp:942:4: error: 'type<model>::has_ambiguous_number_of_constructor_par
   error(_ = "verify BOOST_DI_INJECT_TRAITS or di::ctor_traits");
 ```
 
-Let's fixed it using [BOOST_DI_INJECT] then!
+Let's fix it using [BOOST_DI_INJECT] then!
 
 ```cpp
 class model {
@@ -486,7 +551,7 @@ We can also write `model(int rows, int cols, ...)` to get the same result.
 </span>
 
 Okay, right now it compiles but, wait a minute, `123` (renderer device) was injected for both `rows` and `cols`!
-Well, it wasn't even closed to what we would like to, but we can fix it easily using [named] annotations.
+Well, it wasn't even close to what we wanted, but we can fix it easily using [named] annotations.
 
 Firstly, we have to create names. That's easy as names are just unique objects.
 
@@ -533,7 +598,7 @@ The same result might be accomplished with having different types for rows and c
 Full example here.
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp)
 
-Check out also.
+Check out also...
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
 ![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
@@ -544,7 +609,7 @@ Check out also.
 ###5. [Basic] Split your configuration
 
 But my project has hundreds of interfaces and I would like to split my bindings into separate components.
-There is nothing simpler than that with `[Boost].DI` as [injector] might be extended by other [injector].
+This is simple to do with [Boost.DI] as an [injector] can be extended by other injectors.
 
 Let's split our configuration then and keep our `model` bindings separately from `app` bindings.
 
@@ -579,7 +644,10 @@ And glue them into one injector the same way...
   );
 ```
 
-Check it out yourself!
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+Gluing many [injector]s into one is order independent.
+
+And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp)
 
 But I would like to have a module in `cpp` file, how can I do that?

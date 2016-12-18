@@ -66,6 +66,7 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 
 <a id="nutshell"></a>
+
 * In a nutshell
 
 ```cpp
@@ -91,7 +92,7 @@ struct core::injector : TBindings... {
 };
 
 template<class TInjector, class TConfig>
-sturct provider {
+struct provider {
   template<class T> auto get() const noexcept {
     using pair<TInitialization, TCtor...> = decltype(ctor_traits<TInjector, T>());
     return TConfig::provider().get(TInitialization{}, TCtor...);
