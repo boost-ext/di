@@ -33,7 +33,7 @@ Please, check out [XML Extension](extensions.md#xml-injection).
 Yes, [Boost].DI supports dynamic bindings.
 
 ```cpp
-auto use_gui_view = ...;
+auto use_gui_view = true/false;
 
 auto injector = di::make_injector(
   di::bind<iview>.to([&](const auto& injector) -> iview& {

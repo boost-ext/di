@@ -16,6 +16,10 @@ namespace di = boost::di;
 $CXX -std=c++14 ...
 ```
 
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+[Boost].DI compiles with -fno-exceptions -fno-rtti -Wall -Wextra -Werror -pedantic -pedantic-errors
+</span>
+
 * To run tests
 ```sh
 git clone https://github.com/boost-experimental/di && cd di && make

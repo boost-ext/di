@@ -274,7 +274,7 @@ Ah, okay, we haven't bound `iview` which means that `BOOST.DI` can't figure out 
 Well, it's really simple to fix it, we just follow suggestion provided.
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>()
 );
 ```
@@ -304,7 +304,7 @@ take a look at [constructible] policy.
 </span>
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>()
 , di::bind<int>.to(42) // renderer.device | [Boost].DI can also deduce 'int' type for you -> 'di::bind<>.to(42)'
 );
@@ -324,7 +324,7 @@ Great, but my code is more dynamic than that! I mean that I want to choose `gui_
 ```cpp
 auto use_gui_view = true/false;
 
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<iview>.to([&](const auto& injector) -> iview& {
     if (use_gui_view)
       return injector.template create<gui_view&>();
@@ -380,7 +380,7 @@ The last but not least, sometimes, it's really useful to override some bindings.
 With `[Boost].DI` you can easily do that with [override] specifier (Implemented using `operator[](override)`).
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<int>.to(42) // renderer device
 , di::bind<int>.to(123) [di::override] // override renderer device
 );
@@ -434,11 +434,26 @@ For instance, reference, shared_ptr will be deduced as [singleton] scope and poi
 | boost::shared_ptr<T> | [singleton] |
 | std::weak_ptr<T> | [singleton] |
 
+
+Example
+```cpp
+class scopes_deduction {
+  scopes_deduction(const int& /*singleton scope*/,
+                   std::shared_ptr<int> /*singleton scope*/,
+                   std::unique_ptr<int> /*unique scope*/,
+                   int /*unique scope*/)
+  { }
+};
+
+di::make_injector().create<example>(); // scopes will be deduced based on constructor parameter types
+```
+
+
 Coming back to our example, we got quite a few `singletons` there as we just needed one instance per application life time.
 Although scope deduction is very useful, it's not always what we need and therefore `[Boost].DI` allows changing the scope for a given type.
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>().in(di::singleton) // explicitly specify singleton scope
 );
 ```
@@ -446,7 +461,7 @@ auto injector = di::make_injector(
 What if I want to change `gui_view` to be a different instance per each request. Let's change the scope to [unique] then.
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<iview>.to<gui_view>().in(di::unique)
 );
 ```
@@ -492,7 +507,7 @@ But, it would be better if `timer` was always created per request, although it's
 To do so, we just need add scope when binding it, like this...
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<timer>.in(di::unique) // different per request
 );
 ```
@@ -586,7 +601,7 @@ for example `(named = "Rows"_s)`.
 Finally, we have to bind our values.
 
 ```cpp
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind<int>.named(Rows).to(6)
 , di::bind<int>.named(Cols).to(8)
 );
@@ -641,7 +656,7 @@ auto app_module = [](const bool& use_gui_view) {
 And glue them into one injector the same way...
 
 ```cpp
-  auto injector = di::make_injector(
+  const auto injector = di::make_injector(
     model_module()
   , app_module(use_gui_view)
   );
@@ -659,11 +674,11 @@ Such design might be achieved with `[Boost].DI` using [injector] and exposing gi
 
 * Expose all types (default)
 ```cpp
-const auto injector = // auto exposes all types
-di::make_injector(
-  di::bind<int>.to(42)
-, di::bind<double>.to(87.0)
-);
+const const auto injector = // auto exposes all types
+  di::make_injector(
+    di::bind<int>.to(42)
+  , di::bind<double>.to(87.0)
+  );
 
 injector.create<int>(); OK
 injector.create<double>(); // OK
@@ -672,10 +687,10 @@ injector.create<double>(); // OK
 * Expose only specific types
 ```cpp
 const di::injector<int> injector = // only int is exposed
-di::make_injector(
-  di::bind<int>.to(42)
-, di::bind<double>.to(87.0)
-);
+  di::make_injector(
+    di::bind<int>.to(42)
+  , di::bind<double>.to(87.0)
+  );
 
 injector.create<int>(); OK
 injector.create<double>(); // COMPILE TIME ERROR, double is not exposed by the injector

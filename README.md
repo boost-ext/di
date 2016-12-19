@@ -12,76 +12,83 @@
 Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/try_it/index.html))
 
 ```cpp
-+---------------------------------------------------+
-|$CXX -std=c++14 -fno-exceptions -O2 example.cpp    |
-|#Compiles in 0.4s!                                 |
-+-----------------------------+---------------------+
-                              |
-                              \
-                                  #include <boost/di.hpp> +-----------+
- +-----------------------------+                                      |
- |                             |  namespace di = boost::di;     +-----+--------------------------------+
- |                             +-+                              |One header (3k lines, no dependencies)|
- |  +-----------------------+    +struct uniform {              +--------------------------------------+
- |  |Automatic conversion   |       bool &b;
- |  |between std::shared_ptr+------+boost::shared_ptr<interface> sp;
- |  |and boost::shared_ptr  |     };
- |  +-----------------------+
- |                             +-+class direct {
- |                          +--+   public:                                 +---------------------------+
- |                          |       direct(const uniform &uniform          |ASM x86-64 == `make_unique`|
- |               +----------+            , std::shared_ptr<interface> sp)  +---------------------------+
- |               |                    : uniform_(uniform)                  |push   %rax                |
- |               |                  , sp_(sp)                              |mov    $0x8,%edi           |
- |               |                  {}                                     |callq  0x4007b0 <_Znwm@plt>|
- |               |                                                         |movq   $0x400a10,(%rax)    |
- | +-------------+----------+       const uniform &uniform_;               |mov    $0x8,%esi           |
- | |Inject  dependencies    |       std::shared_ptr<interface> sp_;        |mov    %rax,%rdi           |
- | |using T{...} or T(...)  |     };                                       |callq  0x400960 <_ZdlPvm>  |
- +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax           |
-   |any changes/registration+-----+class example {           |             |pop    %rdx                |
-   |in the code!            |      public:                   +             |retq                       |
-   +------------------------+       example(std::unique_ptr<direct> d      +-------------------------+-+
-                                   +--------+ , interface &ref                                       |
-                                   |          , int i)+-------------------------------------------+  +-+
-                                   |  : i_(i) {                                                   |    |
-                                   |  assert(false == d->uniform_.b);                             |    |
-                     +-------------+  assert(d->sp_.get() == d->uniform_.sp.get());               |    |
-                     |                assert(&ref == d->sp_.get());     +                         |    |
-    +----------------+---------+    }                         +         |                         |    |
-    |Deduce scope based on     |                              |         |                         |    |
-    |constructor parameter type|    auto run() const {        +---------+ +--------------------+  |    |
-    |T -> unique               |      return i_ == 42;                  +-+The same shared_ptr,|  |    |
-    |T& -> singleton           |    }                                     |reference provided  |  |    |
-    |shared_ptr -> singleton   |                                          +--------------------+  |    |
-    |unique_ptr |> unique      |   private:                                                       |    |
-    +--------------------------+    int i_ = 0;                                                +--+    |
-                                  };                                                           |       |
-                                                                                               |       |
-                                  int main() {                          +----------------------+--+    |
-                                    auto runtime_value = false;         |ASM x86-64 == 'return 42'|    |
-                                                                        +-------------------------+    |
-                    +-------------+ auto module = [&] {                 |mov $0x2a,%eax           |    |
-            +-------+-----------+     return di::make_injector(         |retq                     |    |
-            |Split configuration|       di::bind<>().to(runtime_value)  +----+--------------------+    |
-            |into modules       |     );                                     |                         |
-            +-------+-----------+   };                                       |                         |
-                    |         +----------------------------------------------+                         |
-                    |         |     auto injector = di::make_injector(                                 |
-                    |         |       di::bind<interface>().to<implementation>()+----------------------+
-                    |         +---+ , di::bind<>().to(42)
-                    +--------------+, module()                                     +---------------------+
-                                    );                                  +----------+Compile time creation|
-                                                                        +          |guarantee!           |
-                                    auto object = injector.create<example>();      +---------------------+
-                                    assert(object.run());  +
-                                  }                        |
-                                                           |  +----------------------------------------+
-                                                           +--+Short compile time error messages!      |
-                                                              |For example:                            |
-                                                              |`abstract_type<interface>::is_not_bound`|
-                                                              +----------------------------------------+
+// $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors hello_world.cpp
+// cl /std:c++14 /Ox /W3 hello_world.cpp (***)
+
+#include <boost/di.hpp>
+#include <cassert>
+#include <iostream>
+
+namespace di = boost::di;
+
+struct iworld {
+  virtual ~iworld() noexcept = default;
+};
+struct world : iworld {
+  world() { std::cout << " world!" << std::endl; }
+};
+
+struct hello {
+  explicit hello(int i) {
+    assert(42 == i);
+    std::cout << "hello";
+  }
+};
+
+// aggregate initialization `example{hello, world}`
+struct example {
+  hello h;
+  iworld& w;
+};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<iworld>().to<world>()
+  , di::bind<>().to(42)
+  );
+
+  injector.create<example>();
+}
 ```
+
+###Benchmark
+
+<p align="center">
+<table>
+  <tr>
+    <th></th>
+    <th>Clang-3.8</th>
+    <th>GCC-6</th>
+    <th>MSVC-2015</th>
+
+    <td rowspan="4">
+      <a href="http://boost-experimental.github.io/di/benchmarks/index.html#benchmarks">More Benchmarks</a>
+    </td>
+  </tr>
+
+  <tr>
+    <td>Compilation Time</td>
+    <td>0.102s</td>
+    <td>0.118s</td>
+    <td>0.296s</td>
+  </tr>
+
+  <tr>
+    <td>Binary size (stripped)</td>
+    <td>6.2kb</td>
+    <td>6.2kb</td>
+    <td>105kb</td>
+  </tr>
+
+  <tr>
+    <td>ASM x86-64</td>
+    <td colspan="2">
+      <pre><code>
+      </code></pre>
+    </td>
+  </tr>
+</table>
+</p>
 
 ---------------------------------------
 
@@ -118,7 +125,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [6. [Advanced] Dump/Limit your types](http://boost-experimental.github.io/di/tutorial/index.html#6-advanced-dumplimit-your-types)
     * [7. [Advanced] Customize it](http://boost-experimental.github.io/di/tutorial/index.html#7-advanced-customize-it)
     * [8. [Advanced] Extend it](http://boost-experimental.github.io/di/tutorial/index.html#8-advanced-extend-it)
-* [Try It!](http://boost-experimental.github.io/di/try_it/index.html)
+* [Try It Online!](http://boost-experimental.github.io/di/try_it/index.html)
 * [Benchmarks](http://boost-experimental.github.io/di/benchmarks/index.html)
     * [Performance](http://boost-experimental.github.io/di/benchmarks/index.html#performance)
     * [C++ Libraries](http://boost-experimental.github.io/di/benchmarks/index.html#c-libraries)
@@ -181,8 +188,3 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
     * [ [0.1.0] - 2014-08-15](http://boost-experimental.github.io/di/CHANGELOG/index.html#-010-2014-08-15)
 * [TODO](http://boost-experimental.github.io/di/TODO/index.html)
 
-[](GENERATE_TOC_END)
-
----
-
-**Disclaimer** `Boost.DI` is not an official Boost library.
