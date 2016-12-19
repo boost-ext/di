@@ -1,3 +1,55 @@
+##Performance
+
+* **Run-time performance**
+    * Environment
+        * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+        * clang++3.4 -O2 -fno-exceptions / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
+
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_without_bindings.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_with_bound_instance.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_named_type.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_module.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp)
+
+* **Compile-time performance**
+    * Environment
+        * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
+        * clang++3.4 -O2 -fno-exceptions
+
+[Boost].DI header         | Time [s]
+--------------------------|----------
+`#include <boost/di.hpp>` | 0.050s
+
+```cpp
+Legend:
+    ctor    = raw constructor: T(int i, double d);
+    inject  = inject constructor: BOOST_DI_INJECT(T, int i, double d);
+    all     = all types exposed from module: auto configure();
+    exposed = one type exposed from module: di::injector<T> configure();
+```
+[![small complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)
+```cpp
+* 4248897537 instances created
+* 132 different types
+* 10 modules
+```
+---
+[![medium complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png)
+```cpp
+* 1862039751439806464 instances created
+* 200 different types
+* 10 modules
+```
+---
+[![big complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png)
+```cpp
+* 5874638529236910091 instances created
+* 310 different types
+* 100 different interfaces
+* 10 modules
+```
+
 ##C++ Libraries
 
 | **Library** | [Boost].DI ([See Performance](overview.md#performance)) | [dicpp] | [Google.Fruit] |

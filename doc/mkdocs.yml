@@ -16,9 +16,10 @@ pages:
 - Introduction: index.md
 - Overview: overview.md
 - Tutorial: tutorial.md
-- Benchmarks: benchmarks.md
 - Try It!: try_it.md
+- Benchmarks: benchmarks.md
 - User Guide: user_guide.md
+- Design: design.md
 - Examples: examples.md
 - Extensions: extensions.md
 - FAQ: FAQ.md
