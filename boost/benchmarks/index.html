@@ -18,7 +18,7 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../tutorial/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../try_it/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../try_it/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../user_guide/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
@@ -26,6 +26,10 @@
 
 <div class="toc">
 <dl class="toc">
+
+    
+        <dt><span class="section"><a href="#performance">Performance</a></span></dt>
+    
 
     
         <dt><span class="section"><a href="#c-libraries">C++ Libraries</a></span></dt>
@@ -45,6 +49,242 @@
 
 
 <div class="section">
+<h2 id="performance">Performance</h2>
+<ul>
+<li><strong>Run-time performance</strong><ul>
+<li>Environment<ul>
+<li>x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux</li>
+<li>clang++3.4 -O2 -fno-exceptions / <code>gdb -batch -ex 'file ./a.out' -ex 'disassemble main'</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+auto test() {
+  auto injector = di::make_injector();
+  return injector.create&lt;int&gt;();
+}
+
+/**
+ * ASM x86-64 (same as `return 0`)
+ *
+ * xor %eax,%eax
+ * retq
+ */
+
+</code></pre>
+
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+auto test() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().to(42)
+  );
+
+  return injector.create&lt;int&gt;();
+}
+
+/**
+ * ASM x86-64 (same as `return 42`)
+ *
+ * mov $0x2a,%eax
+ * retq
+ */
+
+</code></pre>
+
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+auto my_int = [] {};
+
+struct c {
+  BOOST_DI_INJECT(c, (named = my_int) int i) : i(i) {}
+  int i = 0;
+};
+
+auto test() {
+  auto injector = di::make_injector(
+    di::bind&lt;int&gt;().named(my_int).to(42)
+  );
+
+  return injector.create&lt;c&gt;().i;
+}
+
+/**
+ * ASM x86-64 (same as `return 42`)
+ *
+ * mov $0x2a,%eax
+ * retq
+ */
+
+</code></pre>
+
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+auto test() {
+  auto injector = di::make_injector(
+    di::bind&lt;interface&gt;().to&lt;implementation&gt;()
+  );
+
+  return injector.create&lt;std::unique_ptr&lt;interface&gt;&gt;();
+}
+
+/**
+ * ASM x86-64 (same as `std::make_unique&lt;implementation&gt;()`)
+ *
+ * push   %rbx
+ * mov    %rdi,%rbx
+ * mov    $0x8,%edi
+ * callq  0x4009f0 &lt;_Znwm@plt&gt;
+ * movq   $0x400e78,(%rax)
+ * mov    %rax,(%rbx)
+ * mov    %rbx,%rax
+ * pop    %rbx
+ * retq
+ */
+
+</code></pre>
+
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+auto module = [] {
+  return di::make_injector(
+    di::bind&lt;interface&gt;().to&lt;implementation&gt;()
+  );
+};
+
+auto test() {
+  auto injector = di::make_injector(module());
+  return injector.create&lt;std::unique_ptr&lt;interface&gt;&gt;();
+}
+
+/**
+ * ASM x86-64 (same as `std::make_unique&lt;implementation&gt;()`)
+ *
+ * push   %rbx
+ * mov    %rdi,%rbx
+ * mov    $0x8,%edi
+ * callq  0x4008e0 &lt;_Znwm@plt&gt;
+ * movq   $0x400c78,(%rax)
+ * mov    %rax,(%rbx)
+ * mov    %rbx,%rax
+ * pop    %rbx
+ * retq
+ */
+
+</code></pre>
+
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+
+auto module = []() -&gt; di::injector&lt;std::unique_ptr&lt;interface&gt;&gt; {
+  return di::make_injector(
+    di::bind&lt;interface&gt;().to&lt;implementation&gt;()
+  );
+};
+
+auto test() {
+  auto injector = di::make_injector(module());
+  return injector.create&lt;std::unique_ptr&lt;interface&gt;&gt;();
+}
+
+/**
+ * ASM x86-64 (additional cost for type erasure)
+ *
+ * push   %r14
+ * push   %rbx
+ * push   %rax
+ * mov    %rdi,%r14
+ * mov    $0x18,%edi
+ * callq  0x4008e0 &lt;_Znwm@plt&gt;
+ * mov    %rax,%rbx
+ * movq   $0x400bb0,(%rbx)
+ * movq   $0x400bd0,0x8(%rbx)
+ * mov    $0x8,%edi
+ * callq  0x4008e0 &lt;_Znwm@plt&gt;
+ * movq   $0x400cd8,(%rax)
+ * mov    %rax,(%r14)
+ * mov    %rbx,%rdi
+ * callq  *0x8(%rbx)
+ * mov    %rbx,%rdi
+ * callq  0x400880 &lt;_ZdlPv@plt&gt;
+ * mov    %r14,%rax
+ * add    $0x8,%rsp
+ * pop    %rbx
+ * pop    %r14
+ * retq
+ */
+
+</code></pre>
+
+<ul>
+<li><strong>Compile-time performance</strong><ul>
+<li>Environment<ul>
+<li>x86_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux</li>
+<li>clang++3.4 -O2 -fno-exceptions</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>[Boost].DI header</th>
+<th>Time [s]</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>#include &lt;boost/di.hpp&gt;</code></td>
+<td>0.050s</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="cpp">Legend:
+    ctor    = raw constructor: T(int i, double d);
+    inject  = inject constructor: BOOST_DI_INJECT(T, int i, double d);
+    all     = all types exposed from module: auto configure();
+    exposed = one type exposed from module: di::injector&lt;T&gt; configure();
+</code></pre>
+
+<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png"><img alt="small complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png" /></a></p>
+<pre><code class="cpp">* 4248897537 instances created
+* 132 different types
+* 10 modules
+</code></pre>
+
+<hr />
+<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png"><img alt="medium complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png" /></a></p>
+<pre><code class="cpp">* 1862039751439806464 instances created
+* 200 different types
+* 10 modules
+</code></pre>
+
+<hr />
+<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png"><img alt="big complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png" /></a></p>
+<pre><code class="cpp">* 5874638529236910091 instances created
+* 310 different types
+* 100 different interfaces
+* 10 modules
+</code></pre>
+
 <h2 id="c-libraries">C++ Libraries</h2>
 <table>
 <thead>
@@ -1002,7 +1242,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  href="../tutorial/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../try_it/index.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p"  href="../try_it/index.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n"  href="../user_guide/index.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

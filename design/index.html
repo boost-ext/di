@@ -8,7 +8,7 @@
   
   <meta name="author" content="Kris Jusiak">
   
-  <title>Overview - [Boost].DI</title>
+  <title>Design - [Boost].DI</title>
   
 
   <link rel="shortcut icon" href="../img/favicon.ico">
@@ -25,9 +25,9 @@
   
   <script>
     // Current page data
-    var mkdocs_page_name = "Overview";
-    var mkdocs_page_input_path = "overview.md";
-    var mkdocs_page_url = "/overview/index.html";
+    var mkdocs_page_name = "Design";
+    var mkdocs_page_input_path = "design.md";
+    var mkdocs_page_url = "/design/index.html";
   </script>
   
   <script src="../js/jquery-2.1.1.min.js"></script>
@@ -86,36 +86,8 @@
 <li>
           
             <li>
-    <li class="toctree-l1 current">
-        <a class="current" href="index.html">Overview</a>
-        
-            <ul>
-            
-                <li class="toctree-l3"><a href="#quick-start">Quick Start</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#dependencies">Dependencies</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#supportedtested-compilers">Supported/Tested compilers</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#configuration">Configuration</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#exception-safety">Exception Safety</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#thread-safety">Thread Safety</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#error-messages">Error messages</a></li>
-                
-            
-                <li class="toctree-l3"><a href="#performance">Performance</a></li>
-                
-            
-            </ul>
+    <li class="toctree-l1 ">
+        <a class="" href="../overview/index.html">Overview</a>
         
     </li>
 <li>
@@ -149,8 +121,21 @@
 <li>
           
             <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../design/index.html">Design</a>
+    <li class="toctree-l1 current">
+        <a class="current" href="index.html">Design</a>
+        
+            <ul>
+            
+                <li class="toctree-l3"><a href="#boostdi-design-goals">[Boost].DI design goals</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#design-overview">Design Overview</a></li>
+                
+            
+                <li class="toctree-l3"><a href="#in-a-nutshell-implementation-detail">In a nutshell (Implementation detail)</a></li>
+                
+            
+            </ul>
         
     </li>
 <li>
@@ -212,7 +197,7 @@
     
       
     
-    <li>Overview</li>
+    <li>Design</li>
     <li class="wy-breadcrumbs-aside">
       
         
@@ -224,95 +209,130 @@
           <div role="main">
             <div class="section">
               
-                <h3 id="quick-start">Quick Start</h3>
+                <h3 id="boostdi-design-goals">[Boost].DI design goals</h3>
 <ul>
-<li>Get <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp">boost/di.hpp</a> header</li>
+<li>Be as fast as possible (See <a href="../overview/index.html#performance">Performance</a>)</li>
+<li>Compile as fast as possible (See <a href="../overview/index.html#benchmarks">Benchmarks</a>)</li>
+<li>Give short and intuitive error messages (See <a href="../overview/index.html#error-messages">Error messages</a>)</li>
+<li>Guarantee object creation at compile-time (See <a href="../tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
+<li>Be as non-intrusive as possible (See <a href="../user_guide/index.html#injections">Injections</a>)</li>
+<li>Be easy to extend (See <a href="../extensions/index.html">Extensions</a>)</li>
 </ul>
-<pre><code class="sh">wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
-</code></pre>
-
-<ul>
-<li>Include the header and define <code>di</code> namespace alias</li>
-</ul>
-<pre><code class="cpp">#include &quot;boost/di.hpp&quot;
-namespace di = boost::di;
-</code></pre>
-
-<ul>
-<li>Compile with C++14 support</li>
-</ul>
-<pre><code class="sh">$CXX -std=c++14 ...
-</code></pre>
-
-<ul>
-<li>To run tests</li>
-</ul>
-<pre><code class="sh">git clone https://github.com/boost-experimental/di &amp;&amp; cd di &amp;&amp; make
-</code></pre>
-
-<h3 id="dependencies">Dependencies</h3>
-<ul>
-<li>No external dependencies are required (neither STL nor Boost)</li>
-</ul>
-<h3 id="supportedtested-compilers">Supported/Tested compilers</h3>
-<ul>
-<li><a href="https://travis-ci.org/boost-experimental/di">Clang-3.4+</a></li>
-<li><a href="https://travis-ci.org/boost-experimental/di">GCC-5.2+</a></li>
-<li><a href="https://ci.appveyor.com/project/krzysztof-jusiak/di">MSVC-2015+</a></li>
-</ul>
-<h3 id="configuration">Configuration</h3>
+<h3 id="design-overview">Design Overview</h3>
+<p><a href="../images/di.png"><img alt="Design" src="../images/di.png" /></a></p>
 <table>
 <thead>
 <tr>
-<th>Macro</th>
+<th>Component</th>
 <th>Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>BOOST_DI_VERSION</code></td>
-<td>Current version of [Boost].DI (ex. 1'0'0)</td>
+<td><a href="../user_guide/index.html#bindings">Bindings</a></td>
+<td>DSL to create dependencies representation which will be used by core to resolve types</td>
 </tr>
 <tr>
-<td><code>BOOST_DI_CFG</code></td>
-<td>Global configuration allows to customize provider and policies (See <a href="../user_guide/index.html#di_config">Config</a>)</td>
+<td><a href="../user_guide/index.html#scopes">Scopes</a></td>
+<td>Responsible for maintain objects life time</td>
 </tr>
 <tr>
-<td><code>BOOST_DI_CFG_CTOR_LIMIT_SIZE</code></td>
-<td>Limits number of allowed constructor parameters [0-10, default=10] (See <a href="../user_guide/index.html#injections">Injections</a>)</td>
+<td><a href="../user_guide/index.html#providers">Providers</a></td>
+<td>Responsible for providing object instance</td>
 </tr>
 <tr>
-<td><code>BOOST_DI_CFG_DIAGNOSTICS_LEVEL</code></td>
-<td>Gives more information with error messages (See <a href="#error-messages">Error messages</a>)</td>
+<td><a href="../user_guide/index.html#policies">Policies</a></td>
+<td>Compile-time limitations for types / Run-time types vistor</td>
 </tr>
 <tr>
-<td><code>BOOST_DI_NAMESPACE_BEGIN</code></td>
-<td><code>namespace boost { namespace di { inline namespace v_1_0_0 {</code></td>
+<td><a href="../user_guide/index.html#di_config">Config</a></td>
+<td>Configuration for <a href="../user_guide/index.html#policies">Policies</a> and <a href="../user_guide/index.html#providers">Providers</a></td>
 </tr>
 <tr>
-<td><code>BOOST_DI_NAMESPACE_END</code></td>
-<td><code>}}}</code></td>
+<td>Core</td>
+<td>Responsible for resolving requested types (implementation detail)</td>
+</tr>
+<tr>
+<td>Wrappers</td>
+<td>Responsible for conversion to required type (implementation detail)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="exception-safety">Exception Safety</h3>
-<ul>
-<li>[Boost].DI is not using exceptions internally and therefore might be compiled with <code>-fno-exceptions</code>.</li>
-<li>Check <a href="../user_guide/index.html">User Guide</a> to verify which API's are marked <code>noexcept</code>.</li>
-</ul>
-<h3 id="thread-safety">Thread Safety</h3>
-<ul>
-<li>[Boost].DI is thread safe.</li>
-</ul>
-<h3 id="error-messages">Error messages</h3>
-<ul>
-<li>[Boost].DI is designed to give great diagnostic errors. The examples below will show you the actual error messages for different scenarios. Check <a href="../user_guide/index.html#concepts"><code>Concepts</code></a> to check it out.</li>
-</ul>
-<h3 id="performance">Performance</h3>
-<ul>
-<li>[Boost].DI has none run-time overhead and compiles faster than Java's DI frameworks. Check <a href="benchmark.md"><code>Benchmarks</code></a> to see more.</li>
-</ul>
+<p><a id="nutshell"></a></p>
 <hr />
+<h3 id="in-a-nutshell-implementation-detail">In a nutshell (Implementation detail)</h3>
+<p>The main interface of the injector is a <code>create</code> method. 
+When <code>create</code> method is called for type <code>T</code> the magic happens.
+Firstly, policies are verified (for example, whether the type <code>T</code> is allowed to be created).
+Then, the constructor traits are deduced (<code>ctor_traits</code> ) for type <code>T</code> and dependencies of the constructor
+parameters are resolved (<code>binder</code>). <code>wrapper</code> is used to convert internal representation
+of the dependency into a required type (ex. <code>shared_ptr&lt;T&gt;</code>). Whole process is repeated
+recursively for all required parameters of <code>T</code> constructor.</p>
+<pre><code class="cpp">struct direct; // T(...)
+struct uniform; // T{...}
+
+template&lt;class T, class... TArgs&gt; is_braces_constructible; // type T is constructible using T{...}
+template&lt;class T, class... TArgs&gt; is_constructible; // Type T is constructible using T(...)
+
+template&lt;class T&gt; is_injectable; // Type T uses BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS
+
+template&lt;class TConfig, class... TBindings&gt; // For Example, TBindings = { di::bind&lt;Interface&gt;.to&lt;Implementation&gt; }
+struct core::injector : TBindings... {
+  using config = TConfig;
+  using deps = TBindings...;
+
+  template&lt;class T&gt; // For example, T = Interface
+  auto create() const noexcept {
+    TConfig::policies&lt;T&gt;()...; // verify policies
+    using Type = core::binder&lt;TBindings...&gt;().resolve&lt;T&gt;(*this); // Type = Implementation
+    return core::wrapper&lt;T&gt;{dependency.create(provider&lt;TInjector&gt;{*this}.get&lt;Type&gt;())};
+  }
+};
+
+template&lt;class TInjector, class TConfig&gt;
+struct provider {
+  template&lt;class T&gt; auto get() const noexcept {
+    using pair&lt;TInitialization, TCtor...&gt; = decltype(ctor_traits&lt;TInjector, T&gt;());
+    return TConfig::provider().get(TInitialization{}, TCtor...);
+  }
+  const TInjector&amp; injector;
+};
+
+template&lt;class TInjector&gt;
+struct any_type {
+  template&lt;class T&gt;
+  operator T() const {
+    return injector.templte create&lt;T&gt;();
+  }
+  const TInjector&amp; injector;
+};
+
+template&lt;class TInjector, class T&gt;
+auto ctor_traits() {
+  if (is_injectable&lt;T&gt;() {
+    return pair&lt;direct, typename T::boost_di_inject__&gt;{}; // BOOST_DI_INJECT(T, args...) -&gt; T(args...)
+  }
+
+  for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i &gt;= 0; --i) {
+    if (is_constructible&lt;T, any_type&lt;TInjector&gt;...&gt;()) { // ... -&gt; i times
+      return pair&lt;direct, any_type&lt;TInjector&gt;...&gt;{}; // T(any_type...)
+    }
+  }
+
+  for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i &gt;= 0; --i) {
+    if (is_braces_constructible&lt;T, any_type&lt;TInjector&gt;...&gt;()) { // ... -&gt; i times
+      return pair&lt;uniform, any_type&lt;TInjector&gt;...&gt;{}; // T{any_type...}
+    }
+  }
+
+  return error(...);
+};
+</code></pre>
+
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+<a href="../user_guide/index.html#di_automatic">Automatic injection</a> depends on template implicit conversion operator and therefore
+conversion constructors <code>template&lt;class I&gt; T(I)</code> are not supported and have to be injected using <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a>, <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>, <a href="#di_inject">di::inject</a> or <a href="#di_ctor_traits">di::ctor_traits</a>.
+</span></p>
               
             </div>
           </div>
@@ -326,10 +346,10 @@ namespace di = boost::di;
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../tutorial/index.html" class="btn btn-neutral float-right" title="Tutorial">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../examples/index.html" class="btn btn-neutral float-right" title="Examples">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
-        <a href="../index.html" class="btn btn-neutral" title="Introduction"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../user_guide/index.html" class="btn btn-neutral" title="User Guide"><span class="icon icon-circle-arrow-left"></span> Previous</a>
       
     </div>
   
@@ -371,10 +391,10 @@ namespace di = boost::di;
     <span class="rst-current-version" data-toggle="rst-current-version">
       
       
-        <span><a href="../index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
+        <span><a href="../user_guide/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../tutorial/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../examples/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
