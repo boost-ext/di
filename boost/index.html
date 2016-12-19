@@ -57,7 +57,7 @@ Kris Jusiak
     
 
     
-        <dt><span class="section"><a href="try_it/index.html">Try It!</a></span></dt>
+        <dt><span class="section"><a href="try_it/index.html">Try It Online!</a></span></dt>
     
 
     
@@ -66,10 +66,6 @@ Kris Jusiak
 
     
         <dt><span class="section"><a href="user_guide/index.html">User Guide</a></span></dt>
-    
-
-    
-        <dt><span class="section"><a href="design/index.html">Design</a></span></dt>
     
 
     
@@ -142,7 +138,7 @@ In short, DI is all about construction!</p>
                       ----------------------------------------|-------------------------------------------
                       class coffee_maker {                    | class coffee_maker {
                       public:                                 | public:
-                          void brew() {                       |   coffee_maker(shared_ptr&lt;iheater&gt; heater
+                          void brew() {                       |   coffee_maker(const shared_ptr&lt;iheater&gt;&amp; heater
                               heater-&gt;on();                   |              , unique_ptr&lt;ipump&gt; pump)
                               pump-&gt;pump();                   |         : heater(heater), pump(move(pump))
                               clog &lt;&lt; &quot;coffee&quot;! &lt;&lt; endl;      |     { }
@@ -351,77 +347,9 @@ but also can help you with...</p>
 <li>[Boost].DI gives better control of what and how is created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>)</li>
 <li>[Boost].DI gives better understanding about objects hierarchy (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>)</li>
 </ul>
-<pre><code class="cpp">+---------------------------------------------------+
-|$CXX -std=c++14 -fno-exceptions -O2 example.cpp    |
-|#Compiles in 0.4s!                                 |
-+-----------------------------+---------------------+
-                              |
-                              \
-                                  #include &lt;boost/di.hpp&gt; +-----------+
- +-----------------------------+                                      |
- |                             |  namespace di = boost::di;     +-----+--------------------------------+
- |                             +-+                              |One header (3k lines, no dependencies)|
- |  +-----------------------+    +struct uniform {              +--------------------------------------+
- |  |Automatic conversion   |       bool &amp;b;
- |  |between std::shared_ptr+------+boost::shared_ptr&lt;interface&gt; sp;
- |  |and boost::shared_ptr  |     };
- |  +-----------------------+
- |                             +-+class direct {
- |                          +--+   public:                                 +---------------------------+
- |                          |       direct(const uniform &amp;uniform          |ASM x86-64 == `make_unique`|
- |               +----------+            , std::shared_ptr&lt;interface&gt; sp)  +---------------------------+
- |               |                    : uniform_(uniform)                  |push   %rax                |
- |               |                  , sp_(sp)                              |mov    $0x8,%edi           |
- |               |                  {}                                     |callq  0x4007b0 &lt;_Znwm@plt&gt;|
- |               |                                                         |movq   $0x400a10,(%rax)    |
- | +-------------+----------+       const uniform &amp;uniform_;               |mov    $0x8,%esi           |
- | |Inject  dependencies    |       std::shared_ptr&lt;interface&gt; sp_;        |mov    %rax,%rdi           |
- | |using T{...} or T(...)  |     };                                       |callq  0x400960 &lt;_ZdlPvm&gt;  |
- +-+without REFLECTION or   |                                +-------------+mov    $0x1,%eax           |
-   |any changes/registration+-----+class example {           |             |pop    %rdx                |
-   |in the code!            |      public:                   +             |retq                       |
-   +------------------------+       example(std::unique_ptr&lt;direct&gt; d      +-------------------------+-+
-                                   +--------+ , interface &amp;ref                                       |
-                                   |          , int i)+-------------------------------------------+  +-+
-                                   |  : i_(i) {                                                   |    |
-                                   |  assert(false == d-&gt;uniform_.b);                             |    |
-                     +-------------+  assert(d-&gt;sp_.get() == d-&gt;uniform_.sp.get());               |    |
-                     |                assert(&amp;ref == d-&gt;sp_.get());     +                         |    |
-    +----------------+---------+    }                         +         |                         |    |
-    |Deduce scope based on     |                              |         |                         |    |
-    |constructor parameter type|    auto run() const {        +---------+ +--------------------+  |    |
-    |T -&gt; unique               |      return i_ == 42;                  +-+The same shared_ptr,|  |    |
-    |T&amp; -&gt; singleton           |    }                                     |reference provided  |  |    |
-    |shared_ptr -&gt; singleton   |                                          +--------------------+  |    |
-    |unique_ptr |&gt; unique      |   private:                                                       |    |
-    +--------------------------+    int i_ = 0;                                                +--+    |
-                                  };                                                           |       |
-                                                                                               |       |
-                                  int main() {                          +----------------------+--+    |
-                                    auto runtime_value = false;         |ASM x86-64 == 'return 42'|    |
-                                                                        +-------------------------+    |
-                    +-------------+ auto module = [&amp;] {                 |mov $0x2a,%eax           |    |
-            +-------+-----------+     return di::make_injector(         |retq                     |    |
-            |Split configuration|       di::bind&lt;&gt;().to(runtime_value)  +----+--------------------+    |
-            |into modules       |     );                                     |                         |
-            +-------+-----------+   };                                       |                         |
-                    |         +----------------------------------------------+                         |
-                    |         |     auto injector = di::make_injector(                                 |
-                    |         |       di::bind&lt;interface&gt;().to&lt;implementation&gt;()+----------------------+
-                    |         +---+ , di::bind&lt;&gt;().to(42)
-                    +--------------+, module()                                     +---------------------+
-                                    );                                  +----------+Compile time creation|
-                                                                        +          |guarantee!           |
-                                    auto object = injector.create&lt;example&gt;();      +---------------------+
-                                    assert(object.run());  +
-                                  }                        |
-                                                           |  +----------------------------------------+
-                                                           +--+Short compile time error messages!      |
-                                                              |For example:                            |
-                                                              |`abstract_type&lt;interface&gt;::is_not_bound`|
-                                                              +----------------------------------------+
-</code></pre>
-
+<blockquote>
+<p><a href="http://boost-experimental.github.io/di/try_it/index.html"><strong>Try it online!</strong></a></p>
+</blockquote>
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp"> UML Dumper Extension</a></li>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp"> XML Injection Extension</a></li>

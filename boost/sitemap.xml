@@ -51,14 +51,6 @@
 
     
     <url>
-     <loc>http://boost-experimental.github.io/di/design/index.html</loc>
-     <lastmod>2016-12-19</lastmod>
-     <changefreq>daily</changefreq>
-    </url>
-    
-
-    
-    <url>
      <loc>http://boost-experimental.github.io/di/examples/index.html</loc>
      <lastmod>2016-12-19</lastmod>
      <changefreq>daily</changefreq>

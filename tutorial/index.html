@@ -132,7 +132,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../try_it/index.html">Try It!</a>
+        <a class="" href="../try_it/index.html">Try It Online!</a>
         
     </li>
 <li>
@@ -147,13 +147,6 @@
             <li>
     <li class="toctree-l1 ">
         <a class="" href="../user_guide/index.html">User Guide</a>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../design/index.html">Design</a>
         
     </li>
 <li>
@@ -493,7 +486,7 @@ You can get more info about error by increasing <a href="../overview/index.html#
 </span></p>
 <p>Ah, okay, we haven't bound <code>iview</code> which means that <code>BOOST.DI</code> can't figure out whether we want <code>text_view</code> or <code>gui_view</code>?
 Well, it's really simple to fix it, we just follow suggestion provided.</p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;()
 );
 </code></pre>
@@ -516,7 +509,7 @@ The same approach might be used in order to bind a type to a value.</p>
 If you want change the default behaviour and be sure that all required dependencies are bound and not value initialized
 take a look at <a href="../user_guide/index.html#di_constructible">constructible</a> policy.
 </span></p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;()
 , di::bind&lt;int&gt;.to(42) // renderer.device | [Boost].DI can also deduce 'int' type for you -&gt; 'di::bind&lt;&gt;.to(42)'
 );
@@ -532,7 +525,7 @@ correctly. No runtime exceptions or runtime asserts, EVER!
 <code>[Boost].DI</code> can handle that too!</p>
 <pre><code class="cpp">auto use_gui_view = true/false;
 
-auto injector = di::make_injector(
+const auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {
     if (use_gui_view)
       return injector.template create&lt;gui_view&amp;&gt;();
@@ -579,7 +572,7 @@ class app {
 <img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp" /></p>
 <p>The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
 With <code>[Boost].DI</code> you can easily do that with <a href="../user_guide/index.html#di_bind">override</a> specifier (Implemented using <code>operator[](override)</code>).</p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;int&gt;.to(42) // renderer device
 , di::bind&lt;int&gt;.to(123) [di::override] // override renderer device
 );
@@ -662,15 +655,27 @@ For instance, reference, shared_ptr will be deduced as <a href="../user_guide/in
 </tr>
 </tbody>
 </table>
+<p>Example</p>
+<pre><code class="cpp">class scopes_deduction {
+  scopes_deduction(const int&amp; /*singleton scope*/,
+                   std::shared_ptr&lt;int&gt; /*singleton scope*/,
+                   std::unique_ptr&lt;int&gt; /*unique scope*/,
+                   int /*unique scope*/)
+  { }
+};
+
+di::make_injector().create&lt;example&gt;(); // scopes will be deduced based on constructor parameter types
+</code></pre>
+
 <p>Coming back to our example, we got quite a few <code>singletons</code> there as we just needed one instance per application life time.
 Although scope deduction is very useful, it's not always what we need and therefore <code>[Boost].DI</code> allows changing the scope for a given type.</p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::singleton) // explicitly specify singleton scope
 );
 </code></pre>
 
 <p>What if I want to change <code>gui_view</code> to be a different instance per each request. Let's change the scope to <a href="../user_guide/index.html#di_unique">unique</a> then.</p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to&lt;gui_view&gt;().in(di::unique)
 );
 </code></pre>
@@ -768,7 +773,7 @@ use <code>std::shared_ptr</code> instead.</p>
 
 <p>But, it would be better if <code>timer</code> was always created per request, although it's a <code>shared_ptr</code>.
 To do so, we just need add scope when binding it, like this...</p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;timer&gt;.in(di::unique) // different per request
 );
 </code></pre>
@@ -839,7 +844,7 @@ If you happen to use clang/gcc compiler you can use string literals instead of c
 for example <code>(named = "Rows"_s)</code>.
 </span></p>
 <p>Finally, we have to bind our values.</p>
-<pre><code class="cpp">auto injector = di::make_injector(
+<pre><code class="cpp">const auto injector = di::make_injector(
   di::bind&lt;int&gt;.named(Rows).to(6)
 , di::bind&lt;int&gt;.named(Cols).to(8)
 );
@@ -882,7 +887,7 @@ auto app_module = [](const bool&amp; use_gui_view) {
 </code></pre>
 
 <p>And glue them into one injector the same way...</p>
-<pre><code class="cpp">  auto injector = di::make_injector(
+<pre><code class="cpp">  const auto injector = di::make_injector(
     model_module()
   , app_module(use_gui_view)
   );
@@ -898,11 +903,11 @@ Such design might be achieved with <code>[Boost].DI</code> using <a href="../use
 <ul>
 <li>Expose all types (default)</li>
 </ul>
-<pre><code class="cpp">const auto injector = // auto exposes all types
-di::make_injector(
-  di::bind&lt;int&gt;.to(42)
-, di::bind&lt;double&gt;.to(87.0)
-);
+<pre><code class="cpp">const const auto injector = // auto exposes all types
+  di::make_injector(
+    di::bind&lt;int&gt;.to(42)
+  , di::bind&lt;double&gt;.to(87.0)
+  );
 
 injector.create&lt;int&gt;(); OK
 injector.create&lt;double&gt;(); // OK
@@ -912,10 +917,10 @@ injector.create&lt;double&gt;(); // OK
 <li>Expose only specific types</li>
 </ul>
 <pre><code class="cpp">const di::injector&lt;int&gt; injector = // only int is exposed
-di::make_injector(
-  di::bind&lt;int&gt;.to(42)
-, di::bind&lt;double&gt;.to(87.0)
-);
+  di::make_injector(
+    di::bind&lt;int&gt;.to(42)
+  , di::bind&lt;double&gt;.to(87.0)
+  );
 
 injector.create&lt;int&gt;(); OK
 injector.create&lt;double&gt;(); // COMPILE TIME ERROR, double is not exposed by the injector
@@ -1026,7 +1031,7 @@ Please check them out and write your own!</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../try_it/index.html" class="btn btn-neutral float-right" title="Try It!">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../try_it/index.html" class="btn btn-neutral float-right" title="Try It Online!">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../overview/index.html" class="btn btn-neutral" title="Overview"><span class="icon icon-circle-arrow-left"></span> Previous</a>

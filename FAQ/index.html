@@ -101,7 +101,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../try_it/index.html">Try It!</a>
+        <a class="" href="../try_it/index.html">Try It Online!</a>
         
     </li>
 <li>
@@ -116,13 +116,6 @@
             <li>
     <li class="toctree-l1 ">
         <a class="" href="../user_guide/index.html">User Guide</a>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../design/index.html">Design</a>
         
     </li>
 <li>
@@ -255,7 +248,7 @@ Please, check out <a href="../extensions/index.html#xml-injection">XML Extension
 <h3 id="since-boostdi-has-a-compile-time-approach-can-i-have-dynamic-bindings">Since [Boost].DI has a compile time approach can I have dynamic bindings?</h3>
 Yes, [Boost].DI supports dynamic bindings.</li>
 </ul>
-<pre><code class="cpp">auto use_gui_view = ...;
+<pre><code class="cpp">auto use_gui_view = true/false;
 
 auto injector = di::make_injector(
   di::bind&lt;iview&gt;.to([&amp;](const auto&amp; injector) -&gt; iview&amp; {

@@ -101,7 +101,7 @@
           
             <li>
     <li class="toctree-l1 ">
-        <a class="" href="../try_it/index.html">Try It!</a>
+        <a class="" href="../try_it/index.html">Try It Online!</a>
         
     </li>
 <li>
@@ -150,13 +150,6 @@
                 
             
             </ul>
-        
-    </li>
-<li>
-          
-            <li>
-    <li class="toctree-l1 ">
-        <a class="" href="../design/index.html">Design</a>
         
     </li>
 <li>
@@ -284,7 +277,48 @@
 <li><a href="#di_config">di::config</a></li>
 </ul>
 </li>
+<li><a href="#implementation_details">Implementation details</a></li>
 </ul>
+<hr />
+<p><a href="../images/di.png"><img alt="Design" src="../images/di.png" /></a></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#bindings">Bindings</a></td>
+<td>DSL to create dependencies representation which will be used by core to resolve types</td>
+</tr>
+<tr>
+<td><a href="#scopes">Scopes</a></td>
+<td>Responsible for maintain objects life time</td>
+</tr>
+<tr>
+<td><a href="#providers">Providers</a></td>
+<td>Responsible for providing object instance</td>
+</tr>
+<tr>
+<td><a href="#policies">Policies</a></td>
+<td>Compile-time limitations for types / Run-time types vistor</td>
+</tr>
+<tr>
+<td><a href="#di_config">Config</a></td>
+<td>Configuration for [Policies] and [Providers]</td>
+</tr>
+<tr>
+<td>Core</td>
+<td>Responsible for resolving requested types (implementation detail)</td>
+</tr>
+<tr>
+<td>Wrappers</td>
+<td>Responsible for conversion to required type (implementation detail)</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <p>Let's assume all examples below include <code>boost/di.hpp</code> header and define a convenient <code>di</code>
 namespace alias as well as some basic interfaces and types.</p>
@@ -444,6 +478,80 @@ auto make_injector(const TBindings&amp;...) noexcept;
 <p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" />
 <img alt="CPP(BTN)" src="../Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp" /></p>
 <p><br /><hr /></p>
+<p><strong>Injection in a nutshell</strong> (implementation detail)</p>
+<p>The main interface of the injector is a <code>create</code> method. 
+When <code>create</code> method is called for type <code>T</code> the magic happens.
+Firstly, policies are verified (for example, whether the type <code>T</code> is allowed to be created).
+Then, the constructor traits are deduced (<code>ctor_traits</code> ) for type <code>T</code> and dependencies of the constructor
+parameters are resolved (<code>binder</code>). <code>wrapper</code> is used to convert internal representation
+of the dependency into a required type (ex. <code>shared_ptr&lt;T&gt;</code>). Whole process is repeated
+recursively for all required parameters of <code>T</code> constructor.</p>
+<pre><code class="cpp">struct direct; // T(...)
+struct uniform; // T{...}
+
+template&lt;class T, class... TArgs&gt; is_braces_constructible; // type T is constructible using T{...}
+template&lt;class T, class... TArgs&gt; is_constructible; // Type T is constructible using T(...)
+
+template&lt;class T&gt; is_injectable; // Type T uses BOOST_DI_INJECT or BOOST_DI_INJECT_TRAITS
+
+template&lt;class TConfig, class... TBindings&gt; // For Example, TBindings = { di::bind&lt;Interface&gt;.to&lt;Implementation&gt; }
+struct core::injector : TBindings... {
+  using config = TConfig;
+  using deps = TBindings...;
+
+  template&lt;class T&gt; // For example, T = Interface
+  auto create() const noexcept {
+    TConfig::policies&lt;T&gt;()...; // verify policies
+    using Type = core::binder&lt;TBindings...&gt;().resolve&lt;T&gt;(*this); // Type = Implementation
+    return core::wrapper&lt;T&gt;{dependency.create(provider&lt;TInjector&gt;{*this}.get&lt;Type&gt;())};
+  }
+};
+
+template&lt;class TInjector, class TConfig&gt;
+struct provider {
+  template&lt;class T&gt; auto get() const noexcept {
+    using pair&lt;TInitialization, TCtor...&gt; = decltype(ctor_traits&lt;TInjector, T&gt;());
+    return TConfig::provider().get(TInitialization{}, TCtor...);
+  }
+  const TInjector&amp; injector;
+};
+
+template&lt;class TInjector&gt;
+struct any_type {
+  template&lt;class T&gt;
+  operator T() const {
+    return injector.templte create&lt;T&gt;();
+  }
+  const TInjector&amp; injector;
+};
+
+template&lt;class TInjector, class T&gt;
+auto ctor_traits() {
+  if (is_injectable&lt;T&gt;() {
+    return pair&lt;direct, typename T::boost_di_inject__&gt;{}; // BOOST_DI_INJECT(T, args...) -&gt; T(args...)
+  }
+
+  for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i &gt;= 0; --i) {
+    if (is_constructible&lt;T, any_type&lt;TInjector&gt;...&gt;()) { // ... -&gt; i times
+      return pair&lt;direct, any_type&lt;TInjector&gt;...&gt;{}; // T(any_type...)
+    }
+  }
+
+  for (auto i = BOOST_DI_CFG_CTOR_LIMIT_SIZE; i &gt;= 0; --i) {
+    if (is_braces_constructible&lt;T, any_type&lt;TInjector&gt;...&gt;()) { // ... -&gt; i times
+      return pair&lt;uniform, any_type&lt;TInjector&gt;...&gt;{}; // T{any_type...}
+    }
+  }
+
+  return error(...);
+};
+</code></pre>
+
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+<a href="index.html#di_automatic">Automatic injection</a> depends on template implicit conversion operator and therefore
+conversion constructors <code>template&lt;class I&gt; T(I)</code> are not supported and have to be injected using <a href="#BOOST_DI_INJECT">BOOST_DI_INJECT</a>, <a href="#BOOST_DI_INJECT_TRAITS">BOOST_DI_INJECT_TRAITS</a>, <a href="#di_inject">di::inject</a> or <a href="#di_ctor_traits">di::ctor_traits</a>.
+</span></p>
+<hr />
 <h3 id="bindings">Bindings</h3>
 <p>Bindings define dependencies configuration describing what types will be created
 and what values will be passed into them.</p>
@@ -2552,7 +2660,7 @@ di::make_injector(...)
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../design/index.html" class="btn btn-neutral float-right" title="Design">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../examples/index.html" class="btn btn-neutral float-right" title="Examples">Next <span class="icon icon-circle-arrow-right"></span></a>
       
       
         <a href="../benchmarks/index.html" class="btn btn-neutral" title="Benchmarks"><span class="icon icon-circle-arrow-left"></span> Previous</a>
@@ -2600,7 +2708,7 @@ di::make_injector(...)
         <span><a href="../benchmarks/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>
       
       
-        <span style="margin-left: 15px"><a href="../design/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
+        <span style="margin-left: 15px"><a href="../examples/index.html" style="color: #fcfcfc">Next &raquo;</a></span>
       
     </span>
 </div>
