@@ -50,7 +50,7 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 * [Boost].DI is thread safe.
 
-###Error messages
+###Error Messages
 
 * [Boost].DI is designed to give great diagnostic errors. The examples below will show you the actual error messages for different scenarios. Check [`Concepts`](user_guide.md#concepts) to check it out.
 
