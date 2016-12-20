@@ -60,7 +60,7 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 ###Performance
 
-* [Boost].DI has none run-time overhead and compiles faster than Java's DI frameworks. Check [`Benchmarks`](benchmark.md) to see more.
+* [Boost].DI has none run-time overhead and compiles faster than Java's DI frameworks. Check [`Benchmarks`](benchmarks.md) to see more.
 
 ---
 

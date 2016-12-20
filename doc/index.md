@@ -262,57 +262,25 @@ but also can help you with...
 * Be as non-intrusive as possible (See [Injections](user_guide.md#injections))
 * Be easy to extend (See [Extensions](extensions.md))
 
+###Articles
+
+* [Inversion of Control Containers and the Dependency Injection pattern](http://martinfowler.com/articles/injection.html)
+* [DIP in the Wild](http://martinfowler.com/articles/dipInTheWild.html)
+
+###Videos
+
+* [Dependency Injection](https://www.youtube.com/watch?v=IKD2-MAkXyQ)
+* [The Clean Code Talks - Don't Look For Things!](https://www.youtube.com/watch?v=RlfLCWKxHJ0)
+* [C++Now 2016: C++14 Dependency Injection Library](https://www.youtube.com/watch?v=comZthFv3PM) | [Slides](http://boost-experimental.github.io/di/cppnow-2016)
+* [Meeting C++ 2016: TDD/BDD and Dependency Injection](https://www.youtube.com/watch?v=T3uMcxhzRUE) | [Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
+* [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
+* [The Future of Dependency Injection with Dagger 2](https://www.youtube.com/watch?v=plK0zyRLIP8)
+* [Design Patterns in C++: Creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
+
 ###Acknowledgements
 * Thanks to **Bartosz Kalinczuk** for code review and tips how to improve `[Boost].DI`
 * Thanks to **Sohail Somani** for support and tips how to improve `[Boost].DI`
 * Thanks to **Olof Edlund** for very useful feedback and for all the improvements to the documentation
 * Thanks to **Rob Stewart** and **Robert Ramey** for documentation feedback and tips how to improve it
-
-###Materials/Videos
-
-* **Dependency Injection**
-
-![YOUTUBE](https://www.youtube.com/embed/IKD2-MAkXyQ)
-
----
-
-* **Design Patterns in C++: Creational**
-
-[https://www.pluralsight.com/courses/design-patterns-cpp-creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
-
----
-
-* **The Clean Code Talks - Don't Look For Things!**
-
-![YOUTUBE](https://www.youtube.com/embed/RlfLCWKxHJ0)
-
----
-
-* C++Now 2016: **C++14 Dependency Injection Library ([Boost].DI)**
-
-![YOUTUBE](https://www.youtube.com/embed/comZthFv3PM)
-
-[Slides](http://boost-experimental.github.io/di/cppnow-2016)
-
----
-
-* MeetingC++ 2016: **TDD/BDD and Dependency Injection**
-
-![YOUTUBE](https://www.youtube.com/watch?v=T3uMcxhzRUE)
-
-[Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
-
----
-
-* **A New Type of dependency injection**
-
-![YOUTUBE](http://www.youtube.com/embed/oK_XtfXPkqw)
-
----
-
-* **The Future of Dependency Injection with Dagger 2**
-
-![YOUTUBE](https://www.youtube.com/embed/plK0zyRLIP8)
-
 
 [Dagger2]: https://github.com/google/dagger

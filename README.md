@@ -104,8 +104,9 @@ int main() {
     * [Real Life examples?](http://boost-experimental.github.io/di/index.html#real-life-examples)
     * [Why [Boost].DI?](http://boost-experimental.github.io/di/index.html#why-boostdi)
     * [[Boost].DI design goals](http://boost-experimental.github.io/di/index.html#boostdi-design-goals)
+    * [Articles](http://boost-experimental.github.io/di/index.html#articles)
+    * [Videos](http://boost-experimental.github.io/di/index.html#videos)
     * [Acknowledgements](http://boost-experimental.github.io/di/index.html#acknowledgements)
-    * [Materials/Videos](http://boost-experimental.github.io/di/index.html#materialsvideos)
 * [Overview](http://boost-experimental.github.io/di/overview/index.html)
     * [Quick Start](http://boost-experimental.github.io/di/overview/index.html#quick-start)
     * [Dependencies](http://boost-experimental.github.io/di/overview/index.html#dependencies)
@@ -186,5 +187,4 @@ int main() {
     * [ [1.0.0] - 2016-02-22](http://boost-experimental.github.io/di/CHANGELOG/index.html#-100-2016-02-22)
     * [ [0.5.0] - 2015-01-12](http://boost-experimental.github.io/di/CHANGELOG/index.html#-050-2015-01-12)
     * [ [0.1.0] - 2014-08-15](http://boost-experimental.github.io/di/CHANGELOG/index.html#-010-2014-08-15)
-* [TODO](http://boost-experimental.github.io/di/TODO/index.html)
 

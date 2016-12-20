@@ -29,6 +29,12 @@
 - C++03/C++11 version
 - Support for Clang3.2+
 
+---
+
+* TODO
+
+    * [https://waffle.io/boost-experimental/di](https://waffle.io/boost-experimental/di)
+
 [1.0.1]: https://github.com/boost-experimental/di/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/boost-experimental/di/compare/v0.5.0...v1.0.0
 [0.5.0]: https://github.com/boost-experimental/di/compare/v0.1.0...v0.5.0
