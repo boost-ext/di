@@ -1,0 +1,15 @@
+@startuml app.png
+
+"IViewer" : show(T) : void
+"IReader" : read() : T
+
+"ConsoleViewer" -up-|> "IViewer"
+"ConsoleViewer" : show(T) : void
+
+"ConsoleReader" -up-|> "IReader"
+"ConsoleReader" : read() : T
+
+"App" ..> "IReader"
+"App" ..> "IViewer"
+
+@enduml

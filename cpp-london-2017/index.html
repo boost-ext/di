@@ -57,215 +57,541 @@ Kris Jusiak
 
 ==============================================================================
 
-##Agenda
+##Disclaimer
 
-* Demo
-* Summary
+###Simple examples but let's think large scale.
 
-==============================================================================
-
-##Dependency Injection
-
-> "Don't call us, we'll call you", Hollywood principle
+Let's think about big team projects.
 
 ----
 
-##SOLID (Object-oriented design)
+#Story:  (BDD Style)
 
-| | |
-|-|-|
-|**S**|Single responsibility|
-|**O**|Open-closed|
-|**L**|Liskov substitution|
-|**I**|Interface segregation |
-|**[D]**|**Dependency inversion**|
+Scenario 1:
 
 ----
 
-functional
+#In search of the best design!
 
-// We could also use a regular interface with an operator().
-using iwebpage_retriever = fdi::interface<struct unique_tag, std::string(std::string)>;
-using iwebpage_printer = fdi::interface<struct unique_tag2, void(std::string)>;
+----
 
-// For fun, let's say this is a 3rd party library's function.
-std::string download_webpage(std::string url) {...}
+## KISS - ~~Keep it simple~~, STUPID
 
-// I'm considering an alternate foo(params..., fdi::dependencies<...>)
-auto print_webpage(const iwebpage_retriever& get_webpage) {
-    return [&](std::string url) {
-        auto webpage = get_webpage(url);
-        std::cout << webpage;
-    };
-}
-
-struct app {
-    app(iwebpage_printer& print) : _print(print) {}
-    void run() { _print("http://google.com"); }
-    iwebpage_printer& _print;
-};
-
+```cpp
 int main() {
-    auto injector = boost::di::make_injector(
-        // This bind works alongside boost::di::bind.
-        fdi::bind<iwebpage_retriever>.to(download_webpage),
-        fdi::bind<iwebpage_printer>.to(print_webpage)
-    );
-
-    // There's also a shortcut to do this without app existing.
-    di::create<app>().run();
+  auto value = 0;
+  {
+    std::filestream file{"input.txt"};
+    file >> value;
+  }
+  std::cout << value << '\n';
 }
+```
 
-Types of dependency injection
+----
 
-Templates (Duck typing) policy design
+* (+) Does it job!
+* (-) Hard to test
+* (-) Hard to do TDD and/or BDD
 
-Static polymorphism(CRTP)
+Good pracieses are good practices for a reason!
 
-Type erasure
+----
 
-concepts
+##Let's introduce some abstractions
 
-class coffee_maker {
+```cpp
+class Reader {
+  static constexpr auto name = "input.txt";
+  std::filestream file{name};
+
 public:
-  coffee_maker(ElectricHeater heater, Pump pump)
-    : heater(heater), pump(pump)
-  { }
-
-  virtual ElectricHeater heater;
-  virtual ElectricPump pump;
+  auto read() {
+    auto value = 0;
+    file >> value;
+    return value;
+  }
 };
-
-porposal link
-
-----
-
-Dynamic polymorphism
-
-Devirtualization and run-time polymorphism
-
-CRTP vs final
-
-----
-
-----
-
-
-Basically, there is a only one (big) step to get all benefits of Dependency Injection.
-You have to separate creation logic from business logic, which means that your code
-should be free of object creation inside other objects.
-
-##Dependency Injection vs Service Locator
-
-> It's all about the construction!
-
-####No DI
-```cpp
-coffee_maker()
-  : heater(make_shared<electric_heater>()) // construct dependencies
-  , pump(make_unique<heat_pump>(heater))
-{ }
 ```
 
-####DI
 ```cpp
-coffee_maker(shared_ptr<iheater> heater // inject dependencies
-           , unique_ptr<ipump> pump)
-  : heater(heater)
-  , pump(move(pump))
-{ }
+class Viewer {
+  public:
+    void show(int value) {
+      std::cout << value << '\n';
+    }
+};
 ```
+
+----
+
+##Let's introduce some abstractions
+
+```cpp
+class App {
+  Reader reader;
+  Viewer viewer;
+
+  void run() {
+    viewer.show(reader.read());
+  }
+};
+```
+
+```cpp
+int main() {
+  App{}.run();
+}
+```
+
+----
+
+![app0](images/app0.png)
+
+----
+
+* (+) Does it job!
+* (-) Hard to test
+* (-) Hard to do TDD and/or BDD
 
 ----
 
 ##Composition Root
 
-> (preferably) unique location in an application where modules are composed together
+> Unique location in an application where modules are composed together
 
 ```cpp
 int main() {
-  injector{}.create<app>();
+  App{}.run();
 }
 ```
 
 ----
 
-##Common mistakes when using DI
-
-----
-
-##Passing a dependency to create another dependency inside your object
+###First injection
 
 ```cpp
-class Model {
+class Reader;
+class Viewer;
+```
+
+```cpp
+class App {
+ Reader reader;
+ Viewer viewer;
+
  public:
-   Model(int width, int height) 
-     : board(std::make_unique<Board>(width, height)) // Bad
-   { } 
+  App(Reader&& reader, Viewer&& viewer)
+    : reader(std::move(reader))
+    , viewer(std::move(viewer))
+  { }
 
-   explicit Model(std::unique_ptr<IBoard> board) // Better
-     : board(std::move(board))
-   { } 
-
-   ...
-
- private:
-  std::unique_ptr<IBoard> board;
+  void run() {
+    viewer.show(reader.read());
+  }
 };
+```
+
+```cpp
+int main() {
+  Reader reader;
+  Viewer viewer;
+  App app{std::move(reader), std::move(viewer)};
+
+}
 ```
 
 ----
 
-##Carrying dependencies
+![app1](images/app1.png)
+
+----
+
+* (+) Does it job!
+* (-) Hard to test
+* (-) Hard to do TDD and/or BDD
+
+----
+
+##Policy Design (Duck typing)
 
 ```cpp
-class Model : public Service { // Bad
- public:
-   explicit Model(std::unique_ptr<IBoard> board) // Bad
-     : Service(std::move(board))
-   { } 
-   void update() {
-     Service::do_something_with_board(); // Bad
-   }
+class Reader;
+class Viewer;
+```
+
+```cpp
+template<class TReader, class TViewer>
+class App {
+  TReader reader;
+  TViewer viewer;
+
+public:
+  App(TReader& reader, TViewer& viewer)
+    : reader(reader), viewer(viewer)
+  { }
+
+  void run() {
+    viewer.show(reader.read());
+  }
 };
 ```
 
 ```cpp
-class Model { // Better
- public:
-   explicit Model(std::unique_ptr<Service> service) // Better
-     : service(std::move(service))
-   { } 
-   void update() {
-     service.do_something_with_board(); // Better
-   }
+int main() {
+  Reader reader;
+  Viewer viewer;
+  App<Reader, Viewer> app{reader, viewer};
+  app.run();
+}
+```
 
- private:
-   std::unique_ptr<Service> service;
+----
+
+* (-) template propages
+```cpp
+Viewer request a type has to be passed via App
+```
+* (-) oOmpilation times (POI)
+* (-) Not meaningufl errors (Duck typing)
+* (+) Easier to test, although we don'tknow what
+
+----
+
+##Static Polymorphism
+####Curiously recurring template pattern (CRTP)
+
+```cpp
+template<class T> 
+struct Reader {
+  void read() {
+    static_cast<T*>(this)->read(value);
+  }
+}
+```
+
+```cpp
+template<class T> 
+struct Viewer {
+  void show(int value) {
+    static_cast<T*>(this)->show(value);
+  }
+}
+```
+
+```cpp
+class App {
+  // TODO
 };
 ```
 
 ----
 
-##Carrying injector (Service Locator pattern)
+* (-) template propages
+```cpp
+Viewer request a type has to be passed via App
+```
+* (-) oOmpilation times (POI)
+* (-) Not meaningufl errors (Duck typing)
+* (+) Easier to test, although we don'tknow what
+
+----
+
+##Dynamic Polymorphism
 
 ```cpp
-class Model {
- public:
-   explicit Model(service_locator& sl) // Bad (ask)
-     : service(sl.resolve<unique_ptr<Service>>())
-   { } 
-
-   explicit Model(std::unique_ptr<Service> service) // Better (tell)
-     : service(std::move(service))
-   { } 
-
-   ...
-
- private:
-   std::unique_ptr<Service> service;
+class IReader {
+public:
+  virtual ~IReader() noexcept = default;
+  virtual int read() = 0;
 };
 ```
+
+```cpp
+class FileReader : public IReader {
+public:
+  FileReader(std::string_view path);
+  void read() override;
+};
+```
+
+```cpp
+class IViewer {
+public:
+  virtual ~IViewer() noexcept = default;
+  virtual void show(int) = 0;
+};
+```
+
+```cpp
+class ConsoleViewer : public IViewer {
+  void show(int) override;
+};
+```
+
+----
+
+##Single responsibility principle
+
+> "A class should have only one reason to change" Unclue Bob
+
+----
+
+```cpp
+class App {
+  std::unique_ptr<IReader<int>> reader =
+    std::make_uniqe<FileReader>("input.txt");
+
+  std::unique_ptr<IViewer<int>> viewer =
+    std::make_uniqe<ConsoleViewer>();
+
+public:
+  void run() {
+    viewer->show(reader->read());
+  }
+
+};
+```
+
+```cpp
+int main() {
+  App{}.run();
+}
+```
+
+----
+
+![app](images/app.png)
+
+* Loosely coupled
+* easy to test
+
+----
+
+* (-) Peformance?
+* (-) oOmpilation times (POI)
+* (-) Not meaningufl errors (Duck typing)
+* (+) Easier to test, although we don'tknow what
+
+----
+
+##Dynamic Polymorphism performance
+####final keyword and Devirtualization
+
+![final](images/final.png)
+https://godbolt.org/g/e8olYN
+
+----
+
+##Static factory
+
+```cpp
+class IReader; class FileReader;
+class IViewer; class ConsoleViewer;
+```
+
+```cpp
+struct ReaderFactory {
+  static auto create(std::string_view input) {
+    return std::make_unique<FileReader>(input);
+  }
+};
+```
+
+```cpp
+struct ViewerFactory {
+  static auto create() {
+    return std::make_unique<ConsoleViewer>();
+  }
+};
+```
+
+----
+
+```cpp
+class App {
+public:
+  void run() {
+    ViewerFactory::create()->show(
+      ReaderFactory::create("input.txt")->read()
+    );
+  }
+
+};
+```
+
+```cpp
+int main() {
+  App{}.run();
+}
+```
+
+----
+
+* (-) Peformance?
+* (-) oOmpilation times (POI)
+* (-) Not meaningufl errors (Duck typing)
+* (+) Easier to test, although we don'tknow what
+
+----
+
+```cpp
+class IReader; class FileReader;
+class IViewer; class ConsoleViewer;
+```
+
+```cpp
+class App {
+  IReader& reaer;
+  IViewer& viewer;
+
+public:
+  App(IReader& reader, IViewer& viewer)
+    : reader(reader), viewer(viewer) {}
+
+  void run() {
+    viewer.show(reader.read());
+  }
+};
+```
+
+```cpp
+int main() {
+  auto reader = std::make_unique<FileReader>("input.txt");
+  auto viewer = std::make_unique<ConsoleViewer>());
+
+  App{*reader, *viewer}.run();
+}
+```
+
+----
+
+* (-) Wiring Mess
+* (+) TDD/BDD easy to mock
+* (+) Reusable
+
+----
+
+##Dependency Injection (DI)
+
+> "Don't call us, we'll call you", Hollywood principle
+
+----
+
+> It's all about the construction!
+
+----
+
+##Testing
+
+> "If you liked it then you should have put a test on it", Beyonce rule
+
+----
+
+```cpp
+"should show read text"_test = [] {
+  constexpr auto value = 42;
+
+  auto [sut, mocks] = make<App>();
+
+  InSequence sequence;
+  EXPECT_CALL(mocks<IReader>, read()).WillOnce(Return(value));
+  EXPECT_CALL(mocks<IViewer>, show(value));
+
+  sut.run();
+};
+```
+
+----
+
+##Weak vs Strong interface
+
+```cpp
+class QtViewer {
+public:
+  QtViewer(int width, int height); // weak
+};
+
+QtViewer(600, 800); // Okay
+QtViewer(800, 600); //oops
+
+class QtViewer {
+public:
+  QtViewer(width, height); // strong types
+};
+
+QtViewer(witdth{500}, height{800}); // Okay
+QtViewer(height{500}, width{800}); // COmpile error
+QtViewer(500, 800); // COmpile error
+```
+
+----
+
+##C++2X?
+
+```cpp
+template <class T>
+concept bool Readable() {
+  return requires(T reader) {
+    { reader.read(std::string_view{}) } -> auto;
+  }
+};
+```
+
+```cpp
+template <class T>
+concept bool Viewable() {
+  return requires(T viewer) {
+    { viewer.show() };
+  }
+};
+```
+
+----
+
+```cpp
+class App {
+  virtual Readable reaer; // stack, Small Buffer Optimization
+  virtual Viewable viewer; // type erasure
+
+public:
+  App(Readable reader, Viewable viewer) // template<Readable...
+    : reader(reader), viewer(viewer) {}
+
+  void run() {
+    viewer.show(reader.read());
+  }
+};
+```
+
+----
+
+```cpp
+int main() {
+  Readable reader = FileReader{"input.txt"};
+  Viewable viwer = ConsoleViewer();
+
+  App{reader, viewer}.run();
+}
+```
+
+| | |
+|-|-|
+|Concepts lite | http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf |
+|Virtual concepts | https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf |
+
+----
+
+* ###Single Responsiliby = A lot of classes = A lot wiring = Wiring Mess
+
+* ###Wiring mess = Hard to exend = woraround under preasure
+
+-----
+
+###Solution => Automate that => [Boost].DI
+
+> Separate creation logic from business logic, which means that your code
+should be free of object creation inside other objects.
 
 ==============================================================================
 
@@ -281,7 +607,7 @@ class Model {
 
 ----
 
-##[Boost].DI - Hello World
+##[Boost].DI - Removing the wiring mess
 
 ```cpp
 #include <boost/di.hpp>
@@ -289,34 +615,33 @@ namespace di = boost::di;
 ```
 
 ```cpp
-struct iworld { virtual ~iworld() noexcept = default; };
-struct world : iworld {};
-struct ihello { virtual ~ihello() noexcept = default; };
-struct hello : ihello {};
+class IReader;
+class IViewer;
 ```
 
 ```cpp
-struct hello_world {
-  hello_world(const ihello&, const iworld&); // DI handles
-};                  ^              ^         // order and types
-                    |              \------------\
-                    \----------------------\    |
-int main() {                               |    |
-  const auto injector = di::make_injector( |    |
-     di::bind<ihello>.to<hello>() ---------/    |
-   , di::bind<iworld>.to<world>() -------------/
+class App {
+ public:
+  App(const IReader&, const IViewer&); // DI handles
+};                  ^       ^          // order and types
+                    |       \----------------------\
+                    \-----------------------\      |
+int main() {                                |      |
+  const auto injector = di::make_injector(  |      |
+     di::bind<IReader>.to<FileReader>(), ---/      |
+     di::bind<IViewer>.to<ConsoleViewer>() --------/
   );
 
-  auto hw = injector.create<unique_ptr<hello_world>>();
+  injector.create<App>().run();
 }
 ```
 
 ----
 
-##[Boost].DI - Hello World
+##[Boost].DI - Performance
 
 ```sh
-time $CXX -std=c++14 hello_world.cpp # 0.102s
+time $CXX -std=c++14 app.cpp # 0.092s
 ```
 
 ####ASM x86-64
@@ -336,38 +661,12 @@ retq
 ####Same as
 
 ```cpp
-return make_unique<hello_world>(...);
+return make_unique<App>(...);
 ```
 
 ----
 
-##Hello World - Errors
-
-```cpp
-const auto injector = di::make_injector(
-// di::bind<ihello>.to<hello>() // missing 'ihello' binding
- , di::bind<iworld>.to<world>()
-);
-auto hw = injector.create<hello_world>();
-```
-
-####Full Compilation-Time Error Message
-
-```cpp
-error: 'create<hello_world>' is deprecated: creatable constraint
-  injector.create<hello_world>();           not satisfied
-           ^
-note 'create<hello_world>' has been explicitly marked deprecated here
-  create
-  ^
-error: inline function 'abstract_type<ihello>::is_not_bound::error'
- error(_ = "type is not bound, did you forget to add:
-           'di::bind<interface>.to<implementation>()'?");
-```
-
-----
-
-##Benchmarks (GCC-5/Java8)
+##Benchmarks (GCC-6/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -381,11 +680,35 @@ error: inline function 'abstract_type<ihello>::is_not_bound::error'
 | Compilation time    | 0.706s       | 0.642s             | 1.903s        |
 | Execution time      | 0.002s       | 0.544s             | 0.210s        |
 
-==============================================================================
+----
 
-##[Boost].DI - User Guide
+##[Boost].DI - Compile-time errors
+
+```cpp
+const auto injector = di::make_injector(
+// di::bind<IViewer>.to<ConsoleViewer>(), // missing 'IViewer' binding
+   di::bind<IReader>.to<FileReader>()
+);
+auto app = injector.create<App>();
+```
+
+####Full Compilation-Time Error Message
+
+```cpp
+error: 'create<App>' is deprecated: creatable constraint
+  injector.create<App>();           not satisfied
+           ^
+note 'create<App>' has been explicitly marked deprecated here
+  create
+  ^
+error: inline function 'abstract_type<IViewer>::is_not_bound::error'
+ error(_ = "type is not bound, did you forget to add:
+           'di::bind<interface>.to<implementation>()'?");
+```
 
 ----
+
+##[Boost].DI - API
 
 ###Injector
 ```cpp
@@ -410,605 +733,269 @@ auto make_injector(TDeps&&...) noexcept;
 
 ----
 
-###Injections
+###Injection
 
-####App
+##Let's come back to our example
 ```cpp
-struct renderer { int device; };
+class Reader;
+class Viewer;
 ```
+
 ```cpp
-class iview {
+class App {
+ Reader reader;
+ Viewer viewer;
+
 public:
-  virtual ~iview() = default;
-  virtual void update() = 0;
-};
-```
-```cpp
-class model {};
-```
-```cpp
-class controller {
-public:
-  controller(model&, view&) {}
-};
-```
-```cpp
-class user {};
-```
-```cpp
-class app {
-public:
-  app(controller&, user&) {}
-};
-```
+  App(Reader&& reader, Viewer&& viewer)
+    : reader(std::move(reader))
+    , viewer(std::move(viewer))
+  {}
 
-----
-
-###Injections
-
-####Usual approach
-```cpp
-renderer renderer_;
-view view_{"title", renderer_};
-model model_;
-controller controller_{model_, view_};
-user user_;
-app app_{controller_, user_};
-```
-
-####With [Boost].DI
-
-```cpp
-auto app = di::make_injector().create<app>();
-```
-
-----
-
-###Injections - Aggregates
-```cpp
-struct T { int& a; double b; };
-```
-
-```cpp
- auto i = 42;
- auto injector = di::make_injector(
-    di::bind<int>.to(i),
-    di::bind<double>.to(87.0)
- );
-```
-
-####Test
-```cpp
-assert(42 == injector.create<T>().a);
-assert(87.0 == injector.create<T>().b);
-```
-
-----
-
-###Injections - Annotations
-
-```cpp
-struct T {
-  T(int i1, NAMED("some_name"_s, int) i2) {
-    assert(87 == i1);
-    assert(42 == i2);
+  void run() {
+    viewer.show(reader.read());
   }
 };
 ```
 
-```cpp
- auto injector = di::make_injector(
-    di::bind<int>.named("some_name"_s).to(87),
-    di::bind<int>.to(42)
- );
-```
-
 ----
 
-###Bindings - Interface -> Implementations
-
-```cpp
-auto injector = di::make_injector(
-  di::bind<iview>.to<gui_view>()
-);
-```
-
-####Test
-```cpp
-assert(dynamic_cast<gui_view*>(injector.create<unique_ptr<iview>().get()));
-assert(dynamic_cast<gui_view*>(injector.create<shared_ptr<iview>().get()));
-assert(dynamic_cast<const gui_view*>(&injector.create<const iview&>());
-```
-<!-- .element: style="margin-left:0%; width:100%" -->
-
-----
-
-###Bindings - Type -> value
-
-```cpp
-auto injector = di::make_injector(
-  di::bind<int>.to(42) // or di::bind<>.to(42)
-);
-```
-
-####Test
-```cpp
-assert(42 == injector.create<int>());
-```
-
-----
-
-###Bindings - Containers
-
-```cpp
-auto injector = di::make_injector(
-  di::bind<int[]>().to({1, 2, 3})
-);
-```
-
-####Test
-```cpp
-auto v = injector.create<vector<int>>();
-         // or array / set
-
-assert(3 == v.size());
-assert(1 == v[0]);
-assert(2 == v[1]);
-assert(3 == v[2]);
-```
-
-----
-
-###Bindings - containers (interface)
-
-```cpp
-auto injector = di::make_injector(
-  di::bind<interface[]>().to<implementation1, implementation2>()
-);
-```
-
-####Test
-```cpp
-auto v = injector.create<
-  vector<unique_ptr<interface>>>();
-    // or array / set with
-    // shared_ptr, raw pointer, reference, ...
-
-assert(2 == v.size());
-assert(dynamic_cast<implementation1*>(v[0].get()));
-assert(dynamic_cast<implementation2*>(v[1].get()));
-```
-
-----
-
-###Bindings - Dynamic Conditions
-
-```cpp
-auto use_gui_view = true/false;
-
-auto injector = di::make_injector(
-  di::bind<iview>.to([&](const auto& injector) -> iview& {
-    return use_gui_view ?
-      injector.create<gui_view&>() : injector.create<text_view&>();
-  })
-);
-```
-
-####Test
-```cpp
-use_gui_view = true;
-assert(dynamic_cast<gui_view*>(
-  injector.create<unique_ptr<iview>().get())
-);
-
-use_gui_view = false;
-assert(dynamic_cast<text_view*>(
-  injector.create<unique_ptr<iview>().get())
-);
-```
-
-----
-
-##Bindings - providers
-
-```cpp
-class example {
- public:
-  explicit example(di::provider<std::unique_ptr<interface>> l) {
-    assert(dynamic_cast<implementation*>(l.get()));
-  }
-};
-```
-
-####Test
+##Manual DI
 ```cpp
 int main() {
-  const auto injector = di::make_injector(
-    di::bind<interface>.to<implementation>() // might be dynamically chosen
-  );
+  Reader reader;
+  Viewer viewer;
+  App app{std::move(reader), std::move(viewer)};
+  app.run();
 }
 ```
-<!-- .element: style="margin-left:0%; width:100%" -->
 
-----
-
-###Bindings - Factories
-
+##[Boost].DI
 ```cpp
-struct interface {
-  virtual ~interface() noexcept = default;
-  virtual void dummy1() = 0;
-};
-
-struct implementation : interface {
-  implementation(int i, double d) {
-    assert(42 == i);
-    assert(87.0 == d);
-  }
-  void dummy1() override {}
-};
-```
-
-####Test
-```cpp
-const auto injector = di::make_injector(
-  di::bind<>.to(42),
-  di::bind<>.to(87.0),
-  di::bind<ifactory<interface>>.to(factory<implementation>)
-);
-auto f = injector.create<ifactory<interface>();
-assert(dynamic_cast<implementation*>(f.create().get()));
+int main() {
+  di::make_injector().create<App>().run();
+}
 ```
 
 ----
 
-###Bindings - Dynamic Factories
+##Refactoring fore free!
+
+####Let's change App constructor
 
 ```cpp
-struct interface {
-  virtual ~interface() noexcept = default;
-  virtual void dummy1() = 0;
-};
-
-struct implementation : interface {
-  implementation(int i, double d) {
-    assert(42 == i);
-    assert(87.0 == d);
-  }
-  void dummy1() override {}
-};
-```
-
-####Test
-```cpp
-const auto injector = di::make_injector(
-  di::bind<>.to(42)
-  di::bind<ifactory<interface(double)>>.to(factory<implementation>)
-);
-auto f = injector.create<ifactory<interface(double)>();
-assert(dynamic_cast<implementation*>(f.create(87.0).get()));
+  App(Viewer& viewer, std::unique_ptr<Reader> reader)
+    : viewer(viewer)
+    , reader(std::move(reader))
+  {}
 ```
 
 ----
 
-###Bindings - Factories - Assisted Injection
+##Manual DI
+```cpp
+int main() {
+  auto reader = std::make_unique<Reader>{};
+  Viewer viewer;
+  App app{viewer, std::move(reader)};
+  app.run();
+}
+```
+
+##[Boost].DI
+```cpp
+int main() {
+  di::make_injector().create<App>().run(); // same as before!
+}
+```
+
+----
+
+##Scoped deduction
+
+###Unique scope
+```cpp
+assert(injector.create<std::unique_ptr<IViewer>>().get()
+    != injector.create<std::unique_ptr<IViewer>>().get());
+```
+
+###Singleton scope
+```cpp
+assert(injector.create<std::shared_ptr<IViewer>>() 
+    == injector.create<std::shared_ptr<IViewer>>());
+```
 
 ```cpp
-struct interface {
-  virtual ~interface() noexcept = default;
-  virtual void dummy1() = 0;
-};
-
-struct implementation : interface {
-  implementation(int i, NAMED("assisted"_s, float) f, double d) {
-    assert(42 == i);
-    assert(123.0 == f);
-    assert(87.0 == d);
-  }
-  void dummy1() override {}
-};
-```
-
-####Test
-```cpp
-const auto injector = di::make_injector(
-  di::bind<float>.to(123.0),
-  di::bind<ifactory<interface(int,double)>>.to(factory<implementation>)
-);
-auto f = injector.create<ifactory<interface(int, double)>();
-assert(dynamic_cast<implementation*>(f.create(42, 87.0).get()));
+assert(&injector.create<IViewer&>>() 
+    == injector.create<std::shared_ptr<IViewer>>().get());
 ```
 
 ----
 
-##Scopes
-
-* [Deduce scope](http://boost-experimental.github.io//di/user_guide/index.html#di_deduce) (default)
-* [Instance scope](http://boost-experimental.github.io//di/user_guide/index.html#di_instance) (bind<>.to(value) where value is maintained by the user)
-* [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) (one instance per request)
-* [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) (shared instance)
-
-----
-
-##Scopes - Life time
-
-```
-+----------------------------------------------+ Singleton scope
-|
-|          Unique scope     Unique scope
-|          +---+            +------+
-|          |                |
-+--+-------+----------------+------------------> Application life time
-   |
-   |
-   +------------------------+ Instance / User scope
-                             (is not controlled by DI)
-```
-
-----
-
-###Scopes deduction
+##Scoped deduction
 
 | Type | Scope |
 |------|-------|
-| `T`, `T&&`, `T*`, `const T*`, `unique_ptr<T>` | [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) |
-| `T&`, `const T&`, `shared_ptr<T>`, `boost::shared_ptr<T>`, `weak_ptr<T>` | [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) |
+| `T`, `T&&`, `owner<T*>`,  `unique_ptr<T>` | [Unique scope](http://boost-experimental.github.io//di/user_guide/index.html#di_unique) |
+| `T&`, `const T&`, `T*`, `const T*`, `shared_ptr<T>`, `boost::shared_ptr<T>`, `weak_ptr<T>` | [Singleton scope](http://boost-experimental.github.io//di/user_guide/index.html#di_singleton) |
 
 ----
 
-###Scopes
+##Implementing features by wiring
 
-```cpp
-auto injector = di::make_injector(
-  di::bind<iview>.to<gui_view>().in(di::singleton) // explicitly
-);
-```
-
-####Test
-
-```cpp
-assert(&injector.create<iview&>() == &injector.create<iview&>());
-```
+Scenario 2
+If command line 
+New Scenario
 
 ----
 
-##Modules
-
+###Configuration module
 ```cpp
-auto view_module = [] {
+const auto config = [](std::string_view view) {
   return di::make_injector(
-    di::bind<icanvas>.to<sdl_canvas>()
-  , di::bind<irenderer>.to<gui_renderer>()
+     di::bind<IReader>.to<FileReader>(),
+     di::bind<IViewer>.to([&](const auto& injector) {
+       if (argv[1] == "QtViewer") {
+          return injector.create<QtViewer&>();
+       } else if (argv[1] == "ConsoleViewer") {
+          return injector.create<ConsoleViewer&>();
+       }
+     })
   );
 };
 ```
 
 ```cpp
-auto model_module = [] {
-  return di::make_injector(
-    di::bind<config>.to({6, 8})
-  , di::bind<irandom>.to<mt19937_random>()
-  );
-};
-```
-
-```cpp
-auto injector = di::make_injector(
-  view_module(), model_module()
-);
-
-injector.create<app>();
+int main(int argc, char** argv) {
+  assert(2 == argc);
+  config(argv[1]).create<App>().run();
+}
 ```
 
 ----
 
-###Modules - exposed (cpp)
-
-####Expose Modules
+Functional DI?
 
 ```cpp
-di::injector<view&> view_module() { // expose view
-  return di::make_injector(
-    di::bind<icanvas>.to<sdl_canvas>()
-  , di::bind<irenderer>.to<gui_renderer>()
-  );
-}
+using fview = std::function<void(int)>;
+using fread = std::function<int()>;
 ```
 
 ```cpp
-di::injector<model&> model_module() { // expose model
-  return di::make_injector(
-    di::bind<config>.to({6, 8})
-  , di::bind<irandom>.to<mt19937_random>()
-  );
-}
+const auto fileRead = [](std::string_view path) {
+  return [=] {
+    auto value = 0;
+    {
+      std::fstream file{path};
+      file >> value;
+    }
+    return value;
+  };
+};
 ```
 
 ```cpp
-auto injector = di::make_injector(
-  view_module(), model_module()
+const auto consoleView = [](int value) {
+  std::cout << value << '\n';
+};
+```
+
+----
+
+```cpp
+class App {
+  fview view;
+  fread read;
+
+ public:
+   App(const fview& view, const fread& read)
+     : view(view), read(read)
+   { }
+
+   void run() {
+     view(read());
+   }
+};
+```
+
+```cpp
+const auto injector = di::make_injector(
+    di::bind<fview>.to(consoleView)
+  , di::bind<fread>.to(fileRead("input.txt"))
 );
 
-injector.create<app>();
+injector.create<App>().run();
 ```
+
+----
+
+##More features
+
+* Policies
+  * Example - Disallow passing by raw pointer without markup ownership explicitly 
+* Automatic mocks injection
+  * Creates and inject mocks automatically
+* Serialization
+  * Serialize all POD's in the App
+* Dependencies diagram generation
 
 ==============================================================================
 
-##DI and Testing
-
-> "If you liked it then you should have put a test on it", Beyonce rule
+##Summary
 
 ----
 
-##DI - Automatic Mocks injection
+##STUPID vs SOLID
 
-> Create and inject mocks automatically using [Boost].DI and FakeIt!
+<table><tr>
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td>Singleton</td></tr>
+    <tr><td><b>T</b></td><td>Tight Coupling</td></tr>
+    <tr><td><b>U</b></td><td>Untestability</td></tr>
+    <tr><td><b>P</b></td><td>Premature Optimization</td></tr>
+    <tr><td><b>I</b></td><td>Indescriptive Naming</td></tr>
+    <tr><td><b>D</b></td><td>Duplication</td></tr>
+  </table>
+ </td>
 
-----
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td><b>Single Responsibility</b></td></tr>
+    <tr><td><b>O</b></td><td>Open-close</td></tr>
+    <tr><td><b>L</b></td><td>Liskov substitution</td></tr>
+    <tr><td><b>I</b></td><td>Interface segregation</td></tr>
+    <tr><td><b>D</b></td><td><b>Dependency injection</b></td></tr>
+  </table>
+ </td>
 
-##Automatic mocks injector - Goal
-
-```cpp
-struct app {
-  app(const interface1& i1, interface2& i2);
-  void update() {
-    if (i1.foo()) {
-      i2.bar();
-    }
-  }
-};
-```
-
-```cpp
-"should update app"_test = [] {
-  // given
-  const auto injector = di::make_injector<mocks_provider>();
-
-  // when
-  When(Method(mock<interface1>, foo)).Return(true);
-  injector.create<app>().update();
-
-  // then
-  Verify(Method(mock<interface2>, bar).Times(1);
-};
-```
+ </tr>
+</table>
+> "Clean Code", Unclue Bob
 
 ----
 
-##Mocks Provider
+##Dependency Injection
 
-```cpp
-template <class T>
-auto& mock() {
-  return fakeit::Mock<T>();
-}
+* A powerful design pattern helping with creating
+  * Loosely Coupling
+  * Easy to test code (TDD)
 
-struct mocks_provider {
-  template <class T, class... TArgs>
-  auto get(TArgs&&... args) const {
-    if constexpr(is_polymorphic<T>{} && !is_bound<T>{}) {
-      return mock<T>();
-    } else {
-      return make_unique<T>(forward<TArgs>(args)...);
-    }
-  }
-};
-```
-
-----
-
-##Example (Integration Test)
-
-```cpp
-"given player has 1 move, when player swipes then no moves"_test = [] {
-  // given
-  const auto injector = di::make_injector<mocks_provider>(
-     di::bind<>.to(config{8/*width*/, 10/*height*/, 1/*moves*/})
-   , di::bind<board::colors_t[]>.to({3,5,1,4,3,2,2,...})
-  );
-  auto game = injector.create<Game>();
-```
-
-```cpp
-  // when
-  game.start();
-
-  // then
-  Verify(Method(mock<icanvas>, show_moves).Using(1);
-  Verify(Method(mock<icanvas>, show_board).Using({3,5,1,4,3,2,2,...});
-```
-
-```cpp
-  // when
-  game.swipe({3, 5}, {3, 6}); // a winning swipe
-
-  // then
-  Verify(Method(mock<icanvas>, show_moves).Using(0);
-  Verify(Method(mock<icanvas>, show_board).Using({5,2,1,1,4,2,2,...});
-};
-```
-
-----
-
-##DI - Wiring mess
-
-####Create a game (Simplified)
-```cpp
- Manual DI                                   | [Boost].DI
----------------------------------------------+----------------------------------
- StrictMock<canvas_mock> canvas;             | auto game = di::make_injector(
- Config config{8, 10, 1};                    |   di::bind<>.to(config{8, 10, 1})
- Board board{config, {{3,5,1,4,3,2,2, ...}}};| ).create<Game>();
- Contoller controller{config, board};        |
- Game game{controller, canvas};              |
-```
-<!-- .element: style="margin-left:-5%; width:110%" -->
-
-----
-
-##DI - Wiring mess
-
-####Simple Refactor
-```cpp
-Board(const config&, initializer_list<int>); -> Board(initializer_list<int>, const config&);
-Game(Contoller&, const icanvas&)             -> Game(const icanvas&, unique_ptr<Contoller>);
-```
-<!-- .element: style="margin-left:-10%; width:120%" -->
-
-####Make a game
-```cpp
- Manual DI                                            | [Boost].DI (No changes required!)
-------------------------------------------------------+----------------------------------
- StrictMock<canvas_mock> canvas;                      |
- Config config{8, 10, 1};                             | auto game = di::make_injector(
- Board board{{{3,5,1,4,3,2,2, ...}}, config}; /*DIFF*/|   di::bind<>.to(config{8, 10, 1})
- auto controller =                                    | ).create<Game>(); // same old
-   make_unique<Contoller>(board, config); /*DIFF*/    |
- Game game{canvas, controller}; /*DIFF*/              |
-```
-<!-- .element: style="margin-left:-10%; width:120%" -->
-
-==============================================================================
-
-##Bonus - Simplest test framework
-
-----
-
-###'Test Framework'
-
-####Implementation
-```cpp
-template <char...>
-struct test {
-  template <class Test>
-  auto operator=(const Test& test) { test(); return true; }
-};
-
-// GNU extension for now, maybe in C++20
-template <class T, T... Chars>
-constexpr auto operator""_test() { return test<Chars...>{}; }
-```
-
-####Usage
-```cpp
-"should be equal"_test = [] {
-  assert(0 == 0);
-};
-
-"should not be equal"_test = [] {
-  assert(!(1 == 0));
-};
-```
+* [Boost].DI
+  * Removes wiring mess (boilerplate code)
+  * Simplify refactoring
+  * Make testing easier (automatic mocks injection)
 
 ==============================================================================
 
 ##Questions?
 
-| [Boost].SML |  |
+| [Boost].DI |  |
 | ------- | ------------- |
-| Documentation | http://boost-experimental.github.io/sml |
-| Source Code | https://github.com/boost-experimental/sml |
-| Try it online | https://github.com/boost-experimental/sml/examples |
+| Documentation | http://boost-experimental.github.io/di |
+| Source Code | https://github.com/boost-experimental/di |
+| Try it online! | http://boost-experimental.github.io/di/try_it/index.html |
+|                | https://godbolt.org/g/dvjJFI |
 <!-- .element: style="margin-left:-13%; width:125%" -->
 
 -

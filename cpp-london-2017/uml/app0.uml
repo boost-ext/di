@@ -1,0 +1,9 @@
+@startuml app.png
+
+"Viewer" : show(T) : void
+"Reader" : read() : T
+
+"App" *.. "Reader"
+"App" *.. "Viewer"
+
+@enduml
