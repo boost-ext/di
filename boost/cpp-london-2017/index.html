@@ -82,7 +82,7 @@ Kris Jusiak
 
 ==============================================================================
 
-#Story:  (BDD Style)
+##Story:  (BDD Style)
 
 Scenario 1:
 
@@ -244,7 +244,7 @@ int main() {
 
 ----
 
-##Let's make it more generic - Policy Design (V3)
+##Let's make it more generic - Policy Design / Duck Typing (V3)
 
 ```cpp
 class Reader;
@@ -285,7 +285,7 @@ int main() {
 * (+) Can't inject different Readers/Viewers
 * (-) We are limited to header files
 * (-) Slower compilation times (Point of instantiation - POI)
-* (-) Bigger executable size
+* (-) Code bloat (executable size)
 * (-) Horrible error messages
 
 ----
@@ -330,7 +330,7 @@ class App {
 
 ----
 
-##What about concepts? (C++2X?)
+##Concepts to the rescue? (C++2X?)
 
 ```cpp
 template <class T>
@@ -350,7 +350,9 @@ concept bool Viewable() {
 };
 ```
 
-##What about concepts? (C++2X?)
+----
+
+##Concepts to the rescue? (C++2X?)
 
 ```cpp
 class App {
@@ -378,12 +380,13 @@ int main() {
 
 ----
 
-##What about concepts? (C++2X?)
+##Concepts to the rescue? (C++2X?)
 
-| | |
-|-|-|
-|Concepts lite | [http://www.open-std.org/.../n3580.pdf](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) |
-|Virtual concepts | [https://github.com/.../VirtualConcepts.pdf](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) |
+| | | |
+|-|-|-|
+|Concepts lite     | Constrating templates        | [http://www.open-std.org/.../n3580.pdf](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) |
+|Virtual concepts  | Type-erasure                 | [https://github.com/.../VirtualConcepts.pdf](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) |
+|Static reflection | Fakes/Stubs/Mocks generation | [www.open-std.org/.../p0194r0.pdf](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf) |
 
 ----
 
@@ -533,6 +536,16 @@ int main() {
 * (+/-) Performance
 * (-) It's tightly coupled to the static factories
 * (-) Can't test factories easily
+
+----
+
+| | |
+|-|-|
+|Static factories | MUST GO! |
+|Abstract factories | Okay as long as injected |
+|Smart factories/Assisted injection | Even better, inject some object up-front and some at run-time |
+
+| | | |
 
 ----
 
