@@ -82,9 +82,16 @@ Kris Jusiak
 
 ==============================================================================
 
-##Story:  (BDD Style)
+##Story: Show a value from a file (BDD Style)
 
-Scenario 1:
+```
+Scenario 1: Value from a file is displayed
+ Given an 'input.txt' file with an integer value in it
+   And console terminal ready
+ When the App runs
+ Then the integer value from 'input.txt' should
+      be shown on the terminal console
+```
 
 ----
 
@@ -382,11 +389,11 @@ int main() {
 
 ##Concepts to the rescue? (C++2X?)
 
-| | | |
-|-|-|-|
-|Concepts lite     | Constrating templates        | [http://www.open-std.org/.../n3580.pdf](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) |
-|Virtual concepts  | Type-erasure                 | [https://github.com/.../VirtualConcepts.pdf](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) |
-|Static reflection | Fakes/Stubs/Mocks generation | [www.open-std.org/.../p0194r0.pdf](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf) |
+| | |
+|-|-|
+|[Concepts lite](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) | Constrating templates |
+|[Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf)  | Type-erasure |
+|[Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf) | Fakes/Stubs/Mocks generation |
 
 ----
 
@@ -542,10 +549,8 @@ int main() {
 | | |
 |-|-|
 |Static factories | MUST GO! |
-|Abstract factories | Okay as long as injected |
-|Smart factories/Assisted injection | Even better, inject some object up-front and some at run-time |
-
-| | | |
+|Abstract factories | Okay as long as they are injected |
+|Smart factories/Assisted injection | Even better, inject some objects up-front and some at run-time later on|
 
 ----
 
@@ -611,8 +616,6 @@ int main() {
 };
 ```
 
-
-
 ----
 
 ##Manual DI Facts
@@ -658,7 +661,32 @@ int main() {
 
 ----
 
-##[Boost].DI - Removing the wiring mess
+##[Boost].DI - API
+
+###Injector
+```cpp
+template<class... TDeps> requires boundable<TDeps...>()
+class injector {
+public:
+  explicit injector(TDeps&&...) noexcept;
+  injector(injector&&) = default;
+  injector& operator=(injector&&) = default;
+
+  template<class T> requires creatable<T>()
+  constexpr T create() const;
+};
+```
+
+###Make injector
+```cpp
+template<class TConfig = di::config, class... TDeps>
+  requires configurable<TConfig>() && boundable<TDeps...>()
+auto make_injector(TDeps&&...) noexcept;
+```
+
+----
+
+##[Boost].DI - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -717,7 +745,7 @@ return make_unique<App>(...);
 
 ----
 
-##Benchmarks (GCC-6/Java8)
+##[Boost].DI - Benchmarks (GCC-6/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -755,31 +783,6 @@ note 'create<App>' has been explicitly marked deprecated here
 error: inline function 'abstract_type<IViewer>::is_not_bound::error'
  error(_ = "type is not bound, did you forget to add:
            'di::bind<interface>.to<implementation>()'?");
-```
-
-----
-
-##[Boost].DI - API
-
-###Injector
-```cpp
-template<class... TDeps> requires boundable<TDeps...>()
-class injector {
-public:
-  explicit injector(TDeps&&...) noexcept;
-  injector(injector&&) = default;
-  injector& operator=(injector&&) = default;
-
-  template<class T> requires creatable<T>()
-  constexpr T create() const;
-};
-```
-
-###Make injector
-```cpp
-template<class TConfig = di::config, class... TDeps>
-  requires configurable<TConfig>() && boundable<TDeps...>()
-auto make_injector(TDeps&&...) noexcept;
 ```
 
 ----
@@ -837,15 +840,22 @@ int main() {
 
 ###Let's change App constructor
   
+#####Before
 ```cpp
-Before                                | After
---------------------------------------+----------------------------------------------------
-App(Reader&& reader, Viewer&& viewer) | App(Viewer& viewer, std::unique_ptr<Reader> reader)
-  : reader(std::move(reader))         |  : viewer(viewer)
-  , viewer(std::move(viewer))         |  , reader(std::move(reader))
-{}                                    | {}
+App(Reader&& reader, Viewer&& viewer)
+  : reader(std::move(reader))
+  , viewer(std::move(viewer))
+{ }
 ```
-<!-- .element: style="margin-left:-3%; width:112%" -->
+
+#####After
+```cpp
+App(Viewer& viewer, std::unique_ptr<Reader> reader)
+ : viewer(viewer)
+ , reader(std::move(reader))
+{}
+
+```
 
 ----
 
@@ -872,9 +882,23 @@ int main() {
 
 ##Implementing features by wiring
 
-Scenario 2
-If command line 
-New Scenario
+```
+Scenario 2: Value from the input file is displayed on the console
+ Given an 'input.txt' file with an integer value in it
+   And the first command line argument equals to "ConsoleViewer"
+ When the App runs
+ Then the integer value from 'input.txt' should
+      be shown on the terminal console
+```
+
+```
+Scenario 3: Value from the input file is displayed on the QtWindow
+ Given an 'input.txt' file with an integer value in it
+   And the first command line argument equals to "QtViewer"
+ When the App runs
+ Then the integer value from 'input.txt' should
+      be shown on the Qt Window
+```
 
 ----
 
@@ -915,9 +939,9 @@ const auto config = [](std::string_view view) {
   return di::make_injector(
      di::bind<IReader>.to<FileReader>(),
      di::bind<IViewer>.to([&](const auto& injector) {
-       if (argv[1] == "QtViewer") {
+       if (view == "QtViewer") {
           return injector.create<QtViewer&>();
-       } else if (argv[1] == "ConsoleViewer") {
+       } else if (view == "ConsoleViewer") {
           return injector.create<ConsoleViewer&>();
        }
      })
@@ -934,7 +958,7 @@ int main(int argc, char** argv) {
 
 ----
 
-###What about functional DI? (V8)
+##What about functional DI? (V8)
 
 ```cpp
 using fview = std::function<void(int)>;
@@ -962,7 +986,7 @@ const auto consoleView = [](int value) {
 
 ----
 
-###What about functional DI? (V8)
+##What about functional DI? (V8)
 
 ```cpp
 class App {
@@ -998,7 +1022,7 @@ injector.create<App>().run();
 * Automatic mocks injection
   * Creates and inject mocks automatically
 * Serialization
-  * Serialize all POD's in the App
+  * Serialize POD's in the App
 * Dependencies diagram generation
 
 http://boost-experimental.github.io/di
