@@ -49,7 +49,7 @@ C++ London Feb-2017
 
 #Boost your design with dependency injection
 
-Kris Jusiak
+Kris Jusiak, Quantlab
 
 ---
 
@@ -64,9 +64,9 @@ Kris Jusiak
     * Naive
     * Policy Design
     * Static Polymorphism
+    * Virtual Concepts (C++2X)
+    * Functional approach
     * Dynamic Polymorphism
-      * Static factory
-    * Concepts (C++2X)
 * Dependency Injection
   * [Boost].DI
 * Summary
@@ -241,7 +241,7 @@ int main() {
 
 ----
 
-##There we have it - Dependency Injection (DI)
+##There you have it - Dependency Injection (DI)
 
 > "Don't call us, we'll call you", Hollywood principle
 
@@ -297,7 +297,7 @@ int main() {
 
 ----
 
-##Let's make it more open by using static polymorphism (V4)
+##Let's make it a bit less generic with static polymorphism (V4)
 ####Curiously recurring template pattern (CRTP)
 
 ```cpp
@@ -397,7 +397,66 @@ int main() {
 
 ----
 
-##Let's make it more open by using dynamic polymorphism (V5)
+##Functional DI for fun and profit? (V5)
+
+```cpp
+using fview = std::function<void(int)>;
+using fread = std::function<int()>;
+```
+
+```cpp
+const auto fileRead = [](std::string_view path) {
+  return [=] {
+    auto value = 0;
+    {
+      std::fstream file{path};
+      file >> value;
+    }
+    return value;
+  };
+};
+```
+
+```cpp
+const auto consoleView = [](int value) {
+  std::cout << value << '\n';
+};
+```
+
+----
+
+##Functional DI for fun and profit? (V5)
+
+```cpp
+class App {
+  fview view;
+  fread read;
+
+ public:
+   App(const fview& view, const fread& read)
+     : view(view), read(read)
+   { }
+
+   void run() {
+     view(read());
+   }
+};
+```
+
+```cpp
+const auto injector = di::make_injector(
+    di::bind<fview>.to(consoleView)
+  , di::bind<fread>.to(fileRead("input.txt"))
+);
+
+injector.create<App>().run();
+```
+
+----
+
+----
+
+##Object oriented design with dynamic polymorphism (V6)
 
 ```cpp
 class IReader {
@@ -417,7 +476,7 @@ public:
 
 ----
 
-##Let's make it more open by using dynamic polymorphism (V5)
+##Object oriented design with dynamic polymorphism (V6)
 
 ```cpp
 class IViewer {
@@ -441,7 +500,7 @@ class ConsoleViewer final : public IViewer {
 
 ----
 
-##Let's make it more open by using dynamic polymorphism (V5)
+##Object oriented design with dynamic polymorphism (V6)
 
 ```cpp
 class App {
@@ -467,7 +526,7 @@ int main() {
 
 ----
 
-##Let's make it more open by using dynamic polymorphism (V5)
+##Object oriented design with dynamic polymorphism (V6)
 
 * (+) Still does the job
 * (-) We can't test App easily
@@ -512,7 +571,7 @@ struct ViewerFactory {
 
 ----
 
-##Let's inject using static factory (V6)
+##Let's inject using static factory (V7)
 
 ```cpp
 class App {
@@ -534,7 +593,7 @@ int main() {
 
 ----
 
-##Let's inject using static factory (V6)
+##Let's inject using static factory (V7)
 
 * (+) Still does the job
 * (+) We can test it in isolation (including App) but it's hard
@@ -554,7 +613,7 @@ int main() {
 
 ----
 
-##Let's inject using Manual DI (V7)
+##Let's inject using Manual DI (V8)
 
 ```cpp
 class IReader; class FileReader;
@@ -587,7 +646,7 @@ int main() {
 
 ----
 
-##Let's inject using Manual DI (V7)
+##Let's inject using Manual DI (V8)
 
 ![app](images/app.png)
 
@@ -645,7 +704,6 @@ int main() {
 ###Simplify/Remove the wiring mess
 =>
 ### [Boost].DI
-
 
 ==============================================================================
 
@@ -745,7 +803,7 @@ return make_unique<App>(...);
 
 ----
 
-##[Boost].DI - Benchmarks (GCC-6/Java8)
+##[Boost].DI - Benchmarks (GCC-7/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -925,9 +983,9 @@ public:
 ```
 
 ```cpp
-QtViewer(witdth{500}, height{800}); // Okay
-QtViewer(height{500}, width{800});  // Compile error, YAY
-QtViewer(500, 800);                 // Compile error, YAY
+QtViewer(width{500}, height{800}); // Okay
+QtViewer(height{500}, width{800}); // Compile error, YAY
+QtViewer(500, 800);                // Compile error, YAY
 ```
 
 ----
@@ -940,9 +998,9 @@ const auto config = [](std::string_view view) {
      di::bind<IReader>.to<FileReader>(),
      di::bind<IViewer>.to([&](const auto& injector) {
        if (view == "QtViewer") {
-          return injector.create<QtViewer&>();
+          return std::make_unique<QtViewer>(width{1024}, height{768});
        } else if (view == "ConsoleViewer") {
-          return injector.create<ConsoleViewer&>();
+          return std::make_unique<ConsoleViewer>();
        }
      })
   );
@@ -958,74 +1016,18 @@ int main(int argc, char** argv) {
 
 ----
 
-##What about functional DI? (V8)
-
-```cpp
-using fview = std::function<void(int)>;
-using fread = std::function<int()>;
-```
-
-```cpp
-const auto fileRead = [](std::string_view path) {
-  return [=] {
-    auto value = 0;
-    {
-      std::fstream file{path};
-      file >> value;
-    }
-    return value;
-  };
-};
-```
-
-```cpp
-const auto consoleView = [](int value) {
-  std::cout << value << '\n';
-};
-```
-
-----
-
-##What about functional DI? (V8)
-
-```cpp
-class App {
-  fview view;
-  fread read;
-
- public:
-   App(const fview& view, const fread& read)
-     : view(view), read(read)
-   { }
-
-   void run() {
-     view(read());
-   }
-};
-```
-
-```cpp
-const auto injector = di::make_injector(
-    di::bind<fview>.to(consoleView)
-  , di::bind<fread>.to(fileRead("input.txt"))
-);
-
-injector.create<App>().run();
-```
-
-----
-
 ##[Boost].DI - more features
 
-* Policies
-  * Example - Disallow passing by raw pointer without markup ownership explicitly 
+* Policies 
+  * Compile-time limitations for types (ex. disallow passing pointers without explicit ownership) 
+  * Run-time types visitor (ex. logging)
 * Automatic mocks injection
   * Creates and inject mocks automatically
 * Serialization
   * Serialize POD's in the App
 * Dependencies diagram generation
 
-http://boost-experimental.github.io/di
+http://boost-experimental.github.io/di/extensions
 
 ==============================================================================
 
