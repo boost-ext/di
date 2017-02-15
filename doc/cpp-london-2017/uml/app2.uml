@@ -1,7 +1,7 @@
 @startuml
 
-"Viewer" : show(T) : void
-"Reader" : read() : T
+"Viewer" : show(int) : void
+"Reader" : read() : int
 
 "App" *.. "Reader"
 "App" *.. "Viewer"
@@ -9,4 +9,3 @@
 "App" : run() : void
 
 @enduml
-
