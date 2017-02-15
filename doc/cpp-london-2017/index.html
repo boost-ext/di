@@ -15,10 +15,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-    <link rel="stylesheet" href="css/theme/league.css" id="theme">
+        <link rel="stylesheet" href="css/theme/league.css" id="theme">
 
-		<!-- Code syntax highlighting -->
-    <link rel="stylesheet" href="lib/css/zenburn.css">
+            <!-- Code syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -60,15 +60,13 @@ Kris Jusiak, Quantlab
 ##Agenda
 
 * In search of the best design
-  * Solutions
-    * Naive
-    * Policy Design
-    * Static Polymorphism
-    * Virtual Concepts (C++2X)
-    * Functional approach
-    * Dynamic Polymorphism
-* Dependency Injection
-  * [Boost].DI
+    * God object, Single responsibility, Static factories, Constructor injection
+    * Policy design, Static polymorphism, Virtual concepts (C++2X)
+    * Functional design, Type erasure, Dynamic polymorphism (Object Oriented design)
+* [[Boost].DI](https://github.com/boost-experimental/di)
+    * Overview
+    * Showcase
+    * Testing
 * Summary
 
 ----
@@ -77,7 +75,7 @@ Kris Jusiak, Quantlab
 
 ---
 
-* ###We will focus on simple example
+* ###We will focus on a simple example
 ###but let's think large scale (big team projects)
 
 ==============================================================================
@@ -97,31 +95,54 @@ Scenario 1: Value from a file is displayed
 
 #In search of the best design!
 
-* Loosely coupeled
-* Testable
+* Loosely coupled code
+* Testable code
 
 ----
 
-## KISS - ~~Keep it simple~~, STUPID
+## KISS - ~~Keep it simple~~, STUPID (V0)
+
+```cpp
+class App { // God object - does too much!
+  void run() {
+    auto value = 0;
+    {
+      std::ifstream file{"input.txt"};
+      assert(file.good());
+      file >> value;
+    }
+    std::cout << value << '\n';
+  }
+};
+```
 
 ```cpp
 int main() {
-  auto value = 0;
-  {
-    std::fstream file{"input.txt"};
-    file >> value;
-  }
-  std::cout << value << '\n';
+    App{}.run();
 }
 ```
 
+----
+
+## God object (V0)
+
+![app](images/app0.png)
+
 * (+) Does the job?
 * (-) Hard to extend/maintain
-* (-) Hard to test, do TDD and/or BDD
+* (-) Hard to test (TDD/BDD)
 
 ----
 
-##Good practises are good practices for a reason
+##Composition Root
+
+> Unique location in an application where modules are composed together
+
+```cpp
+int main() {
+  App{}.run();
+}
+```
 
 ----
 
@@ -129,8 +150,8 @@ int main() {
 
 ```cpp
 class Reader {
-  static constexpr auto name = "input.txt";
-  std::fstream file{name};
+  static constexpr auto path = "input.txt";
+  std::ifstream file{path};
 
 public:
   auto read() {
@@ -175,7 +196,7 @@ int main() {
 
 ##Let's introduce some abstractions (V1)
 
-![app0](images/app0.png)
+![app](images/app2.png)
 
 * (+) Still does the job
 * (+/-) We can somewhat test it in isolation (can't test the App)
@@ -183,9 +204,50 @@ int main() {
 
 ----
 
-##Composition Root
+##Single responsibility principle
 
-> Unique location in an application where modules are composed together
+> "A class should have only one reason to change" Unclue Bob
+
+----
+
+##Let's fix it by using static factories? (V2)
+
+```cpp
+class IReader; class FileReader;
+class IViewer; class ConsoleViewer;
+```
+
+```cpp
+struct ReaderFactory {
+  static auto create(std::string_view input) {
+    return std::make_unique<FileReader>(input);
+  }
+};
+```
+
+```cpp
+struct ViewerFactory {
+  static auto create() {
+    return std::make_unique<ConsoleViewer>();
+  }
+};
+```
+
+----
+
+##Let's fix it by using static factories? (V2)
+
+```cpp
+class App {
+public:
+  void run() {
+    ViewerFactory::create()->show(
+      ReaderFactory::create("input.txt")->read()
+    );
+  }
+
+};
+```
 
 ```cpp
 int main() {
@@ -195,7 +257,19 @@ int main() {
 
 ----
 
-##Let's inject some abstractions (V2)
+##Let's fix it by using static factories? (V2)
+
+* (+) Still does the job
+* (+) We can test it in isolation but it's hard
+* (+) Reader/Viewer are still tightly coupled to App
+* (-) Can't inject different Readers/Viewers
+* (-) Can't test factories easily
+
+> Static factories MUST GO!
+
+----
+
+##Let's fix it by constructor injection? (V3)
 
 ```cpp
 class Reader;
@@ -224,15 +298,14 @@ int main() {
   Reader reader;
   Viewer viewer;
   App app{std::move(reader), std::move(viewer)};
-
 }
 ```
 
 ----
 
-##Let's inject some abstractions (V2)
+##Let's fix it by constructor injection? (V3)
 
-![app1](images/app1.png)
+![app](images/app1.png)
 
 * (+) Still does the job
 * (+) We can test it in isolation (including App) but it's hard
@@ -244,14 +317,21 @@ int main() {
 ##There you have it - Dependency Injection (DI)
 
 > "Don't call us, we'll call you", Hollywood principle
+> Separates creation logic from business logic
 
 -
 
-> Separates creation logic from business logic
+###Wiring - Create and pass required dependencies
+```cpp
+Reader reader{...};
+Viewer viewer{...};
+...
+App app{...}
+```
 
 ----
 
-##Let's make it more generic - Policy Design / Duck Typing (V3)
+##Let's fix it by templates - Policy Design / Duck Typing (V4)
 
 ```cpp
 class Reader;
@@ -277,12 +357,13 @@ public:
 
 ----
 
+##Let's fix it by templates - Policy Design / Duck Typing (V4)
+
 ```cpp
 int main() {
   Reader reader;
   Viewer viewer;
-  App<Reader, Viewer> app{reader, viewer};
-  app.run();
+  App<Reader, Viewer>{reader, viewer}.run();
 }
 ```
 
@@ -293,38 +374,106 @@ int main() {
 * (-) We are limited to header files
 * (-) Slower compilation times (Point of instantiation - POI)
 * (-) Code bloat (executable size)
+* (-) Template are contagious
 * (-) Horrible error messages
+
+> template<class T, class Allocator = std::allocator<T>> class vector;
 
 ----
 
-##Let's make it a bit less generic with static polymorphism (V4)
+##Template argument deduction for class templates (C++17)
+
+###C++14
+```cpp
+  App<Reader, Viewer>{reader, viewer}.run();
+```
+
+###C++17
+```cpp
+  App{reader, viewer}.run(); // templates are still there
+                             // just deduced from parameters
+```
+
+----
+
+##Let's interface it by static polymorphism (V5)
 ####Curiously recurring template pattern (CRTP)
 
 ```cpp
-template<class T> 
-struct Reader {
-  void read() {
-    static_cast<T*>(this)->read(value);
-  }
-}
+template <class T>
+class Reader {
+  int read_impl() { return {}; }
+public:
+  int read() { return static_cast<T*>(this)->read_impl(); }
+};
 ```
 
 ```cpp
-template<class T> 
-struct Viewer {
-  void show(int value) {
-    static_cast<T*>(this)->show(value);
+class FileReader : public Reader<FileReader> {
+  std::ifstream file;
+public:
+  explicit FileReader(std::string_view path) : file(path) {
+      assert(file.good());
   }
-}
-```
 
-```cpp
-class App {
-  // TODO
+  int read_impl() {
+    auto value = 0;
+    file >> value;
+    return value;
+  }
 };
 ```
 
 ----
+
+##Let's interface it by static polymorphism? (V5)
+
+```cpp
+template <class T>
+class Viewer {
+  void show_impl(int) {}
+public:
+  void show(int value) { static_cast<T*>(this)->show_impl(value); }
+};
+```
+
+```cpp
+class ConsoleViewer : public Viewer<ConsoleViewer> {
+public:
+  void show_impl(int value) { std::cout << value << std::endl; }
+};
+```
+
+----
+
+##Let's interface it by static polymorphism? (V5)
+
+```cpp
+template <class TReader, class TViewer>
+class App {
+  TReader& reader;
+  TViewer& viewer;
+
+public:
+  App(TReader& reader, TViewer& viewer) 
+   : reader(reader), viewer(viewer) 
+  {}
+
+  void run() { viewer.show(reader.read()); }
+};
+```
+
+```cpp
+int main() {
+  FileReader reader{"input.txt"};
+  ConsoleViewer viewer{};
+  App{reader, viewer}.run();
+}
+```
+
+----
+
+![app](images/app3.png)
 
 * (+) Still does the job
 * (+) We can test it in isolation (including App) but it's hard
@@ -337,7 +486,7 @@ class App {
 
 ----
 
-##Concepts to the rescue? (C++2X?)
+##Virtual Concepts to the rescue? (C++2X?)
 
 ```cpp
 template <class T>
@@ -359,7 +508,7 @@ concept bool Viewable() {
 
 ----
 
-##Concepts to the rescue? (C++2X?)
+##Virtual Concepts to the rescue? (C++2X?)
 
 ```cpp
 class App {
@@ -367,7 +516,8 @@ class App {
   virtual Viewable viewer; // type erasure
 
 public:
-  App(Readable reader, Viewable viewer) // template<Readable...
+  // implies templat<Readable T1, Viewable T2> App
+  App(Readable reader, Viewable viewer)
     : reader(reader), viewer(viewer) {}
 
   void run() {
@@ -387,7 +537,16 @@ int main() {
 
 ----
 
-##Concepts to the rescue? (C++2X?)
+##Virtual Concepts to the rescue? (C++2X?)
+
+* (+) Still does the job
+* (+) We can test it in isolation (including App) but it's hard
+* (+) Reader/Viewer are not tightly coupled to App
+* (+) Can't inject different Readers/Viewers
+* (-) We are limited to header files
+* (-) Slower compilation times (Point of instantiation - POI)
+* (-) Bigger executable size
+* (-) Horrible error messages
 
 | | |
 |-|-|
@@ -397,7 +556,11 @@ int main() {
 
 ----
 
-##Functional DI for fun and profit? (V5)
+##No templates solution, please?
+
+----
+
+##Functional design for fun and profit? (V6)
 
 ```cpp
 using fview = std::function<void(int)>;
@@ -409,7 +572,7 @@ const auto fileRead = [](std::string_view path) {
   return [=] {
     auto value = 0;
     {
-      std::fstream file{path};
+      std::ifstream file{path};
       file >> value;
     }
     return value;
@@ -425,7 +588,7 @@ const auto consoleView = [](int value) {
 
 ----
 
-##Functional DI for fun and profit? (V5)
+##Functional design for fun and profit? (V6)
 
 ```cpp
 class App {
@@ -444,19 +607,110 @@ class App {
 ```
 
 ```cpp
-const auto injector = di::make_injector(
-    di::bind<fview>.to(consoleView)
-  , di::bind<fread>.to(fileRead("input.txt"))
-);
-
-injector.create<App>().run();
+int main() {
+  App{fileRead, consoleView}.run();
+}
 ```
 
 ----
 
+* (+) Still does the job
+* (+) We can test it in isolation (including App) but it's hard
+* (+) Reader/Viewer are not tightly coupled to App
+* (+) Can't inject different Readers/Viewers
+* (-) We are limited to header files
+* (-) Slower compilation times (Point of instantiation - POI)
+* (-) Bigger executable size
+* (-) Horrible error messages
+
 ----
 
-##Object oriented design with dynamic polymorphism (V6)
+##Let's erase the type - Type erasure - (V7)?
+
+
+```cpp
+BOOST_TYPE_ERASURE_MEMBER((has_read), read, 0)
+BOOST_TYPE_ERASURE_MEMBER((has_show), show, 1)
+```
+
+```cpp
+using Reader = mpl::vector<
+  has_read<int()>
+, type_erasure::copy_constructible<>
+>;
+
+using Viewer = mpl::vector<
+  has_show<void(int)>
+, type_erasure::copy_constructible<>
+>;
+```
+
+----
+
+##Let's erase the type - Type erasure - (V7)?
+
+```cpp
+struct FileReader {
+  explicit FileReader(std::string_view path) : file{path} {
+    assert(file.good()); 
+  }
+
+  int read() {
+    auto value = 0;
+    file >> value;
+    return value;
+  }
+
+  std::ifstream file;
+};
+```
+
+```cpp
+struct ConsoleViewer {
+  void show(int value) { std::cout << value << std::endl; }
+};
+```
+
+----
+
+##Let's erase the type - Type erasure - (V7)?
+
+```cpp
+struct App {
+  type_erasure::any<Reader> reader;
+  type_erasure::any<Viewer> viewer;
+
+  App(type_erasure::any<Reader> reader,
+     type_erasure::any<Viewer> viewer)
+    : reader(reader), viewer(viewer)
+  { }
+
+  void run() { viewer.show(reader.read()); }
+};
+```
+
+```cpp
+int main() {
+  FileReader reader{"input.txt"};
+  ConsoleViewer viewer{};
+  App{reader, viewer}.run();
+}
+```
+
+----
+
+* (+) Still does the job
+* (+) We can test it in isolation (including App) but it's hard
+* (+) Reader/Viewer are not tightly coupled to App
+* (+) Can't inject different Readers/Viewers
+* (-) We are limited to header files
+* (-) Slower compilation times (Point of instantiation - POI)
+* (-) Bigger executable size
+* (-) Horrible error messages
+
+----
+
+##Object oriented design with dynamic polymorphism (V8)
 
 ```cpp
 class IReader {
@@ -476,7 +730,7 @@ public:
 
 ----
 
-##Object oriented design with dynamic polymorphism (V6)
+##Object oriented design with dynamic polymorphism (V8)
 
 ```cpp
 class IViewer {
@@ -494,131 +748,7 @@ class ConsoleViewer final : public IViewer {
 
 ----
 
-##Single responsibility principle
-
-> "A class should have only one reason to change" Unclue Bob
-
-----
-
-##Object oriented design with dynamic polymorphism (V6)
-
-```cpp
-class App {
-  std::unique_ptr<IReader<int>> reader =
-    std::make_uniqe<FileReader>("input.txt");
-
-  std::unique_ptr<IViewer<int>> viewer =
-    std::make_uniqe<ConsoleViewer>();
-
-public:
-  void run() {
-    viewer->show(reader->read());
-  }
-
-};
-```
-
-```cpp
-int main() {
-  App{}.run();
-}
-```
-
-----
-
-##Object oriented design with dynamic polymorphism (V6)
-
-* (+) Still does the job
-* (-) We can't test App easily
-* (-) Reader/Viewer are tightly coupled to App again
-* (-) Can't inject different Readers/Viewers again
-* (-) Performance hit due to virtual dispatch?
-
-> Did we make a step backwards?
-
-----
-
-##Dynamic Polymorphism - performance
-####final keyword and Devirtualization
-
-![final](images/final.png)
-https://godbolt.org/g/e8olYN
-
-----
-
-##Let's inject using static factory (V6)
-
-```cpp
-class IReader; class FileReader;
-class IViewer; class ConsoleViewer;
-```
-
-```cpp
-struct ReaderFactory {
-  static auto create(std::string_view input) {
-    return std::make_unique<FileReader>(input);
-  }
-};
-```
-
-```cpp
-struct ViewerFactory {
-  static auto create() {
-    return std::make_unique<ConsoleViewer>();
-  }
-};
-```
-
-----
-
-##Let's inject using static factory (V7)
-
-```cpp
-class App {
-public:
-  void run() {
-    ViewerFactory::create()->show(
-      ReaderFactory::create("input.txt")->read()
-    );
-  }
-
-};
-```
-
-```cpp
-int main() {
-  App{}.run();
-}
-```
-
-----
-
-##Let's inject using static factory (V7)
-
-* (+) Still does the job
-* (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are tightly coupled to App again
-* (+) Can inject different Readers/Viewers
-* (+/-) Performance
-* (-) It's tightly coupled to the static factories
-* (-) Can't test factories easily
-
-----
-
-| | |
-|-|-|
-|Static factories | MUST GO! |
-|Abstract factories | Okay as long as they are injected |
-|Smart factories/Assisted injection | Even better, inject some objects up-front and some at run-time later on|
-
-----
-
-##Let's inject using Manual DI (V8)
-
-```cpp
-class IReader; class FileReader;
-class IViewer; class ConsoleViewer;
-```
+##Object oriented design with dynamic polymorphism (V8)
 
 ```cpp
 class App {
@@ -637,73 +767,53 @@ public:
 
 ```cpp
 int main() {
-  auto reader = std::make_unique<FileReader>("input.txt"); // wire
-  auto viewer = std::make_unique<ConsoleViewer>()); // wire
+  auto reader = FileReader("input.txt");
+  auto viewer = ConsoleViewer{};
 
-  App{*reader, *viewer}.run(); // inject
+  App{reader, viewer}.run();
 }
 ```
 
 ----
 
-##Let's inject using Manual DI (V8)
+##Object oriented design with dynamic polymorphism (V8)
 
-![app](images/app.png)
+![app](images/app3.png)
 
 * (+) Still does the job
 * (+) We can easily do TDD/BDD (mocking)
 * (+) We can inject diff readers/writers (loosely coupled)
-* (-) We introduced a wiring mess (boilerplate code)
+* (-) Performance hit due to virtual dispatch?
 
 ----
 
-##Testing
+##Dynamic Polymorphism - performance
+####final keyword and devirtualization
 
-> "If you liked it then you should have put a test on it", Beyonce rule
-
-```cpp
-"should show read text"_test = [] {
-  constexpr auto value = 42;
-
-  auto [sut, mocks] = make<App>();
-
-  InSequence sequence;
-  EXPECT_CALL(mocks<IReader>, read()).WillOnce(Return(value));
-  EXPECT_CALL(mocks<IViewer>, show(value));
-
-  sut.run();
-};
-```
+![final](images/final.png)
+https://godbolt.org/g/e8olYN
 
 ----
 
-##Manual DI Facts
+##Manual DI - Problems
 
 * ###Single Responsibility
   =>
     * ###A lot of classes
     =>
-        * ###A lot wiring
+      * ###Wiring Mess
+      =>
+        * ###Hard to maintain + programers are lazy
         =>
-            * ###Wiring Mess
-
-----
-
-##Manual DI Facts
-
-* ###Wiring mess
-  =>
-    * ###Hard to maintain
-    =>
-        * ###Workarounds
+          * ###Hacks/Workarounds
 
 -----
 
 ##Solution
 
-###Simplify/Remove the wiring mess
+###Simplify/Remove the wiring mess (Automate the injection)
 =>
-### [Boost].DI
+### [[Boost].DI](https://github.com/boost-experimental/di)
 
 ==============================================================================
 
@@ -845,7 +955,7 @@ error: inline function 'abstract_type<IViewer>::is_not_bound::error'
 
 ----
 
-##Let's come back to our example (V2)
+##Let's come back to our example (V3)
 
 ###Automatic Injection
 
@@ -875,7 +985,7 @@ public:
 
 ##Automatic Injection
 
-###Manual DI
+###Manual DI - Wiring mess
 ```cpp
 int main() {
   Reader reader;
@@ -919,7 +1029,7 @@ App(Viewer& viewer, std::unique_ptr<Reader> reader)
 
 ##Refactoring for free!
 
-###Manual DI
+###Manual DI - Wiring mess
 ```cpp
 int main() {
   auto reader = std::make_unique<Reader>{};
@@ -1016,22 +1126,71 @@ int main(int argc, char** argv) {
 
 ----
 
-##[Boost].DI - more features
+##Testing
 
-* Policies 
-  * Compile-time limitations for types (ex. disallow passing pointers without explicit ownership) 
-  * Run-time types visitor (ex. logging)
-* Automatic mocks injection
-  * Creates and inject mocks automatically
-* Serialization
-  * Serialize POD's in the App
-* Dependencies diagram generation
+> "If you liked it then you should have put a test on it", Beyonce rule
 
-http://boost-experimental.github.io/di/extensions
+----
+
+##Test Driven Development (TDD) / Unit Tests
+
+```cpp
+"should show read text"_test = [] {
+  constexpr auto value = 42;
+
+  auto [sut, mocks] = make<App>(); // creates System Under Test
+                                   // and mocks
+
+  InSequence sequence;
+  EXPECT_CALL(mocks<IReader>(), read()).WillOnce(Return(value));
+  EXPECT_CALL(mocks<IViewer>(), show(value));
+
+  sut.run();
+};
+```
+
+----
+
+##Behaviour Driven Development (BDD) / Integration Tests
+
+```cpp
+"given input file, when runs, then print value from file"_test = [] {
+  {
+      std::fstream file{"input.txt"};
+      file << 42;
+  }
+  mocks_t mocks;
+  const auto injector = di::make_injector(
+    config(),
+    di::bind<IViewer>.to(GMock<IViewer>(mocks))
+  );
+
+  EXPECT_CALL(mocks<IViewer>(), show(42));
+
+  injector.create<App>().run();
+};
+```
+
+----
+
+##[Boost].DI - features
+
+* Core
+    * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
+* Extensions
+    * Automatic Mocks jnjection, Smart Factories, Assisted Injection, Xml Injection, Dependencies Diagram Generation, Automatic Serialization
+
+---
+
+[Examples](http://boost-experimental.github.io/di/examples) | [Extensions](http://boost-experimental.github.io/di/extensions)
 
 ==============================================================================
 
 ##Summary
+
+----
+
+##Good practises are good practices for a reason!
 
 ----
 
@@ -1067,13 +1226,13 @@ http://boost-experimental.github.io/di/extensions
 
 ##Dependency Injection
 
-* A powerful design pattern helping with creating
-  * Loosely Coupling
-  * Easy to test code (TDD)
+* A powerful design pattern helping with creating:
+  * Loosely coupled code
+  * Easy to test code (TDD/BDD)
 
 * [Boost].DI
-  * Removes wiring mess (boilerplate code)
-  * Simplify refactoring
+  * Removes/Cleanup the wiring mess (boilerplate code)
+  * Simplify refactoring (constructor parameters deduction)
   * Make testing easier (automatic mocks injection)
 
 ==============================================================================
@@ -1084,7 +1243,7 @@ http://boost-experimental.github.io/di/extensions
 | ------- | ------------- |
 | Documentation | http://boost-experimental.github.io/di |
 | Source Code | https://github.com/boost-experimental/di |
-| Try it online! | http://boost-experimental.github.io/di/try_it/index.html |
+| Try it online! | http://boost-experimental.github.io/di/try_it |
 |                | https://godbolt.org/g/dvjJFI |
 <!-- .element: style="margin-left:-13%; width:125%" -->
 
