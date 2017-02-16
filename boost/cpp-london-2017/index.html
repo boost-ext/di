@@ -130,7 +130,7 @@ int main() {
 ![app](images/app0.png)
 
 * (+) Does the job?
-* (-) Hard to extend/maintain
+* (-) Tightly coupled (hard to extend/maintain)
 * (-) Hard to test (TDD/BDD)
 
 ----
@@ -594,6 +594,8 @@ class App {
 ```
 
 ----
+
+##Functional design for fun and profit? (V6)
 
 ```cpp
 int main() {
@@ -1157,7 +1159,7 @@ int main(int argc, char** argv) {
   mocks_t mocks;
   const auto injector = di::make_injector(
     config(),
-    di::bind<IViewer>.to(GMock<IViewer>(mocks))
+    di::bind<IViewer>.to(GMock<IViewer>(mocks)) [di::override]
   );
 
   EXPECT_CALL(mocks<IViewer>(), show(42));
@@ -1217,7 +1219,7 @@ int main(int argc, char** argv) {
 
 ##Dependency Injection
 
-* A powerful design pattern helping with creating
+* A powerful design pattern helping with producing
   * Loosely coupled code
   * Easy to test code (TDD/BDD)
 
