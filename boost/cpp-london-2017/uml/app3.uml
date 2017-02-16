@@ -1,13 +1,13 @@
 @startuml
 
-"IViewer" : show(T) : void
-"IReader" : read() : T
+"IViewer" : show(int) : void
+"IReader" : read() : int
 
 "ConsoleViewer" -up-|> "IViewer"
-"ConsoleViewer" : show(T) : void
+"ConsoleViewer" : show(int) : void
 
-"ConsoleReader" -up-|> "IReader"
-"ConsoleReader" : read() : T
+"FileReader" -up-|> "IReader"
+"FileReader" : read() : int
 
 "App" ..> "IReader"
 "App" ..> "IViewer"

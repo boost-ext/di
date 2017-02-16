@@ -63,7 +63,7 @@ Kris Jusiak, Quantlab
     * God object, Single responsibility, Static factories, Constructor injection
     * Policy design, Static polymorphism, Virtual concepts (C++2X)
     * Functional design, Type erasure, Dynamic polymorphism (Object Oriented design)
-* [[Boost].DI](https://github.com/boost-experimental/di)
+* [Boost].DI
     * Overview
     * Showcase
     * Testing
@@ -75,7 +75,7 @@ Kris Jusiak, Quantlab
 
 ---
 
-* ###We will focus on a simple example
+###We will focus on a simple example
 ###but let's think large scale (big team projects)
 
 ==============================================================================
@@ -198,9 +198,8 @@ int main() {
 
 ![app](images/app2.png)
 
-* (+) Still does the job
 * (+/-) We can somewhat test it in isolation (can't test the App)
-* (-) Reader/Viewer tightly coupled to App
+* (-) Reader/Viewer tightly coupled to the App
 
 ----
 
@@ -259,9 +258,8 @@ int main() {
 
 ##Let's fix it by using static factories? (V2)
 
-* (+) Still does the job
 * (+) We can test it in isolation but it's hard
-* (+) Reader/Viewer are still tightly coupled to App
+* (+) Reader/Viewer are still tightly coupled to the App
 * (-) Can't inject different Readers/Viewers
 * (-) Can't test factories easily
 
@@ -307,9 +305,8 @@ int main() {
 
 ![app](images/app1.png)
 
-* (+) Still does the job
 * (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to App
+* (+) Reader/Viewer are not tightly coupled to the App
 * (-) Can't inject different Readers/Viewers
 
 ----
@@ -318,8 +315,6 @@ int main() {
 
 > "Don't call us, we'll call you", Hollywood principle
 > Separates creation logic from business logic
-
--
 
 ###Wiring - Create and pass required dependencies
 ```cpp
@@ -332,11 +327,6 @@ App app{...}
 ----
 
 ##Let's fix it by templates - Policy Design / Duck Typing (V4)
-
-```cpp
-class Reader;
-class Viewer;
-```
 
 ```cpp
 template<class TReader, class TViewer>
@@ -355,10 +345,6 @@ public:
 };
 ```
 
-----
-
-##Let's fix it by templates - Policy Design / Duck Typing (V4)
-
 ```cpp
 int main() {
   Reader reader;
@@ -367,17 +353,21 @@ int main() {
 }
 ```
 
-* (+) Still does the job
+----
+
+##Let's fix it by templates - Policy Design / Duck Typing (V4)
+
 * (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to App
-* (+) Can't inject different Readers/Viewers
-* (-) We are limited to header files
+* (+) Reader/Viewer are not tightly coupled to the App
+* (+) Can inject different Readers/Viewers
+* (-) Header files only
 * (-) Slower compilation times (Point of instantiation - POI)
 * (-) Code bloat (executable size)
-* (-) Template are contagious
-* (-) Horrible error messages
+* (-) Templates are contagious and give bad error messages
 
-> template<class T, class Allocator = std::allocator<T>> class vector;
+---
+
+STL example: `std::vector`
 
 ----
 
@@ -396,13 +386,13 @@ int main() {
 
 ----
 
-##Let's interface it by static polymorphism (V5)
-####Curiously recurring template pattern (CRTP)
+##Let's interface it by static polymorphism
+####Curiously recurring template pattern (CRTP) (V5)
 
 ```cpp
 template <class T>
 class Reader {
-  int read_impl() { return {}; }
+  int read_impl() { return {}; } // default
 public:
   int read() { return static_cast<T*>(this)->read_impl(); }
 };
@@ -413,7 +403,7 @@ class FileReader : public Reader<FileReader> {
   std::ifstream file;
 public:
   explicit FileReader(std::string_view path) : file(path) {
-      assert(file.good());
+    assert(file.good());
   }
 
   int read_impl() {
@@ -426,12 +416,12 @@ public:
 
 ----
 
-##Let's interface it by static polymorphism? (V5)
+##Let's interface it by static polymorphism (V5)
 
 ```cpp
 template <class T>
 class Viewer {
-  void show_impl(int) {}
+  void show_impl(int) {} // default
 public:
   void show(int value) { static_cast<T*>(this)->show_impl(value); }
 };
@@ -440,13 +430,13 @@ public:
 ```cpp
 class ConsoleViewer : public Viewer<ConsoleViewer> {
 public:
-  void show_impl(int value) { std::cout << value << std::endl; }
+  void show_impl(int value) { std::cout << value << '\n'; }
 };
 ```
 
 ----
 
-##Let's interface it by static polymorphism? (V5)
+##Let's interface it by static polymorphism (V5)
 
 ```cpp
 template <class TReader, class TViewer>
@@ -473,16 +463,12 @@ int main() {
 
 ----
 
-![app](images/app3.png)
+##Let's interface it by static polymorphism (V5)
 
-* (+) Still does the job
-* (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to App
-* (+) Can't inject different Readers/Viewers
-* (-) We are limited to header files
-* (-) Slower compilation times (Point of instantiation - POI)
-* (-) Bigger executable size
-* (-) Horrible error messages
+![app](images/app4.png)
+
+* (+) More explicit requirements / default behaviour
+* (-) Same as with Policy Design...
 
 ----
 
@@ -512,11 +498,11 @@ concept bool Viewable() {
 
 ```cpp
 class App {
-  virtual Readable reader; // stack, Small Buffer Optimization
+  virtual Readable reader; // stack, Small Buffer Optimization?
   virtual Viewable viewer; // type erasure
 
 public:
-  // implies templat<Readable T1, Viewable T2> App
+  // Same as template<Readable T1, Viewable T2>
   App(Readable reader, Viewable viewer)
     : reader(reader), viewer(viewer) {}
 
@@ -529,7 +515,7 @@ public:
 ```cpp
 int main() {
   Readable reader = FileReader{"input.txt"};
-  Viewable viwer = ConsoleViewer();
+  Viewable viewer = ConsoleViewer();
 
   App{reader, viewer}.run();
 }
@@ -539,14 +525,12 @@ int main() {
 
 ##Virtual Concepts to the rescue? (C++2X?)
 
-* (+) Still does the job
-* (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to App
-* (+) Can't inject different Readers/Viewers
-* (-) We are limited to header files
-* (-) Slower compilation times (Point of instantiation - POI)
-* (-) Bigger executable size
-* (-) Horrible error messages
+* (+) Explicit requirements/constraints (concepts)
+* (+) Removes most problems with Policy Design!
+* (-) A bit slower compilation times
+* (-) May allocate?
+
+-
 
 | | |
 |-|-|
@@ -606,26 +590,21 @@ class App {
 };
 ```
 
+----
+
 ```cpp
 int main() {
   App{fileRead, consoleView}.run();
 }
 ```
 
-----
-
-* (+) Still does the job
-* (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to App
-* (+) Can't inject different Readers/Viewers
-* (-) We are limited to header files
-* (-) Slower compilation times (Point of instantiation - POI)
-* (-) Bigger executable size
-* (-) Horrible error messages
+* (+) Powerful design
+* (-) std::function may allocate and causes code bloat
+* (-) Requires totally different approach
 
 ----
 
-##Let's erase the type - Type erasure - (V7)?
+##Let's erase the type - Type erasure - (V7)
 
 
 ```cpp
@@ -647,10 +626,12 @@ using Viewer = mpl::vector<
 
 ----
 
-##Let's erase the type - Type erasure - (V7)?
+##Let's erase the type - Type erasure - (V7)
 
 ```cpp
-struct FileReader {
+class FileReader {
+  std::ifstream file;
+public:
   explicit FileReader(std::string_view path) : file{path} {
     assert(file.good()); 
   }
@@ -660,28 +641,28 @@ struct FileReader {
     file >> value;
     return value;
   }
-
-  std::ifstream file;
 };
 ```
 
 ```cpp
-struct ConsoleViewer {
-  void show(int value) { std::cout << value << std::endl; }
+class ConsoleViewer {
+public:
+  void show(int value) { std::cout << value << '\n'; }
 };
 ```
 
 ----
 
-##Let's erase the type - Type erasure - (V7)?
+##Let's erase the type - Type erasure - (V7)
 
 ```cpp
-struct App {
+class App {
   type_erasure::any<Reader> reader;
   type_erasure::any<Viewer> viewer;
 
+public:
   App(type_erasure::any<Reader> reader,
-     type_erasure::any<Viewer> viewer)
+      type_erasure::any<Viewer> viewer)
     : reader(reader), viewer(viewer)
   { }
 
@@ -699,14 +680,17 @@ int main() {
 
 ----
 
-* (+) Still does the job
-* (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to App
-* (+) Can't inject different Readers/Viewers
-* (-) We are limited to header files
-* (-) Slower compilation times (Point of instantiation - POI)
-* (-) Bigger executable size
-* (-) Horrible error messages
+##Let's erase the type - Type erasure - (V7)
+
+* (+) Inhertiance is not required
+* (+) Stack based (Small Buffer Optimization)
+* (-) Macros
+* (-) Allocations
+* (-) Slower compilation times
+
+--
+
+STL example: `std::shared_ptr deleter`
 
 ----
 
@@ -752,7 +736,7 @@ class ConsoleViewer final : public IViewer {
 
 ```cpp
 class App {
-  IReader& reaer;
+  IReader& reader;
   IViewer& viewer;
 
 public:
@@ -780,9 +764,7 @@ int main() {
 
 ![app](images/app3.png)
 
-* (+) Still does the job
-* (+) We can easily do TDD/BDD (mocking)
-* (+) We can inject diff readers/writers (loosely coupled)
+* (+) Easy mocking for TDD/BDD
 * (-) Performance hit due to virtual dispatch?
 
 ----
@@ -797,13 +779,13 @@ https://godbolt.org/g/e8olYN
 
 ##Manual DI - Problems
 
-* ###Single Responsibility
+* ###Single Responsibility Principle
   =>
     * ###A lot of classes
     =>
       * ###Wiring Mess
       =>
-        * ###Hard to maintain + programers are lazy
+        * ###Hard to maintain + Lazy programers (99%)
         =>
           * ###Hacks/Workarounds
 
@@ -811,13 +793,14 @@ https://godbolt.org/g/e8olYN
 
 ##Solution
 
-###Simplify/Remove the wiring mess (Automate the injection)
+###Simplify/Remove the wiring mess
+  ####(Automate dependency injection)
 =>
 ### [[Boost].DI](https://github.com/boost-experimental/di)
 
 ==============================================================================
 
-##[Boost].DI
+##[[Boost].DI](https://github.com/boost-experimental/di)
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
@@ -829,7 +812,7 @@ https://godbolt.org/g/e8olYN
 
 ----
 
-##[Boost].DI - API
+##[[Boost].DI](https://github.com/boost-experimental/di) - API
 
 ###Injector
 ```cpp
@@ -854,7 +837,7 @@ auto make_injector(TDeps&&...) noexcept;
 
 ----
 
-##[Boost].DI - Hello World
+##[[Boost].DI](https://github.com/boost-experimental/di) - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -885,7 +868,7 @@ int main() {                                |      |
 
 ----
 
-##[Boost].DI - Performance
+##[[Boost].DI](https://github.com/boost-experimental/di) - Performance
 
 ```sh
 time $CXX -std=c++14 app.cpp # 0.092s
@@ -913,7 +896,7 @@ return make_unique<App>(...);
 
 ----
 
-##[Boost].DI - Benchmarks (GCC-7/Java8)
+##[[Boost].DI](https://github.com/boost-experimental/di) - Benchmarks (GCC-7/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -929,7 +912,7 @@ return make_unique<App>(...);
 
 ----
 
-##[Boost].DI - Compile-time errors
+##[[Boost].DI](https://github.com/boost-experimental/di) - Compile-time errors
 
 ```cpp
 const auto injector = di::make_injector(
@@ -955,7 +938,7 @@ error: inline function 'abstract_type<IViewer>::is_not_bound::error'
 
 ----
 
-##Let's come back to our example (V3)
+##[[Boost].DI](https://github.com/boost-experimental/di) - Let's come back to our example (V3)
 
 ###Automatic Injection
 
@@ -983,9 +966,9 @@ public:
 
 ----
 
-##Automatic Injection
+##[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Injection
 
-###Manual DI - Wiring mess
+####Manual DI - Wiring mess
 ```cpp
 int main() {
   Reader reader;
@@ -995,7 +978,7 @@ int main() {
 }
 ```
 
-###[Boost].DI
+####[Boost].DI
 ```cpp
 int main() {
   di::make_injector().create<App>().run();
@@ -1004,9 +987,9 @@ int main() {
 
 ----
 
-##Refactoring for free!
+##[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
 
-###Let's change App constructor
+###Let's change `App` constructor
   
 #####Before
 ```cpp
@@ -1027,7 +1010,7 @@ App(Viewer& viewer, std::unique_ptr<Reader> reader)
 
 ----
 
-##Refactoring for free!
+##[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
 
 ###Manual DI - Wiring mess
 ```cpp
@@ -1048,7 +1031,7 @@ int main() {
 
 ----
 
-##Implementing features by wiring
+##[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
 
 ```
 Scenario 2: Value from the input file is displayed on the console
@@ -1065,13 +1048,13 @@ Scenario 3: Value from the input file is displayed on the QtWindow
    And the first command line argument equals to "QtViewer"
  When the App runs
  Then the integer value from 'input.txt' should
-      be shown on the Qt Window
+      be shown on the QtWindow
 ```
 
 ----
 
-##Implementing features by wiring
-###Weak vs Strong interface
+##[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+####Weak vs Strong interface
 
 ```cpp
 class QtViewer {
@@ -1100,8 +1083,8 @@ QtViewer(500, 800);                // Compile error, YAY
 
 ----
 
-##Implementing features by wiring
-###Configuration
+##[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+####Configuration
 ```cpp
 const auto config = [](std::string_view view) {
   return di::make_injector(
@@ -1132,7 +1115,9 @@ int main(int argc, char** argv) {
 
 ----
 
-##Test Driven Development (TDD) / Unit Tests
+## [[Boost].DI](https://github.com/boost-experimental/di) - Test Driven Development (TDD) 
+
+###Unit Tests
 
 ```cpp
 "should show read text"_test = [] {
@@ -1151,7 +1136,9 @@ int main(int argc, char** argv) {
 
 ----
 
-##Behaviour Driven Development (BDD) / Integration Tests
+##[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD) 
+
+###Integration Tests
 
 ```cpp
 "given input file, when runs, then print value from file"_test = [] {
@@ -1173,7 +1160,7 @@ int main(int argc, char** argv) {
 
 ----
 
-##[Boost].DI - features
+##[[Boost].DI](https://github.com/boost-experimental/di) - features
 
 * Core
     * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
@@ -1230,7 +1217,7 @@ int main(int argc, char** argv) {
   * Loosely coupled code
   * Easy to test code (TDD/BDD)
 
-* [Boost].DI
+* [[Boost].DI](https://github.com/boost-experimental/di)
   * Removes/Cleanup the wiring mess (boilerplate code)
   * Simplify refactoring (constructor parameters deduction)
   * Make testing easier (automatic mocks injection)

@@ -1,0 +1,17 @@
+@startuml
+
+"Viewer<T>" : show(int) : void
+"Reader<T>" : read() : int
+
+"ConsoleViewer" -up-|> "Viewer<T>"
+"ConsoleViewer" : show(int) : void
+
+"FileReader" -up-|> "Reader<T>"
+"FileReader" : read() : int
+
+"App" ..> "Reader<T>"
+"App" ..> "Viewer<T>"
+
+"App" : run: void
+
+@enduml
