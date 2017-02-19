@@ -21,17 +21,17 @@ environment:
 
   matrix:
   - platform: x64
-    os: Previous Visual Studio 2015
+    image: Previous Visual Studio 2015
     BS: cmake
     MEMCHECK: DRMEMORY
 
   - platform: x64
-    os: Visual Studio 2015
+    image: Visual Studio 2015
     BS: cmake
     MEMCHECK: DRMEMORY
 
   - platform: x64
-    os: Visual Studio 2017 RC
+    image: Visual Studio 2017 RC
     BS: cmake
     MEMCHECK: DRMEMORY
 
