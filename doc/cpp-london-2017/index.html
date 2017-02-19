@@ -124,6 +124,8 @@ int main() {
 }
 ```
 
+> We read code way more often than we write it!
+
 ----
 
 ## God object (V0)
@@ -285,9 +287,9 @@ class App {
 
 ```cpp
 int main() {
-  Reader reader;
-  Printer printer;
-  App app{std::move(reader), std::move(printer)};
+  Reader reader;                                  // wiring
+  Printer printer;                                // wiring
+  App app{std::move(reader), std::move(printer)}; // wiring
 }
 ```
 
@@ -310,10 +312,10 @@ int main() {
 
 ####Wiring - Create and pass required dependencies
 ```cpp
-Reader reader{...};
-Printer printer{...};
-...
-App app{...}
+Reader reader{...};   // wiring
+Printer printer{...}; // wiring
+...                   // ...
+App app{...};         // wiring         
 ```
 
 > Separates creation logic from business logic
@@ -341,9 +343,9 @@ public:
 
 ```cpp
 int main() {
-  Reader reader;
-  Printer printer;
-  App<Reader, Printer>{reader, printer}.run();
+  Reader reader;                                // wiring
+  Printer printer;                              // wiring
+  App<Reader, Printer>{reader, printer}.run();  // wiring
 }
 ```
 
@@ -455,9 +457,9 @@ public:
 
 ```cpp
 int main() {
-  FileReader reader{"input.txt"};
-  ConsolePrinter printer{};
-  App{reader, printer}.run();
+  FileReader reader{"input.txt"}; // wiring
+  ConsolePrinter printer{};       // wiring
+  App{reader, printer}.run();     // wiring
 }
 ```
 
@@ -514,10 +516,9 @@ public:
 
 ```cpp
 int main() {
-  Readable reader = FileReader{"input.txt"};
-  Printable printer = ConsolePrinter();
-
-  App{reader, printer}.run();
+  Readable reader = FileReader{"input.txt"}; // wiring
+  Printable printer = ConsolePrinter();      // wiring
+  App{reader, printer}.run();                // wiring
 }
 ```
 
@@ -679,9 +680,9 @@ public:
 
 ```cpp
 int main() {
-  FileReader reader{"input.txt"};
-  ConsolePrinter printer{};
-  App{reader, printer}.run();
+  FileReader reader{"input.txt"}; // wiring
+  ConsolePrinter printer{};       // wiring
+  App{reader, printer}.run();     // wiring
 }
 ```
 
@@ -713,8 +714,10 @@ public:
 
 ```cpp
 class FileReader final : public IReader {
+  std::fstream& file;
+
 public:
-  explicit FileReader(std::string_view path);
+  explicit FileReader(std::fstream&); // NOTE -> it's not a path!
   void read() override;
 };
 ```
@@ -733,7 +736,10 @@ public:
 
 ```cpp
 class ConsolePrinter final : public IPrinter {
+  std::ostream& stream;
+
 public:
+  explicit ConsolePrinter(std::ostream&);  // NOTE -> inject ostream!
   void print(int) override;
 };
 ```
@@ -759,10 +765,11 @@ public:
 
 ```cpp
 int main() {
-  auto reader = FileReader("input.txt");
-  auto printer = ConsolePrinter{};
-
-  App{reader, printer}.run();
+  auto file = std::fstream{"input.txt"}; // wiring!
+  auto reader = FileReader{file};        // wiring!
+  auto& out = std::cout;                 // wiring!
+  auto printer = ConsolePrinter{out};    // wiring!
+  App{reader, printer}.run();            // wiring!
 }
 ```
 
@@ -772,8 +779,9 @@ int main() {
 
 ![app](images/app3.png)
 
-* (+) Easy mocking for TDD/BDD
+* (+) Easy to test and mock (TDD/BDD)
 * (-) Performance hit due to virtual dispatch?
+* (-) We introduced even bigger wiring mess!
 
 ----
 
