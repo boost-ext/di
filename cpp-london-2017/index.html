@@ -80,7 +80,7 @@ Kris Jusiak, Quantlab
 
 ==============================================================================
 
-##Story: Show a value from a file (BDD Style)
+###Story: Print a value from a file (BDD Style)
 
 ```
 Scenario 1: Value from a file is displayed
@@ -88,16 +88,17 @@ Scenario 1: Value from a file is displayed
    And console terminal ready
  When the App runs
  Then the integer value from 'input.txt' should
-      be shown on the terminal console
+      be printed on the terminal console
 ```
 
 ----
 
-#In search of the best design!
+##In search of the best design!
 
 * Loosely coupled code (easy to extend, maintain, reause)
 * Testable code (TDD, BDD)
-* ...
+* ... 
+      There is much more!
 
 ----
 
@@ -135,7 +136,7 @@ int main() {
 
 ----
 
-##Composition Root
+###Composition Root
 
 > Unique location in an application where modules are composed together
 
@@ -147,7 +148,7 @@ int main() {
 
 ----
 
-##Let's introduce some abstractions (V1)
+###Let's introduce some abstractions (V1)
 
 ```cpp
 class Reader {
@@ -164,9 +165,9 @@ public:
 ```
 
 ```cpp
-class Viewer {
+class Printer {
   public:
-    void show(int value) {
+    void print(int value) {
       std::cout << value << '\n';
     }
 };
@@ -174,15 +175,15 @@ class Viewer {
 
 ----
 
-##Let's introduce some abstractions (V1)
+###Let's introduce some abstractions (V1)
 
 ```cpp
 class App {
   Reader reader;
-  Viewer viewer;
+  Printer printer;
 
   void run() {
-    viewer.show(reader.read());
+    printer.print(reader.read());
   }
 };
 ```
@@ -195,53 +196,48 @@ int main() {
 
 ----
 
-##Let's introduce some abstractions (V1)
+###Let's introduce some abstractions (V1)
 
 ![app](images/app2.png)
 
 * (+/-) We can somewhat test it in isolation (can't test the App)
-* (-) Reader/Viewer tightly coupled to the App
+* (-) Reader/Printer tightly coupled to the App
 
 ----
 
-##Single responsibility principle
+###Single responsibility principle
 
 > "A class should have only one reason to change" Unclue Bob
 
 ----
 
-##Let's fix it by using static factories? (V2)
-
-```cpp
-class IReader; class FileReader;
-class IViewer; class ConsoleViewer;
-```
+###Let's fix it by using static factories? (V2)
 
 ```cpp
 struct ReaderFactory {
-  static auto create(std::string_view input) {
-    return std::make_unique<FileReader>(input);
+  static auto create(std::string_view path) {
+    return std::make_unique<FileReader>(path);
   }
 };
 ```
 
 ```cpp
-struct ViewerFactory {
+struct PrinterFactory {
   static auto create() {
-    return std::make_unique<ConsoleViewer>();
+    return std::make_unique<ConsolePrinter>();
   }
 };
 ```
 
 ----
 
-##Let's fix it by using static factories? (V2)
+###Let's fix it by using static factories? (V2)
 
 ```cpp
 class App {
 public:
   void run() {
-    ViewerFactory::create()->show(
+    PrinterFactory::create()->print(
       ReaderFactory::create("input.txt")->read()
     );
   }
@@ -257,37 +253,32 @@ int main() {
 
 ----
 
-##Let's fix it by using static factories? (V2)
+###Let's fix it by using static factories? (V2)
 
 * (+) We can test it in isolation but it's hard
-* (+) Reader/Viewer are still tightly coupled to the App
-* (-) Can't inject different Readers/Viewers
+* (+) Reader/Printer are still tightly coupled to the App
+* (-) Can't inject different Readers/Printers
 * (-) Can't test factories easily
 
 > Static factories MUST GO!
 
 ----
 
-##Let's fix it by using constructor injection? (V3)
-
-```cpp
-class Reader;
-class Viewer;
-```
+###Let's fix it by using constructor injection? (V3)
 
 ```cpp
 class App {
  Reader reader;
- Viewer viewer;
+ Printer printer;
 
  public:
-  App(Reader&& reader, Viewer&& viewer)
+  App(Reader&& reader, Printer&& printer)
     : reader(std::move(reader))
-    , viewer(std::move(viewer))
+    , printer(std::move(printer))
   { }
 
   void run() {
-    viewer.show(reader.read());
+    printer.print(reader.read());
   }
 };
 ```
@@ -295,53 +286,55 @@ class App {
 ```cpp
 int main() {
   Reader reader;
-  Viewer viewer;
-  App app{std::move(reader), std::move(viewer)};
+  Printer printer;
+  App app{std::move(reader), std::move(printer)};
 }
 ```
 
 ----
 
-##Let's fix it by using constructor injection? (V3)
+###Let's fix it by using constructor injection? (V3)
 
 ![app](images/app1.png)
 
 * (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to the App
-* (-) Can't inject different Readers/Viewers
+* (+) Reader/Printer are not tightly coupled to the App
+* (-) Can't inject different Readers/Printers
+* (-) We introduced a wiring mess
 
 ----
 
-##There you have it - Dependency Injection (DI)
+###There you have it - Dependency Injection (DI)
 
 > "Don't call us, we'll call you", Hollywood principle
-> Separates creation logic from business logic
 
-###Wiring - Create and pass required dependencies
+####Wiring - Create and pass required dependencies
 ```cpp
 Reader reader{...};
-Viewer viewer{...};
+Printer printer{...};
 ...
 App app{...}
 ```
 
+> Separates creation logic from business logic
+
 ----
 
-##Let's fix it by using templates - Policy Design / Duck Typing (V4)
+###Let's fix it by using templates - Policy Design / Duck Typing (V4)
 
 ```cpp
-template<class TReader, class TViewer>
+template<class TReader, class TPrinter>
 class App {
   TReader reader;
-  TViewer viewer;
+  TPrinter printer;
 
 public:
-  App(TReader& reader, TViewer& viewer)
-    : reader(reader), viewer(viewer)
+  App(TReader& reader, TPrinter& printer)
+    : reader(reader), printer(printer)
   { }
 
   void run() {
-    viewer.show(reader.read());
+    printer.print(reader.read());
   }
 };
 ```
@@ -349,18 +342,18 @@ public:
 ```cpp
 int main() {
   Reader reader;
-  Viewer viewer;
-  App<Reader, Viewer>{reader, viewer}.run();
+  Printer printer;
+  App<Reader, Printer>{reader, printer}.run();
 }
 ```
 
 ----
 
-##Let's fix it by using templates - Policy Design / Duck Typing (V4)
+###Let's fix it by using templates - Policy Design / Duck Typing (V4)
 
 * (+) We can test it in isolation (including App) but it's hard
-* (+) Reader/Viewer are not tightly coupled to the App
-* (+) Can inject different Readers/Viewers
+* (+) Reader/Printer are not tightly coupled to the App
+* (+) Can inject different Readers/Printers
 * (-) Header files only
 * (-) Slower compilation times (Point of instantiation - POI)
 * (-) Code bloat (executable size)
@@ -372,35 +365,36 @@ STL example: `std::vector`
 
 ----
 
-##Template argument deduction for class templates (C++17)
+###Template argument deduction for class templates (C++17)
 
-###C++14
+####C++14
 ```cpp
-  App<Reader, Viewer>{reader, viewer}.run();
+  App<Reader, Printer>{reader, printer}.run();
 ```
 
-###C++17
+####C++17
 ```cpp
-  App{reader, viewer}.run(); // templates are still there
-                             // just deduced from parameters
+  App{reader, printer}.run(); // templates are still there
+                              // just deduced from parameters
 ```
 
 ----
 
-##Let's improve it by using static polymorphism? (V5)
-####Curiously recurring template pattern (CRTP)
+###Let's improve it by using static polymorphism? (V5)
+#####Curiously recurring template pattern (CRTP)
 
 ```cpp
 template <class T>
 class Reader {
   int read_impl() { return {}; } // default
+
 public:
   int read() { return static_cast<T*>(this)->read_impl(); }
 };
 ```
 
 ```cpp
-class FileReader : public Reader<FileReader> {
+class FileReader final : public Reader<FileReader> {
   std::ifstream file;
 
   int read_impl() {
@@ -418,53 +412,58 @@ public:
 
 ----
 
-##Let's improve it by using static polymorphism? (V5)
+###Let's improve it by using static polymorphism? (V5)
 
 ```cpp
 template <class T>
-class Viewer {
-  void show_impl(int) {} // default
+class Printer {
+  void print_impl(int) {} // default
+
 public:
-  void show(int value) { static_cast<T*>(this)->show_impl(value); }
+  void print(int value) { 
+    static_cast<T*>(this)->print_impl(value); 
+  }
 };
 ```
 
 ```cpp
-class ConsoleViewer : public Viewer<ConsoleViewer> {
-  void show_impl(int value) { std::cout << value << '\n'; }
+class ConsolePrinter final: public Printer<ConsolePrinter> {
+  void print_impl(int value) {
+    std::cout << value << '\n'; 
+  }
 };
 ```
 
 ----
 
-##Let's improve it by using static polymorphism? (V5)
+###Let's improve it by using static polymorphism? (V5)
 
 ```cpp
-template <class TReader, class TViewer>
+template <class TReader, class TPrinter>
 class App {
   TReader& reader;
-  TViewer& viewer;
+  TPrinter& printer;
 
 public:
-  App(TReader& reader, TViewer& viewer) 
-   : reader(reader), viewer(viewer) 
+  App(TReader& reader, TPrinter& printer) 
+   : reader(reader), printer(printer) 
   {}
 
-  void run() { viewer.show(reader.read()); }
+  void run() { printer.print(reader.read()); }
 };
 ```
 
 ```cpp
 int main() {
   FileReader reader{"input.txt"};
-  ConsoleViewer viewer{};
-  App{reader, viewer}.run();
+  ConsolePrinter printer{};
+  App{reader, printer}.run();
 }
 ```
 
 ----
 
-##Let's improve it by using static polymorphism? (V5)
+###Let's improve it by using static polymorphism? (V5)
 
 ![app](images/app4.png)
 
@@ -473,7 +472,7 @@ int main() {
 
 ----
 
-##Virtual Concepts to the rescue? (C++2X?)
+###Virtual Concepts to the rescue? (C++2X?)
 
 ```cpp
 template <class T>
@@ -486,29 +485,29 @@ concept bool Readable() {
 
 ```cpp
 template <class T>
-concept bool Viewable() {
-  return requires(T viewer) {
-    { viewer.show() };
+concept bool Printable() {
+  return requires(T printer) {
+    { printer.print() };
   }
 };
 ```
 
 ----
 
-##Virtual Concepts to the rescue? (C++2X?)
+###Virtual Concepts to the rescue? (C++2X?)
 
 ```cpp
 class App {
-  virtual Readable reader; // stack, Small Buffer Optimization?
-  virtual Viewable viewer; // type erasure
+  virtual Readable reader;   // stack, Small Buffer Optimization?
+  virtual Printable printer; // type erasure
 
 public:
-  // Same as template<Readable T1, Viewable T2>
-  App(Readable reader, Viewable viewer)
-    : reader(reader), viewer(viewer) {}
+  // Same as template<Readable T1, Printable T2>
+  App(Readable reader, Printable printer)
+    : reader(reader), printer(printer) {}
 
   void run() {
-    viewer.show(reader.read());
+    printer.print(reader.read());
   }
 };
 ```
@@ -516,15 +515,15 @@ public:
 ```cpp
 int main() {
   Readable reader = FileReader{"input.txt"};
-  Viewable viewer = ConsoleViewer();
+  Printable printer = ConsolePrinter();
 
-  App{reader, viewer}.run();
+  App{reader, printer}.run();
 }
 ```
 
 ----
 
-##Virtual Concepts to the rescue? (C++2X?)
+###Virtual Concepts to the rescue? (C++2X?)
 
 * (+) Explicit requirements/constraints (concepts)
 * (+) Removes most problems with Policy Design!
@@ -535,27 +534,27 @@ int main() {
 
 | | |
 |-|-|
-|[Concepts lite](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) | Constrating templates |
-|[Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf)  | Type-erasure |
-|[Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf) | Fakes/Stubs/Mocks generation |
+|[ (SG8) Concepts lite](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) | Constrating templates |
+|[ (SG8) Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf)  | Type-erasure |
+|[ (SG7) Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf) | Fakes/Stubs/Mocks generation |
 
 ----
 
-##No templates solution, please!
+###No templates solution, please!
 
 > Some would say that templates are great for libraries but not as much for the production code (KISS)
 
 ----
 
-##Functional design for fun and profit? (V6)
+###Functional design for fun and profit? (V6)
 
 ```cpp
-using fview = std::function<void(int)>;
+using fprinter = std::function<void(int)>;
 using fread = std::function<int()>;
 ```
 
 ```cpp
-const auto fileRead = [](std::string_view path) {
+const auto fileReader = [](std::string_view path) {
   return [=] {
     auto value = 0;
     {
@@ -568,38 +567,38 @@ const auto fileRead = [](std::string_view path) {
 ```
 
 ```cpp
-const auto consoleView = [](int value) {
+const auto consolePrinter = [](int value) {
   std::cout << value << '\n';
 };
 ```
 
 ----
 
-##Functional design for fun and profit? (V6)
+###Functional design for fun and profit? (V6)
 
 ```cpp
 class App {
-  fview view;
+  fprinter printer;
   fread read;
 
  public:
-   App(const fview& view, const fread& read)
-     : view(view), read(read)
+   App(const fprinter& printer, const fread& read)
+     : printer(printer), read(read)
    { }
 
    void run() {
-     view(read());
+     printer(read());
    }
 };
 ```
 
 ----
 
-##Functional design for fun and profit? (V6)
+###Functional design for fun and profit? (V6)
 
 ```cpp
 int main() {
-  App{fileRead, consoleView}.run();
+  App{fileReader, consolePrinter}.run();
 }
 ```
 
@@ -609,12 +608,12 @@ int main() {
 
 ----
 
-##Let's erase the type - Type erasure - (V7)
+###Let's erase the type - Type erasure - (V7)
 
 
 ```cpp
-BOOST_TYPE_ERASURE_MEMBER((has_read), read, 0)
-BOOST_TYPE_ERASURE_MEMBER((has_show), show, 1)
+BOOST_TYPE_ERASURE_MEMBER((has_read), read, 0)   // SFINAE
+BOOST_TYPE_ERASURE_MEMBER((has_print), print, 1) // SFINAE
 ```
 
 ```cpp
@@ -623,22 +622,23 @@ using Reader = mpl::vector<
 , type_erasure::copy_constructible<>
 >;
 
-using Viewer = mpl::vector<
-  has_show<void(int)>
+using Printer = mpl::vector<
+  has_print<void(int)>
 , type_erasure::copy_constructible<>
 >;
 ```
 
 ----
 
-##Let's erase the type - Type erasure - (V7)
+###Let's erase the type - Type erasure - (V7)
 
 ```cpp
-class FileReader {
+class FileReader final { // no inhertiance
   std::ifstream file;
+
 public:
   explicit FileReader(std::string_view path) : file{path} {
-    assert(file.good()); 
+    assert(file.good());
   }
 
   int read() {
@@ -650,42 +650,44 @@ public:
 ```
 
 ```cpp
-class ConsoleViewer {
+class ConsolePrinter final { // no inhertiance
 public:
-  void show(int value) { std::cout << value << '\n'; }
+  void print(int value) { std::cout << value << '\n'; }
 };
 ```
 
 ----
 
-##Let's erase the type - Type erasure - (V7)
+###Let's erase the type - Type erasure - (V7)
 
 ```cpp
 class App {
   type_erasure::any<Reader> reader;
-  type_erasure::any<Viewer> viewer;
+  type_erasure::any<Printer> printer;
 
 public:
   App(type_erasure::any<Reader> reader,
-      type_erasure::any<Viewer> viewer)
-    : reader(reader), viewer(viewer)
+      type_erasure::any<Printer> printer)
+    : reader(reader), printer(printer)
   { }
 
-  void run() { viewer.show(reader.read()); }
+  void run() {
+    printer.print(reader.read()); 
+  }
 };
 ```
 
 ```cpp
 int main() {
   FileReader reader{"input.txt"};
-  ConsoleViewer viewer{};
-  App{reader, viewer}.run();
+  ConsolePrinter printer{};
+  App{reader, printer}.run();
 }
 ```
 
 ----
 
-##Let's erase the type - Type erasure - (V7)
+###Let's erase the type - Type erasure - (V7)
 
 * (+) Inhertiance is not required
 * (+) Stack based (Small Buffer Optimization)
@@ -699,7 +701,7 @@ STL example: `std::shared_ptr deleter`
 
 ----
 
-##Object oriented design with dynamic polymorphism (V8)
+###Object oriented design with dynamic polymorphism (V8)
 
 ```cpp
 class IReader {
@@ -712,45 +714,45 @@ public:
 ```cpp
 class FileReader final : public IReader {
 public:
-  FileReader(std::string_view path);
+  explicit FileReader(std::string_view path);
   void read() override;
 };
 ```
 
 ----
 
-##Object oriented design with dynamic polymorphism (V8)
+###Object oriented design with dynamic polymorphism (V8)
 
 ```cpp
-class IViewer {
+class IPrinter {
 public:
-  virtual ~IViewer() noexcept = default;
-  virtual void show(int) = 0;
+  virtual ~IPrinter() noexcept = default;
+  virtual void print(int) = 0;
 };
 ```
 
 ```cpp
-class ConsoleViewer final : public IViewer {
+class ConsolePrinter final : public IPrinter {
 public:
-  void show(int) override;
+  void print(int) override;
 };
 ```
 
 ----
 
-##Object oriented design with dynamic polymorphism (V8)
+###Object oriented design with dynamic polymorphism (V8)
 
 ```cpp
 class App {
   IReader& reader;
-  IViewer& viewer;
+  IPrinter& printer;
 
 public:
-  App(IReader& reader, IViewer& viewer)
-    : reader(reader), viewer(viewer) {}
+  App(IReader& reader, IPrinter& printer)
+    : reader(reader), printer(printer) {}
 
   void run() {
-    viewer.show(reader.read());
+    printer.print(reader.read());
   }
 };
 ```
@@ -758,15 +760,15 @@ public:
 ```cpp
 int main() {
   auto reader = FileReader("input.txt");
-  auto viewer = ConsoleViewer{};
+  auto printer = ConsolePrinter{};
 
-  App{reader, viewer}.run();
+  App{reader, printer}.run();
 }
 ```
 
 ----
 
-##Object oriented design with dynamic polymorphism (V8)
+###Object oriented design with dynamic polymorphism (V8)
 
 ![app](images/app3.png)
 
@@ -775,7 +777,7 @@ int main() {
 
 ----
 
-##Dynamic Polymorphism - performance
+###Dynamic Polymorphism - performance
 ####final keyword and devirtualization
 
 ![final](images/final.png)
@@ -783,30 +785,30 @@ https://godbolt.org/g/e8olYN
 
 ----
 
-##Manual DI - Problems
+###Manual DI - Problems
 
-* ###Single Responsibility Principle
+* ####Single Responsibility Principle
   =>
-    * ###A lot of classes
+    * ####A lot of classes
     =>
-      * ###Wiring Mess
+      * ####Wiring Mess
       =>
-        * ###Hard to maintain + Lazy programers (99%)
+        * ####Hard to maintain + Lazy programers (99%)
         =>
-          * ###Hacks/Workarounds
+          * ####Hacks/Workarounds
 
 -----
 
-##Solution
+###Solution
 
-###Simplify/Remove the wiring mess
+####Simplify/Remove the wiring mess
   ####(Automate dependency injection)
 =>
 ### [[Boost].DI](https://github.com/boost-experimental/di)
 
 ==============================================================================
 
-##[[Boost].DI](https://github.com/boost-experimental/di)
+###[[Boost].DI](https://github.com/boost-experimental/di)
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
@@ -818,9 +820,9 @@ https://godbolt.org/g/e8olYN
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - API
+###[[Boost].DI](https://github.com/boost-experimental/di) - API
 
-####Injector
+#####Injector
 ```cpp
 template<class... TDeps> requires boundable<TDeps...>()
 class injector {
@@ -834,7 +836,7 @@ public:
 };
 ```
 
-####Make injector
+#####Make injector
 ```cpp
 template<class TConfig = di::config, class... TDeps>
   requires configurable<TConfig>() && boundable<TDeps...>()
@@ -843,7 +845,7 @@ constexpr auto make_injector(TDeps&&...) noexcept;
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Hello World
+###[[Boost].DI](https://github.com/boost-experimental/di) - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -851,21 +853,16 @@ namespace di = boost::di;
 ```
 
 ```cpp
-class IReader;
-class IViewer;
-```
-
-```cpp
 class App {
  public:
-  App(const IReader&, const IViewer&); // DI handles
-};                  ^       ^          // order and types
+  App(const IReader&, const IPrinter&); // DI handles
+};                  ^       ^           // order and types
                     |       \----------------------\
                     \-----------------------\      |
 int main() {                                |      |
   const auto injector = di::make_injector(  |      |
      di::bind<IReader>.to<FileReader>(), ---/      |
-     di::bind<IViewer>.to<ConsoleViewer>() --------/
+     di::bind<IPrinter>.to<ConsolePrinter>() ------/
   );
 
   injector.create<std::unique_ptr<App>>().run();
@@ -874,13 +871,13 @@ int main() {                                |      |
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Performance
+###[[Boost].DI](https://github.com/boost-experimental/di) - Performance
 
 ```sh
 time $CXX -std=c++14 app.cpp # 0.092s
 ```
 
-####ASM x86-64
+#####ASM x86-64
 
 ```
 push   %rbx
@@ -894,7 +891,7 @@ pop    %rbx
 retq
 ```
 
-####Same as
+#####Same as
 
 ```cpp
 return make_unique<App>(...);
@@ -902,7 +899,7 @@ return make_unique<App>(...);
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Benchmarks (GCC-7/Java8)
+###[[Boost].DI](https://github.com/boost-experimental/di) - Benchmarks (GCC-7/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -918,17 +915,17 @@ return make_unique<App>(...);
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Compile-time errors
+###[[Boost].DI](https://github.com/boost-experimental/di) - Compile-time errors
 
 ```cpp
 const auto injector = di::make_injector(
-// di::bind<IViewer>.to<ConsoleViewer>(), // missing 'IViewer' binding
+// di::bind<IPrinter>.to<ConsolePrinter>(), // missing 'IPrinter'
    di::bind<IReader>.to<FileReader>()
 );
 auto app = injector.create<App>();
 ```
 
-####Full Compilation-Time Error Message
+#####Full Compilation-Time Error Message
 
 ```cpp
 error: 'create<App>' is deprecated: creatable constraint
@@ -937,54 +934,49 @@ error: 'create<App>' is deprecated: creatable constraint
 note 'create<App>' has been explicitly marked deprecated here
   create
   ^
-error: inline function 'abstract_type<IViewer>::is_not_bound::error'
+error: inline function 'abstract_type<IPrinter>::is_not_bound::error'
  error(_ = "type is not bound, did you forget to add:
            'di::bind<interface>.to<implementation>()'?");
 ```
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Let's come back to our example (V3)
+###[[Boost].DI](https://github.com/boost-experimental/di) - Let's come back to our example (V3)
 
-###Automatic Injection
-
-```cpp
-class Reader;
-class Viewer;
-```
+####Automatic Injection
 
 ```cpp
 class App {
  Reader reader;
- Viewer viewer;
+ Printer printer;
 
 public:
-  App(Reader&& reader, Viewer&& viewer)
+  App(Reader&& reader, Printer&& printer)
     : reader(std::move(reader))
-    , viewer(std::move(viewer))
+    , printer(std::move(printer))
   {}
 
   void run() {
-    viewer.show(reader.read());
+    printer.print(reader.read());
   }
 };
 ```
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Injection
+###[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Injection
 
-####Manual DI - Wiring mess
+#####Manual DI - Wiring mess
 ```cpp
 int main() {
   Reader reader;
-  Viewer viewer;
-  App app{std::move(reader), std::move(viewer)};
+  Printer printer;
+  App app{std::move(reader), std::move(printer)};
   app.run();
 }
 ```
 
-####[Boost].DI
+#####[Boost].DI
 ```cpp
 int main() {
   di::make_injector().create<App>().run();
@@ -993,22 +985,22 @@ int main() {
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
+###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
 
-###Let's change `App` constructor
+####Let's change `App` constructor
   
-#####Before
+######Before
 ```cpp
-App(Reader&& reader, Viewer&& viewer)
+App(Reader&& reader, Printer&& printer)
   : reader(std::move(reader))
-  , viewer(std::move(viewer))
+  , printer(std::move(printer))
 { }
 ```
 
-#####After
+######After
 ```cpp
-App(Viewer& viewer, std::unique_ptr<Reader> reader)
- : viewer(viewer)
+App(Printer& printer, std::unique_ptr<Reader> reader)
+ : printer(printer)
  , reader(std::move(reader))
 {}
 
@@ -1016,19 +1008,19 @@ App(Viewer& viewer, std::unique_ptr<Reader> reader)
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
+###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
 
-####Manual DI - Wiring mess
+#####Manual DI - Wiring mess
 ```cpp
 int main() {
   auto reader = std::make_unique<Reader>{};
-  Viewer viewer;
-  App app{viewer, std::move(reader)};
+  Printer printer;
+  App app{printer, std::move(reader)};
   app.run();
 }
 ```
 
-####[Boost].DI - No changes!
+#####[Boost].DI - No changes!
 ```cpp
 int main() {
   di::make_injector().create<App>().run(); // same as before!
@@ -1037,78 +1029,81 @@ int main() {
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
 
 ```
-Scenario 2: Value from the input file is displayed on the console
+Scenario 2: Value from an input file is displayed on the console
  Given an 'input.txt' file with an integer value in it
-   And the first command line argument equals to "ConsoleViewer"
+   And the first command line argument equals to "ConsolePrinter"
  When the App runs
  Then the integer value from 'input.txt' should
-      be shown on the terminal console
+      be printed on the terminal console
 ```
 
 ```
-Scenario 3: Value from the input file is displayed on the QtWindow
+Scenario 3: Value from an input file is displayed on the QtWindow
  Given an 'input.txt' file with an integer value in it
-   And the first command line argument equals to "QtViewer"
+   And the first command line argument equals to "QtPrinter"
  When the App runs
  Then the integer value from 'input.txt' should
-      be shown on the QtWindow
+      be printed on the QtWindow
 ```
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
-####Weak vs Strong interface
+###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+#####Weak interface
 
 ```cpp
-class QtViewer {
+class QtPrinter {
 public:
-  QtViewer(int width, int height); // weak interface
+  QtPrinter(int width, int height); // weak interface
 };
 ```
 
 ```cpp
-QtViewer{600, 800}; // Okay
-QtViewer{800, 600}; // Oops
+QtPrinter{600, 800}; // Okay
+QtPrinter{800, 600}; // Oops
 ```
 
+#####Strong interface
+
 ```cpp
-class QtViewer {
+class QtPrinter {
 public:
-  QtViewer(width, height); // strong types
+  QtPrinter(width, height); // 'strong typedefs'
 };
 ```
 
 ```cpp
-QtViewer{width{500}, height{800}}; // Okay
-QtViewer{height{500}, width{800}}; // Compile error, YAY
-QtViewer{500, 800};                // Compile error, YAY
+QtPrinter{width{500}, height{800}}; // Okay
+QtPrinter{height{500}, width{800}}; // Compile error, YAY
+QtPrinter{500, 800};                // Compile error, YAY
 ```
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
-####Configuration
+###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+#####Configuration
 ```cpp
-const auto config = [](std::string_view view) {
+const auto config = [](std::string_view printer) {
   return di::make_injector(
      di::bind<IReader>.to<FileReader>(),
-     di::bind<IViewer>.to([&] {
-       switch (hash(view)) {
+     di::bind<IPrinter>.to([&] {
+       switch (hash(printer)) {
          default: return nullptr;
-         case "QtViewer"_hash:
-           return std::make_unique<QtViewer>(width{1024}, height{768});
-         case "ConsoleViewer"_hash:
-           return std::make_unique<ConsoleViewer>();
+         case "QtPrinter"_hash:
+           return std::make_unique<QtPrinter>(width{1024}
+                                            , height{768});
+         case "ConsolePrinter"_hash:
+           return std::make_unique<ConsolePrinter>();
        }
      })
   );
 };
 ```
 
-####Usage
+#####Usage
 ```cpp
 int main(int argc, char** argv) {
   assert(2 == argc);
@@ -1118,7 +1113,7 @@ int main(int argc, char** argv) {
 
 ----
 
-##Testing
+###Testing
 
 > "If you liked it then you should have put a test on it", Beyonce rule
 
@@ -1126,10 +1121,10 @@ int main(int argc, char** argv) {
 
 ## [[Boost].DI](https://github.com/boost-experimental/di) - Test Driven Development (TDD) 
 
-###Unit Tests
+####Unit Tests
 
 ```cpp
-"should show read text"_test = [] {
+"should print read text"_test = [] {
   constexpr auto value = 42;
 
   auto [sut, mocks] = make<App>(); // creates System Under Test
@@ -1138,7 +1133,7 @@ int main(int argc, char** argv) {
 
   InSequence sequence;
   EXPECT_CALL(mocks<IReader>(), read()).WillOnce(Return(value));
-  EXPECT_CALL(mocks<IViewer>(), show(value));
+  EXPECT_CALL(mocks<IPrinter>(), print(value));
 
   sut.run();
 };
@@ -1146,23 +1141,25 @@ int main(int argc, char** argv) {
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD) 
+###[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD) 
 
-###Integration Tests
+####Integration/Acceptance Tests
 
 ```cpp
-"given input file, when runs, then print value from file"_test = [] {
+"Given an input file
+ When App runs
+ Then print value from file"_test = [] {
+  mocks_t mocks;
   {
       std::ofstream file{"input.txt"};
       file << 42;
   }
-  mocks_t mocks;
   const auto injector = di::make_injector(
-    config(),
-    di::bind<IViewer>.to(GMock<IViewer>(mocks)) [di::override]
+    config(), // production wiring
+    di::bind<IPrinter>.to(GMock<IPrinter>(mocks)) [di::override]
   );
 
-  EXPECT_CALL(mocks<IViewer>(), show(42));
+  EXPECT_CALL(mocks<IPrinter>(), print(42));
 
   injector.create<App>().run();
 };
@@ -1170,24 +1167,24 @@ int main(int argc, char** argv) {
 
 ----
 
-##[[Boost].DI](https://github.com/boost-experimental/di) - features
+###[[Boost].DI](https://github.com/boost-experimental/di) - features
 
 * Core ([Examples](http://boost-experimental.github.io/di/examples))
     * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
 * Extensions ([Examples](http://boost-experimental.github.io/di/extensions))
-    * Automatic Mocks jnjection, Smart Factories, Assisted Injection, Xml Injection, Dependencies Diagram Generation, Automatic Serialization
+    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization
 
 ==============================================================================
 
-##Summary
+###Summary
 
 ----
 
-##Good practises are good practices for a reason!
+###Good practises are good practices for a reason!
 
 ----
 
-##STUPID vs SOLID (Object Oriented design)
+###STUPID vs SOLID (Object Oriented design)
 
 <table><tr>
  <td>
@@ -1217,7 +1214,7 @@ int main(int argc, char** argv) {
 
 ----
 
-##Dependency Injection
+###Dependency Injection
 
 * A powerful design pattern helping with producing
   * Loosely coupled code
