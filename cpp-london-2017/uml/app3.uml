@@ -1,16 +1,16 @@
 @startuml
 
-"IViewer" : show(int) : void
+"IPrinter" : show(int) : void
 "IReader" : read() : int
 
-"ConsoleViewer" -up-|> "IViewer"
-"ConsoleViewer" : show(int) : void
+"ConsolePrinter" -up-|> "IPrinter"
+"ConsolePrinter" : show(int) : void
 
 "FileReader" -up-|> "IReader"
 "FileReader" : read() : int
 
 "App" ..> "IReader"
-"App" ..> "IViewer"
+"App" ..> "IPrinter"
 
 "App" : run: void
 

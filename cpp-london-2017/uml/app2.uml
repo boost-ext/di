@@ -1,10 +1,10 @@
 @startuml
 
-"Viewer" : show(int) : void
+"Printer" : show(int) : void
 "Reader" : read() : int
 
 "App" *.. "Reader"
-"App" *.. "Viewer"
+"App" *.. "Printer"
 
 "App" : run() : void
 
