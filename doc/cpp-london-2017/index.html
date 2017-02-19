@@ -76,7 +76,11 @@ Kris Jusiak, Quantlab
 ---
 
 ###We will focus on a simple example
-###but let's think large scale (big team projects)
+###but let's think large scale (medium, big team projects)
+
+* A medium team project >= 100.000 LOC
+* 5 LOC example on a slide -> 500 LOC in production
+
 
 ==============================================================================
 
@@ -97,7 +101,7 @@ Scenario 1: Value from a file is displayed
 
 * Loosely coupled code (easy to extend, maintain, reause)
 * Testable code (TDD, BDD)
-* ... 
+* ...
       There is much more!
 
 ----
@@ -124,7 +128,7 @@ int main() {
 }
 ```
 
-> We read code way more often than we write it!
+> We read code more often than we write it!
 
 ----
 
@@ -147,6 +151,8 @@ int main() {
   App{}.run();
 }
 ```
+
+* Simplifies writing integration tests
 
 ----
 
@@ -243,7 +249,6 @@ public:
       ReaderFactory::create("input.txt")->read()
     );
   }
-
 };
 ```
 
@@ -315,7 +320,7 @@ int main() {
 Reader reader{...};   // wiring
 Printer printer{...}; // wiring
 ...                   // ...
-App app{...};         // wiring         
+App app{...};         // wiring
 ```
 
 > Separates creation logic from business logic
@@ -422,8 +427,8 @@ class Printer {
   void print_impl(int) {} // default
 
 public:
-  void print(int value) { 
-    static_cast<T*>(this)->print_impl(value); 
+  void print(int value) {
+    static_cast<T*>(this)->print_impl(value);
   }
 };
 ```
@@ -431,7 +436,7 @@ public:
 ```cpp
 class ConsolePrinter final: public Printer<ConsolePrinter> {
   void print_impl(int value) {
-    std::cout << value << '\n'; 
+    std::cout << value << '\n';
   }
 };
 ```
@@ -447,8 +452,8 @@ class App {
   TPrinter& printer;
 
 public:
-  App(TReader& reader, TPrinter& printer) 
-   : reader(reader), printer(printer) 
+  App(TReader& reader, TPrinter& printer)
+   : reader(reader), printer(printer)
   {}
 
   void run() { printer.print(reader.read()); }
@@ -499,9 +504,9 @@ concept bool Printable() {
 ###Virtual Concepts to the rescue? (C++2X?)
 
 ```cpp
-class App {
-  virtual Readable reader;   // stack, Small Buffer Optimization?
-  virtual Printable printer; // type erasure
+class App {                  // no template types!
+  virtual Readable reader;   // type erasure
+  virtual Printable printer; // stack, Small Buffer Optimization?
 
 public:
   // Same as template<Readable T1, Printable T2>
@@ -543,7 +548,7 @@ int main() {
 
 ###No templates solution, please!
 
-> Some would say that templates are great for libraries but not as much for the production code (KISS)
+> Some would argue that templates are great for libraries but not as much for the production code (KISS)
 
 ----
 
@@ -551,7 +556,7 @@ int main() {
 
 ```cpp
 using fprinter = std::function<void(int)>;
-using fread = std::function<int()>;
+using fread    = std::function<int()>;
 ```
 
 ```cpp
@@ -610,7 +615,6 @@ int main() {
 ----
 
 ###Let's erase the type - Type erasure - (V7)
-
 
 ```cpp
 BOOST_TYPE_ERASURE_MEMBER((has_read), read, 0)   // SFINAE
@@ -673,7 +677,7 @@ public:
   { }
 
   void run() {
-    printer.print(reader.read()); 
+    printer.print(reader.read());
   }
 };
 ```
@@ -696,7 +700,7 @@ int main() {
 * (-) Allocations
 * (-) Slower compilation times
 
---
+-
 
 STL example: `std::shared_ptr deleter`
 
@@ -714,10 +718,10 @@ public:
 
 ```cpp
 class FileReader final : public IReader {
-  std::fstream& file;
+  std::istream& input;
 
 public:
-  explicit FileReader(std::fstream&); // NOTE -> it's not a path!
+  explicit FileReader(std::istream&); // NOTE -> it's not a path!
   void read() override;
 };
 ```
@@ -736,11 +740,11 @@ public:
 
 ```cpp
 class ConsolePrinter final : public IPrinter {
-  std::ostream& stream;
+  std::ostream& output;
 
 public:
-  explicit ConsolePrinter(std::ostream&);  // NOTE -> inject ostream!
-  void print(int) override;
+  explicit ConsolePrinter(std::ostream&);  // NOTE -> ostream
+  void print(int) override;                //         injection!
 };
 ```
 
@@ -803,14 +807,14 @@ https://godbolt.org/g/e8olYN
       =>
         * ####Hard to maintain + Lazy programers (99%)
         =>
-          * ####Hacks/Workarounds (Breaks SRP)
+          * ####Hacks/Workarounds (~~Single Responsibility~~)
 
 -----
 
 ###Solution
 
 ####Simplify/Remove the wiring mess
-  ####(Automate dependency injection)
+  ####By Automating dependency injection?
 =>
 ### [[Boost].DI](https://github.com/boost-experimental/di)
 
@@ -868,10 +872,10 @@ class App {
   App(const IReader&, const IPrinter&); // DI handles
 };                  ^       ^           // order and types
                     |       \----------------------\
-                    \-----------------------\      |
-int main() {                                |      |
-  const auto injector = di::make_injector(  |      |
-     di::bind<IReader>.to<FileReader>(), ---/      |
+                    \--------------------------\   |
+int main() {                                   |   |
+  const auto injector = di::make_injector(     |   |
+     di::bind<IReader>.to<FileReader>(), ------/   |
      di::bind<IPrinter>.to<ConsolePrinter>() ------/
   );
 
@@ -979,9 +983,10 @@ public:
 #####Manual DI - Wiring mess
 ```cpp
 int main() {
-  Reader reader;
-  Printer printer;
-  App app{std::move(reader), std::move(printer)};
+  auto file = std::fstream{"input.txt"};                 // wiring
+  auto reader = Reader{file};                            // wiring
+  auto printer = Printer{std::cout};                     // wiring
+  auto app = App{std::move(reader), std::move(printer)}; // wiring
   app.run();
 }
 ```
@@ -998,7 +1003,7 @@ int main() {
 ###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
 
 ####Let's change `App` constructor
-  
+
 ######Before
 ```cpp
 App(Reader&& reader, Printer&& printer)
@@ -1023,9 +1028,10 @@ App(Printer& printer, std::unique_ptr<Reader> reader)
 #####Manual DI - Wiring mess
 ```cpp
 int main() {
-  auto reader = std::make_unique<Reader>{};
-  Printer printer;
-  App app{printer, std::move(reader)};
+  auto file = std::fstream{"input.txt"};      // wiring
+  auto reader = std::make_unique<Reader>{};   // diff wiring!
+  auto printer = Printer{std::cout};          // wiring
+  auto app = App{printer, std::move(reader)}; // diff wiring!
   app.run();
 }
 ```
@@ -1042,16 +1048,7 @@ int main() {
 ###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
 
 ```
-Scenario 2: Value from an input file is displayed on the console
- Given an 'input.txt' file with an integer value in it
-   And the first command line argument equals to "ConsolePrinter"
- When the App runs
- Then the integer value from 'input.txt' should
-      be printed on the terminal console
-```
-
-```
-Scenario 3: Value from an input file is displayed on the QtWindow
+Scenario 2: Value from an input file is displayed on the QtWindow
  Given an 'input.txt' file with an integer value in it
    And the first command line argument equals to "QtPrinter"
  When the App runs
@@ -1099,15 +1096,10 @@ QtPrinter{500, 800};                // Compile error, YAY
 const auto config = [](std::string_view printer) {
   return di::make_injector(
      di::bind<IReader>.to<FileReader>(),
-     di::bind<IPrinter>.to([&] {
-       switch (hash(printer)) {
-         default: return nullptr;
-         case "QtPrinter"_hash:
-           return std::make_unique<QtPrinter>(width{1024}
-                                            , height{768});
-         case "ConsolePrinter"_hash:
-           return std::make_unique<ConsolePrinter>();
-       }
+     di::bind<IPrinter>.to([&] { // we can also create using injector
+       return printer == "QtPrinter"
+         ? std::make_unique<QtPrinter>(width{1024}, height{768});
+         : std::make_unique<ConsolePrinter>();
      })
   );
 };
@@ -1116,8 +1108,7 @@ const auto config = [](std::string_view printer) {
 #####Usage
 ```cpp
 int main(int argc, char** argv) {
-  assert(2 == argc);
-  config(argv[1]).create<App>().run();
+  config(argc == 2 ? argv[1] : nullptr).create<App>().run();
 }
 ```
 
@@ -1129,7 +1120,7 @@ int main(int argc, char** argv) {
 
 ----
 
-## [[Boost].DI](https://github.com/boost-experimental/di) - Test Driven Development (TDD) 
+## [[Boost].DI](https://github.com/boost-experimental/di) - Test Driven Development (TDD)
 
 ####Unit Tests
 
@@ -1138,7 +1129,7 @@ int main(int argc, char** argv) {
   constexpr auto value = 42;
 
   auto [sut, mocks] = make<App>(); // creates System Under Test
-                                   // and mocks 
+                                   // and mocks
                                    // (C++17 Structured Bindings)
 
   InSequence sequence;
@@ -1151,21 +1142,21 @@ int main(int argc, char** argv) {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD) 
+###[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD)
 
 ####Integration/Acceptance Tests
 
 ```cpp
 "Given an input file
- When App runs
- Then print value from file"_test = [] {
+ When App is running
+ Then value from input file should be printed"_test = [] {
   mocks_t mocks;
   {
       std::ofstream file{"input.txt"};
       file << 42;
   }
   const auto injector = di::make_injector(
-    config(), // production wiring
+    config(), // use production wiring
     di::bind<IPrinter>.to(GMock<IPrinter>(mocks)) [di::override]
   );
 
@@ -1182,7 +1173,7 @@ int main(int argc, char** argv) {
 * Core ([Examples](http://boost-experimental.github.io/di/examples))
     * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
 * Extensions ([Examples](http://boost-experimental.github.io/di/extensions))
-    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization
+    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization, ...
 
 ==============================================================================
 
