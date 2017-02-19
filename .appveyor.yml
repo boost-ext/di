@@ -30,6 +30,11 @@ environment:
     BS: cmake
     MEMCHECK: DRMEMORY
 
+  - platform: x64
+    os: Visual Studio 2017 RC
+    BS: cmake
+    MEMCHECK: DRMEMORY
+
 matrix:
   fast_finish: true
 
