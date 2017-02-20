@@ -22,19 +22,19 @@ environment:
   matrix:
   - platform: x64
     image: Previous Visual Studio 2015
-    VSPATH: "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC"
+    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
     BS: cmake
     MEMCHECK: DRMEMORY
 
   - platform: x64
     image: Visual Studio 2015
-    VSPATH: "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC"    
+    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
     BS: cmake
     MEMCHECK: DRMEMORY
 
   - platform: x64
     image: Visual Studio 2017 RC
-    VSPATH: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC"
+    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC
     BS: cmake
     MEMCHECK: DRMEMORY
 
