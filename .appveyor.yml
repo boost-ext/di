@@ -21,18 +21,6 @@ environment:
 
   matrix:
   - platform: x64
-    image: Previous Visual Studio 2015
-    VisualStudioVersion: 14.0
-    BS: cmake
-    MEMCHECK: DRMEMORY
-
-  - platform: x64
-    image: Visual Studio 2015
-    VisualStudioVersion: 14.0
-    BS: cmake
-    MEMCHECK: DRMEMORY
-
-  - platform: x64
     image: Visual Studio 2017 RC
     VisualStudioVersion: 15.0
     BS: cmake
