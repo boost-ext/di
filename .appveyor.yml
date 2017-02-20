@@ -52,7 +52,7 @@ install:
   - cinst -y drmemory
   - appveyor DownloadFile http://downloads.sourceforge.net/mingw-w64/x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z
   - 7z x x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z > nul
-  - cd "%VSPATH%" && vcvarsall && cl
+  - call "%VSPATH%"\vcvarsall %PLATFORM%
   - set PATH=C:\cmake-3.7.2-win32-x86\bin;mingw64\bin;%PATH%;
 
 build_script:
