@@ -79,7 +79,7 @@ Kris Jusiak, Quantlab
 ###but let's think large scale (medium, big team projects)
 
 * A medium team project >= 100.000 LOC
-* 5 LOC example on a slide -> 500 LOC in production
+* 5 LOC example on a slide == 500 LOC in production
 
 
 ==============================================================================
@@ -89,7 +89,7 @@ Kris Jusiak, Quantlab
 ```
 Scenario 1: Value from a file is displayed
  Given an 'input.txt' file with an integer value in it
-   And console terminal ready
+   And console terminal is ready
  When the App runs
  Then the integer value from 'input.txt' should
       be printed on the terminal console
@@ -933,7 +933,7 @@ return make_unique<App>(...);
 
 ```cpp
 const auto injector = di::make_injector(
-// di::bind<IPrinter>.to<ConsolePrinter>(), // missing 'IPrinter'
+// di::bind<IPrinter>.to<ConsolePrinter>(), // missing 'IPrinter' wiring
    di::bind<IReader>.to<FileReader>()
 );
 auto app = injector.create<App>();
@@ -1156,7 +1156,7 @@ int main(int argc, char** argv) {
       file << 42;
   }
   const auto injector = di::make_injector(
-    config(), // use production wiring
+    config(), // production wiring
     di::bind<IPrinter>.to(GMock<IPrinter>(mocks)) [di::override]
   );
 
