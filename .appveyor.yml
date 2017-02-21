@@ -34,7 +34,7 @@ environment:
 
   - platform: x64
     image: Visual Studio 2017 RC
-    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC
+    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC
     BS: cmake
     MEMCHECK: DRMEMORY
 
