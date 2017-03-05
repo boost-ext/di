@@ -177,7 +177,10 @@ int main() {
 
 ##Injection
 
-> When dependencies are known at COMPILE-TIME
+> Compile-time options
+
+* Dependencies are ONLY known at compile-time 
+  * Most of them!
 
 ----
 
@@ -310,7 +313,7 @@ STL example: `std::vector`
 template <class T>
 concept bool Readable() {
   return requires(T reader) {
-    { reader.read(std::string_view{}) } -> int;
+    { reader.read() } -> int;
   }
 };
 ```
@@ -319,7 +322,7 @@ concept bool Readable() {
 template <class T>
 concept bool Printable() {
   return requires(T printer) {
-    { printer.print() };
+    { printer.print() } -> void;
   }
 };
 ```
@@ -376,7 +379,10 @@ int main() {
 
 ##Injection
 
-> When dependencies are known at RUN-TIME
+> Run-time options
+
+* Dependencies AREN'T known at compile-time 
+  * For example - type depends on some configuration from xml file
 
 ----
 
@@ -474,9 +480,9 @@ https://godbolt.org/g/e8olYN
 
 ###Virtual functions - inheritance
 
-> "Inheritance Is The Base Class of Evil" 
+> "Inheritance Is The Base Class of Evil" Sean Parent
 
-> Sean Parent
+-
 
 https://channel9.msdn.com/Events/GoingNative/2013/Inheritance-Is-The-Base-Class-of-Evil
 
@@ -961,9 +967,9 @@ struct Readable {
 
   template <class T>
   auto requires(T &&t) -> REQUIRES(
-    T(t),                 // copy constructible
-    std::cout << t,       // printable
-    (T)has_read<int()>    // read callable
+    T(t),              // copy constructible
+    std::cout << t,    // printable
+    has_read<int()>    // read callable
   );
 };
 ```
@@ -974,9 +980,9 @@ struct Printable {
 
   template <class T>
   auto requires(T &&t) -> REQUIRES(
-    T(t),                   // copy constructible
-    std::cout << t,         // printable
-    (T)has_print<void(int)> // print callable
+    T(t),                 // copy constructible
+    std::cout << t,       // printable
+    has_print<void(int)>  // print callable
   );
 };
 ```
