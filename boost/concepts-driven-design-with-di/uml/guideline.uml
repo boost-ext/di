@@ -2,16 +2,15 @@
 
 start
 
-if (I know what to inject at compile time?) then (yes)
+if (I know the dependency at compile time?) then (yes)
   :Concepts;
 else (no)
-   if (I don't wanna use heap and I care about performance?) then (yes)
+   if (I need max performance and no heap?) then (yes)
     :Type Erasure;
    else (no)
     :Virtual Functions;
    endif
 endif
-
 
 stop
 

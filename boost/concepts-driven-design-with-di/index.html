@@ -108,7 +108,7 @@ Kris Jusiak
 
  </tr>
 </table>
-> "Clean Code", Uncle Bob
+> "Clean Code" Uncle Bob
 
 ==============================================================================
 
@@ -709,7 +709,7 @@ int main() {                                      |   |
      di::bind<IPrinter>.to<ConsolePrinter>() ---------/
   );
 
-  injector.create<std::unique_ptr<App>>().run();
+  injector.create<std::unique_ptr<App>>()->run();
 }
 ```
 
@@ -877,7 +877,13 @@ int main() {
 
 ###[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Mocks Injector
 
-####[GUnit.GMock](https://github.com/cpp-testing/GUnit) and virtual functions
+####[GUnit.GMock](https://github.com/cpp-testing/GUnit)
+```cpp
+GMock<IReader> readerMock;
+EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
+```
+
+####Test
 ```cpp
 "should print read text"_test = [] {
   constexpr auto value = 42;
@@ -951,7 +957,7 @@ http://ericniebler.com/2013/11/23/concept-checking-in-c11/
 
 ```cpp
 struct Readable {
-  $has_(read);
+  HAS_MEMBER_FUNCTION(read);
 
   template <class T>
   auto requires(T &&t) -> REQUIRES(
@@ -964,7 +970,7 @@ struct Readable {
 
 ```cpp
 struct Printable {
-  $has_(print);
+  HAS_MEMBER_FUNCTION(print);
 
   template <class T>
   auto requires(T &&t) -> REQUIRES(
@@ -1166,6 +1172,14 @@ int main() {
 }
 ```
 
+----
+
+###Concepts driven design with [[Boost].DI](https://github.com/boost-experimental/di)
+
+|  |  |
+| ------- | ------------- |
+| Try it online! | http://boost-experimental.github.io/di |
+
 ==============================================================================
 
 ###Summary
@@ -1176,13 +1190,15 @@ int main() {
 
 ![guideline](images/guideline.png)
 
+> "If you liked it then you should have put a test on it" Beyonce rule
+
+----
+
+###Concepts and static reflection will be a game changer!
+
 ----
 
 ###Good practises are good practices for a reason!
-
-----
-
-> "If you liked it then you should have put a test on it", Beyonce rule
 
 ----
 
