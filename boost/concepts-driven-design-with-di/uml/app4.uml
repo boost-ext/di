@@ -1,0 +1,17 @@
+@startuml
+
+"Printer<T>" : show(int) : void
+"Reader<T>" : read() : int
+
+"ConsolePrinter" -up-|> "Printer<T>"
+"ConsolePrinter" : show(int) : void
+
+"FileReader" -up-|> "Reader<T>"
+"FileReader" : read() : int
+
+"App" ..> "Reader<T>"
+"App" ..> "Printer<T>"
+
+"App" : run: void
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+
+"IPrinter" : show(int) : void
+"IReader" : read() : int
+
+"ConsolePrinter" -up-|> "IPrinter"
+"ConsolePrinter" : show(int) : void
+
+"FileReader" -up-|> "IReader"
+"FileReader" : read() : int
+
+"App" ..> "IReader"
+"App" ..> "IPrinter"
+
+"App" : run: void
+
+@enduml

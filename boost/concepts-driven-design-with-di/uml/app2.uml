@@ -1,0 +1,11 @@
+@startuml
+
+"Printer" : show(int) : void
+"Reader" : read() : int
+
+"App" *.. "Reader"
+"App" *.. "Printer"
+
+"App" : run() : void
+
+@enduml
