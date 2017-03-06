@@ -943,19 +943,39 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 
 ##Concepts driven design with [[Boost].DI](https://github.com/boost-experimental/di)
 
-> "Concept Checking in C++11" Eric Niebler
-
-http://ericniebler.com/2013/11/23/concept-checking-in-c11/
-
-----
-
-##Concepts driven design (C++14)
-
 > Let's kill 3 birds with one stone!
 
 * Concepts checking (type constraints)
 * Mocking (automatic generation from concepts)
 * Type erasure based on concepts (dynamic dispatch)
+
+----
+
+##Concepts driven design / C++14 (V7)
+
+####API
+```cpp
+struct Concept {
+  template <class... Ts>
+  auto requires(Ts... &&ts) -> REQUIRES(
+    ... // any expression on ts
+  );
+};
+```
+
+####Example
+```cpp
+struct Concept {
+  template <class T>
+  auto requires(T &&t) -> REQUIRES(
+    t++,           // incrementable
+    *t,            // dereferencable
+    std::cout << t // printable
+  );
+};
+```
+
+http://ericniebler.com/2013/11/23/concept-checking-in-c11/
 
 ----
 
@@ -969,7 +989,7 @@ struct Readable {
   auto requires(T &&t) -> REQUIRES(
     T(t),              // copy constructible
     std::cout << t,    // printable
-    has_read<int()>    // read callable
+    has_read<T, int()> // read callable
   );
 };
 ```
@@ -980,9 +1000,9 @@ struct Printable {
 
   template <class T>
   auto requires(T &&t) -> REQUIRES(
-    T(t),                 // copy constructible
-    std::cout << t,       // printable
-    has_print<void(int)>  // print callable
+    T(t),                   // copy constructible
+    std::cout << t,         // printable
+    has_print<T, void(int)> // print callable
   );
 };
 ```
