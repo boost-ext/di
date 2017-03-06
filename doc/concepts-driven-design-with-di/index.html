@@ -552,7 +552,7 @@ int main() {
 
 ----
 
-###Type erasure/Virtual Concepts (V6)
+###Type erasure/Virtual Concepts/C++2X (V6)
 
 ```cpp
 class FileReader final { // no inhertiance
@@ -580,7 +580,7 @@ public:
 
 ----
 
-###Type erasure/Virtual Concepts (V6)
+###Type erasure/Virtual Concepts/C++2X (V6)
 
 ```cpp
 class App {
@@ -609,7 +609,7 @@ int main() {
 
 ----
 
-###Type erasure/Virtual Concepts (V6)
+###Type erasure/Virtual Concepts/C++2X (V6)
 
 * (+) Inheritance is not required
 * (+) Value semantics (no heap usage required)
@@ -687,7 +687,7 @@ constexpr auto make_injector(TDeps&&...) noexcept;
 ####Bind
 ```cpp
 template<class... Interfaces> 
-  requires is_convertible<Interfaces..., Implementation>
+  requires is_convertible<Interfaces..., Implementation>()
 di::bind<Interfaces...>.to<Implementation>()
                        .to(Implementation&& value)
 ```
@@ -1138,13 +1138,11 @@ Scenario 2: Value from an input file is displayed on the QtWindow
 const auto config = [](std::string_view printer) {
   return di::make_injector(
      di::bind<Readable>.to<FileReader>(),
-
      di::bind<Printable>.to([&](const auto& injector) {
        return printer == "QtPrinter"
          ? injector.create<QtPrinter>()
          : injector.create<ConsolePrinter>();
      })
-
   );
 };
 ```
