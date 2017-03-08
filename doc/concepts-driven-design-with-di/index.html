@@ -890,7 +890,6 @@ App(Printer& printer, std::unique_ptr<Reader> reader)
 #####Manual DI - Wiring mess
 ```cpp
 int main() {
-  auto file = std::fstream{"input.txt"};      // wiring
   auto reader = std::make_unique<Reader>{};   // diff wiring!
   auto printer = Printer{std::cout};          // wiring
   auto app = App{printer, std::move(reader)}; // diff wiring!
@@ -1015,7 +1014,7 @@ struct Readable {
   auto requires(T &&t, std::ostream& os) -> REQUIRES(
     T(t),               // copy constructible
     os << t,            // printable
-    has_read<T, int()>  // read callable
+    (T)has_read<int()>  // read callable
   );
 };
 ```
@@ -1028,7 +1027,7 @@ struct Printable {
   auto requires(T &&t, std::ostream& os) -> REQUIRES(
     T(t),                   // copy constructible
     os << t,                // printable
-    has_print<T, void(int)> // print callable
+    (T)has_print<void(int)> // print callable
   );
 };
 ```
@@ -1038,8 +1037,8 @@ struct Printable {
 ##Concepts driven design / C++14 (V7)
 
 ```cpp
-template<class TReader = Readable    // = Concept
-       , class TPrinter = Printable> // = Concept
+template<class TReader  = Readable   // TReader  = 'Concept'
+       , class TPrinter = Printable> // TPrinter = 'Concept'
 class App {
   TReader reader;
   TPrinter printer;
