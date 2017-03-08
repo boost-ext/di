@@ -845,8 +845,7 @@ public:
 #####Manual DI - Wiring mess
 ```cpp
 int main() {
-  auto file = std::fstream{"input.txt"};                 // wiring
-  auto reader = Reader{file};                            // wiring
+  auto reader = Reader{};                                // wiring
   auto printer = Printer{std::cout};                     // wiring
   auto app = App{std::move(reader), std::move(printer)}; // wiring
   app.run();
