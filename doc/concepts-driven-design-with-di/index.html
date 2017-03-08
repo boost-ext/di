@@ -307,23 +307,46 @@ STL example: `std::vector`
 
 ----
 
+###Concepts/C++2X?
+
+####API
+```cpp
+template<class... Ts>
+concept bool Concept = requires(Ts..., args...) {
+    expressions...
+};
+```
+
+---
+
+####Example
+```cpp
+template <class T>
+concept bool Concept = 
+  requires(T t, std::ostream& os) {
+    { os << t } -> std::ostream&; // printable
+  } &&
+  requires(T t, int p1, double p2) {
+    { t.foo(p1, p2) } -> void // foo callable void(T::*)(int, double)
+  }
+};
+```
+
+----
+
 ###Concepts/C++2X? (V3)
 
 ```cpp
 template <class T>
-concept bool Readable() {
-  return requires(T reader) {
-    { reader.read() } -> int;
-  }
+concept bool Readable = requires(T reader) {
+  { reader.read() } -> int;
 };
 ```
 
 ```cpp
 template <class T>
-concept bool Printable() {
-  return requires(T printer) {
-    { printer.print() } -> void;
-  }
+concept bool Printable = requires(T printer) {
+  { printer.print() } -> void;
 };
 ```
 
@@ -943,7 +966,7 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 
 ##Concepts driven design with [[Boost].DI](https://github.com/boost-experimental/di)
 
-> Let's kill 3 birds with one stone!
+###Idea
 
 * Concepts checking (type constraints)
 * Mocking (automatic generation from concepts)
@@ -958,7 +981,7 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 struct Concept {
   template <class... Ts>
   auto requires(Ts... &&ts) -> REQUIRES(
-    ... // any expression on ts
+    expressions...
   );
 };
 ```
@@ -967,10 +990,10 @@ struct Concept {
 ```cpp
 struct Concept {
   template <class T>
-  auto requires(T &&t) -> REQUIRES(
-    t++,           // incrementable
-    *t,            // dereferencable
-    std::cout << t // printable
+  auto requires(T &&t, std::ostream& os) -> REQUIRES(
+    t++,        // incrementable
+    *t,         // dereferencable
+    os << t     // printable
   );
 };
 ```
@@ -986,10 +1009,10 @@ struct Readable {
   HAS_MEMBER_FUNCTION(read);
 
   template <class T>
-  auto requires(T &&t) -> REQUIRES(
-    T(t),              // copy constructible
-    std::cout << t,    // printable
-    has_read<T, int()> // read callable
+  auto requires(T &&t, std::ostream& os) -> REQUIRES(
+    T(t),               // copy constructible
+    os << t,            // printable
+    has_read<T, int()>  // read callable
   );
 };
 ```
@@ -999,9 +1022,9 @@ struct Printable {
   HAS_MEMBER_FUNCTION(print);
 
   template <class T>
-  auto requires(T &&t) -> REQUIRES(
+  auto requires(T &&t, std::ostream& os) -> REQUIRES(
     T(t),                   // copy constructible
-    std::cout << t,         // printable
+    os << t,                // printable
     has_print<T, void(int)> // print callable
   );
 };
@@ -1061,6 +1084,8 @@ di.hpp: note: in instantiation of template class
 
 app.cpp:: note: while substituting template 'to'
   di::bind<Readable>.to<Logger>()
+
+app.cpp: error: 'class Logger' has no member named 'read'
 ```
 
 ----
@@ -1185,16 +1210,17 @@ class LegacyImplementation final : public ILegacyInterface {
 ```cpp
 int main() {
   const auto injector = di::make_injector(
-    di::bind<Readable>.to<FileReader>(), // concept -> template class
+    di::bind<Readable>.to<FileReader>(),         // concept -> template class
     di::bind<Synchronizable>.to<Synchronizer>(), // concept -> class
-    di::bind<Loggable>.to<Logger>(), // concept -> type erasure
+    di::bind<Loggable>.to<Logger>(),             // concept -> type erasure
     di::bind<ILegacyInterface>.
-          to<LegacyImplementation>() // interface -> template class
+          to<LegacyImplementation>()             // interface -> template class
   );
 
   injector.create<App>().run();
 }
 ```
+<!-- .element: style="margin-left:-3%; width:105%" -->
 
 ----
 
@@ -1202,7 +1228,7 @@ int main() {
 
 |  |  |
 | ------- | ------------- |
-| Try it online! | http://boost-experimental.github.io/di |
+| Try it online! | http://melpon.org/wandbox/permlink/UGaFDy2jaSCeksa1 |
 
 ==============================================================================
 
@@ -1213,8 +1239,6 @@ int main() {
 ###Injection guideline
 
 ![guideline](images/guideline.png)
-
-> "If you liked it then you should have put a test on it" Beyonce rule
 
 ----
 
@@ -1231,6 +1255,9 @@ int main() {
 * A powerful design pattern helping with producing
   * Loosely coupled code
   * Easy to test code (TDD/BDD)
+
+> "If you liked it then you should have put a test on it" Beyonce rule
+
 
 * [[Boost].DI](https://github.com/boost-experimental/di)
   * Removes/Cleanup the wiring mess (boilerplate code)
