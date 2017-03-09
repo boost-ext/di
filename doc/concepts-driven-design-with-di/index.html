@@ -1084,7 +1084,7 @@ const auto Printable =
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES(print<T, void>&&, int i) (
+  REQUIRES(print<T, void>&& t, int i) (
     t.print(i) // print callable with void (T::*)(int)
   );
 ```
@@ -1252,7 +1252,7 @@ int main(int argc, char** argv) {
 
 ----
 
-###Concepts driven design and virtual functions
+###Concepts driven design together with interfaces
 
 ```cpp
 template<class TSynchronizer = $(Synchronizable)>
@@ -1276,7 +1276,7 @@ class LegacyImplementation final : public ILegacyInterface {
 
 ----
 
-###Concepts driven design and virtual functions
+###Concepts driven design together with interfaces
 
 ```cpp
 int main() {
