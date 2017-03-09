@@ -45,8 +45,6 @@
                    data-notes="^Note:">
 					<script type="text/template">
 
----
-
 #Concepts driven design with dependency injection
 
 ---
@@ -182,7 +180,7 @@ int main() {
 
 > Compile-time options
 
-* Dependencies are ONLY known at compile-time 
+* Dependencies are ONLY known at compile-time
   * Most of them!
 
 ----
@@ -323,7 +321,7 @@ concept bool Concept = requires(Ts..., args...) {
 ####Example
 ```cpp
 template <class T>
-concept bool Concept = 
+concept bool Concept =
   requires(T t, std::ostream& os) {
     { os << t } -> std::ostream&; // printable
   } &&
@@ -405,7 +403,7 @@ int main() {
 
 > Run-time options
 
-* Dependencies AREN'T known at compile-time 
+* Dependencies AREN'T known at compile-time
   * For example - type depends on some configuration from xml file
 
 ----
@@ -714,7 +712,7 @@ constexpr auto make_injector(TDeps&&...) noexcept;
 
 ####Bind
 ```cpp
-template<class... Interfaces> 
+template<class... Interfaces>
   requires is_convertible<Interfaces..., Implementation>()
 di::bind<Interfaces...>.to<Implementation>()
                        .to(Implementation&& value)
@@ -1002,7 +1000,7 @@ const auto Concept = REQUIRES(args...)(
 REFLEXPR(foo); // static reflection, please!
 
 template<class T>
-const auto Fooable = 
+const auto Fooable =
   REQUIRES(T&& t, std::ostream& os) (
     os << t // printable
   ) &&
@@ -1065,7 +1063,7 @@ foo.foo(42, 77.0);
 REFLEXPR(read); // still better than MOCK_METHOD7(...)
 
 template<class T>
-const auto Readable = 
+const auto Readable =
   REQUIRES(T&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
@@ -1079,7 +1077,7 @@ const auto Readable =
 REFLEXPR(print); // still better than MOCK_METHOD7(...)
 
 template<class T>
-const auto Printable = 
+const auto Printable =
   REQUIRES(T&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
@@ -1150,7 +1148,7 @@ const auto injector = di::make_injector(
 ```cpp
 di.hpp: error: static_assert failed "constraint not satisfied"
 
-di.hpp: note: in instantiation of template class 
+di.hpp: note: in instantiation of template class
   'concept_check<Readable>::is_not_satisfied_by<Logger>'
 
 app.cpp:: note: while substituting template 'to'
@@ -1211,7 +1209,7 @@ public:
 
 ----
 
-###Concepts driven design - switching to run-time - type erasure 
+###Concepts driven design - switching to run-time - type erasure
 
 ####Implementing features by wiring
 
@@ -1226,7 +1224,7 @@ Scenario 2: Value from an input file is displayed on the QtWindow
 
 ----
 
-###Concepts driven design - switching to run-time - type erasure 
+###Concepts driven design - switching to run-time - type erasure
 
 ####Implementing features by wiring
 
