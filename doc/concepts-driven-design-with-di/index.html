@@ -1002,7 +1002,7 @@ const auto Concept = REQUIRES(args...)(
 REFLEXPR(foo); // static reflection, please!
 
 template<class T>
-const auto FooConcept = 
+const auto Fooable = 
   REQUIRES(T&& t, std::ostream& os) (
     os << t // printable
   ) &&
