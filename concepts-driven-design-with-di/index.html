@@ -999,7 +999,7 @@ const auto Concept = REQUIRES(args...)(
 
 ####Example
 ```cpp
-HAS_MEMBER_FUNCTION(foo); // static reflection, please!
+REFLEXPR(foo); // static reflection, please!
 
 template<class T>
 const auto FooConcept = 
@@ -1062,7 +1062,7 @@ foo.foo(42, 77.0);
 ##Concepts driven design / C++14 (V7)
 
 ```cpp
-HAS_MEMBER_FUNCTION(read); // still better than MOCK_METHOD7(...)
+REFLEXPR(read); // still better than MOCK_METHOD7(...)
 
 template<class T>
 const auto Readable = 
@@ -1076,7 +1076,7 @@ const auto Readable =
 ```
 
 ```cpp
-HAS_MEMBER_FUNCTION(print); // still better than MOCK_METHOD7(...)
+REFLEXPR(print); // still better than MOCK_METHOD7(...)
 
 template<class T>
 const auto Printable = 
