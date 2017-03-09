@@ -390,7 +390,7 @@ int main() {
   * Generate mocks from type constraints using static reflection
 * (+) Reader/Printer are not tightly coupled to the App
 * (+) Different Readers/Printers can be injected
-* (+) Short and sweet error messages
+* (+) Short error messages
   * Constraint not satisfied (POI)
 * (-) Header files only
 
@@ -845,8 +845,7 @@ public:
 #####Manual DI - Wiring mess
 ```cpp
 int main() {
-  auto file = std::fstream{"input.txt"};                 // wiring
-  auto reader = Reader{file};                            // wiring
+  auto reader = Reader{};                                // wiring
   auto printer = Printer{std::cout};                     // wiring
   auto app = App{std::move(reader), std::move(printer)}; // wiring
   app.run();
@@ -1064,6 +1063,18 @@ int main() {
   injector.create<App>().run();
 }
 ```
+
+----
+
+##Concepts driven design / C++14 (V7)
+
+* (+) We can test it in isolation
+* (+) Short error messages (type constraints verification)
+* (+) Automatic mocks generation (GMock)
+* (+) Dynamic dispatch via type erasure supported out of the box
+* (+) Reader/Printer are not tightly coupled to the App
+* (+) Different Readers/Printers can be injected
+* (-) Header files only
 
 ----
 
