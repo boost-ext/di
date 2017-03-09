@@ -320,8 +320,6 @@ concept bool Concept = requires(Ts..., args...) {
 };
 ```
 
----
-
 ####Example
 ```cpp
 template <class T>
@@ -330,7 +328,7 @@ concept bool Concept =
     { os << t } -> std::ostream&; // printable
   } &&
   requires(T t, int p1, double p2) {
-    { t.foo(p1, p2) } -> void // foo callable void(T::*)(int, double)
+    { t.foo(p1, p2) } -> void // foo callable with void(T::*)(int, double)
   }
 };
 ```
@@ -412,7 +410,7 @@ int main() {
 
 ----
 
-###Virtual functions (V4)
+###Virtual functions/interfaces (V4)
 
 ```cpp
 class IReader {
@@ -434,7 +432,7 @@ public:
 
 ----
 
-###Virtual functions (V4)
+###Virtual functions/interfaces (V4)
 
 ```cpp
 class IPrinter {
@@ -456,7 +454,7 @@ public:
 
 ----
 
-###Virtual functions (V4)
+###Virtual functions/interfaces (V4)
 
 ```cpp
 class App {
@@ -485,7 +483,7 @@ int main() {
 
 ----
 
-###Virtual functions (V4)
+###Virtual functions/interfaces (V4)
 
 ![app](images/app3.png)
 
@@ -496,7 +494,7 @@ int main() {
 
 ----
 
-###Virtual functions - performance
+###Virtual functions/interfaces - performance
 ####final keyword and devirtualization
 
 ![final](images/final.png)
@@ -504,7 +502,7 @@ https://godbolt.org/g/e8olYN
 
 ----
 
-###Virtual functions - inheritance
+###Virtual functions/interfaces - inheritance
 
 > "Inheritance Is The Base Class of Evil" Sean Parent
 
@@ -649,9 +647,13 @@ int main() {
 * STL example: `std::shared_ptr deleter`
 * [(SG8) Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf)
 
-==============================================================================
+----
 
-###Manual DI - Problems
+###Doesn't matter which option will be chosen the wiring will have to happen either way!
+
+----
+
+###Manual DI - Wiring
 
 * ####Single Responsibility Principle
   =>
@@ -659,7 +661,7 @@ int main() {
     =>
       * ####Wiring Mess
       =>
-        * ####Hard to maintain + Lazy programers (99%)
+        * ####Hard to maintain + Lazy programmers (99%)
         =>
           * ####Hacks/Workarounds (~~Single Responsibility~~)
 
@@ -909,7 +911,7 @@ int main() {
 
 ####[GUnit.GMock](https://github.com/cpp-testing/GUnit)
 ```cpp
-GMock<IReader> readerMock;
+GMock<IReader> readerMock; // no more MOCK_CONST_METHOD7(...), etc.
 EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 ```
 
@@ -956,46 +958,53 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - features
+##The story so far
 
-* Core ([Examples](http://boost-experimental.github.io/di/examples))
-    * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
-* Extensions ([Examples](http://boost-experimental.github.io/di/extensions))
-    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization, ...
+####Virtual functions/Interfaces
 
-==============================================================================
+> [[Boost].DI](https://github.com/boost-experimental/di)
+* Automatic constructor injection
+
+-
+
+> [GUnit.GMock](https://github.com/cpp-testing/GUnit)
+* Easy mocking
+* Automatic mocking injection
+
+----
 
 ##Concepts driven design with [[Boost].DI](https://github.com/boost-experimental/di)
 
 ###Idea
 
-* Concepts checking (type constraints)
-* Mocking (automatic generation from concepts)
+* Concepts checking (type constraints for templates)
+    * no more horrible error messages
 * Type erasure based on concepts (dynamic dispatch)
+    * 100% value semantics (no heap)
+* Mocking (automatic generation from concepts)
+    * Goal - write tests once, it shouldn't matter what and how is injected
 
 ----
 
-##Concepts driven design / C++14 (V7)
+##Concepts driven design / C++14
 
-####API
+####API (much more powerful than interfaces)
 ```cpp
-struct Concept {
-  template <class... Ts>
-  auto requires(Ts... &&ts) -> REQUIRES(
+const auto Concept = REQUIRES(args...)(
     expressions...
-  );
-};
+);
 ```
 
 ####Example
 ```cpp
-struct Concept {
-  template <class T>
-  auto requires(T &&t, std::ostream& os) -> REQUIRES(
-    t++,        // incrementable
-    *t,         // dereferencable
-    os << t     // printable
-  );
+template<class T>
+const auto Concept = 
+  REQUIRES(T&& t, std::ostream& os) (
+    os << t // printable
+  ) &&
+  REQUIRES(T&& t, int p1, double p2) (
+    t.foo(p1, p2); // foo callable with void(T::*)(int, double)
+  )
 };
 ```
 
@@ -1003,32 +1012,32 @@ http://ericniebler.com/2013/11/23/concept-checking-in-c11/
 
 ----
 
-##Concepts driven design / C++14 (V7)
+##Concepts driven design / C++14
 
+####Concept checking (used when wiring)
 ```cpp
-struct Readable {
-  HAS_MEMBER_FUNCTION(read);
-
-  template <class T>
-  auto requires(T &&t, std::ostream& os) -> REQUIRES(
-    T(t),               // copy constructible
-    os << t,            // printable
-    (T)has_read<int()>  // read callable
-  );
-};
+static_assert(Concept<Foo>(), "foo satisfies Concept");
+static_assert(Concept<Bar>(), "bar doesn't satisfy Concept");
 ```
 
+####Concepts mocking
 ```cpp
-struct Printable {
-  HAS_MEMBER_FUNCTION(print);
+GMock<Readable> mock;
+EXPECT_CALL(mock, (read)(42));
+mock.read(42);
+```
 
-  template <class T>
-  auto requires(T &&t, std::ostream& os) -> REQUIRES(
-    T(t),                   // copy constructible
-    os << t,                // printable
-    (T)has_print<void(int)> // print callable
-  );
-};
+####Type erasure
+```cpp
+any<Readable> reader = FileReader{}; // holds anything
+reader.read(42);                     // Readable (stack!)
+```
+
+####Type erasure mocking
+```cpp
+any<Readable> reader = GMock<Readable>();
+EXPECT_CALL(mock, (read)(42));
+reader.read(42);
 ```
 
 ----
@@ -1036,8 +1045,54 @@ struct Printable {
 ##Concepts driven design / C++14 (V7)
 
 ```cpp
-template<class TReader  = Readable   // TReader  = 'Concept'
-       , class TPrinter = Printable> // TPrinter = 'Concept'
+HAS_MEMBER_FUNCTION(read); // static reflection, please!
+
+template<class T>
+const auto Readable = 
+  REQUIRES(T&& t, std::ostream& os) (
+    T(t),    // copy constructible
+    os << t  // printable
+  ) &&
+  REQUIRES(read<T, int>&& t) (
+    t.read() // read callable with int (T::*)()
+  );
+```
+
+```cpp
+HAS_MEMBER_FUNCTION(print); // still better than MOCK_METHOD7(...)
+
+template<class T>
+const auto Printable = 
+  REQUIRES(T&& t, std::ostream& os) (
+    T(t),    // copy constructible
+    os << t  // printable
+  ) &&
+  REQUIRES(print<T, void>&&, int i) (
+    t.print(i) // print callable with void (T::*)(int)
+  );
+```
+
+----
+
+##Concepts driven design / C++14 (V7)
+
+>Short `decltype` notation
+```cpp
+$(Concept) is same as decltype(Concept<>)
+```
+
+>Alternative
+```cpp
+using Concept_t = decltype(Concept<>);
+```
+
+----
+
+##Concepts driven design / C++14 (V7)
+
+```cpp
+template<class TReader  = $(Readable)   // TReader  = 'Concept'
+       , class TPrinter = $(Printable)> // TPrinter = 'Concept'
 class App {
   TReader reader;
   TPrinter printer;
@@ -1056,8 +1111,8 @@ public:
 ```cpp
 int main() {
   const auto injector = di::make_injector(
-    di::bind<Readable>.to<FileReader>(),
-    di::bind<Printable>.to<ConsolePrinter>()
+    di::bind<$(Readable)>.to<FileReader>(),
+    di::bind<$(Printable)>.to<ConsolePrinter>()
   );
 
   injector.create<App>().run();
@@ -1082,8 +1137,8 @@ int main() {
 
 ```cpp
 const auto injector = di::make_injector(
-  di::bind<Readable>.to<Logger>(), // Logger doesn't satisfy Readable!
-  di::bind<Printable>.to<ConsolePrinter>()
+  di::bind<$(Readable)>.to<Logger>(), // Logger isn't Readable!
+  di::bind<$(Printable)>.to<ConsolePrinter>()
 );
 ```
 
@@ -1111,7 +1166,7 @@ GMock<Readable> readableMock;
 EXPECT_CALL(readableMock, read(_)).WillOnce(Return(42));
 ```
 
-####Test
+####Test (same as with interfaces)
 ```cpp
 "should print read text"_test = [] {
   constexpr auto value = 42;
@@ -1120,8 +1175,8 @@ EXPECT_CALL(readableMock, read(_)).WillOnce(Return(42));
                                    // and mocks
 
   InSequence sequence;
-  EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
-  EXPECT_CALL(mocks<Printable>(), print(value));
+  EXPECT_CALL(mocks<$(Readable)>(), read()).WillOnce(Return(value));
+  EXPECT_CALL(mocks<$(Printable)>(), print(value));
 
   sut.run();
 };
@@ -1132,13 +1187,13 @@ EXPECT_CALL(readableMock, read(_)).WillOnce(Return(42));
 ###Concepts driven design - switching to run-time - type erasure
 
 ```cpp
-template<class TReader = Readable>
+template<class TReader = $(Readable)>
 class App {
   TReader reader;
-  any<Printable> printer; // type erasure based on concepts
+  any<$(Printable)> printer; // type erasure based on concepts
 
 public:
-  App(TReader reader, any<Printable> printer)
+  App(TReader reader, any<$(Printable)> printer)
     : reader(reader), printer(printer)
   { }
 
@@ -1197,7 +1252,7 @@ int main(int argc, char** argv) {
 ###Concepts driven design and virtual functions
 
 ```cpp
-template<class TSynchronizer = Synchronizable>
+template<class TSynchronizer = $(Synchronizable)>
 class FileReader final {
 public:
   FileReader(std::string_view path
@@ -1207,11 +1262,11 @@ public:
 ```
 
 ```cpp
-template<class TWriter = Writable>
+template<class TWriter = $(Writable)>
 class LegacyImplementation final : public ILegacyInterface {
   LegacyImplementation(IFactory* factory      // interface
                      , TWriter writer         // template/concept
-                     , any<Loggable> logger); // type erasure
+                     , any<$(Loggable)> logger); // type erasure
   ...
 };
 ```
@@ -1223,11 +1278,11 @@ class LegacyImplementation final : public ILegacyInterface {
 ```cpp
 int main() {
   const auto injector = di::make_injector(
-    di::bind<Readable>.to<FileReader>(),         // concept -> template class
-    di::bind<Synchronizable>.to<Synchronizer>(), // concept -> class
-    di::bind<Loggable>.to<Logger>(),             // concept -> type erasure
+    di::bind<$(Readable)>.to<FileReader>(),         // concept -> template class
+    di::bind<$(Synchronizable)>.to<Synchronizer>(), // concept -> class
+    di::bind<$(Loggable)>.to<Logger>(),             // concept -> type erasure
     di::bind<ILegacyInterface>.
-          to<LegacyImplementation>()             // interface -> template class
+          to<LegacyImplementation>()                // interface -> template class
   );
 
   injector.create<App>().run();
@@ -1249,17 +1304,11 @@ int main() {
 
 ----
 
-###Injection guideline
-
-![guideline](images/guideline.png)
+###Good practises are good practices for a reason!
 
 ----
 
 ###Concepts and static reflection will be a game changer!
-
-----
-
-###Good practises are good practices for a reason!
 
 ----
 
@@ -1273,6 +1322,13 @@ int main() {
   * Removes/Cleanup the wiring mess (boilerplate code)
   * Simplify refactoring (constructor parameters deduction)
   * Make testing easier (automatic mocks injection)
+  * Supports templates/concepts injection
+
+----
+
+###Dependency Injection - guideline
+
+![guideline](images/guideline.png)
 
 ==============================================================================
 
