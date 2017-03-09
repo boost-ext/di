@@ -1002,7 +1002,7 @@ const auto Concept = REQUIRES(args...)(
 HAS_MEMBER_FUNCTION(foo); // static reflection, please!
 
 template<class T>
-const auto Concept = 
+const auto FooConcept = 
   REQUIRES(T&& t, std::ostream& os) (
     os << t // printable
   ) &&
@@ -1015,32 +1015,46 @@ http://ericniebler.com/2013/11/23/concept-checking-in-c11/
 
 ----
 
+##Concepts driven design / C++14 (V7)
+
+>Short `decltype` notation
+```cpp
+$(Concept) is same as decltype(Concept<>)
+```
+
+>Alternative
+```cpp
+using Concept_t = decltype(Concept<>);
+```
+
+----
+
 ##Concepts driven design / C++14
 
 ####Concept checking (used when wiring)
 ```cpp
-static_assert(Concept<Foo>(), "foo satisfies Concept");
-static_assert(Concept<Bar>(), "bar doesn't satisfy Concept");
+static_assert(Fooable<Foo>(), "foo satisfies Fooable");
+static_assert(Fooable<Bar>(), "bar doesn't satisfy Fooable");
 ```
 
 ####Concepts mocking
 ```cpp
-GMock<Readable> mock;
-EXPECT_CALL(mock, (read)(42));
+GMock<$(Fooable)> mock;
+EXPECT_CALL(mock, (foo)(42));
 mock.read(42);
 ```
 
 ####Type erasure
 ```cpp
-any<Readable> reader = FileReader{}; // holds anything
-reader.read(42);                     // Readable (stack!)
+any<$(Fooable)> foo = Foo{}; // holds anything
+foo.foo(42, 77.0);           // Fooable (stack!)
 ```
 
 ####Type erasure mocking
 ```cpp
-any<Readable> reader = GMock<Readable>();
-EXPECT_CALL(mock, (read)(42));
-reader.read(42);
+any<$(Fooable)> foo = GMock<$(Fooable)>();
+EXPECT_CALL(mock, (foo)(42, 77.0));
+foo.foo(42, 77.0);
 ```
 
 ----
@@ -1073,20 +1087,6 @@ const auto Printable =
   REQUIRES(print<T, void>&&, int i) (
     t.print(i) // print callable with void (T::*)(int)
   );
-```
-
-----
-
-##Concepts driven design / C++14 (V7)
-
->Short `decltype` notation
-```cpp
-$(Concept) is same as decltype(Concept<>)
-```
-
->Alternative
-```cpp
-using Concept_t = decltype(Concept<>);
 ```
 
 ----
