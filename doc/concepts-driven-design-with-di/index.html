@@ -316,7 +316,7 @@ STL example: `std::vector`
 ```cpp
 template<class... Ts>
 concept bool Concept = requires(Ts..., args...) {
-    expressions...
+  expressions...
 };
 ```
 
@@ -958,18 +958,20 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 
 ----
 
-##The story so far
+##The story so far - Virtual functions/interfaces
 
-####Virtual functions/Interfaces
-
-> [[Boost].DI](https://github.com/boost-experimental/di)
-* Automatic constructor injection
-
--
+>[[Boost].DI](https://github.com/boost-experimental/di)
+```
+Automatic constructor injection
+```
 
 > [GUnit.GMock](https://github.com/cpp-testing/GUnit)
-* Easy mocking
-* Automatic mocking injection
+```
+Easy mocking
+```
+```
+Automatic mocking injection
+```
 
 ----
 
@@ -991,21 +993,22 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 ####API (much more powerful than interfaces)
 ```cpp
 const auto Concept = REQUIRES(args...)(
-    expressions...
+  expressions...
 );
 ```
 
 ####Example
 ```cpp
+HAS_MEMBER_FUNCTION(foo); // static reflection, please!
+
 template<class T>
 const auto Concept = 
   REQUIRES(T&& t, std::ostream& os) (
     os << t // printable
   ) &&
-  REQUIRES(T&& t, int p1, double p2) (
+  REQUIRES(foo<T, void>&& t, int p1, double p2) (
     t.foo(p1, p2); // foo callable with void(T::*)(int, double)
-  )
-};
+  );
 ```
 
 http://ericniebler.com/2013/11/23/concept-checking-in-c11/
@@ -1045,7 +1048,7 @@ reader.read(42);
 ##Concepts driven design / C++14 (V7)
 
 ```cpp
-HAS_MEMBER_FUNCTION(read); // static reflection, please!
+HAS_MEMBER_FUNCTION(read); // still better than MOCK_METHOD7(...)
 
 template<class T>
 const auto Readable = 
@@ -1203,8 +1206,8 @@ public:
 };
 ```
 
-* ####Wiring - NO CHANGES REQUIRED!
-* ####Test - NO CHANGES REQUIRED ([GUnit.GMock](https://github.com/cpp-testing/GUnit))!
+* ####Wiring - NO CHANGES REQUIRED
+* ####Test - NO CHANGES REQUIRED ([GUnit.GMock](https://github.com/cpp-testing/GUnit))
 
 ----
 
@@ -1230,8 +1233,8 @@ Scenario 2: Value from an input file is displayed on the QtWindow
 ```cpp
 const auto config = [](std::string_view printer) {
   return di::make_injector(
-     di::bind<Readable>.to<FileReader>(),
-     di::bind<Printable>.to([&](const auto& injector) {
+     di::bind<$(Readable)>.to<FileReader>(),
+     di::bind<$(Printable)>.to([&](const auto& injector) {
        return printer == "QtPrinter"
          ? injector.create<QtPrinter>()
          : injector.create<ConsolePrinter>();
