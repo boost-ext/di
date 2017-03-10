@@ -1000,10 +1000,10 @@ const auto Concept = REQUIRES(args...)(
 ```cpp
 template<class T>
 const auto Fooable =
-  REQUIRES(T&& t, std::ostream& os) (
+  REQUIRES(auto&& t, std::ostream& os) (
     os << t // printable
   ) &&
-  REQUIRES((foo, void), auto&& t, int p1, double p2) (
+  REQUIRES((foo, void) auto&& t, int p1, double p2) (
     t.foo(p1, p2); // foo callable with void(T::*)(int, double)
   );
 ```
@@ -1061,11 +1061,11 @@ foo.foo(42, 77.0);
 ```cpp
 template<class T>
 const auto Readable =
-  REQUIRES(T&& t, std::ostream& os) (
+  REQUIRES(auto&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES((read, int), auto&& t) (
+  REQUIRES((read, int) auto&& t) (
     t.read() // read callable with int (T::*)()
   );
 ```
@@ -1073,11 +1073,11 @@ const auto Readable =
 ```cpp
 template<class T>
 const auto Printable =
-  REQUIRES(T&& t, std::ostream& os) (
+  REQUIRES(auto&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES((print, void), auto && t, int i) (
+  REQUIRES((print, void) auto&& t, int i) (
     t.print(i) // print callable with void (T::*)(int)
   );
 ```
