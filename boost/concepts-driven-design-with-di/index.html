@@ -45,11 +45,16 @@
                    data-notes="^Note:">
 					<script type="text/template">
 
+
+2017
+
 #Concepts driven design with dependency injection
+
+Kris Jusiak, Quantlab
 
 ---
 
-Kris Jusiak
+[kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
 
 ==============================================================================
 
@@ -922,8 +927,8 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
                                    // and mocks
 
   InSequence sequence;
-  EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
-  EXPECT_CALL(mocks<Printable>(), print(value));
+  EXPECT_CALL(mocks<$(Readable)>(), read()).WillOnce(Return(value));
+  EXPECT_CALL(mocks<$(Printable)>(), print(value));
 
   sut.run();
 };
@@ -997,14 +1002,12 @@ const auto Concept = REQUIRES(args...)(
 
 ####Example
 ```cpp
-REFLEXPR(foo); // static reflection, please!
-
 template<class T>
 const auto Fooable =
   REQUIRES(T&& t, std::ostream& os) (
     os << t // printable
   ) &&
-  REQUIRES(foo<T, void>&& t, int p1, double p2) (
+  REQUIRES((foo, void), auto&& t, int p1, double p2) (
     t.foo(p1, p2); // foo callable with void(T::*)(int, double)
   );
 ```
@@ -1060,29 +1063,25 @@ foo.foo(42, 77.0);
 ##Concepts driven design / C++14 (V7)
 
 ```cpp
-REFLEXPR(read); // still better than MOCK_METHOD7(...)
-
 template<class T>
 const auto Readable =
   REQUIRES(T&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES(read<T, int>&& t) (
+  REQUIRES((read, int), auto&& t) (
     t.read() // read callable with int (T::*)()
   );
 ```
 
 ```cpp
-REFLEXPR(print); // still better than MOCK_METHOD7(...)
-
 template<class T>
 const auto Printable =
   REQUIRES(T&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES(print<T, void>&& t, int i) (
+  REQUIRES((print, void), auto && t, int i) (
     t.print(i) // print callable with void (T::*)(int)
   );
 ```
@@ -1163,7 +1162,7 @@ app.cpp: error: 'class Logger' has no member named 'read'
 
 ####[GUnit.GMock](https://github.com/cpp-testing/GUnit)
 ```cpp
-GMock<Readable> readableMock;
+GMock<$(Readable)> readableMock;
 EXPECT_CALL(readableMock, read(_)).WillOnce(Return(42));
 ```
 
