@@ -998,14 +998,11 @@ const auto Concept = REQUIRES(args...)(
 
 ####Example
 ```cpp
-template<class T>
 const auto Fooable =
   REQUIRES(auto&& t, std::ostream& os) (
     os << t // printable
   ) &&
-  REQUIRES((foo, void) auto&& t, int p1, double p2) (
-    t.foo(p1, p2); // foo callable with void(T::*)(int, double)
-  );
+  Callable<void(int, double)>(FNAME(foo));
 ```
 
 http://ericniebler.com/2013/11/23/concept-checking-in-c11/
@@ -1016,12 +1013,12 @@ http://ericniebler.com/2013/11/23/concept-checking-in-c11/
 
 >Short `decltype` notation
 ```cpp
-$(Concept) is same as decltype(Concept<>)
+#define $ decltype
 ```
 
 >Alternative
 ```cpp
-using Concept_t = decltype(Concept<>);
+using Concept_t = decltype(Concept);
 ```
 
 ----
@@ -1030,8 +1027,8 @@ using Concept_t = decltype(Concept<>);
 
 ####Concept checking (used when wiring)
 ```cpp
-static_assert(Fooable<Foo>(), "foo satisfies Fooable");
-static_assert(Fooable<Bar>(), "bar doesn't satisfy Fooable");
+static_assert(satisfies<Foo>(Fooable), "foo satisfies Fooable");
+static_assert(satisfies<Bar>(Fooable), "bar doesn't satisfy Fooable");
 ```
 
 ####Concepts mocking
@@ -1059,27 +1056,21 @@ foo.foo(42, 77.0);
 ##Concepts driven design / C++14 (V7)
 
 ```cpp
-template<class T>
 const auto Readable =
   REQUIRES(auto&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES((read, int) auto&& t) (
-    t.read() // read callable with int (T::*)()
-  );
+  Callable<int()>(FNAME(read));
 ```
 
 ```cpp
-template<class T>
 const auto Printable =
   REQUIRES(auto&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  REQUIRES((print, void) auto&& t, int i) (
-    t.print(i) // print callable with void (T::*)(int)
-  );
+  Callable<void(int)>(FNAME(print));
 ```
 
 ----
