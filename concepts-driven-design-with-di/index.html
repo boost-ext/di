@@ -923,8 +923,8 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
                                    // and mocks
 
   InSequence sequence;
-  EXPECT_CALL(mocks<$(Readable)>(), read()).WillOnce(Return(value));
-  EXPECT_CALL(mocks<$(Printable)>(), print(value));
+  EXPECT_CALL(mocks<IReader)>(), read()).WillOnce(Return(value));
+  EXPECT_CALL(mocks<IPrinter>(), print(value));
 
   sut.run();
 };
@@ -991,7 +991,7 @@ Automatic mocking injection
 
 ####API (much more powerful than interfaces)
 ```cpp
-const auto Concept = REQUIRES(args...)(
+const auto Concept = $requires(args...)(
   expressions...
 );
 ```
@@ -999,10 +999,11 @@ const auto Concept = REQUIRES(args...)(
 ####Example
 ```cpp
 const auto Fooable =
-  REQUIRES(auto&& t, std::ostream& os) (
+  $requires(auto&& t, std::ostream& os) (
+    T(t), // copy constructible
     os << t // printable
   ) &&
-  Callable<void(int, double)>(FNAME(foo));
+  Callable<void(int, double)>($fname(foo));
 ```
 
 http://ericniebler.com/2013/11/23/concept-checking-in-c11/
@@ -1027,8 +1028,8 @@ using Concept_t = decltype(Concept);
 
 ####Concept checking (used when wiring)
 ```cpp
-static_assert(satisfies<Foo>(Fooable), "foo satisfies Fooable");
-static_assert(satisfies<Bar>(Fooable), "bar doesn't satisfy Fooable");
+static_assert(requiers<Foo>(Fooable), "");
+static_assert(requires<Bar>(Fooable), "bar requires to be Fooable!");
 ```
 
 ####Concepts mocking
@@ -1057,20 +1058,20 @@ foo.foo(42, 77.0);
 
 ```cpp
 const auto Readable =
-  REQUIRES(auto&& t, std::ostream& os) (
+  $requires(auto&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  Callable<int()>(FNAME(read));
+  Callable<int()>($fname(read));
 ```
 
 ```cpp
 const auto Printable =
-  REQUIRES(auto&& t, std::ostream& os) (
+  $requires(auto&& t, std::ostream& os) (
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  Callable<void(int)>(FNAME(print));
+  Callable<void(int)>($fname(print));
 ```
 
 ----
