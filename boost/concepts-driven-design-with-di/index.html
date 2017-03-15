@@ -1003,7 +1003,7 @@ const auto Fooable =
     T(t), // copy constructible
     os << t // printable
   ) &&
-  Callable<void(int, double)>($fname(foo));
+  $(foo)<void(int, double)>();
 ```
 
 http://ericniebler.com/2013/11/23/concept-checking-in-c11/
@@ -1062,7 +1062,7 @@ const auto Readable =
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  Callable<int()>($fname(read));
+  $(read)<int()>();
 ```
 
 ```cpp
@@ -1071,7 +1071,7 @@ const auto Printable =
     T(t),    // copy constructible
     os << t  // printable
   ) &&
-  Callable<void(int)>($fname(print));
+  $(print)<void(int)>();
 ```
 
 ----
