@@ -16,6 +16,20 @@
 #include <tuple>
 #include <vector>
 
+struct Concept {};
+struct ConceptImpl {};
+
+BOOST_DI_NAMESPACE_BEGIN
+
+namespace concepts {
+template <class T>
+struct is_related<true, Concept, T> {
+  static constexpr auto value = true;
+};
+}  // concepts
+
+BOOST_DI_NAMESPACE_END
+
 namespace di = boost::di;
 
 struct i1 {
@@ -1115,6 +1129,17 @@ test bind_template_to_type_templates_type = [] {
   static_expect(std::is_same<classA<classB>, std::decay_t<decltype(object.t)>>::value);
   static_expect(std::is_same<classB, std::decay_t<typename decltype(object.t)::type>>::value);
   expect(42 == object.t.i);
+};
+
+template <class T = Concept>
+struct app4 {
+  using type = T;
+};
+
+test bind_template_to_conept_type = [] {
+  const auto injector = di::make_injector(di::bind<Concept>().to<ConceptImpl>());
+  auto object = injector.create<app4>();
+  static_expect(std::is_same<ConceptImpl, typename decltype(object)::type>::value);
 };
 
 #if defined(__cpp_variable_templates)
