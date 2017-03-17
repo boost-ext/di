@@ -146,6 +146,7 @@ namespace di = boost::di;
 struct iworld {
   virtual ~iworld() noexcept = default;
 };
+
 struct world : iworld {
   world() { std::cout &lt;&lt; &quot; world!&quot; &lt;&lt; std::endl; }
 };
@@ -157,15 +158,17 @@ struct hello {
   }
 };
 
+template &lt;class T = class Greater&gt;
 struct example {
-  hello h;
+  T h;
   iworld&amp; w;
 };
 
 int main() {
-  auto injector = di::make_injector(
-    di::bind&lt;iworld&gt;().to&lt;world&gt;()
-  , di::bind&lt;&gt;().to(42)
+  const auto injector = di::make_injector(
+    di::bind&lt;iworld&gt;().to&lt;world&gt;()      // bind interface to implementation
+  , di::bind&lt;&gt;().to(42)                 // bind int to value 42
+  , di::bind&lt;class Greater&gt;.to&lt;hello&gt;() // bind template to type
   );
 
   injector.create&lt;example&gt;();
