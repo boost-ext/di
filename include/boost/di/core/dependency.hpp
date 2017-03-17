@@ -18,6 +18,17 @@
 
 namespace core {
 
+template <class>
+struct resolve_me;
+
+template <class, class, class>
+struct resolve__;
+
+template <class TBinder, class TDeps, template <class...> class T, class... Ts>
+struct resolve__<TBinder, TDeps, T<Ts...>> {
+  using type = T<typename TBinder::template resolve_t<TDeps, Ts, no_name>::template given_t<TBinder, TDeps>...>;
+};
+
 template <class, class>
 struct dependency_concept {};
 
@@ -97,6 +108,19 @@ class dependency
   using name = TName;
   using priority = TPriority;
 
+  template <class, class, class T>
+  struct resolve_impl {
+    using type = T;
+  };
+
+  template <class TBinder, class TDeps, class T>
+  struct resolve_impl<TBinder, TDeps, resolve_me<T>> {
+    using type = typename resolve__<TBinder, TDeps, T>::type;
+  };
+
+  template <class TBinder, class TDeps>
+  using given_t = typename resolve_impl<TBinder, TDeps, given>::type;
+
   dependency() noexcept {}
 
   template <class T>
@@ -142,6 +166,11 @@ class dependency
     using dependency =
         dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
+  }
+
+  template <template <class...> class T>
+  auto to() noexcept {
+    return dependency<TScope, TExpected, resolve_me<T<>>, TName, TPriority>{};
   }
 
   template <class...>

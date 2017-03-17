@@ -13,6 +13,7 @@ namespace di = boost::di;
 struct iworld {
   virtual ~iworld() noexcept = default;
 };
+
 struct world : iworld {
   world() { std::cout << " world!" << std::endl; }
 };
@@ -25,16 +26,18 @@ struct hello {
 };
 
 /// aggregate initialization `example{hello, world}`
+template <class T = class Greater>
 struct example {
-  hello h;
+  T h;
   iworld& w;
 };
 
 int main() {
   // clang-format off
-  auto injector = di::make_injector(
-    di::bind<iworld>().to<world>()
-  , di::bind<>().to(42)
+  const auto injector = di::make_injector(
+    di::bind<iworld>().to<world>()      // bind interface to implementation
+  , di::bind<>().to(42)                 // bind int to value 42
+  , di::bind<class Greater>.to<hello>() // bind template to type
   );
   // clang-format off
 
