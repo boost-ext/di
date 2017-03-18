@@ -35,9 +35,9 @@ struct example {
 int main() {
   // clang-format off
   const auto injector = di::make_injector(
-    di::bind<iworld>().to<world>()      // bind interface to implementation
-  , di::bind<>().to(42)                 // bind int to value 42
-  , di::bind<class Greater>.to<hello>() // bind template to type
+    di::bind<iworld>().to<world>()        // bind interface to implementation
+  , di::bind<>().to(42)                   // bind int to value 42
+  , di::bind<class Greater>().to<hello>() // bind template to type
   );
   // clang-format off
 
