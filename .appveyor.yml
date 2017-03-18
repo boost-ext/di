@@ -33,8 +33,8 @@ environment:
     MEMCHECK: DRMEMORY
 
   - platform: x64
-    image: Visual Studio 2017 RC
-    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC
+    image: Visual Studio 2017
+    VSPATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build
     BS: cmake
     MEMCHECK: DRMEMORY
 
