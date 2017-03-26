@@ -189,6 +189,7 @@ retq
     * [Shared Scope](http://boost-experimental.github.io/di/extensions/index.html#shared-scope)
 * [FAQ](http://boost-experimental.github.io/di/FAQ/index.html)
 * [CHANGELOG](http://boost-experimental.github.io/di/CHANGELOG/index.html)
+    * [ [1.1.0] - 2017-05-04](http://boost-experimental.github.io/di/CHANGELOG/index.html#-110-2017-05-04)
     * [ [1.0.1] - 2016-05-04](http://boost-experimental.github.io/di/CHANGELOG/index.html#-101-2016-05-04)
     * [ [1.0.0] - 2016-02-22](http://boost-experimental.github.io/di/CHANGELOG/index.html#-100-2016-02-22)
     * [ [0.5.0] - 2015-01-12](http://boost-experimental.github.io/di/CHANGELOG/index.html#-050-2015-01-12)
