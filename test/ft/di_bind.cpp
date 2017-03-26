@@ -1088,7 +1088,7 @@ test bind_template_to_type = [] {
   struct classA {
     int i{};
   };
-  const auto injector = di::make_injector(di::bind<A>().to<classA>(), di::bind<>.to(42));
+  const auto injector = di::make_injector(di::bind<A>().to<classA>(), di::bind<>().to(42));
   auto object = injector.create<app1>();
   expect(42 == object.t.i);
 };
