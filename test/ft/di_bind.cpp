@@ -123,7 +123,7 @@ test deduced_named_to = [] {
 
 test named_polymorphic = [] {
   struct c {
-    BOOST_DI_INJECT(explicit c, (named = name)std::shared_ptr<i1> sp) : sp(sp) {}
+    BOOST_DI_INJECT(explicit c, (named = name) std::shared_ptr<i1> sp) : sp(sp) {}
     std::shared_ptr<i1> sp;
   };
 
@@ -152,7 +152,7 @@ test named_with_ctor_def_decl = [] {
 
 test named_parameters_with_shared_scope = [] {
   struct c {
-    BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1> &n1, (named = b)std::shared_ptr<i1> n2) : n1(n1), n2(n2) {}
+    BOOST_DI_INJECT(c, (named = a) const std::shared_ptr<i1> &n1, (named = b) std::shared_ptr<i1> n2) : n1(n1), n2(n2) {}
 
     std::shared_ptr<i1> n1;
     std::shared_ptr<i1> n2;
@@ -696,7 +696,8 @@ test multi_bindings_containers = [] {
 
 test multi_bindings_inject_named = [] {
   struct c {
-    BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>> &v1, (named = b)std::vector<std::unique_ptr<i1>> v2) {
+    BOOST_DI_INJECT(c, (named = a) const std::vector<std::shared_ptr<i1>> &v1,
+                    (named = b) std::vector<std::unique_ptr<i1>> v2) {
       expect(v1.size() == 2);
       expect(dynamic_cast<impl1 *>(v1[0].get()));
       expect(dynamic_cast<impl1_2 *>(v1[1].get()));
@@ -730,12 +731,12 @@ test multi_bindings_ctor_with_exposed_module = [] {
   struct ExposedI1 {};
   struct ExposedI1_ {};
 
-  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1{})std::unique_ptr<i1>)> {
+  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1{}) std::unique_ptr<i1>)> {
     return di::make_injector(di::bind<i1>().to<impl1>().named(ExposedI1{}));
   };
   auto module2 = []() -> di::injector<std::unique_ptr<i1>> { return di::make_injector(di::bind<i1>().to<impl1_int>()); };
   auto module3 = [] { return di::make_injector(di::bind<i1>().to<impl1_2>().named(ExposedI1_{})); };
-  auto module4 = [&]() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1_{})std::unique_ptr<i1>)> {
+  auto module4 = [&]() -> di::injector<BOOST_DI_EXPOSE((named = ExposedI1_{}) std::unique_ptr<i1>)> {
     return di::make_injector(module3());
   };
   auto injector =

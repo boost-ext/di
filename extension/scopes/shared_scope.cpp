@@ -56,7 +56,7 @@ auto name = [] {};
 
 class example {
  public:
-  BOOST_DI_INJECT(example, (named = name)std::shared_ptr<interface1> sp1, (named = name)std::shared_ptr<interface1> sp2,
+  BOOST_DI_INJECT(example, (named = name) std::shared_ptr<interface1> sp1, (named = name) std::shared_ptr<interface1> sp2,
                   std::shared_ptr<interface1> sp3) {
     assert(sp1 == sp2);
     assert(dynamic_cast<implementation2*>(sp1.get()));

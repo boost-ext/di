@@ -41,8 +41,9 @@ using wrapper_traits_t = typename wrapper_traits<T>::type;
 __BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
 template <class TGiven, class TProvider, class... Ts>
-struct is_expr : aux::integral_constant<bool, aux::is_callable_with<TGiven, typename TProvider::injector_t, Ts...>::value &&
-                                                  !has_result_type<TGiven>::value> {};
+struct is_expr : aux::integral_constant<bool,
+                                        aux::is_callable_with<TGiven, typename TProvider::injector_t, Ts...>::value &&
+                                            !has_result_type<TGiven>::value> {};
 
 }  // detail
 
@@ -200,7 +201,7 @@ class instance {
     template <class TName, class T>
     struct injector__<named<TName, T>> {
       T (*f)(const injector__*) = nullptr;
-      explicit injector__(const decltype(f)& ptr) : f(ptr) {}
+      explicit injector__(const decltype(f) & ptr) : f(ptr) {}
     };
 
     struct injector : injector__<Ts>... {

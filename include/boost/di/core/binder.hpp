@@ -59,6 +59,17 @@ class binder {
   }
 #endif  // __pph__
 
+  template <class, class T>
+  struct resolve_template_impl {
+    using type = T;
+  };
+
+  template <class TDeps, template <class...> class T, class... Ts>
+  struct resolve_template_impl<TDeps, aux::identity<T<Ts...>>> {
+    using type = T<typename resolve_template_impl<
+        TDeps, typename resolve__<TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>::type...>;
+  };
+
  public:
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
@@ -74,6 +85,9 @@ class binder {
 
   template <class TDeps, class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>>
   using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;
+
+  template <class TDeps, class T>
+  using resolve_template_t = typename resolve_template_impl<TDeps, T>::type;
 };
 
 }  // core

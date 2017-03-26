@@ -36,7 +36,7 @@ struct provider__ {
 template <class T>
 typename scope<T>::template requires_<typename scope<_, _>::is_referable, typename scope<_, _>::try_create,
                                       typename scope<_, _>::create>
-    scopable_impl(...);
+scopable_impl(...);
 
 template <class T>
 auto scopable_impl(T &&)

@@ -23,11 +23,11 @@ struct impl1 : i1 {
 auto my_name = [] {};
 
 struct T {
-  BOOST_DI_INJECT(T, (named = my_name)std::unique_ptr<i1> up) : up(std::move(up)) {}
+  BOOST_DI_INJECT(T, (named = my_name) std::unique_ptr<i1> up) : up(std::move(up)) {}
   std::unique_ptr<i1> up;
 };
 
-auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = my_name)std::unique_ptr<i1>)> {
+auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = my_name) std::unique_ptr<i1>)> {
   // clang-format off
   return di::make_injector(
     di::bind<i1>().named(my_name).to<impl1>()

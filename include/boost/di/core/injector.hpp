@@ -95,7 +95,8 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
   template <class T, class TName = no_name, class TIsRoot = aux::false_type>
   struct is_creatable {
     using dependency_t = binder::resolve_t<injector, T, TName>;
-    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::template given_t<binder, injector>, T>::type;
+    using ctor_t =
+        typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T>::type;
     using ctor_args_t = typename ctor_t::second::second;
 
     static constexpr auto value =
@@ -135,9 +136,9 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
   }
 
   template <template <class...> class T>
-  typename resolve__<binder, injector, T<>>::type create() const {
-    using type = typename resolve__<binder, injector, T<>>::type;
-    return __BOOST_DI_TYPE_WKND(T) create_successful_impl<aux::true_type>(aux::type<type>{});
+  binder::resolve_template_t<injector, aux::identity<T<>>> create() const {
+    return __BOOST_DI_TYPE_WKND(T)
+        create_successful_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
   }
 
  protected:
@@ -263,7 +264,8 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::template given_t<binder, injector>, T>::type;
+    using ctor_t =
+        typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
@@ -278,7 +280,8 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
   auto create_successful_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
-    using ctor_t = typename type_traits::ctor_traits__<typename dependency_t::template given_t<binder, injector>, T>::type;
+    using ctor_t =
+        typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T>::type;
     using provider_t = successful::provider<ctor_t, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));

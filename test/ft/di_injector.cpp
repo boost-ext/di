@@ -291,11 +291,11 @@ test exposed_bind = [] {
 
 test exposed_bind_interface = [] {
   struct c {
-    BOOST_DI_INJECT(c, (named = name)std::unique_ptr<i1> i) : i(std::move(i)) {}
+    BOOST_DI_INJECT(c, (named = name) std::unique_ptr<i1> i) : i(std::move(i)) {}
     std::unique_ptr<i1> i;
   };
 
-  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = name)std::unique_ptr<i1>)> {
+  auto module = []() -> di::injector<BOOST_DI_EXPOSE((named = name) std::unique_ptr<i1>)> {
     return di::make_injector(di::bind<i1>().named(name).to<impl1>());
   };
 
@@ -364,26 +364,26 @@ test exposed_by_singleton = [] {
 
 test exposed_named = [] {
   struct c {
-    BOOST_DI_INJECT(c, std::shared_ptr<i1> sp1, (named = name)std::shared_ptr<i1> sp2) {
+    BOOST_DI_INJECT(c, std::shared_ptr<i1> sp1, (named = name) std::shared_ptr<i1> sp2) {
       expect(dynamic_cast<impl1*>(sp1.get()));
       expect(dynamic_cast<impl1_2*>(sp2.get()));
       expect(sp1 != sp2);
     }
   };
-  di::injector<BOOST_DI_EXPOSE((named = name)std::shared_ptr<i1>), std::shared_ptr<i1>> injector =
+  di::injector<BOOST_DI_EXPOSE((named = name) std::shared_ptr<i1>), std::shared_ptr<i1>> injector =
       di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i1>().named(name).to<impl1_2>());
   injector.create<c>();
 };
 
 test exposed_named_ref = [] {
   struct c {
-    BOOST_DI_INJECT(c, i1& o1, (named = name)i1& o2) {
+    BOOST_DI_INJECT(c, i1& o1, (named = name) i1& o2) {
       expect(dynamic_cast<impl1*>(&o1));
       expect(dynamic_cast<impl1_2*>(&o2));
       expect(&o1 != &o2);
     }
   };
-  di::injector<BOOST_DI_EXPOSE((named = name)i1&), i1&> injector =
+  di::injector<BOOST_DI_EXPOSE((named = name) i1&), i1&> injector =
       di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i1>().named(name).to<impl1_2>());
   injector.create<c>();
 };

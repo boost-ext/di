@@ -6,7 +6,6 @@
 //
 #if !defined(COVERAGE)
 
-#include "boost/di.hpp"
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
@@ -14,6 +13,7 @@
 #include <regex>
 #include <sstream>
 #include <string>
+#include "boost/di.hpp"
 #include "common/utils.hpp"
 
 namespace {

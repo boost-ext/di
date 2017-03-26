@@ -23,8 +23,7 @@
 template <class TFStream = std::ofstream>
 struct file : std::string, TFStream {
   file(const std::string& name)  // non explicit
-      : std::string{name},
-        TFStream{name} {}
+      : std::string{name}, TFStream{name} {}
 };
 
 std::string cxx() {

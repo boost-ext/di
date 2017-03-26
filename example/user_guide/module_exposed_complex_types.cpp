@@ -37,7 +37,7 @@ struct T {
 
 __BOOST_DI_UNUSED auto name = [] {};
 
-di::injector<T, std::unique_ptr<T>, BOOST_DI_EXPOSE((named = name)T)> module(const int& i) noexcept {
+di::injector<T, std::unique_ptr<T>, BOOST_DI_EXPOSE((named = name) T)> module(const int& i) noexcept {
   // clang-format off
   return di::make_injector(
     di::bind<i1>().to<impl1>()
@@ -63,7 +63,7 @@ int main() {
   }
   {
     struct example {
-      BOOST_DI_INJECT(example, (named = name)T object) : object(object) {}
+      BOOST_DI_INJECT(example, (named = name) T object) : object(object) {}
       T object;
     };
 

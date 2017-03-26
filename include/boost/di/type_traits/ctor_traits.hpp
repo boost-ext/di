@@ -52,7 +52,7 @@ struct ctor_impl<TIsConstructible, T, aux::index_sequence<Ns...>,
                  __BOOST_DI_REQUIRES((sizeof...(Ns) > 1) && !TIsConstructible<T, get<core::any_type_fwd<T>, Ns>...>::value)>
     : aux::conditional<TIsConstructible<T, get<core::any_type_ref_fwd<T>, Ns>...>::value,
                        aux::type_list<get<core::any_type_ref_fwd<T>, Ns>...>,
-                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(Ns)-1>>::type> {};
+                       typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<sizeof...(Ns) - 1>>::type> {};
 
 template <template <class...> class TIsConstructible, class T>
 using ctor_impl_t = typename ctor_impl<TIsConstructible, T, aux::make_index_sequence<BOOST_DI_CFG_CTOR_LIMIT_SIZE>>::type;
