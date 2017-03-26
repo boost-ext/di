@@ -2385,8 +2385,8 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   create()
       // clang-format on
       const {
-    return __BOOST_DI_TYPE_WKND(T)
-        create_successful_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
+    return __BOOST_DI_TYPE_WKND(type) create_successful_impl<aux::true_type>(aux::type<type>{});
   }
   template <template <class...> class T,
             __BOOST_DI_REQUIRES(
@@ -2397,8 +2397,8 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
   create()
       // clang-format on
       const {
-    return __BOOST_DI_TYPE_WKND(T)
-        create_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
+    return __BOOST_DI_TYPE_WKND(type) create_impl<aux::true_type>(aux::type<type>{});
   }
 
  protected:
@@ -2579,8 +2579,8 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
   create()
       // clang-format on
       const {
-    return __BOOST_DI_TYPE_WKND(T)
-        create_successful_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
+    return __BOOST_DI_TYPE_WKND(type) create_successful_impl<aux::true_type>(aux::type<type>{});
   }
   template <template <class...> class T,
             __BOOST_DI_REQUIRES(
@@ -2591,8 +2591,8 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
   create()
       // clang-format on
       const {
-    return __BOOST_DI_TYPE_WKND(T)
-        create_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
+    return __BOOST_DI_TYPE_WKND(type) create_impl<aux::true_type>(aux::type<type>{});
   }
 
  protected:
