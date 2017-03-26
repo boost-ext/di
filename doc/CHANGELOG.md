@@ -1,3 +1,12 @@
+## [1.1.0] - 2017-05-04
+- **Additions**
+  - Support for Clang-4.0
+  - Support for GCC-7.0
+  - Support for MSVC-2017
+  >
+  - **Core**
+    - [Support for injecting templates/concepts]()
+
 ## [1.0.1] - 2016-05-04
 - **Breaking Changes**
     - [Simplified interface for policies](http://boost-experimental.github.io/di/user_guide/index.html#policies)
