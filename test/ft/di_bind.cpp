@@ -1086,7 +1086,9 @@ struct app1 {
 
 test bind_template_to_type = [] {
   struct classA {
+#if defined(__MSVC__)
     explicit classA(int i) : i(i) {}
+#endif
     int i = 0;
   };
   const auto injector = di::make_injector(di::bind<A>().to<classA>(), di::bind<>().to(42));
@@ -1103,6 +1105,9 @@ struct app2 {
 
 test bind_template_to_types = [] {
   struct classA {
+#if defined(__MSVC__)
+    explicit classA(int i) : i(i) {}
+#endif
     int i = 0;
   };
   struct ConceptImpl {};
