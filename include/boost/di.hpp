@@ -30,17 +30,20 @@ BOOST_DI_CFG_FWD
 #define __BOOST_DI_UNUSED __attribute__((unused))
 #define __BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define __BOOST_DI_TYPE_WKND(T)
+#define __BOOST_DI_ACCESS_WKND private
 #elif defined(__GNUC__)
 #define __GCC__
 #define __BOOST_DI_UNUSED __attribute__((unused))
 #define __BOOST_DI_DEPRECATED(...) [[deprecated(__VA_ARGS__)]]
 #define __BOOST_DI_TYPE_WKND(T)
+#define __BOOST_DI_ACCESS_WKND private
 #elif defined(_MSC_VER)
 #define __MSVC__
 #define __has_include(...) 0
 #define __BOOST_DI_UNUSED
 #define __BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
 #define __BOOST_DI_TYPE_WKND(T) (T &&)
+#define __BOOST_DI_ACCESS_WKND public
 #endif
 #if !defined(__has_builtin)
 #define __has_builtin(...) 0
@@ -1589,7 +1592,7 @@ struct override {};
 template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
 class dependency
     : dependency_base,
-      TScope::template scope<TExpected, TGiven>,
+      __BOOST_DI_ACCESS_WKND TScope::template scope<TExpected, TGiven>,
       public dependency_impl<dependency_concept<TExpected, TName>, dependency<TScope, TExpected, TGiven, TName, TPriority>> {
   template <class, class, class, class, class>
   friend class dependency;

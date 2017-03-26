@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_CORE_DEPENDENCY_HPP
 #define BOOST_DI_CORE_DEPENDENCY_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/concepts/boundable.hpp"
@@ -47,7 +48,7 @@ struct override {};
 template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
 class dependency
     : dependency_base,
-      TScope::template scope<TExpected, TGiven>,
+      __BOOST_DI_ACCESS_WKND TScope::template scope<TExpected, TGiven>,
       public dependency_impl<dependency_concept<TExpected, TName>, dependency<TScope, TExpected, TGiven, TName, TPriority>> {
   template <class, class, class, class, class>
   friend class dependency;
