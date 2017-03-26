@@ -1086,7 +1086,7 @@ struct app1 {
 
 test bind_template_to_type = [] {
   struct classA {
-    int i{};
+    int i = 0;
   };
   const auto injector = di::make_injector(di::bind<A>().to<classA>(), di::bind<>().to(42));
   auto object = injector.create<app1>();
@@ -1102,7 +1102,7 @@ struct app2 {
 
 test bind_template_to_types = [] {
   struct classA {
-    int i{};
+    int i = 0;
   };
   struct ConceptImpl {};
   const auto injector =
@@ -1119,7 +1119,7 @@ template <class T = B>
 struct classA {
   using type = T;
   explicit classA(int i) : i(i) {}
-  int i{};
+  int i = 0;
 };
 
 template <class T = A>
