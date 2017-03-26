@@ -20,20 +20,20 @@ environment:
   fast_finish: true
 
   matrix:
-  - platform: x64
-    image: Previous Visual Studio 2015
+  - APPVEYOR_BUILD_WORKER_IMAGE: Previous Visual Studio 2015
+    PLATFORM: x64
     VSPATH: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
     BS: cmake
     MEMCHECK: DRMEMORY
 
-  - platform: x64
-    image: Visual Studio 2015
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+    PLATFORM: x64
     VSPATH: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC
     BS: cmake
     MEMCHECK: DRMEMORY
 
-  - platform: x64
-    image: Visual Studio 2017
+  - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+    PLATFORM: x64
     VSPATH: C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build
     BS: cmake
     MEMCHECK: DRMEMORY

@@ -16,14 +16,13 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 // cl /std:c++14 /Ox /W3 hello_world.cpp (***)
 
 #include <boost/di.hpp>
-#include <cassert>
-#include <iostream>
 
 namespace di = boost::di;
 
 struct iworld {
   virtual ~iworld() noexcept = default;
 };
+
 struct world : iworld {
   world() { std::cout << " world!" << std::endl; }
 };
@@ -36,18 +35,20 @@ struct hello {
 };
 
 // aggregate initialization `example{hello, world}`
+template <class T = Greater>
 struct example {
-  hello h;
+  T h;
   iworld& w;
 };
 
 int main() {
   const auto injector = di::make_injector(
-    di::bind<iworld>().to<world>()
-  , di::bind<>().to(42)
+    di::bind<iworld>.to<world>()  // bind interface to impl
+  , di::bind<Greater>.to<hello>() // bind template to type
+  , di::bind<>.to(42)             // bind int to value 42
   );
 
-  injector.create<example>();
+  injector.create<std::unique_ptr<example>>();
 }
 ```
 
@@ -81,9 +82,18 @@ int main() {
   </tr>
 
   <tr>
-    <td>ASM x86-64</td>
+    <td>ASM x86-64 (same as `make_unique<example>`)</td>
     <td colspan="2">
       <pre><code>
+push   %rbx
+mov    %rdi,%rbx
+mov    $0x8,%edi
+callq  0x4008e0 <_Znwm@plt>
+movq   $0x400c78,(%rax)
+mov    %rax,(%rbx)
+mov    %rbx,%rax
+pop    %rbx
+retq
       </code></pre>
     </td>
   </tr>
