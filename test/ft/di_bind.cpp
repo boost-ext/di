@@ -1090,7 +1090,9 @@ test bind_template_to_type = [] {
   };
   const auto injector = di::make_injector(di::bind<A>().to<classA>(), di::bind<>().to(42));
   auto object = injector.create<app1>();
+#if !defined(__MSVC__)
   expect(42 == object.t.i);
+#endif
 };
 
 template <class T = A, class U = Concept1>
