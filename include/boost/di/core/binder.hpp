@@ -14,7 +14,7 @@
 
 namespace core {
 
-class binder {
+struct binder {
   template <class TDefault, class>
   static TDefault resolve_impl(...) noexcept {
     return {};
@@ -70,7 +70,6 @@ class binder {
         TDeps, typename resolve__<TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>::type...>;
   };
 
- public:
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;

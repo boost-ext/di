@@ -1893,7 +1893,7 @@ template <class T>
 using configurable = typename configurable__<T>::type;
 }
 namespace core {
-class binder {
+struct binder {
   template <class TDefault, class>
   static TDefault resolve_impl(...) noexcept {
     return {};
@@ -1937,8 +1937,6 @@ class binder {
     using type = T<typename resolve_template_impl<
         TDeps, typename resolve__<TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>::type...>;
   };
-
- public:
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
@@ -2338,7 +2336,7 @@ inline auto build(TInjector&& injector) noexcept {
 #endif
 template <class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : injector_base, pool<bindings_t<TDeps...>> {
-  friend class binder;
+  friend struct binder;
   template <class>
   friend struct pool;
   using pool_t = pool<bindings_t<TDeps...>>;
@@ -2379,10 +2377,28 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
       () const {
     return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <template <class...> class T>
-  binder::resolve_template_t<injector, aux::identity<T<>>> create() const {
+  template <template <class...> class T,
+            __BOOST_DI_REQUIRES(
+                is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  binder::resolve_template_t<injector, aux::identity<T<>>>
+      // clang-format off
+  create()
+      // clang-format on
+      const {
     return __BOOST_DI_TYPE_WKND(T)
         create_successful_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+  }
+  template <template <class...> class T,
+            __BOOST_DI_REQUIRES(
+                !is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  __BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+  binder::resolve_template_t<injector, aux::identity<T<>>>
+      // clang-format off
+  create()
+      // clang-format on
+      const {
+    return __BOOST_DI_TYPE_WKND(T)
+        create_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
   }
 
  protected:
@@ -2515,7 +2531,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
 };
 template <class TConfig, class... TDeps>
 class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps...>> {
-  friend class binder;
+  friend struct binder;
   template <class>
   friend struct pool;
   using pool_t = pool<bindings_t<TDeps...>>;
@@ -2555,10 +2571,28 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
       () const {
     return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <template <class...> class T>
-  binder::resolve_template_t<injector, aux::identity<T<>>> create() const {
+  template <template <class...> class T,
+            __BOOST_DI_REQUIRES(
+                is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  binder::resolve_template_t<injector, aux::identity<T<>>>
+      // clang-format off
+  create()
+      // clang-format on
+      const {
     return __BOOST_DI_TYPE_WKND(T)
         create_successful_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+  }
+  template <template <class...> class T,
+            __BOOST_DI_REQUIRES(
+                !is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  __BOOST_DI_DEPRECATED("creatable constraint not satisfied")
+  binder::resolve_template_t<injector, aux::identity<T<>>>
+      // clang-format off
+  create()
+      // clang-format on
+      const {
+    return __BOOST_DI_TYPE_WKND(T)
+        create_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
   }
 
  protected:

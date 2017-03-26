@@ -86,7 +86,7 @@ inline auto build(TInjector&& injector) noexcept {
 
 template <class TConfig __BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
 class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : injector_base, pool<bindings_t<TDeps...>> {
-  friend class binder;
+  friend struct binder;
   template <class>
   friend struct pool;
   using pool_t = pool<bindings_t<TDeps...>>;
@@ -135,10 +135,28 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
     return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
 
-  template <template <class...> class T>
-  binder::resolve_template_t<injector, aux::identity<T<>>> create() const {
+  template <template <class...> class T,
+            __BOOST_DI_REQUIRES(
+                is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  binder::resolve_template_t<injector, aux::identity<T<>>>
+      // clang-format off
+  create()
+      // clang-format on
+      const {
     return __BOOST_DI_TYPE_WKND(T)
         create_successful_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
+  }
+
+  template <template <class...> class T,
+            __BOOST_DI_REQUIRES(
+                !is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  __BOOST_DI_CONCEPTS_CREATABLE_ERROR_MSG binder::resolve_template_t<injector, aux::identity<T<>>>
+      // clang-format off
+  create()
+      // clang-format on
+      const {
+    return __BOOST_DI_TYPE_WKND(T)
+        create_impl<aux::true_type>(aux::type<binder::resolve_template_t<injector, aux::identity<T<>>>>{});
   }
 
  protected:
