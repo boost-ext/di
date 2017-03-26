@@ -43,9 +43,9 @@ struct example {
 
 int main() {
   const auto injector = di::make_injector(
-    di::bind<iworld>.to<world>()  // bind interface to impl
-  , di::bind<Greater>.to<hello>() // bind template to type
-  , di::bind<>.to(42)             // bind int to value 42
+    di::bind<iworld>.to<world>()    // bind interface to implementation
+  , di::bind<Greater>.to<hello>()   // bind template to type
+  , di::bind<>.to(42)               // bind int to value 42
   );
 
   injector.create<std::unique_ptr<example>>();
@@ -61,10 +61,6 @@ int main() {
     <th>Clang-3.8</th>
     <th>GCC-6</th>
     <th>MSVC-2015</th>
-
-    <td rowspan="4">
-      <a href="http://boost-experimental.github.io/di/benchmarks/index.html#benchmarks">More Benchmarks</a>
-    </td>
   </tr>
 
   <tr>
@@ -83,7 +79,7 @@ int main() {
 
   <tr>
     <td>ASM x86-64 (same as `make_unique<example>`)</td>
-    <td colspan="2">
+    <td colspan="3">
       <pre><code>
 push   %rbx
 mov    %rdi,%rbx
