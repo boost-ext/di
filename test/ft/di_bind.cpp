@@ -1074,6 +1074,7 @@ test bind_unique_ptr_dtor_defined_with_move_ctor = [] {
   expect(nullptr == object.i1_.get());
 };
 
+#if !defined(__MSVC__)
 template <class T = class A>
 struct app1 {
   T t;
@@ -1102,7 +1103,7 @@ test bind_template_to_types = [] {
   };
   struct ConceptImpl {};
   const auto injector =
-      di::make_injector(di::bind<class A>().to<classA>(), di::bind<class Concept1>.to<ConceptImpl>(), di::bind<>.to(42));
+      di::make_injector(di::bind<class A>().to<classA>(), di::bind<class Concept1>().to<ConceptImpl>(), di::bind<>().to(42));
   auto object = injector.create<app2>();
   expect(42 == object.t.i);
   static_expect(std::is_same<classA, std::decay_t<decltype(object.t)>>::value);
@@ -1124,7 +1125,7 @@ struct app3 {
 };
 
 test bind_template_to_type_templates_type = [] {
-  const auto injector = di::make_injector(di::bind<class A>().to<classA>(), di::bind<class B>.to<classB>(), di::bind<>.to(42));
+  const auto injector = di::make_injector(di::bind<class A>().to<classA>(), di::bind<class B>().to<classB>(), di::bind<>().to(42));
 
   auto object = injector.create<app3>();
   static_expect(std::is_same<classA<classB>, std::decay_t<decltype(object.t)>>::value);
@@ -1142,6 +1143,7 @@ test bind_template_to_conept_type = [] {
   auto object = injector.create<app4>();
   static_expect(std::is_same<ConceptImpl, typename decltype(object)::type>::value);
 };
+#endif
 
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
