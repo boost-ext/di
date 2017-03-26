@@ -280,7 +280,7 @@ struct DummyImpl {
 auto dummy_concept = [] {};
 
 struct example {
-  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept)Dummy d, (named = dummy_concept)std::unique_ptr&lt;Dummy&gt; up) {
+  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept) Dummy d, (named = dummy_concept) std::unique_ptr&lt;Dummy&gt; up) {
     assert(42 == i);
     static_assert(std::is_same&lt;decltype(t), int&gt;::value, &quot;&quot;);
     assert(87 == t);
@@ -1024,7 +1024,7 @@ auto name = [] {};
 
 class example {
  public:
-  BOOST_DI_INJECT(example, (named = name)std::shared_ptr&lt;interface1&gt; sp1, (named = name)std::shared_ptr&lt;interface1&gt; sp2,
+  BOOST_DI_INJECT(example, (named = name) std::shared_ptr&lt;interface1&gt; sp1, (named = name) std::shared_ptr&lt;interface1&gt; sp2,
                   std::shared_ptr&lt;interface1&gt; sp3) {
     assert(sp1 == sp2);
     assert(dynamic_cast&lt;implementation2*&gt;(sp1.get()));

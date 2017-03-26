@@ -2186,11 +2186,11 @@ int main() {
 auto my_name = [] {};
 
 struct T {
-  BOOST_DI_INJECT(T, (named = my_name)std::unique_ptr&lt;i1&gt; up) : up(std::move(up)) {}
+  BOOST_DI_INJECT(T, (named = my_name) std::unique_ptr&lt;i1&gt; up) : up(std::move(up)) {}
   std::unique_ptr&lt;i1&gt; up;
 };
 
-auto module = []() -&gt; di::injector&lt;BOOST_DI_EXPOSE((named = my_name)std::unique_ptr&lt;i1&gt;)&gt; {
+auto module = []() -&gt; di::injector&lt;BOOST_DI_EXPOSE((named = my_name) std::unique_ptr&lt;i1&gt;)&gt; {
   return di::make_injector(
     di::bind&lt;i1&gt;().named(my_name).to&lt;impl1&gt;()
   );
@@ -2214,7 +2214,7 @@ struct T {
 
 __BOOST_DI_UNUSED auto name = [] {};
 
-di::injector&lt;T, std::unique_ptr&lt;T&gt;, BOOST_DI_EXPOSE((named = name)T)&gt; module(const int&amp; i) noexcept {
+di::injector&lt;T, std::unique_ptr&lt;T&gt;, BOOST_DI_EXPOSE((named = name) T)&gt; module(const int&amp; i) noexcept {
   return di::make_injector(
     di::bind&lt;i1&gt;().to&lt;impl1&gt;()
   , di::bind&lt;i2&gt;().to&lt;impl2&gt;()
@@ -2238,7 +2238,7 @@ int main() {
   }
   {
     struct example {
-      BOOST_DI_INJECT(example, (named = name)T object) : object(object) {}
+      BOOST_DI_INJECT(example, (named = name) T object) : object(object) {}
       T object;
     };
 
