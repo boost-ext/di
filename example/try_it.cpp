@@ -28,7 +28,7 @@ struct hello {
 /// aggregate initialization `example{hello, world}`
 template <class T = class Greater>
 struct example {
-  T h;
+  //T h;
   iworld& w;
 };
 
