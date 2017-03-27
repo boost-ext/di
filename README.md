@@ -7,7 +7,7 @@
 
 ---------------------------------------
 
-#[Boost].DI
+# [Boost].DI
 
 Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/try_it/index.html))
 
@@ -52,7 +52,7 @@ int main() {
 }
 ```
 
-###Benchmark
+### Benchmark
 
 <p align="center">
 <table>
@@ -98,7 +98,7 @@ retq
 
 ---------------------------------------
 
-###Documentation
+### Documentation
 
 [](GENERATE_TOC_BEGIN)
 
