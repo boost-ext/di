@@ -176,6 +176,33 @@ class Board {
 * DI provides easier to maintain code (different objects might be easily injected)
 * DI provides easier to test code (fakes objects might be injected)
 
+####STUPID vs SOLID (Object Oriented design)
+
+<table><tr>
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td>Singleton</td></tr>
+    <tr><td><b>T</b></td><td>Tight Coupling</td></tr>
+    <tr><td><b>U</b></td><td>Untestability</td></tr>
+    <tr><td><b>P</b></td><td>Premature Optimization</td></tr>
+    <tr><td><b>I</b></td><td>Indescriptive Naming</td></tr>
+    <tr><td><b>D</b></td><td>Duplication</td></tr>
+  </table>
+ </td>
+
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td><b>Single Responsibility</b></td></tr>
+    <tr><td><b>O</b></td><td>Open-close</td></tr>
+    <tr><td><b>L</b></td><td>Liskov substitution</td></tr>
+    <tr><td><b>I</b></td><td>Interface segregation</td></tr>
+    <tr><td><b>D</b></td><td><b>Dependency inversion</b></td></tr>
+  </table>
+ </td>
+
+ </tr>
+</table>
+> "Clean Code" Uncle Bob
 
 ###Do I need a DI Framework/Library?
 
@@ -193,6 +220,18 @@ app app_{controller_, user_};
 ```
 Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
 **ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
+
+####Manual DI - Wiring Mess
+
+* ####Single Responsibility Principle
+  =>
+    * ####A lot of classes
+    =>
+      * ####Wiring Mess
+      =>
+        * ####Hard to maintain + Lazy programmers (99%)
+        =>
+          * ####Hacks/Workarounds (~~Single Responsibility~~)
 
 ![CPP(BTN)](Run_Motivation_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp)
 <br />
@@ -266,6 +305,7 @@ but also can help you with...
 
 * [Inversion of Control Containers and the Dependency Injection pattern](http://martinfowler.com/articles/injection.html)
 * [DIP in the Wild](http://martinfowler.com/articles/dipInTheWild.html)
+* [Concepts driven design with Dependency Injection](http://boost-experimental.github.io/di/concepts-driven-design-with-di)
 
 ###Videos
 
@@ -273,6 +313,7 @@ but also can help you with...
 * [The Clean Code Talks - Don't Look For Things!](https://www.youtube.com/watch?v=RlfLCWKxHJ0)
 * [C++Now 2016: C++14 Dependency Injection Library](https://www.youtube.com/watch?v=comZthFv3PM) | [Slides](http://boost-experimental.github.io/di/cppnow-2016)
 * [Meeting C++ 2016: TDD/BDD and Dependency Injection](https://www.youtube.com/watch?v=T3uMcxhzRUE) | [Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
+* [Boost your design with C++14 dependency injection](https://skillsmatter.com/skillscasts/9830-boost-your-design-with-c-plus-plus14-dependency-injection) | [Slides](http://boost-experimental.github.io/di/cpp-london-2017)
 * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
 * [The Future of Dependency Injection with Dagger 2](https://www.youtube.com/watch?v=plK0zyRLIP8)
 * [Design Patterns in C++: Creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)

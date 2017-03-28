@@ -19,7 +19,30 @@ branch is not maintained anymore.
 >
 
 * ### How the constructor deduction works without reflection support in C++?
-Please check out [injection](overview.md#nutshell) design.
+Please check out [injection](overview.md#nutshell) design and http://boost-experimental.github.io/di/cppnow-2016/#/7/11.
+
+>
+
+* ### Can I inject templates/concepts?
+Yes, concepts/templates can be injected
+
+```cpp
+template <class T = class Greater>
+struct example { 
+  using type = T;
+};
+
+struct hello {};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<class Greater>().to<hello>()
+  );
+
+  auto object = injector.create<example>();
+  static_assert(std::is_same<hello, decltype(object)::type>{});
+}
+```
 
 >
 

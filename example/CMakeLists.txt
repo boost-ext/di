@@ -47,6 +47,7 @@ example(tutorial/basic_first_steps_with_bindings)
 example(tutorial/basic_first_steps_with_bindings_override)
 example(tutorial/basic_first_steps_with_dynamic_bindings)
 example(tutorial/basic_first_steps_with_multiple_bindings)
+example(tutorial/basic_first_steps_with_template_bindings)
 example(tutorial/basic_split_your_configuration)
 example(tutorial/basic_split_your_configuration_expose)
 

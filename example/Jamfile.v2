@@ -88,6 +88,7 @@ test-suite tutorial :
     [ example tutorial/basic_first_steps_with_bindings_override.cpp ]
     [ example tutorial/basic_first_steps_with_dynamic_bindings.cpp ]
     [ example tutorial/basic_first_steps_with_multiple_bindings.cpp ]
+    [ example tutorial/basic_first_steps_with_template_bindings.cpp ]
     [ example tutorial/basic_split_your_configuration.cpp ]
     [ example tutorial/basic_split_your_configuration_expose.cpp ]
 ;

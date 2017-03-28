@@ -11,12 +11,14 @@ should be free of object creation inside other objects...
 ```cpp
 class controller {
 public:
-  controller() : model_(new model{}) {}
-  ~controller() { delete model_; }
+  controller(config c) 
+    : model_(std::make_unique<model>(c))
+  { }
+
   void run();
 
 private:
-  model* model_;
+  std::unique_ptr<model> model_;
 };
 
 int main() {
@@ -317,6 +319,30 @@ correctly. No runtime exceptions or runtime asserts, EVER!
 
 And full example!
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp)
+
+That's nice but I don't want to be using a dynamic (virtual) dispatch. What about concepts/templates?
+Good news, `[Boost].DI` can inject concepts/templates too!
+
+```cpp
+template <class T = class Greater>
+struct example { 
+  using type = T;
+};
+
+struct hello {};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<class Greater>.to<hello>()
+  );
+
+  auto object = injector.create<example>();
+  static_assert(std::is_same<hello, decltype(object)::type>{});
+}
+```
+
+And full example!
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_template_bindings.cpp)
 
 Great, but my code is more dynamic than that! I mean that I want to choose `gui_view` or `text_view` at runtime.
 `[Boost].DI` can handle that too!
