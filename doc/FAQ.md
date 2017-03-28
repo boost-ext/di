@@ -24,7 +24,8 @@ Please check out [injection](overview.md#nutshell) design and http://boost-exper
 >
 
 * ### Can I inject templates/concepts?
-Yes, concepts/templates can be injected
+Yes, concepts/templates can be injected.
+:w
 
 ```cpp
 template <class T = class Greater>
