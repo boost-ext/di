@@ -395,35 +395,27 @@ protects against missusage of the constructor interface.</p>
 <li>DI provides easier to maintain code (different objects might be easily injected)</li>
 <li>DI provides easier to test code (fakes objects might be injected)</li>
 </ul>
-<h4 id="stupid-vs-solid-object-oriented-design">STUPID vs SOLID (Object Oriented design)</h4>
-<table><tr>
- <td>
-  <table>
-    <tr><td><b>S</b></td><td>Singleton</td></tr>
-    <tr><td><b>T</b></td><td>Tight Coupling</td></tr>
-    <tr><td><b>U</b></td><td>Untestability</td></tr>
-    <tr><td><b>P</b></td><td>Premature Optimization</td></tr>
-    <tr><td><b>I</b></td><td>Indescriptive Naming</td></tr>
-    <tr><td><b>D</b></td><td>Duplication</td></tr>
-  </table>
- </td>
-
- <td>
-  <table>
-    <tr><td><b>S</b></td><td><b>Single Responsibility</b></td></tr>
-    <tr><td><b>O</b></td><td>Open-close</td></tr>
-    <tr><td><b>L</b></td><td>Liskov substitution</td></tr>
-    <tr><td><b>I</b></td><td>Interface segregation</td></tr>
-    <tr><td><b>D</b></td><td><b>Dependency inversion</b></td></tr>
-  </table>
- </td>
-
- </tr>
+<h4 id="stupid-vs-solid-clean-code-uncle-bob">STUPID vs SOLID - "Clean Code" Uncle Bob</h4>
+<table>
+  <tr><td><b>S</b></td><td>Singleton</td></tr>
+  <tr><td><b>T</b></td><td>Tight Coupling</td></tr>
+  <tr><td><b>U</b></td><td>Untestability</td></tr>
+  <tr><td><b>P</b></td><td>Premature Optimization</td></tr>
+  <tr><td><b>I</b></td><td>Indescriptive Naming</td></tr>
+  <tr><td><b>D</b></td><td>Duplication</td></tr>
 </table>
 
 <blockquote>
-<p>"Clean Code" Uncle Bob</p>
+<p>vs</p>
 </blockquote>
+<table>
+  <tr><td><b>S</b></td><td><b>Single Responsibility</b></td></tr>
+  <tr><td><b>O</b></td><td>Open-close</td></tr>
+  <tr><td><b>L</b></td><td>Liskov substitution</td></tr>
+  <tr><td><b>I</b></td><td>Interface segregation</td></tr>
+  <tr><td><b>D</b></td><td><b>Dependency inversion</b></td></tr>
+</table>
+
 <h3 id="do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</h3>
 <p>Depending on a project and its scale you may put up with or without a DI library, however, in any project
 a DI framework may <strong>free you</strong> from maintaining a following (boilerplate) code...</p>
@@ -438,28 +430,18 @@ app app_{controller_, user_};
 
 <p>Notice that <strong>ORDER</strong> in which above dependencies are created is <strong>IMPORTANT</strong> as well as that
 <strong>ANY</strong> change in <strong>ANY</strong> of the objects constructor will <strong>REQUIRE</strong> a change in this code!</p>
-<h4 id="manual-di-wiring-mess">Manual DI - Wiring Mess</h4>
-<ul>
-<li>
-<h4 id="single-responsibility-principle">Single Responsibility Principle</h4>
-  =&gt;<ul>
-<li>
-<h4 id="a-lot-of-classes">A lot of classes</h4>
-=&gt;</li>
-<li>
-<h4 id="wiring-mess">Wiring Mess</h4>
-  =&gt;<ul>
-<li>
-<h4 id="hard-to-maintain-lazy-programmers-99">Hard to maintain + Lazy programmers (99%)</h4>
-=&gt;</li>
-<li>
-<h4 id="hacksworkarounds-single-responsibility">Hacks/Workarounds (~~Single Responsibility~~)</h4>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
+<h4 id="manual-di-wiring-mess-avoid-it-by-using-boostdi">Manual DI - Wiring Mess (Avoid it by using [Boost].DI)</h4>
+<pre><code>* Single Responsibility Principle
+  =&gt;
+    * A lot of classes
+    =&gt;
+      * Wiring Mess
+      =&gt;
+        * Hard to maintain + Lazy programmers (99%)
+        =&gt;
+          * Hacks/Workarounds (~~Single Responsibility~~)
+</code></pre>
+
 <p><img alt="CPP(BTN)" src="./Run_Motivation_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp" />
 <br /></p>
 <p>Right now, imagine a project with hundreds or thousands of those dependencies and a critical issue
@@ -623,5 +605,5 @@ but also can help you with...</p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2017-03-28 02:35:37.001549
+Build Date UTC : 2017-03-28 02:58:32.338367
 -->
