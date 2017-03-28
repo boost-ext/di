@@ -273,6 +273,35 @@ protects against missusage of the constructor interface.</p>
 <li>DI provides easier to maintain code (different objects might be easily injected)</li>
 <li>DI provides easier to test code (fakes objects might be injected)</li>
 </ul>
+<h4 id="stupid-vs-solid-object-oriented-design">STUPID vs SOLID (Object Oriented design)</h4>
+<table><tr>
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td>Singleton</td></tr>
+    <tr><td><b>T</b></td><td>Tight Coupling</td></tr>
+    <tr><td><b>U</b></td><td>Untestability</td></tr>
+    <tr><td><b>P</b></td><td>Premature Optimization</td></tr>
+    <tr><td><b>I</b></td><td>Indescriptive Naming</td></tr>
+    <tr><td><b>D</b></td><td>Duplication</td></tr>
+  </table>
+ </td>
+
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td><b>Single Responsibility</b></td></tr>
+    <tr><td><b>O</b></td><td>Open-close</td></tr>
+    <tr><td><b>L</b></td><td>Liskov substitution</td></tr>
+    <tr><td><b>I</b></td><td>Interface segregation</td></tr>
+    <tr><td><b>D</b></td><td><b>Dependency inversion</b></td></tr>
+  </table>
+ </td>
+
+ </tr>
+</table>
+
+<blockquote>
+<p>"Clean Code" Uncle Bob</p>
+</blockquote>
 <h3 id="do-i-need-a-di-frameworklibrary">Do I need a DI Framework/Library?</h3>
 <p>Depending on a project and its scale you may put up with or without a DI library, however, in any project
 a DI framework may <strong>free you</strong> from maintaining a following (boilerplate) code...</p>
@@ -287,9 +316,31 @@ app app_{controller_, user_};
 
 <p>Notice that <strong>ORDER</strong> in which above dependencies are created is <strong>IMPORTANT</strong> as well as that
 <strong>ANY</strong> change in <strong>ANY</strong> of the objects constructor will <strong>REQUIRE</strong> a change in this code!</p>
+<h4 id="manual-di-wiring-mess">Manual DI - Wiring Mess</h4>
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp"> Motivation Example</a>
-<br /></li>
+<li>
+<h4 id="single-responsibility-principle">Single Responsibility Principle</h4>
+  =&gt;<ul>
+<li>
+<h4 id="a-lot-of-classes">A lot of classes</h4>
+=&gt;</li>
+<li>
+<h4 id="wiring-mess">Wiring Mess</h4>
+  =&gt;<ul>
+<li>
+<h4 id="hard-to-maintain-lazy-programmers-99">Hard to maintain + Lazy programmers (99%)</h4>
+=&gt;</li>
+<li>
+<h4 id="hacksworkarounds-single-responsibility">Hacks/Workarounds (~~Single Responsibility~~)</h4>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp"> Motivation Example</a>
+<br /></p>
+</li>
 </ul>
 <p>Right now, imagine a project with hundreds or thousands of those dependencies and a critical issue
 which has to be fixed ASAP. Unfortunately, in order to fix the bug properly a new non-trivial dependency has to be
@@ -365,6 +416,7 @@ but also can help you with...</p>
 <ul>
 <li><a href="http://martinfowler.com/articles/injection.html">Inversion of Control Containers and the Dependency Injection pattern</a></li>
 <li><a href="http://martinfowler.com/articles/dipInTheWild.html">DIP in the Wild</a></li>
+<li><a href="http://boost-experimental.github.io/di/concepts-driven-design-with-di">Concepts driven design with Dependency Injection</a></li>
 </ul>
 <h3 id="videos">Videos</h3>
 <ul>
@@ -372,6 +424,7 @@ but also can help you with...</p>
 <li><a href="https://www.youtube.com/watch?v=RlfLCWKxHJ0">The Clean Code Talks - Don't Look For Things!</a></li>
 <li><a href="https://www.youtube.com/watch?v=comZthFv3PM">C++Now 2016: C++14 Dependency Injection Library</a> | <a href="http://boost-experimental.github.io/di/cppnow-2016">Slides</a></li>
 <li><a href="https://www.youtube.com/watch?v=T3uMcxhzRUE">Meeting C++ 2016: TDD/BDD and Dependency Injection</a> | <a href="http://boost-experimental.github.io/di/meetingcpp-2016">Slides</a></li>
+<li><a href="https://skillsmatter.com/skillscasts/9830-boost-your-design-with-c-plus-plus14-dependency-injection">Boost your design with C++14 dependency injection</a> | <a href="http://boost-experimental.github.io/di/cpp-london-2017">Slides</a></li>
 <li><a href="http://www.youtube.com/watch?v=oK_XtfXPkqw">A New Type of dependency injection</a></li>
 <li><a href="https://www.youtube.com/watch?v=plK0zyRLIP8">The Future of Dependency Injection with Dagger 2</a></li>
 <li><a href="https://www.pluralsight.com/courses/design-patterns-cpp-creational">Design Patterns in C++: Creational</a></li>

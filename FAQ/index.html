@@ -149,6 +149,9 @@
                 <li class="toctree-l3"><a href="#how-the-constructor-deduction-works-without-reflection-support-in-c">How the constructor deduction works without reflection support in C++?</a></li>
                 
             
+                <li class="toctree-l3"><a href="#can-i-inject-templatesconcepts">Can I inject templates/concepts?</a></li>
+                
+            
                 <li class="toctree-l3"><a href="#can-i-use-xml-in-order-to-set-up-bindings-configuration">Can I use XML in order to set-up bindings configuration?</a></li>
                 
             
@@ -226,8 +229,31 @@ branch is not maintained anymore.</li>
 <ul>
 <li>
 <h3 id="how-the-constructor-deduction-works-without-reflection-support-in-c">How the constructor deduction works without reflection support in C++?</h3>
-Please check out <a href="../overview/index.html#nutshell">injection</a> design.</li>
+Please check out <a href="../overview/index.html#nutshell">injection</a> design and http://boost-experimental.github.io/di/cppnow-2016/#/7/11.</li>
 </ul>
+<blockquote></blockquote>
+<ul>
+<li>
+<h3 id="can-i-inject-templatesconcepts">Can I inject templates/concepts?</h3>
+Yes, concepts/templates can be injected</li>
+</ul>
+<pre><code class="cpp">template &lt;class T = class Greater&gt;
+struct example { 
+  using type = T;
+};
+
+struct hello {};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind&lt;class Greater&gt;().to&lt;hello&gt;()
+  );
+
+  auto object = injector.create&lt;example&gt;();
+  static_assert(std::is_same&lt;hello, decltype(object)::type&gt;{});
+}
+</code></pre>
+
 <blockquote></blockquote>
 <ul>
 <li>
