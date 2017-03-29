@@ -14,7 +14,7 @@ namespace di = boost::di;
 class Greater;
 
 template <class T = Greater>
-struct example { 
+struct example {
   using type = T;
 };
 

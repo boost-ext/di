@@ -71,11 +71,6 @@ struct referable<T&&, TDependency> {
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 
-#if defined(__MSVC__)  // __pph__
-template <class T, class TInjector>
-inline auto build(TInjector&& injector) noexcept {
-  return T{static_cast<TInjector&&>(injector)};
-}
 #endif  // __pph__
 
 #define __BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ __BOOST_DI_CORE_INJECTOR_POLICY_ELSE
@@ -144,8 +139,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
       // clang-format on
       const {
     using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type)
-        create_successful_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(type) create_successful_impl<aux::true_type>(aux::type<type>{});
   }
 
   template <template <class...> class T,
@@ -157,8 +151,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
       // clang-format on
       const {
     using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type)
-        create_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(type) create_impl<aux::true_type>(aux::type<type>{});
   }
 
  protected:
@@ -269,16 +262,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
 
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
-#if defined(__MSVC__)  // __pph__
-      : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
-  }
-#else   // __pph__
-      : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
-  }
-#endif  // __pph__
-  {}
+      : pool_t{copyable_t<deps>{}, pool_t{TArgs{static_cast<TInjector&&>(injector)}...}} {}
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_impl__() const {

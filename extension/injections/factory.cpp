@@ -24,7 +24,7 @@ struct factory_impl;
 
 template <class TInjector, class T, class I, class... TArgs>
 struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...> {
-  factory_impl(const TInjector& injector) : injector_((TInjector&)injector) {}
+  explicit factory_impl(const TInjector& injector) : injector_((TInjector&)injector) {}
 
   std::unique_ptr<I> create(TArgs&&... args) const override {
     // clang-format off
