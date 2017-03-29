@@ -2331,12 +2331,6 @@ struct referable<T&&, TDependency> {
 #endif
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
-#if defined(__MSVC__)
-template <class T, class TInjector>
-inline auto build(TInjector&& injector) noexcept {
-  return T{static_cast<TInjector&&>(injector)};
-}
-#endif
 template <class TConfig, class TPolicies = pool<>, class... TDeps>
 class injector : injector_base, pool<bindings_t<TDeps...>> {
   friend struct binder;
@@ -2492,16 +2486,7 @@ class injector : injector_base, pool<bindings_t<TDeps...>> {
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
-#if defined(__MSVC__)
-      : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
-  }
-#else
-      : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
-  }
-#endif
-  {}
+      : pool_t{copyable_t<deps>{}, pool_t{TArgs{static_cast<TInjector&&>(injector)}...}} {}
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
@@ -2686,16 +2671,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, pool<bindings_t<TDeps
       : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
-#if defined(__MSVC__)
-      : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
-  }
-#else
-      : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
-  }
-#endif
-  {}
+      : pool_t{copyable_t<deps>{}, pool_t{TArgs{static_cast<TInjector&&>(injector)}...}} {}
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);

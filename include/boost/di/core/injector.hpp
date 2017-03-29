@@ -71,8 +71,6 @@ struct referable<T&&, TDependency> {
 template <class T, class TDependency>
 using referable_t = typename referable<T, TDependency>::type;
 
-#endif  // __pph__
-
 #define __BOOST_DI_CORE_INJECTOR_POLICY(...) __VA_ARGS__ __BOOST_DI_CORE_INJECTOR_POLICY_ELSE
 #define __BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...)
 #define __BOOST_DI_INJECTOR_ITERATE
