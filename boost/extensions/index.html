@@ -923,7 +923,11 @@ class session_scope {
     using is_referable = typename scope_type::template is_referable&lt;T&gt;;
 
     template &lt;class T, class TName, class TProvider&gt;
+#if defined(__MSVC__)
+    static auto try_create(const TProvider&amp; provider) -&gt; T;
+#else
     static auto try_create(const TProvider&amp; provider) -&gt; decltype(scope_type{}.template try_create&lt;T, TName&gt;(provider));
+#endif
 
     template &lt;class T, class TName, class TProvider&gt;
     auto create(const TProvider&amp; provider) {
