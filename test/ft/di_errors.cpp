@@ -845,6 +845,15 @@ int main() { di::make_injector<test_config>(); }
     }
     ;
 
+    test config_disable_shared_ptr_deduction = [] {
+      expect_compile_fail(
+          "<include> memory -DBOOST_DI_DISABLE_SHARED_PTR_DEDUCTION", errors(), struct c { std::shared_ptr<int> i; };
+          int main() {
+            const auto injector = di::make_injector(di::bind<int>.in(di::singleton));
+            injector.create<c>();
+          });
+    };
+
     // ---------------------------------------------------------------------------
 
     test mismatch_between_ctor_declaration_and_definition = [] {
