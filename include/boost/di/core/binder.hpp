@@ -67,7 +67,8 @@ struct binder {
   template <class TDeps, template <class...> class T, class... Ts>
   struct resolve_template_impl<TDeps, aux::identity<T<Ts...>>> {
     using type = T<typename resolve_template_impl<
-        TDeps, typename resolve__<TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>::type...>;
+        TDeps, aux::remove_qualifiers_t<typename resolve__<
+                   TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>>::type...>;
   };
 
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
@@ -86,7 +87,7 @@ struct binder {
   using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;
 
   template <class TDeps, class T>
-  using resolve_template_t = typename resolve_template_impl<TDeps, T>::type;
+  using resolve_template_t = typename resolve_template_impl<TDeps, aux::remove_qualifiers_t<T>>::type;
 };
 
 }  // core

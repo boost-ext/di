@@ -1142,14 +1142,30 @@ test bind_template_to_type_templates_type = [] {
   expect(42 == object.t.i);
 };
 
-template <class T = Concept>
+template <class T = class External>
 struct app4 {
+  using type = T;
+  T &t;
+};
+
+test bind_template_to_instance = [] {
+  auto i = 42;
+  const auto injector = di::make_injector(di::bind<class External>().to<int>(i));
+  auto object = injector.create<app4>();
+  static_expect(std::is_same<int, typename decltype(object)::type>::value);
+  expect(42 == object.t);
+  i = 87;
+  expect(87 == object.t);
+};
+
+template <class T = Concept>
+struct app5 {
   using type = T;
 };
 
-test bind_template_to_conept_type = [] {
+test bind_template_to_concept_type = [] {
   const auto injector = di::make_injector(di::bind<Concept>().to<ConceptImpl>());
-  auto object = injector.create<app4>();
+  auto object = injector.create<app5>();
   static_expect(std::is_same<ConceptImpl, typename decltype(object)::type>::value);
 };
 

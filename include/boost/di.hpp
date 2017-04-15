@@ -1671,6 +1671,13 @@ class dependency
         dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
+  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+            __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  auto to(T&& object) noexcept {
+    using dependency = dependency<scopes::instance, deduce_traits_t<concepts::any_of<TExpected, TConcept>, T>,
+                                  typename ref_traits<T>::type, TName, TPriority>;
+    return dependency{static_cast<T&&>(object)};
+  }
   template <template <class...> class T>
   auto to() noexcept {
     return dependency<TScope, TExpected, aux::identity<T<>>, TName, TPriority>{};
@@ -1938,7 +1945,8 @@ struct binder {
   template <class TDeps, template <class...> class T, class... Ts>
   struct resolve_template_impl<TDeps, aux::identity<T<Ts...>>> {
     using type = T<typename resolve_template_impl<
-        TDeps, typename resolve__<TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>::type...>;
+        TDeps, aux::remove_qualifiers_t<typename resolve__<
+                   TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>>::type...>;
   };
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
@@ -1952,7 +1960,7 @@ struct binder {
   template <class TDeps, class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>>
   using resolve_t = typename resolve__<TDeps, T, TName, TDefault>::type;
   template <class TDeps, class T>
-  using resolve_template_t = typename resolve_template_impl<TDeps, T>::type;
+  using resolve_template_t = typename resolve_template_impl<TDeps, aux::remove_qualifiers_t<T>>::type;
 };
 }
 namespace core {

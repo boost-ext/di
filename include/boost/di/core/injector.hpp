@@ -144,8 +144,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
       // clang-format on
       const {
     using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type)
-        create_successful_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(type) create_successful_impl<aux::true_type>(aux::type<type>{});
   }
 
   template <template <class...> class T,
@@ -157,8 +156,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
       // clang-format on
       const {
     using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type)
-        create_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(type) create_impl<aux::true_type>(aux::type<type>{});
   }
 
  protected:
