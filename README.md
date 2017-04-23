@@ -14,8 +14,9 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 ## Quick start
 
 ### Download
-[Boost].DI only requires one `di.hpp` header to get it going!
-[Get the latest `di.hpp` here](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
+[Boost].DI  requires only one header to get it going!
+
+[Get the latest [Boost].DI header here!](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
 
 ### Include
 ```cpp
@@ -33,7 +34,7 @@ $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors fil
 cl /std:c++14 /Ox /W3 file.cpp
 ```
 
-#### Create object graph
+#### Example - Create object graph
 
 ```cpp
 class ctor {
@@ -41,9 +42,11 @@ public:
   explicit ctor(int i) : i(i) {}
   int i;
 };
+
 struct aggregate {
   double d;
 };
+
 class example {
   example(aggregate a, const ctor& c) {
     assert(87.0 == a.d);
@@ -96,8 +99,9 @@ retq
 </table>
 </p>
 
-#### Bind interfaces
+#### Example - Bind interfaces
 
+```cpp
 struct interface {
   virtual ~iworld() noexcept = default;
   virtual int get() const = 0;
@@ -165,7 +169,7 @@ retq
 </table>
 </p>
 
-#### Bind templates
+#### Example - Bind templates
 
 ```cpp
 template<class TPolicy = class TErrorPolicy>
@@ -275,7 +279,7 @@ retq
 </table>
 </p>
 
-### Bind concepts
+### Example - Bind concepts
 
 ```cpp
 struct Stremable {
