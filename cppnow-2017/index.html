@@ -55,17 +55,178 @@ Kris Jusiak, Quantlab Financial
 
 ==============================================================================
 
-##Questions?
+## Concepts driven design - Goals
 
-| [Boost].DI |  |
-| ------- | ------------- |
-|[ (SG8) Concepts lite](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) | Constrating templates |
-|[ (SG7) Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf) | Fakes/Stubs/Mocks generation |
-| Documentation | http://boost-experimental.github.io/di |
-| Source Code | https://github.com/boost-experimental/di |
-| Try it online! | http://boost-experimental.github.io/di/try_it |
-|                | https://godbolt.org/g/dvjJFI |
-<!-- .element: style="margin-left:-13%; width:125%" -->
+| | |
+|-|-|
+| Expressiveness | Type constraints for better error messages | 
+| Loosely coupeled design | Inject all the things! |
+| Performance | Static dispatch by default |
+| Flexiblity | Dynamic dispatch using type erasure |
+| Testability | Automatic mocks injection  |
+
+----
+
+## Type constraints
+
+#### +/- Concepts-Lite syntax in C++14
+
+```cpp
+template<class T>             |   struct Reader {
+const auto Readable =         |    Reader(Reader&&) = default;
+  MoveConstructible<T> &&     |    Reader&(Reader&&) = default;
+  MoveAssignable<T> &&        |    int read();
+  REQUIRES(auto&& t) (        |   };
+    int( t.read() )           |   static_assert(Readable<Reader>{});
+  );                          |   static_assert(not Readable<int>{});
+```
+
+#### More suitable syntax for C++14
+
+```cpp                            
+struct Readable {               |  struct Reader {
+ template<class T>              |   Reader(Reader&&) = default;
+ constexpr Readable(T,          |   Reader&(Reader&&) = default;
+   REQUIRES(                    |   int read();                  
+    MoveConstructible<T> &&     |  };                             
+    MoveAssignable<T> &&        |  static_assert(
+    Callable<T, int()>($(read)) |   std::is_convertible<
+   )                            |    Readable, Reader
+ );                             |   >{}
+};                              |  );
+```
+
+----
+
+## Inject all the things!
+
+```cpp
+template<class T = class TException>
+struct ThrowExceptionPolicy { 
+  void onError(std::string_view msg) { throw T{msg}; } 
+};
+```
+
+#### policy design
+```cpp
+template<class TPolicy = class TErrorPolicy>
+class App : TPolicy {
+  void run() {
+    if (false) { TPolicy::onError("error!"); }
+  }
+};
+```
+
+#### Static dispatch and wiring
+```cpp
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<class TException>.to<std::runtime_error>(),
+    di::bind<class TErrorPolicy>.to<ThrowException>()
+  );
+  injector.create<App>().run(); // App is a template!
+}
+```
+
+----
+
+## DI - 2-Phase resolving (types -> ctors)
+
+```cpp
+template<class TReader = Readable, // type = concept
+         class TPrinter = Printable>
+class App {
+  TReader reader;
+  TPrinter printer;
+  
+public:
+  App(TReader reader, TPrinter printer) // ctor params deduction
+   : reader(reader), printer(printer)
+  { }
+  
+  void run() { printer.print(reader.read()); }
+};
+```
+
+#### Concepts based injection (compile time wiring)
+```cpp
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<Readable>.to<FileReader>(), // concepts checking at wiring!
+    di::bind<Printable>.to<ConsolePrinter>()
+  );
+  injector.create<App>().run();
+}
+```
+
+----
+
+## type_erasure for dynamic dispatch
+
+```cpp
+template<class TReader = Readable> // type = concept
+class App {
+  TReader reader;
+  any<Printable> printer; // type erasure based on the same concept!
+
+public:
+  App(TReader reader, any<Printable> printer) // 100% value semantics
+    : reader(reader), printer(printer)
+  { }
+  void run() { printer.print(reader.read()); }
+};
+```
+
+#### Dynamic bindings using virtual concepts
+```cpp
+int main(int argc, char**) {
+  const auto injector = di::make_injector(
+    di::bind<Readable>.to<FileReader>(),
+    di::bind<Printable>.to([&](const auto& bind) -> Printable { 
+      return argc == 1 ?
+        bind<ConsolePrinter>()
+      : bind<QtPrinter>();
+    })
+  );
+  injector.create<App>().run();
+}
+```
+
+----
+
+## Automatic concepts based mocks injection
+
+```cpp
+"should print read text"_test = [] {
+  constexpr auto value = 42;
+  auto [sut, mocks] = testing::make<App>(); // creates System Under Test
+                                            // and mocks!
+
+  InSequence sequence;
+  EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
+  EXPECT_CALL(mocks<Printable>(), print(value));
+
+  sut.run();
+};
+```
+
+==============================================================================
+
+## Questions?
+
+[(SG8) Concepts lite](http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3580.pdf) |
+[Virtual Concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) |
+[(SG7) Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf)
+
+| | |
+|-|-|
+|[Boost].DI | https://github.com/boost-experimental/di |
+| VC        | https://github.com/boost-experimental/vc |
+| GUnit     | https://github.com/cpp-testing/GUnit |
+
+---
+
+[kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
 
 					</script>
 				</section>
