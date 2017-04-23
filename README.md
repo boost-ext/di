@@ -16,13 +16,13 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 ### Download
 [Boost].DI requires only one file. Get the latest header [here!](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
 
-### Include
+#### Include
 ```cpp
 #include <boost/di.hpp>
 namespace di = boost::di;
 ```
 
-### Compile
+#### Compile
 
 ```sh
 gcc/clang$ $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors file.cpp
@@ -55,7 +55,7 @@ int main() {
     di::bind<double>.to(87.0)
   );
 
-  injector.creat<example>();
+  injector.create<example>();
 }
 ```
 
@@ -239,7 +239,7 @@ retq
 </table>
 </p>
 
-### Example - Bind concepts
+#### Example - Bind concepts
 
 ```cpp
 struct Stremable {
