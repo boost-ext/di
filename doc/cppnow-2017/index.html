@@ -151,11 +151,11 @@ public:
 #### Concepts based injection (compile time wiring)
 ```cpp
 int main() {
-  const auto injector = di::make_injector(
-    di::bind<Readable>.to<FileReader>(), // concepts checking at wiring!
-    di::bind<Printable>.to<ConsolePrinter>()
-  );
-  injector.create<App>().run();
+ const auto injector = di::make_injector(
+   di::bind<Readable>.to<FileReader>(), // concepts checking at wiring!
+   di::bind<Printable>.to<ConsolePrinter>()
+ );
+ injector.create<App>().run();
 }
 ```
 
@@ -198,15 +198,15 @@ int main(int argc, char**) {
 
 ```cpp
 "should print read text"_test = [] {
-  constexpr auto value = 42;
-  auto [sut, mocks] = testing::make<App>(); // creates System Under Test
+ constexpr auto value = 42;
+ auto [sut, mocks] = testing::make<App>(); // creates System Under Test
                                             // and mocks!
 
-  InSequence sequence;
-  EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
-  EXPECT_CALL(mocks<Printable>(), print(value));
+ InSequence sequence;
+ EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
+ EXPECT_CALL(mocks<Printable>(), print(value));
 
-  sut.run();
+ sut.run();
 };
 ```
 

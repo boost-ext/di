@@ -11,48 +11,117 @@
 
 Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/try_it/index.html))
 
+## Quick start
+
+### Download
+[Boost].DI only requires one `di.hpp` header to get it going!
+[Get the latest `di.hpp` here](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
+
+### Include
 ```cpp
-// $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors hello_world.cpp
-// cl /std:c++14 /Ox /W3 hello_world.cpp (***)
-
 #include <boost/di.hpp>
-
 namespace di = boost::di;
+```
 
-struct iworld {
-  virtual ~iworld() noexcept = default;
+### Compile
+
+```sh
+$CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors file.cpp
+```
+
+```sh
+cl /std:c++14 /Ox /W3 file.cpp
+```
+
+#### Create object graph
+
+```cpp
+class ctor {
+public:
+  explicit ctor(int i) : i(i) {}
+  int i;
 };
-
-struct world : iworld {
-  world() { std::cout << " world!" << std::endl; }
+struct aggregate {
+  double d;
 };
-
-struct hello {
-  explicit hello(int i) {
-    assert(42 == i);
-    std::cout << "hello";
-  }
-};
-
-// aggregate initialization `example{hello, world}`
-template <class T = class Greater>
-struct example {
-  T h;
-  iworld& w;
+class example {
+  example(aggregate a, const ctor& c) {
+    assert(87.0 == a.d);
+    assert(42 == c.i);
+  };
 };
 
 int main() {
   const auto injector = di::make_injector(
-    di::bind<iworld>.to<world>()          // bind interface to implementation
-  , di::bind<class Greater>.to<hello>()   // bind template to type
-  , di::bind<>.to(42)                     // bind int to value 42
+    di::bind<int>.to(42),
+    di::bind<double>.to(87.0)
+  );
+
+  injector.creat<example>();
+}
+```
+
+<p align="center">
+<table>
+  <tr>
+    <th></th>
+    <th>Clang-3.8</th>
+    <th>GCC-6</th>
+    <th>MSVC-2015</th>
+  </tr>
+
+  <tr>
+    <td>Compilation Time</td>
+    <td>0.102s</td>
+    <td>0.118s</td>
+    <td>0.296s</td>
+  </tr>
+
+  <tr>
+    <td>Binary size (stripped)</td>
+    <td>6.2kb</td>
+    <td>6.2kb</td>
+    <td>105kb</td>
+  </tr>
+
+  <tr>
+    <td>ASM x86-64</td>
+    <td colspan="3">
+      <pre><code>
+xor eax, eax
+retq
+      </code></pre>
+    </td>
+  </tr>
+</table>
+</p>
+
+#### Bind interfaces
+
+struct interface {
+  virtual ~iworld() noexcept = default;
+  virtual int get() const = 0;
+};
+
+class implementation : public interface {
+public:
+  int get() const override { return 42; }
+};
+
+struct example {
+  example(std::shared_ptr<interface> i) {
+    assert(42 == i->get());
+  }
+};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<interface>.to<implementation>()
   );
 
   injector.create<std::unique_ptr<example>>();
 }
 ```
-
-### Benchmark
 
 <p align="center">
 <table>
@@ -89,6 +158,215 @@ movq   $0x400c78,(%rax)
 mov    %rax,(%rbx)
 mov    %rbx,%rax
 pop    %rbx
+retq
+      </code></pre>
+    </td>
+  </tr>
+</table>
+</p>
+
+#### Bind templates
+
+```cpp
+template<class TPolicy = class TErrorPolicy>
+class simple_updater : TPolicy {
+  void update() {
+    TPolicy::on("update");
+  }
+};
+
+template<class T = class TUpdater>
+class example {
+public:
+  explicit example(const TUpdater& updater)
+    : updater(updater)
+  { }
+
+  void update() {
+    updater.update();
+  }
+
+private:
+  const TUpdater& updater;
+};
+
+int main() {
+  struct throw_policy {
+    void on(std::string_view str) {
+      throw std::runtime_error(str);
+    }
+  };
+  const auto injector = di::make_injector(
+    di::bind<class TErrorPolicy>.to<throw_policy>(),
+    di::bind<class TUpdater>.to<simple_updater>()
+  );
+
+  injector.create<example>().update();
+}
+```
+
+<p align="center">
+<table>
+  <tr>
+    <th></th>
+    <th>Clang-3.8</th>
+    <th>GCC-6</th>
+    <th>MSVC-2015</th>
+  </tr>
+
+  <tr>
+    <td>Compilation Time</td>
+    <td>0.102s</td>
+    <td>0.118s</td>
+    <td>0.296s</td>
+  </tr>
+
+  <tr>
+    <td>Binary size (stripped)</td>
+    <td>6.2kb</td>
+    <td>6.2kb</td>
+    <td>105kb</td>
+  </tr>
+
+  <tr>
+    <td>ASM x86-64</td>
+    <td colspan="3">
+      <pre><code>
+xor eax, eax
+retq
+      </code></pre>
+    </td>
+  </tr>
+</table>
+</p>
+
+<p align="center">
+<table>
+  <tr>
+    <th></th>
+    <th>Clang-3.8</th>
+    <th>GCC-6</th>
+    <th>MSVC-2015</th>
+  </tr>
+
+  <tr>
+    <td>Compilation Time</td>
+    <td>0.102s</td>
+    <td>0.118s</td>
+    <td>0.296s</td>
+  </tr>
+
+  <tr>
+    <td>Binary size (stripped)</td>
+    <td>6.2kb</td>
+    <td>6.2kb</td>
+    <td>105kb</td>
+  </tr>
+
+  <tr>
+    <td>ASM x86-64</td>
+    <td colspan="3">
+      <pre><code>
+xor eax, eax
+retq
+      </code></pre>
+    </td>
+  </tr>
+</table>
+</p>
+
+### Bind concepts
+
+```cpp
+struct Stremable {
+ template<class T>
+ auto requires(T&& t) -> decltype(
+   int( t.read() ),
+   t.write(int)
+ );
+};
+
+template<class Exchange = Streamable(class ExchangeStream)
+         class Engine   = Streamable(class EngineStream)>
+class example {
+  example(Exchange exchange, Engine engine)
+    : exchange(exchange), engine(engine)
+  { }
+};
+
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<Stremable(class ExchangeStream)>.to<exchange>(),
+    di::bind<Stremable(class EngineStream)>.to<engine>()
+  );
+
+  injector.create<example>();
+}
+```
+
+<p align="center">
+<table>
+  <tr>
+    <th></th>
+    <th>Clang-3.8</th>
+    <th>GCC-6</th>
+    <th>MSVC-2015</th>
+  </tr>
+
+  <tr>
+    <td>Compilation Time</td>
+    <td>0.102s</td>
+    <td>0.118s</td>
+    <td>0.296s</td>
+  </tr>
+
+  <tr>
+    <td>Binary size (stripped)</td>
+    <td>6.2kb</td>
+    <td>6.2kb</td>
+    <td>105kb</td>
+  </tr>
+
+  <tr>
+    <td>ASM x86-64</td>
+    <td colspan="3">
+      <pre><code>
+xor eax, eax
+retq
+      </code></pre>
+    </td>
+  </tr>
+</table>
+</p>
+
+<p align="center">
+<table>
+  <tr>
+    <th></th>
+    <th>Clang-3.8</th>
+    <th>GCC-6</th>
+    <th>MSVC-2015</th>
+  </tr>
+
+  <tr>
+    <td>Compilation Time</td>
+    <td>0.102s</td>
+    <td>0.118s</td>
+    <td>0.296s</td>
+  </tr>
+
+  <tr>
+    <td>Binary size (stripped)</td>
+    <td>6.2kb</td>
+    <td>6.2kb</td>
+    <td>105kb</td>
+  </tr>
+
+  <tr>
+    <td>ASM x86-64</td>
+    <td colspan="3">
+      <pre><code>
+xor eax, eax
 retq
       </code></pre>
     </td>
