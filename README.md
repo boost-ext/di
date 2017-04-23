@@ -29,7 +29,7 @@ gcc/clang$ $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic
 msvc$      cl /std:c++14 /Ox /W3 file.cpp
 ```
 
-#### Example - Create object graph
+#### Quick guide - Create object graph
 
 ```cpp
 class ctor {
@@ -94,7 +94,7 @@ retq
 </table>
 </p>
 
-#### Example - Bind interfaces
+#### Quick guide - Bind interfaces
 
 ```cpp
 struct interface {
@@ -164,7 +164,7 @@ retq
 </table>
 </p>
 
-#### Example - Bind templates
+#### Quick guide - Bind templates
 
 ```cpp
 template<class TPolicy = class TErrorPolicy>
@@ -239,7 +239,7 @@ retq
 </table>
 </p>
 
-#### Example - Bind concepts
+#### Quick guide - Bind concepts
 
 ```cpp
 struct Stremable {
