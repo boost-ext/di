@@ -1,0 +1,17 @@
+@startuml
+
+start
+
+if (I know the dependency at compile time?) then (yes)
+  :Concepts;
+else (no)
+   if (I need max performance and no heap?) then (yes)
+    :Type Erasure;
+   else (no)
+    :Virtual Functions;
+   endif
+endif
+
+stop
+
+@enduml
