@@ -14,9 +14,7 @@ Your C++14 header only Dependency Injection library with no dependencies ([__Try
 ## Quick start
 
 ### Download
-[Boost].DI  requires only one header to get it going!
-
-[Get the latest [Boost].DI header here!](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
+[Boost].DI requires only one [header]!
 
 ### Include
 ```cpp
@@ -244,41 +242,6 @@ retq
 </table>
 </p>
 
-<p align="center">
-<table>
-  <tr>
-    <th></th>
-    <th>Clang-3.8</th>
-    <th>GCC-6</th>
-    <th>MSVC-2015</th>
-  </tr>
-
-  <tr>
-    <td>Compilation Time</td>
-    <td>0.102s</td>
-    <td>0.118s</td>
-    <td>0.296s</td>
-  </tr>
-
-  <tr>
-    <td>Binary size (stripped)</td>
-    <td>6.2kb</td>
-    <td>6.2kb</td>
-    <td>105kb</td>
-  </tr>
-
-  <tr>
-    <td>ASM x86-64</td>
-    <td colspan="3">
-      <pre><code>
-xor eax, eax
-retq
-      </code></pre>
-    </td>
-  </tr>
-</table>
-</p>
-
 ### Example - Bind concepts
 
 ```cpp
@@ -307,41 +270,6 @@ int main() {
   injector.create<example>();
 }
 ```
-
-<p align="center">
-<table>
-  <tr>
-    <th></th>
-    <th>Clang-3.8</th>
-    <th>GCC-6</th>
-    <th>MSVC-2015</th>
-  </tr>
-
-  <tr>
-    <td>Compilation Time</td>
-    <td>0.102s</td>
-    <td>0.118s</td>
-    <td>0.296s</td>
-  </tr>
-
-  <tr>
-    <td>Binary size (stripped)</td>
-    <td>6.2kb</td>
-    <td>6.2kb</td>
-    <td>105kb</td>
-  </tr>
-
-  <tr>
-    <td>ASM x86-64</td>
-    <td colspan="3">
-      <pre><code>
-xor eax, eax
-retq
-      </code></pre>
-    </td>
-  </tr>
-</table>
-</p>
 
 <p align="center">
 <table>
