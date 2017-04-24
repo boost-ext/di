@@ -173,6 +173,7 @@ public:
   App(TReader reader, any<Printable> printer) // 100% value semantics
     : reader(reader), printer(printer)
   { }
+  
   void run() { printer.print(reader.read()); }
 };
 ```
