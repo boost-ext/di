@@ -200,11 +200,13 @@ int main(int argc, char**) {
 "should print read text"_test = [] {
  constexpr auto value = 42;
  auto [sut, mocks] = testing::make<App>(); // creates System Under Test
-                                            // and mocks!
+                                           // and mocks!
 
  InSequence sequence;
- EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
- EXPECT_CALL(mocks<Printable>(), print(value));
+ {
+   EXPECT_CALL(mocks<Readable>(), read()).WillOnce(Return(value));
+   EXPECT_CALL(mocks<Printable>(), print(value));
+ }
 
  sut.run();
 };
