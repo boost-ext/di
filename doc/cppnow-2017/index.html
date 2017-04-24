@@ -182,7 +182,7 @@ public:
 int main(int argc, char**) {
   const auto injector = di::make_injector(
     di::bind<Readable>.to<FileReader>(),
-    di::bind<Printable>([&](const auto& _) -> Printable { 
+    di::bind<Printable>([&](auto&& _) -> Printable { 
       return argc == 1
         ? _.to<ConsolePrinter>()
         : _.to<QtPrinter>();
