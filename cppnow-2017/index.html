@@ -122,7 +122,7 @@ class App : TPolicy {
 int main() {
   const auto injector = di::make_injector(
     di::bind<class TException>.to<std::runtime_error>(),
-    di::bind<class TErrorPolicy>.to<ThrowException>()
+    di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // type->template
   );
   injector.create<App>().run(); // App is a template!
 }
@@ -155,7 +155,7 @@ int main() {
    di::bind<Readable>.to<FileReader>(), // concepts checking at wiring!
    di::bind<Printable>.to<ConsolePrinter>()
  );
- injector.create<App>().run();
+ injector.create<App>().run(); // App is a template!
 }
 ```
 
@@ -182,10 +182,10 @@ public:
 int main(int argc, char**) {
   const auto injector = di::make_injector(
     di::bind<Readable>.to<FileReader>(),
-    di::bind<Printable>.to([&](const auto& bind) -> Printable { 
-      return argc == 1 ?
-        bind<ConsolePrinter>()
-      : bind<QtPrinter>();
+    di::bind<Printable>([&](const auto& _) -> Printable { 
+      return argc == 1
+        ? _.to<ConsolePrinter>()
+        : _.to<QtPrinter>();
     })
   );
   injector.create<App>().run();
