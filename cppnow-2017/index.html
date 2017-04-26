@@ -72,14 +72,15 @@ Kris Jusiak, Quantlab Financial
 #### +/- Concepts-Lite syntax in C++14/17 (predicates)
 
 ```cpp
-template<class T>             |   struct Foo {
-constexpr auto Fooable =      |    int foo();
-  $requires(T)(auto&& t) (    |   };
-    int( t.foo() )            |   template<class T, REQUIRES(Fooable<T>)>
-  );                          |   void foo(T&&);
+template<class T>              |  struct Foo {
+constexpr auto Fooable =       |   int foo();
+  $requires(T)(auto&& t) (     |  };
+    int( t.foo() )             |   
+  );                           |  template<class T, REQUIRES(Fooable<T>)>
+                               |  void foo(T&&);
 ```
 
-#### Concepts-Lite (types)
+#### Concepts-Lite (type with predicates)
 
 ```cpp                            
 struct Readable {              |  struct Reader {
@@ -87,10 +88,10 @@ struct Readable {              |  struct Reader {
    MoveConstructible<T> &&     |    Reader& operator=(Reader&&) = default;
    MoveAssignable<T> &&        |    int read();
    Callable<T, int()>($(read)) |  };
- ) Readable(T);                | static_assert(
-};                             |   std::is_convertible<
-                               |     Readable, Reader
-			       |   >{}
+ ) Readable(T);                | 
+};                             |  static_assert(
+                               |   std::is_convertible<Readable, Reader>{}
+                               |  );
 ```
 
 ----
