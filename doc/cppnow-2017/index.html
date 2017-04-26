@@ -69,31 +69,28 @@ Kris Jusiak, Quantlab Financial
 
 ## Type constraints
 
-#### +/- Concepts-Lite syntax in C++14
+#### +/- Concepts-Lite syntax in C++14/17 (predicates)
 
 ```cpp
-template<class T>             |   struct Reader {
-const auto Readable =         |    Reader(Reader&&) = default;
-  MoveConstructible<T> &&     |    Reader&(Reader&&) = default;
-  MoveAssignable<T> &&        |    int read();
-  REQUIRES(auto&& t) (        |   };
-    int( t.read() )           |   static_assert(Readable<Reader>{});
-  );                          |   static_assert(not Readable<int>{});
+template<class T>             |   struct Foo {
+constexpr auto Fooable =      |    int foo();
+  $requires(T)(auto&& t) (    |   };
+    int( t.foo() )            |   template<class T, REQUIRES(Fooable<T>)>
+  );                          |   void foo(T&&);
 ```
 
-#### More suitable syntax for C++14
+#### Concepts-Lite (types)
 
 ```cpp                            
-struct Readable {               |  struct Reader {
- template<class T>              |   Reader(Reader&&) = default;
- constexpr Readable(T,          |   Reader&(Reader&&) = default;
-   REQUIRES(                    |   int read();                  
-    MoveConstructible<T> &&     |  };                             
-    MoveAssignable<T> &&        |  static_assert(
-    Callable<T, int()>($(read)) |   std::is_convertible<
-   )                            |    Readable, Reader
- );                             |   >{}
-};                              |  );
+struct Readable {              |  struct Reader {
+ template<class T, REQUIRES(   |    Reader(Reader&&) = default;
+   MoveConstructible<T> &&     |    Reader& operator=(Reader&&) = default;
+   MoveAssignable<T> &&        |    int read();
+   Callable<T, int()>($(read)) |  };
+ ) Readable(T);                | static_assert(
+};                             |   std::is_convertible<
+                               |     Readable, Reader
+			       |   >{}
 ```
 
 ----
