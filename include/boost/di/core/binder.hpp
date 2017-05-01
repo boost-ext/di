@@ -71,9 +71,12 @@ struct binder {
                    TDeps, Ts, no_name, dependency<scopes::deduce, aux::decay_t<Ts>>>::type::given>>::type...>;
   };
 
-  template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
+  template <class T, class TName = no_name, class TParent = aux::false_type, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
-    using dependency = dependency_concept<aux::decay_t<T>, TName>;
+    struct not_resolved {};
+    using named = dependency_concept<aux::decay_t<T>, TParent>;
+    static constexpr auto value = aux::is_same<not_resolved, decltype(resolve_impl<not_resolved, named>((TDeps*)0))>::value;
+    using dependency = aux::conditional_t<value, dependency_concept<aux::decay_t<T>, no_name>, named>;
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
 #if (defined(__CLANG__) && __CLANG__ >= 3'9)  // __pph__

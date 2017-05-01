@@ -280,7 +280,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_impl__() const {
-    auto&& dependency = binder::resolve<T, TName>((injector*)this);
+    auto&& dependency = binder::resolve<T, TName, TIsRoot>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
     using ctor_t =
         typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T>::type;
@@ -296,7 +296,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
 
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_successful_impl__() const {
-    auto&& dependency = binder::resolve<T, TName>((injector*)this);
+    auto&& dependency = binder::resolve<T, TName, TIsRoot>((injector*)this);
     using dependency_t = aux::remove_reference_t<decltype(dependency)>;
     using ctor_t =
         typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T>::type;

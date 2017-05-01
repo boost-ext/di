@@ -109,6 +109,11 @@ class dependency
   }
 
   template <class T, __BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
+  auto when() noexcept {
+    return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
+  }
+
+  template <class T, __BOOST_DI_REQUIRES(aux::is_same<TName, no_name>::value && !aux::is_same<T, no_name>::value) = 0>
   auto named(const T&) noexcept {
     return dependency<TScope, TExpected, TGiven, T, TPriority>{static_cast<dependency&&>(*this)};
   }
