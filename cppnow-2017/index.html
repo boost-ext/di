@@ -91,10 +91,10 @@ struct Readable {               | // Readable Implementation
     MoveAssignable<T> &&       <|> Reader& operator=(Reader&&) = default; // ✔
     Callable<T, int()>($(read))<|> int read(); // ✔
   };                     ^      | };
-};                       \__    |                                              
-                            \   | static_assert(
-         callable using  ---/   |  is_satisfied_by<Readable, Reader>{}
-           function name        | );
+};               ________/      |                                              
+                /               | static_assert(
+  /* Lambda expression */       |  is_satisfied_by<Readable, Reader>{}
+  /* exposing a read() call */  | );
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
