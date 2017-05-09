@@ -59,7 +59,7 @@ Kris Jusiak, Quantlab Financial
 
 | | |
 |-|-|
-| Expressiveness | Type constraints for better error messages | 
+| Expressiveness | Type constraints for better error messages |
 | Loosely coupeled design | Inject all the things! |
 | Performance | Static dispatch by default |
 | Flexiblity | Dynamic dispatch using type erasure |
@@ -75,7 +75,7 @@ Kris Jusiak, Quantlab Financial
 template<class T>               | struct Foo {
 constexpr auto Fooable =        |  int foo();
   $requires(T)(auto&& t) (      | };
-    int( t.foo() )              |  
+    int( t.foo() )              |
   );                            | template<class T, REQUIRES(Fooable<T>)>
                                 | void foo(T&&);
 ```
@@ -83,7 +83,7 @@ constexpr auto Fooable =        |  int foo();
 
 #### Non-dependable constraints
 
-```cpp                            
+```cpp
 struct Readable {               | // Readable Implementation
  template<class T>              |
   auto operator()() const {     | struct Reader { // no inheritance
@@ -91,7 +91,7 @@ struct Readable {               | // Readable Implementation
     MoveAssignable<T> &&       <|> Reader& operator=(Reader&&) = default; // ✔
     Callable<T, int()>($(read))<|> int read(); // ✔
   };                     ^      | };
-};               ________/      |                                              
+};               ________/      |
                 /               | static_assert(
   /* Lambda expression */       |  is_satisfied_by<Readable, Reader>{}
   /* exposing a read() call */  | );
@@ -104,8 +104,8 @@ struct Readable {               | // Readable Implementation
 
 ```cpp
 template<class T = class TException>
-struct ThrowExceptionPolicy { 
-  void onError(std::string_view msg) { throw T{msg}; } 
+struct ThrowExceptionPolicy {
+  void onError(std::string_view msg) { throw T{msg}; }
 };
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
@@ -143,12 +143,12 @@ template<class TReader = Readable, // type = concept
 class App {
   TReader reader;
   TPrinter printer;
-  
+
 public:
   App(TReader reader, TPrinter printer) // ctor params deduction
    : reader(reader), printer(printer)
   { }
-  
+
   void run() { printer.print(reader.read()); }
 };
 ```
@@ -178,7 +178,7 @@ public:
   App(TReader reader, any<Printable> printer) // 100% value semantics
     : reader(reader), printer(printer)
   { }
-  
+
   void run() { printer.print(reader.read()); }
 };
 ```
@@ -188,8 +188,8 @@ public:
 auto config = [](std::string_view printer) {
   return di::make_injector(
     di::bind<Readable>.to<FileReader>(),
-    di::bind<Printable>([&](auto&& _) { 
-      return printer == "QT" ? 
+    di::bind<Printable>([&](auto&& _) {
+      return printer == "QT" ?
         _.to<QtPrinter>() : _.to<ConsolePrinter>();
     })
   );
