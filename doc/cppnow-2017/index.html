@@ -128,7 +128,8 @@ int main() {
     di::bind<class TException>.to<std::runtime_error>(),
     di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // type->template
   );
-  injector.create<App>().run(); // App is a template!
+
+  di::make<App>(injector).run(); // App is a template!
 }
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
