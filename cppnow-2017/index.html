@@ -55,15 +55,15 @@ Kris Jusiak, Quantlab Financial
 
 ==============================================================================
 
-## Concepts driven design - Goals
+## Concepts driven design - Goals / Dream
 
 | | |
 |-|-|
-| Expressiveness | Type constraints for better error messages | 
+| Expressiveness | Type constraints for better error messages |
 | Loosely coupeled design | Inject all the things! |
-| Performance | Static dispatch by default |
-| Flexiblity | Dynamic dispatch using type erasure |
-| Testability | Automatic mocks injection  |
+| Performance | Static dispatch by default <br />(based on concepts) |
+| Flexiblity | Dynamic dispatch using type erasure (based on the same concepts) |
+| Testability | Automatic mocks injection <br />(based on the same concepts) |
 
 ----
 
@@ -75,15 +75,15 @@ Kris Jusiak, Quantlab Financial
 template<class T>               | struct Foo {
 constexpr auto Fooable =        |  int foo();
   $requires(T)(auto&& t) (      | };
-    int( t.foo() )              |  
+    int( t.foo() )              |
   );                            | template<class T, REQUIRES(Fooable<T>)>
                                 | void foo(T&&);
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
-#### Non-dependable constraints
+#### Non-templated constraints
 
-```cpp                            
+```cpp
 struct Readable {               | // Readable Implementation
  template<class T>              |
   auto operator()() const {     | struct Reader { // no inheritance
@@ -91,7 +91,7 @@ struct Readable {               | // Readable Implementation
     MoveAssignable<T> &&       <|> Reader& operator=(Reader&&) = default; // ✔
     Callable<T, int()>($(read))<|> int read(); // ✔
   };                     ^      | };
-};               ________/      |                                              
+};               ________/      |
                 /               | static_assert(
   /* Lambda expression */       |  is_satisfied_by<Readable, Reader>{}
   /* exposing a read() call */  | );
@@ -102,15 +102,15 @@ struct Readable {               | // Readable Implementation
 
 ## Inject all the things!
 
+#### Policy design
 ```cpp
-template<class T = class TException>
-struct ThrowExceptionPolicy { 
-  void onError(std::string_view msg) { throw T{msg}; } 
+template<class T = class TException> // `TException` is satisifed by any type
+struct ThrowExceptionPolicy {        //  It's like auto in Concepts-lite
+  void onError(std::string_view msg) { throw T{msg}; }
 };
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
-#### policy design
 ```cpp
 template<class TPolicy = class TErrorPolicy>
 class App : TPolicy {
@@ -125,30 +125,30 @@ class App : TPolicy {
 ```cpp
 int main() {
   const auto injector = di::make_injector(
-    di::bind<class TException>.to<std::runtime_error>(),
-    di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // type->template
+   di::bind<class TException>.to<std::runtime_error>(),    // concept->type
+   di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // concept->template
   );
-  injector.create<App>().run(); // App is a template!
+  di::make<App>(injector).run(); // App is a template!
 }
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 
-## DI - 2-Phase resolving (types -> ctors)
+## DI - 2-Phase resolving (concepts / ctors)
 
 ```cpp
-template<class TReader = Readable, // type = concept
+template<class TReader = Readable, // typename = concept
          class TPrinter = Printable>
 class App {
   TReader reader;
   TPrinter printer;
-  
+
 public:
-  App(TReader reader, TPrinter printer) // ctor params deduction
-   : reader(reader), printer(printer)
+  App(TReader reader, TPrinter printer) // constructor
+   : reader(reader), printer(printer)   // parameters deduction
   { }
-  
+
   void run() { printer.print(reader.read()); }
 };
 ```
@@ -157,10 +157,10 @@ public:
 ```cpp
 int main() {
  const auto injector = di::make_injector(
-   di::bind<Readable>.to<FileReader>(), // concepts checking at wiring!
-   di::bind<Printable>.to<ConsolePrinter>()
- );
- di::make<App>(injector).run(); // App is a template!
+   di::bind<Readable>.to<FileReader>(),     // concept -> type
+   di::bind<Printable>.to<ConsolePrinter>() // concepts checking
+ );                                         // at wiring!
+ di::make<App>(injector).run();
 }
 ```
 
@@ -178,18 +178,18 @@ public:
   App(TReader reader, any<Printable> printer) // 100% value semantics
     : reader(reader), printer(printer)
   { }
-  
+
   void run() { printer.print(reader.read()); }
 };
 ```
 
 #### Dynamic bindings using virtual concepts
 ```cpp
-auto config = [](std::string_view printer) {
+const auto config = [](std::string_view printer) {
   return di::make_injector(
     di::bind<Readable>.to<FileReader>(),
-    di::bind<Printable>([&](auto&& _) { 
-      return printer == "QT" ? 
+    di::bind<Printable>([&](auto&& _) {
+      return printer == "QT" ?
         _.to<QtPrinter>() : _.to<ConsolePrinter>();
     })
   );
@@ -198,13 +198,13 @@ auto config = [](std::string_view printer) {
 
 ----
 
-## Automatic, concepts based, mocks injection
+## Automatic / concepts based / mocks injection
 
 ```cpp
 "should print read text"_test = [] {
  constexpr auto value = 42;
  auto [app, mocks] = testing::make<App>(); // creates System Under Test
-                                           // and mocks!
+                                           // and Mocks!
 
  InSequence sequence;
  {
