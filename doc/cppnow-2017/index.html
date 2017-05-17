@@ -160,8 +160,7 @@ int main() {
    di::bind<Readable>.to<FileReader>(),     // concept -> type
    di::bind<Printable>.to<ConsolePrinter>() // concepts checking
  );                                         // at wiring!
- di::make<App>(injector).run();
-}
+ di::make<App>(injector).run(); // can preallocate all dependencies
 ```
 
 ----
@@ -225,11 +224,11 @@ const auto config = [](std::string_view printer) {
 [Virtual Concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) |
 [(SG7) Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf)
 
-| | |
-|-|-|
-|[Boost].DI | https://github.com/boost-experimental/di |
-| VC        | https://github.com/boost-experimental/vc |
-| GUnit     | https://github.com/cpp-testing/GUnit |
+| | | |
+|-|-|-|
+| Dependency Injection | [Boost].DI | https://github.com/boost-experimental/di |
+| Virtual Concepts  | VC        | https://github.com/boost-experimental/vc |
+| Mocking | GUnit     | https://github.com/cpp-testing/GUnit |
 
 ---
 
