@@ -67,7 +67,7 @@ Kris Jusiak, Quantlab Financial
 
 ----
 
-## Type constraints
+## Type constraints - [VC](https://github.com/boost-experimental/vc)
 
 #### C++14/17 Type constraints (~Concepts-Lite predicates)
 
@@ -100,7 +100,7 @@ struct Readable {               | // Readable Implementation
 
 ----
 
-## Inject all the things!
+## Inject all the things! - [[Boost].DI](https://github.com/boost-experimental/vc)
 
 #### Policy design
 ```cpp
@@ -114,6 +114,7 @@ struct ThrowExceptionPolicy {        //  It's like auto in Concepts-lite
 ```cpp
 template<class TPolicy = class TErrorPolicy>
 class App : TPolicy {
+public:
   void run() {
     if (...) { TPolicy::onError("error!"); }
   }
@@ -135,7 +136,7 @@ int main() {
 
 ----
 
-## DI - 2-Phase resolving (concepts / ctors)
+## [DI](https://github.com/boost-experimental/vc) - 2-Phase resolving (concepts / ctors) 
 
 ```cpp
 template<class TReader = Readable, // typename = concept
@@ -160,12 +161,12 @@ int main() {
    di::bind<Readable>.to<FileReader>(),     // concept -> type
    di::bind<Printable>.to<ConsolePrinter>() // concepts checking
  );                                         // at wiring!
- di::make<App>(injector).run(); // can preallocate all dependencies
+ di::make<App>(injector).run(); // preallocates shared dependencies
 ```
 
 ----
 
-## type_erasure for dynamic dispatch
+## type_erasure for dynamic dispatch - [VC](https://github.com/boost-experimental/vc)
 
 ```cpp
 template<class TReader = Readable> // type = concept
@@ -197,7 +198,7 @@ const auto config = [](std::string_view printer) {
 
 ----
 
-## Automatic / concepts based / mocks injection
+## Automatic / concepts based / mocks injection - [GUnit.GMock](https://github.com/cpp-testing/gunit)
 
 ```cpp
 "should print read text"_test = [] {
@@ -226,9 +227,9 @@ const auto config = [](std::string_view printer) {
 
 | | | |
 |-|-|-|
-| Dependency Injection | [Boost].DI | https://github.com/boost-experimental/di |
-| Virtual Concepts  | VC        | https://github.com/boost-experimental/vc |
-| Mocking | GUnit     | https://github.com/cpp-testing/GUnit |
+| Dependency Injection |[Boost].DI  | https://github.com/boost-experimental/di |
+| Virtual Concepts     | VC         | https://github.com/boost-experimental/vc |
+| Mocking              | GUnit      | https://github.com/cpp-testing/GUnit |
 
 ---
 
@@ -344,8 +345,6 @@ const auto config = [](std::string_view printer) {
 					{ src: 'plugin/notes/notes.js', async: true }
 				]
 			});
-
 		</script>
-
 	</body>
 </html>
