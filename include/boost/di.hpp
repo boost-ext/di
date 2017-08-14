@@ -1692,7 +1692,11 @@ class dependency
 #if defined(__cpp_variable_templates)
   dependency& operator()() noexcept { return *this; }
 #endif
+#if defined(__MSVC__)
+ public:
+#else
  protected:
+#endif
   using scope_t::is_referable;
   using scope_t::create;
   using scope_t::try_create;

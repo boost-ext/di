@@ -8,7 +8,7 @@ VALGRIND:=--memcheck="valgrind --leak-check=full --error-exitcode=1"
 DRMEMORY:=--memcheck="drmemory -light -batch -exit_code_if_errors 1"
 BS?=cmake
 CMAKE?=cmake
-CMAKE_GENERATOR?="Unix Makefiles"
+CMAKE_GENERATOR?=Unix Makefiles
 TOOLSET?=clang
 CLANG_FORMAT?=clang-format
 CLANG_TIDY?=clang-tidy
@@ -28,7 +28,7 @@ all_bjam:
 
 all_cmake:
 	@-mkdir build
-	cd build && $(CMAKE) -G $(CMAKE_GENERATOR) -DCMAKE_VERBOSE_MAKEFILE=ON .. && $(CMAKE) --build . && ctest --output-on-failure
+	cd build && $(CMAKE) -G "$(CMAKE_GENERATOR)" -DCMAKE_VERBOSE_MAKEFILE=ON .. && $(CMAKE) --build . && ctest --output-on-failure
 
 clean: clean_$(BS)
 
