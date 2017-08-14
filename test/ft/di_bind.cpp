@@ -1142,6 +1142,7 @@ test bind_template_to_type_templates_type = [] {
   expect(42 == object.t.i);
 };
 
+#if not defined(__MSVC__)
 template <class T = class External>
 struct app4 {
   using type = T;
@@ -1168,6 +1169,7 @@ test bind_template_to_concept_type = [] {
   auto object = injector.create<app5>();
   static_expect(std::is_same<ConceptImpl, typename decltype(object)::type>::value);
 };
+#endif
 
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
