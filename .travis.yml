@@ -4,223 +4,167 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-sudo: false
 env:
   global:
   - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=" # GH_TOKEN
   - secure: "F/LBl+hmRJv6kcDKX/N/e8RBJ5D/Non6V/pQawDIU0z+MQbz7fV6/358YVUwyf8Cm2qkyRO/jPWDBRfy/W9X0OlgAFrrTvRe6H2usf24WcU+4hO7u0gS99ca2HRggH7UkQ7GEnCraz65ThlJSEIUpE8+NnlFXpWY2ld4JMNkL44=" # COVERALLS_REPO_TOKEN
 
-branches:
-  except:
-    - gh-pages
-    - benchmarks
-
 git:
   depth: 1
 
-matrix:
-  fast_finish: true
+sudo: false
 
-  allow_failures:
-    - env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.9
-    - env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.9
-    - env: BS=cmake CXX=clang++-3.9
+branches:
+  except:
 
-  include:
+#
+# Documentation
+#
   - os: linux
     env: DOCUMENTATION=ON
+#
+# Style
+#
   - os: linux
-    env: CHECK=ON CLANG_FORMAT=clang-format-3.8 CLANG_TIDY=clang-tidy-3.8
-    addons:
-      apt:
-        packages: ["clang-format-3.8", "clang-tidy-3.8"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"]
+    dist: precise
+    env: CHECK=ON CLANG_FORMAT=clang-format-4.0 CLANG_TIDY=clang-tidy-4.0
+    addons: { apt: { packages: ["clang-format-4.0", "clang-tidy-4.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
+#
+# CMake
+#
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=/usr/local/clang-3.4/bin/clang++
-    addons:
-      apt:
-        packages: ["clang-3.4", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.4"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=/usr/local/clang-3.4/bin/clang++
-    addons:
-      apt:
-        packages: ["clang-3.4", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.4"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang VARIANT=analyze CXX=/usr/local/clang-3.4/bin/clang++
-    addons:
-      apt:
-        packages: ["clang-3.4", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.4"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.5
-    addons:
-      apt:
-        packages: ["clang-3.5", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.5
-    addons:
-      apt:
-        packages: ["clang-3.5", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.5"]
-  - os: linux
-    env: B=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.6
-    addons:
-      apt:
-        packages: ["clang-3.6", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.6
-    addons:
-      apt:
-        packages: ["clang-3.6", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.7
-    addons:
-      apt:
-        packages: ["clang-3.7", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.7
-    addons:
-      apt:
-        packages: ["clang-3.7", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
+    dist: precise
+    env: BS=cmake CXX=clang++-3.6
+    addons: { apt: { packages: ["clang-3.6", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"] } }
+    dist: precise
+
   - os: linux
     env: BS=cmake CXX=clang++-3.7
-    addons:
-      apt:
-        packages: ["clang-3.7", "libstdc++-5-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"]
+    addons: { apt: { packages: ["clang-3.7", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"] } }
+
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.8
-    addons:
-      apt:
-        packages: ["clang-3.8", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"]
-  - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.8
-    addons:
-      apt:
-        packages: ["clang-3.8", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"]
-  - os: linux
+    dist: precise
     env: BS=cmake CXX=clang++-3.8
-    addons:
-      apt:
-        packages: ["clang-3.8", "libstdc++-5-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"]
+    addons: { apt: { packages: ["clang-3.8", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"] } }
+
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND BENCHMARK=QUICK CXX=clang++-3.9
-    addons:
-      apt:
-        packages: ["clang-3.9", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise"]
+    dist: precise
+    env: BS=cmake  CXX=clang++-3.9
+    addons: { apt: { packages: ["clang-3.9", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.9"] } }
+
   - os: linux
-    env: BS=bjam TOOLSET=clang MEMCHECK=VALGRIND LIBCXX=ON CXX=clang++-3.9
-    addons:
-      apt:
-        packages: ["clang-3.9", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise"]
+    dist: precise
+    env: BS=cmake CXX=clang++-4.0
+    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
   - os: linux
-    env: BS=cmake CXX=clang++-3.9
-    addons:
-      apt:
-        packages: ["clang-3.9", "libstdc++-5-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise"]
+    dist: precise
+    env: BS=cmake CXX=clang++-4.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
   - os: linux
-    env: BS=bjam TOOLSET=gcc GCOV=gcov-5 VARIANT=coverage MEMCHECK=VALGRIND CXX=g++-5
-    addons:
-      apt:
-        packages: ["g++-5", "libstdc++-5-dev", "valgrind", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
+    dist: precise
+    env: BS=cmake CXX=g++-5
+    addons: { apt: { packages: ["g++-5", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: linux
-    env: BS=bjam TOOLSET=gcc VARIANT=analyze CXX=g++-5
-    addons:
-      apt:
-        packages: ["g++-5", "libstdc++-5-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
+    dist: precise
+    env: BS=cmake CXX=g++-6
+    addons: { apt: { packages: ["g++-6", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: linux
-    env: BS=bjam TOOLSET=gcc BENCHMARK=QUICK CXX=g++-5
-    addons:
-      apt:
-        packages: ["g++-5", "libstdc++-5-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
-  - os: linux
-    env: BS=cmake BENCHMARK=QUICK CXX=g++-5
-    addons:
-      apt:
-        packages: ["g++-5", "libstdc++-5-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
-  - os: linux
-    env: BS=bjam TOOLSET=gcc VARIANT=analyze CXX=g++-6
-    addons:
-      apt:
-        packages: ["g++-6", "libstdc++-6-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
-  - os: linux
-    env: BS=bjam TOOLSET=gcc BENCHMARK=QUICK CXX=g++-6
-    addons:
-      apt:
-        packages: ["g++-6", "libstdc++-6-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
-  - os: linux
-    env: BS=cmake BENCHMARK=ON CXX=g++-6
-    addons:
-      apt:
-        packages: ["g++-6", "libstdc++-6-dev", "gdb"]
-        sources: ["ubuntu-toolchain-r-test"]
+    dist: trusty
+    env: BS=cmake CXX=g++-7
+    addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: osx
-    osx_image: xcode6.1
-    env: BS=bjam TOOLSET=clang CXX=clang++
-  - os: osx
-    osx_image: xcode6.1
-    env: BS=bjam CXX=clang++
-  - os: osx
-    osx_image: xcode6.2
-    env: BS=bjam TOOLSET=clang CXX=clang++
-  - os: osx
-    osx_image: xcode6.2
-    env: BS=bjam CXX=clang++
-  #- os: osx
-    #osx_image: xcode6.4
-    #env: BS=bjam TOOLSET=clang CXX=clang++
-  #- os: osx
-    #osx_image: xcode6.4
-    #env: BS=bjam CXX=clang++
-  - os: osx
-    osx_image: xcode7
-    env: BS=bjam TOOLSET=clang CXX=clang++
-  - os: osx
-    osx_image: xcode7
+    osx_image: xcode7.3
     env: BS=cmake CXX=clang++
+
   - os: osx
-    osx_image: xcode7.1
+    osx_image: xcode8.3
+    env: BS=cmake CXX=clang++
+
+  - os: osx
+    osx_image: xcode9.1
+    env: BS=cmake CXX=clang++
+
+#
+# Bjam
+#
+  - os: linux
+    dist: precise
+    env: BS=bjam TOOLSET=clang CXX=clang++-4.0
+    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
+  - os: linux
+    dist: trusty
+    env: BS=bjam TOOLSET=gcc CXX=g++-7
+    addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
+  - os: osx
+    osx_image: xcode9.1
     env: BS=bjam TOOLSET=clang CXX=clang++
+
+#
+# Static analysis
+#
+  - os: linux
+    dist: precise
+    env: BS=cmake VARIANT=analyze CXX=clang++-4.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
+  - os: linux
+    dist: trusty
+    env: BS=cmake VARIANT=analyze CXX=g++-7
+    addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: osx
-    osx_image: xcode7.1
-    env: BS=bjam BENCHMARK=QUICK CXX=clang++
+    osx_image: xcode9.1
+    env: BS=cmake VARIANT=analyze CXX=clang++
+
+#
+# Dynamic analysis
+#
+  - os: linux
+    dist: precise
+    env: BS=cmake MEMCHECK=valgrind CXX=clang++-4.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
+  - os: linux
+    dist: trusty
+    env: BS=cmake MEMCHECK=valgrind CXX=g++-7
+    addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: osx
-    osx_image: xcode7.2
-    env: BS=bjam TOOLSET=clang CXX=clang++
+    osx_image: xcode9.1
+    env: BS=cmake MEMCHECK=valgrind CXX=clang++
+
+#
+# Coverage
+#
+  - os: linux
+    dist: trusty
+    env: BS=bjam TOOLSET=gcc GCOV=gcov-7 VARIANT=coverage CXX=g++-7
+    addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
+#
+# Benchmarks
+#
+  - os: linux
+    dist: precise
+    env: BS=cmake BENCHMARK=QUICK CXX=clang++-4.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+
+  - os: linux
+    dist: trusty
+    env: BS=cmake BENCHMARK=QUICK CXX=g++-7
+    addons: { apt: { packages: ["g++-7", "libstdc++-7-dev"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: osx
-    osx_image: xcode7.2
+    osx_image: xcode9.1
     env: BS=cmake BENCHMARK=QUICK CXX=clang++
-  - os: osx
-    osx_image: xcode7.3
-    env: BS=bjam TOOLSET=clang CXX=clang++
-  - os: osx
-    osx_image: xcode7.3
-    env: BS=cmake BENCHMARK=QUICK CXX=clang++
-  - os: osx
-    osx_image: xcode8
-    env: BS=bjam TOOLSET=clang CXX=clang++
-  - os: osx
-    osx_image: xcode8
-    env: BS=cmake BENCHMARK=ON CXX=clang++
 
 before_install:
   - git config --global user.name "Continuous Integration"
@@ -228,15 +172,13 @@ before_install:
   - git config --global push.default simple
 
 install:
-  - if [ "$TRAVIS_OS_NAME" == "osx" ] && [ "${BS}" == "cmake" ]; then (brew uninstall cmake; brew install cmake); fi
-  - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.59.0.tar.gz
-    && tar zxf boost-1.59.0.tar.gz && cd build-boost-1.59.0 && ./bootstrap.sh)
-    && touch Jamroot && export BOOST_ROOT="$PWD/build-boost-1.59.0" && export PATH="$PATH:$BOOST_ROOT"; fi
-  - if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx
-    && cd libcxx/lib && ./buildit && ln -f -s libc++.so.1.0 libc++.so.1)
+  - if [ "${BS}" == "bjam" ]; then (wget https://github.com/boostorg/build/archive/boost-1.65.1.tar.gz
+    && tar zxf boost-1.65.1.tar.gz && cd build-boost-1.65.1 && ./bootstrap.sh)
+    && touch Jamroot && export BOOST_ROOT="$PWD/build-boost-1.65.1" && export PATH="$PATH:$BOOST_ROOT"; fi
+  - if [ "${LIBCXX}" != "" ]; then (svn --quiet co http://llvm.org/svn/llvm-project/libcxx/trunk libcxx && cmake -Bbuild -H. && cmake --build build)
     && export CXXFLAGS="-stdlib=libc++ -I${TRAVIS_BUILD_DIR}/libcxx/include"
-    && export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/lib -lc++"
-    && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/lib:$LD_LIBRARY_PATH"; fi
+    && export LDFLAGS="-L${TRAVIS_BUILD_DIR}/libcxx/build/lib -lc++"
+    && export LD_LIBRARY_PATH="${TRAVIS_BUILD_DIR}/libcxx/build/lib:$LD_LIBRARY_PATH"; fi
 
 script:
   - if [ "${CXX}" != "" ]; then (travis_wait make all); fi
@@ -267,4 +209,3 @@ notifications:
   on_success: change
   on_failure: always
   on_start: false
-
