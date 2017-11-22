@@ -1015,7 +1015,7 @@ int main() { di::make_injector<test_config>(); }
                             virtual ~i() noexcept = default;
                             virtual void dummy() = 0;
                           };
-                          struct c { std::shared_ptr<i> i_; }; int main() {
+                          struct c{explicit c(std::shared_ptr<i>){}}; int main() {
                             di::injector<c> injector = di::make_injector();  // di::bind<i>().to<impl>()
                           });
     };
