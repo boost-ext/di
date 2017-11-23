@@ -6,7 +6,7 @@
 #
 env:
   global:
-  - secure: "A27gNApbElRr3fqZXifVPKkB+xbxMYDFINGk2RDqul1X1Zg51M7e+ohHO9BwhEYiOGmCnFfbsVUP11XyFIH6kzWmxw9mhy8YDglbYfeyu6grxtU3mHElz8W7wO5OCPFPWXQf23sVYE8AWyjj6M+t3oyLJhPXCcYI7uMHEQm10CQ=" # GH_TOKEN
+  - secure: "F/LBl+hmRJv6kcDKX/N/e8RBJ5D/Non6V/pQawDIU0z+MQbz7fV6/358YVUwyf8Cm2qkyRO/jPWDBRfy/W9X0OlgAFrrTvRe6H2usf24WcU+4hO7u0gS99ca2HRggH7UkQ7GEnCraz65ThlJSEIUpE8+NnlFXpWY2ld4JMNkL44=" # GH_TOKEN
 
 git:
   depth: 1
