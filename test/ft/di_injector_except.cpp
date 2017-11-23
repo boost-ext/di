@@ -10,9 +10,7 @@ namespace di = boost::di;
 
 test should_throw_when_ctor_throws = [] {
   struct except {
-    except() {
-      throw 0;
-    }
+    except() { throw 0; }
   };
 
   const auto injector = di::make_injector();
@@ -20,8 +18,7 @@ test should_throw_when_ctor_throws = [] {
   auto cought = false;
   try {
     injector.create<except>();
-  }
-  catch(...) {
+  } catch (...) {
     cought = true;
   }
   expect(cought);

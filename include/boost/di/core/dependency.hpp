@@ -171,9 +171,9 @@ class dependency
 
 #if defined(__MSVC__)  // __pph__
  public:
-#else // __pph__
+#else   // __pph__
  protected:
-#endif // __pph__
+#endif  // __pph__
   using scope_t::is_referable;
   using scope_t::create;
   using scope_t::try_create;

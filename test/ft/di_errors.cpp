@@ -32,7 +32,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     source_code << "namespace di = boost::di;" << std::endl;
     source_code << code;
 
-    std::stringstream errors;
+    std::stringstream errors{};
 
 #if defined(__CLANG__)
     errors << "-Werror";
@@ -42,12 +42,12 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     errors << "/EHsc /W3 /WX";
 #endif
 
-    auto include_rgx = std::regex{"<include>"};
+    const auto include_rgx = std::regex{"<include>"};
 
 #if defined(__MSVC__)
-    auto include = std::regex_replace(defines, include_rgx, "/FI");
+    const auto include = std::regex_replace(defines, include_rgx, "/FI");
 #else
-    auto include = std::regex_replace(defines, include_rgx, "-include");
+    const auto include = std::regex_replace(defines, include_rgx, "-include");
 #endif
 
     command << cxx() << " " << cxxflags(true) << " " << include << " " << errors.str() << " " << source_code
@@ -106,12 +106,12 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
 // ---------------------------------------------------------------------------
 
 test bind_instance_with_given_scope = [] {
-  expect_compile_fail("", errors(), di::make_injector(di::bind<int>().in(di::unique).to(42)););
+  expect_compile_fail("", errors(), int main() { di::make_injector(di::bind<int>().in(di::unique).to(42)); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_instance_with_given_scope_v = [] {
-  expect_compile_fail("", errors(), di::make_injector(di::bind<int>.in(di::unique).to(42)););
+  expect_compile_fail("", errors(), int main() { di::make_injector(di::bind<int>.in(di::unique).to(42)); });
 };
 #endif
 
@@ -516,7 +516,7 @@ test bind_is_abstract_type_named = [] {
                       };
                       struct impl
                       : i{};
-                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) i*){}};
+                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
                       int main() { di::make_injector(di::bind<i>().named(dummy{}).to<impl>()); });
 };
 
@@ -536,7 +536,7 @@ test bind_is_abstract_type_named_v = [] {
                       };
                       struct impl
                       : i{};
-                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) i*){}};
+                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
                       int main() { di::make_injector(di::bind<i>.named(dummy{}).to<impl>()); });
 };
 #endif
@@ -973,7 +973,7 @@ int main() { di::make_injector<test_config>(); }
                             virtual ~i() noexcept = default;
                             virtual void dummy() = 0;
                           };
-                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) i*){}};
+                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
                           int main() { di::make_injector().create<c>(); });
     };
 
@@ -1015,7 +1015,7 @@ int main() { di::make_injector<test_config>(); }
                             virtual ~i() noexcept = default;
                             virtual void dummy() = 0;
                           };
-                          struct c { std::shared_ptr<i> i_; }; int main() {
+                          struct c{explicit c(std::shared_ptr<i>){}}; int main() {
                             di::injector<c> injector = di::make_injector();  // di::bind<i>().to<impl>()
                           });
     };
