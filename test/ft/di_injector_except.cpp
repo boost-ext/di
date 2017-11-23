@@ -81,14 +81,16 @@ test should_throw_when_lambda_with_no_args_throws = [] {
 	expect(cought);
 };
 
+struct except_factory {
+  template <class TInjector>
+  auto operator()(const TInjector&) const {
+    throw 0;
+    return empty{};
+  }
+};
+
 test should_throw_when_factory_with_1_arg_throws = [] {
-	struct except_factory {
-		template <class TInjector>
-		auto operator()(const TInjector&) const {
-			throw 0;
-			return empty{};
-		}
-	};
+
 	const auto injector = di::make_injector(di::bind<empty>().to(except_factory{}));
 
 	auto cought = false;
