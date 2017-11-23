@@ -360,6 +360,9 @@ const auto injector = di::make_injector(
 , di::bind<>.to(42) // renderer device
 );
 ```
+<span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
+It is safe to throw exceptions from lambda. It will be passed through.
+</span>
 
 Notice, that [injector] was passed to lambda expression in order to create `gui_view` / `text_view`.
 This way `[Boost].DI` can inject appropriate dependencies into chosen types. See [bindings] for more details.
