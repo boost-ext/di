@@ -552,6 +552,9 @@ const auto injector = di::make_injector(
 );
 </code></pre>
 
+<p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
+It is safe to throw exceptions from lambda. It will be passed through.
+</span></p>
 <p>Notice, that <a href="../user_guide/index.html#di_make_injector">injector</a> was passed to lambda expression in order to create <code>gui_view</code> / <code>text_view</code>.
 This way <code>[Boost].DI</code> can inject appropriate dependencies into chosen types. See <a href="../user_guide/index.html#bindings">bindings</a> for more details.</p>
 <p>And full example!

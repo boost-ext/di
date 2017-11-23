@@ -59,8 +59,8 @@ Kris Jusiak, Quantlab Financial
 
 | | |
 |-|-|
-| Expressiveness | Type constraints for better error messages |
-| Loosely coupeled design | Inject all the things! |
+| Expressiveness | Type constraints for better error messages (Design by Introspection) |
+| Loosely coupeled design | Inject all the things! (Policy Design) |
 | Performance | Static dispatch by default <br />(based on concepts) |
 | Flexiblity | Dynamic dispatch using type erasure (based on the same concepts) |
 | Testability | Automatic mocks injection <br />(based on the same concepts) |
@@ -81,7 +81,7 @@ constexpr auto Fooable =        |  int foo();
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
-#### Non-templated constraints
+#### Non-templated constraints (optional interfaces)
 
 ```cpp
 struct Readable {               | // Readable Implementation
@@ -122,10 +122,9 @@ public:
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
-#### Static dispatch and wiring
 ```cpp
 int main() {
-  const auto injector = di::make_injector(
+  const auto injector = di::make_injector(                 // wiring
    di::bind<class TException>.to<std::runtime_error>(),    // concept->type
    di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // concept->template
   );

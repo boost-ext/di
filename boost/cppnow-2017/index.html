@@ -55,93 +55,100 @@ Kris Jusiak, Quantlab Financial
 
 ==============================================================================
 
-## Concepts driven design - Goals
+## Concepts driven design - Goals / Dream
 
 | | |
 |-|-|
-| Expressiveness | Type constraints for better error messages | 
-| Loosely coupeled design | Inject all the things! |
-| Performance | Static dispatch by default |
-| Flexiblity | Dynamic dispatch using type erasure |
-| Testability | Automatic mocks injection  |
+| Expressiveness | Type constraints for better error messages (Design by Introspection) |
+| Loosely coupeled design | Inject all the things! (Policy Design) |
+| Performance | Static dispatch by default <br />(based on concepts) |
+| Flexiblity | Dynamic dispatch using type erasure (based on the same concepts) |
+| Testability | Automatic mocks injection <br />(based on the same concepts) |
 
 ----
 
-## Type constraints
+## Type constraints - [VC](https://github.com/boost-experimental/vc)
 
-#### +/- Concepts-Lite syntax in C++14/17 (predicates)
+#### C++14/17 Type constraints (~Concepts-Lite predicates)
 
 ```cpp
-template<class T>              |  struct Foo {
-constexpr auto Fooable =       |   int foo();
-  $requires(T)(auto&& t) (     |  };
-    int( t.foo() )             |   
-  );                           |  template<class T, REQUIRES(Fooable<T>)>
-                               |  void foo(T&&);
+template<class T>               | struct Foo {
+constexpr auto Fooable =        |  int foo();
+  $requires(T)(auto&& t) (      | };
+    int( t.foo() )              |
+  );                            | template<class T, REQUIRES(Fooable<T>)>
+                                | void foo(T&&);
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
-#### Concepts-Lite (type with predicates)
+#### Non-templated constraints (optional interfaces)
 
-```cpp                            
-struct Readable {              |  struct Reader {
- template<class T, REQUIRES(   |    Reader(Reader&&) = default;
-   MoveConstructible<T> &&     |    Reader& operator=(Reader&&) = default;
-   MoveAssignable<T> &&        |    int read();
-   Callable<T, int()>($(read)) |  };
- ) Readable(T);                | 
-};                             |  static_assert(
-                               |   std::is_convertible<Readable, Reader>{}
-                               |  );
+```cpp
+struct Readable {               | // Readable Implementation
+ template<class T>              |
+  auto operator()() const {     | struct Reader { // no inheritance
+    MoveConstructible<T> &&    <|> Reader(Reader&&) = default; // ✔
+    MoveAssignable<T> &&       <|> Reader& operator=(Reader&&) = default; // ✔
+    Callable<T, int()>($(read))<|> int read(); // ✔
+  };                     ^      | };
+};               ________/      |
+                /               | static_assert(
+  /* Lambda expression */       |  is_satisfied_by<Readable, Reader>{}
+  /* exposing a read() call */  | );
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 
-## Inject all the things!
+## Inject all the things! - [[Boost].DI](https://github.com/boost-experimental/vc)
 
+#### Policy design
 ```cpp
-template<class T = class TException>
-struct ThrowExceptionPolicy { 
-  void onError(std::string_view msg) { throw T{msg}; } 
+template<class T = class TException> // `TException` is satisifed by any type
+struct ThrowExceptionPolicy {        //  It's like auto in Concepts-lite
+  void onError(std::string_view msg) { throw T{msg}; }
 };
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
-#### policy design
 ```cpp
 template<class TPolicy = class TErrorPolicy>
 class App : TPolicy {
+public:
   void run() {
-    if (false) { TPolicy::onError("error!"); }
+    if (...) { TPolicy::onError("error!"); }
   }
 };
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
-#### Static dispatch and wiring
 ```cpp
 int main() {
-  const auto injector = di::make_injector(
-    di::bind<class TException>.to<std::runtime_error>(),
-    di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // type->template
+  const auto injector = di::make_injector(                 // wiring
+   di::bind<class TException>.to<std::runtime_error>(),    // concept->type
+   di::bind<class TErrorPolicy>.to<ThrowExceptionPolicy>() // concept->template
   );
-  injector.create<App>().run(); // App is a template!
+  di::make<App>(injector).run(); // App is a template!
 }
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 
-## DI - 2-Phase resolving (types -> ctors)
+## [DI](https://github.com/boost-experimental/vc) - 2-Phase resolving (concepts / ctors) 
 
 ```cpp
-template<class TReader = Readable, // type = concept
+template<class TReader = Readable, // typename = concept
          class TPrinter = Printable>
 class App {
   TReader reader;
   TPrinter printer;
-  
+
 public:
-  App(TReader reader, TPrinter printer) // ctor params deduction
-   : reader(reader), printer(printer)
+  App(TReader reader, TPrinter printer) // constructor
+   : reader(reader), printer(printer)   // parameters deduction
   { }
-  
+
   void run() { printer.print(reader.read()); }
 };
 ```
@@ -150,56 +157,53 @@ public:
 ```cpp
 int main() {
  const auto injector = di::make_injector(
-   di::bind<Readable>.to<FileReader>(), // concepts checking at wiring!
-   di::bind<Printable>.to<ConsolePrinter>()
- );
- injector.create<App>().run(); // App is a template!
-}
+   di::bind<Readable>.to<FileReader>(),     // concept -> type
+   di::bind<Printable>.to<ConsolePrinter>() // concepts checking
+ );                                         // at wiring!
+ di::make<App>(injector).run(); // preallocates shared dependencies
 ```
 
 ----
 
-## type_erasure for dynamic dispatch
+## type_erasure for dynamic dispatch - [VC](https://github.com/boost-experimental/vc)
 
 ```cpp
 template<class TReader = Readable> // type = concept
 class App {
   TReader reader;
-  any<Printable> printer; // type erasure based on the same concept!
-
+  any<Printable> printer; // type erasure based on the same concept
+                          // as concepts example
 public:
   App(TReader reader, any<Printable> printer) // 100% value semantics
     : reader(reader), printer(printer)
   { }
-  
+
   void run() { printer.print(reader.read()); }
 };
 ```
 
 #### Dynamic bindings using virtual concepts
 ```cpp
-int main(int argc, char**) {
-  const auto injector = di::make_injector(
+const auto config = [](std::string_view printer) {
+  return di::make_injector(
     di::bind<Readable>.to<FileReader>(),
-    di::bind<Printable>([&](auto&& _) -> Printable { 
-      return argc == 1
-        ? _.to<ConsolePrinter>()
-        : _.to<QtPrinter>();
+    di::bind<Printable>([&](auto&& _) {
+      return printer == "QT" ?
+        _.to<QtPrinter>() : _.to<ConsolePrinter>();
     })
   );
-  injector.create<App>().run();
-}
+};
 ```
 
 ----
 
-## Automatic concepts based mocks injection
+## Automatic / concepts based / mocks injection - [GUnit.GMock](https://github.com/cpp-testing/gunit)
 
 ```cpp
 "should print read text"_test = [] {
  constexpr auto value = 42;
- auto [sut, mocks] = testing::make<App>(); // creates System Under Test
-                                           // and mocks!
+ auto [app, mocks] = testing::make<App>(); // creates System Under Test
+                                           // and Mocks!
 
  InSequence sequence;
  {
@@ -207,9 +211,10 @@ int main(int argc, char**) {
    EXPECT_CALL(mocks<Printable>(), print(value));
  }
 
- sut.run();
+ app.run();
 };
 ```
+#### It works with concepts/type_erasure and interfaces!
 
 ==============================================================================
 
@@ -219,11 +224,11 @@ int main(int argc, char**) {
 [Virtual Concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) |
 [(SG7) Static reflection](www.open-std.org/jtc1/sc22/wg21/docs/papers/2016/p0194r0.pdf)
 
-| | |
-|-|-|
-|[Boost].DI | https://github.com/boost-experimental/di |
-| VC        | https://github.com/boost-experimental/vc |
-| GUnit     | https://github.com/cpp-testing/GUnit |
+| | | |
+|-|-|-|
+| Dependency Injection |[Boost].DI  | https://github.com/boost-experimental/di |
+| Virtual Concepts     | VC         | https://github.com/boost-experimental/vc |
+| Mocking              | GUnit      | https://github.com/cpp-testing/GUnit |
 
 ---
 
@@ -339,8 +344,6 @@ int main(int argc, char**) {
 					{ src: 'plugin/notes/notes.js', async: true }
 				]
 			});
-
 		</script>
-
 	</body>
 </html>
