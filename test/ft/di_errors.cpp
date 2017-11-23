@@ -516,7 +516,7 @@ test bind_is_abstract_type_named = [] {
                       };
                       struct impl
                       : i{};
-                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
+                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) i*){}};
                       int main() { di::make_injector(di::bind<i>().named(dummy{}).to<impl>()); });
 };
 
@@ -536,7 +536,7 @@ test bind_is_abstract_type_named_v = [] {
                       };
                       struct impl
                       : i{};
-                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
+                      struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) i*){}};
                       int main() { di::make_injector(di::bind<i>.named(dummy{}).to<impl>()); });
 };
 #endif
@@ -973,7 +973,7 @@ int main() { di::make_injector<test_config>(); }
                             virtual ~i() noexcept = default;
                             virtual void dummy() = 0;
                           };
-                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{})i*){}};
+                          struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) i*){}};
                           int main() { di::make_injector().create<c>(); });
     };
 
