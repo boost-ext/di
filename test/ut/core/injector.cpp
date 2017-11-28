@@ -91,6 +91,14 @@ test ctor_injector = [] {
   (void)injector2;
 };
 
+test move = [] {
+  using dep1 = fake_dependency<int>;
+  using dep2 = fake_dependency<double>;
+  injector<config, dep1, dep2> injector_from_{core::init{}};
+  injector<config, dep1> injector_to_{core::init{}};
+  injector_to_ = static_cast<decltype(injector_from_)&&>(injector_from_);
+};
+
 test create = [] {
   injector<config> injector_{core::init{}};
   expect(0 == injector_.create<int>());

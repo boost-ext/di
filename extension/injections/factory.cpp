@@ -38,7 +38,9 @@ struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...>
     );
     // clang-format on
 
-    return injector.template create<std::unique_ptr<T>>();
+    auto object = injector.template create<std::unique_ptr<T>>();
+    injector_ = std::move(injector);
+    return std::move(object);
   }
 
  private:
@@ -96,6 +98,8 @@ int main() {
 
   // clang-format off
   auto injector = di::make_injector(module()
+  // bind instance just to make sure that factory doesn't affect injector
+  , di::bind<interface>().to(std::make_shared<implementation>())
 
   //<<bind factory interface to implementation>>
   , di::bind<ifactory<interface>>().to(factory<implementation>{})
@@ -110,4 +114,7 @@ int main() {
 
   /*<<create `example`>>*/
   injector.create<example>();
+
+  // Check whether injector is affected by factory
+  assert(injector.create<std::shared_ptr<interface>>());
 }
