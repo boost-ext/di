@@ -91,6 +91,9 @@ Creates [injector] type.
       injector(core::injector<Ts...>&&) noexcept;
       explicit injector(const TDeps&...) noexcept;
 
+      template <class T>
+      injector& operator=(T&& other) noexcept;
+
       template<class T> requires creatable<T>
       T create() const;
     };

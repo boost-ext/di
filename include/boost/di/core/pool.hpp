@@ -27,6 +27,12 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
   pool(const aux::type_list<Ts...>&, TPool p) noexcept : pool(static_cast<Ts&&>(p)...) {
     (void)p;
   }
+
+  template <class T>
+  pool& operator=(T&& other) noexcept {
+    (void)aux::swallow{0, (static_cast<TArgs&>(*this).operator=(static_cast<TArgs&&>(other)), 0)...};
+    return *this;
+  }
 };
 
 }  // core

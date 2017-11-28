@@ -114,6 +114,12 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
 
   injector(injector &&) = default;
 
+  template <class T>
+  injector& operator=(T&& other) noexcept {
+    static_cast<pool_t&>(*this).operator=(static_cast<T&&>(other));
+    return *this;
+  }
+
   template <class... TArgs>
   explicit injector(const init&, TArgs... args) noexcept : injector{from_deps{}, static_cast<TArgs&&>(args)...} {}
 

@@ -82,6 +82,26 @@ test get = [] {
   expect(default_ctor_.object == static_cast<const default_ctor_type&>(p).object);
 };
 
+test move = [] {
+  using custom_ctor_type = allocator<custom_ctor>;
+  using trivial_ctor_type = allocator<trivial_ctor>;
+  using default_ctor_type = allocator<default_ctor>;
+  using pool_from_t = pool<aux::type_list<custom_ctor_type, trivial_ctor_type, default_ctor_type>>;
+
+  custom_ctor_type custom_ctor_(new custom_ctor{0});
+  trivial_ctor_type trivial_ctor_(new trivial_ctor);
+  default_ctor_type default_ctor_(new default_ctor);
+  pool_from_t p_from(custom_ctor_, trivial_ctor_, default_ctor_);
+
+  using pool_to_t = pool<aux::type_list<trivial_ctor_type, default_ctor_type>>;
+  pool_to_t p_to(trivial_ctor_type(new trivial_ctor), default_ctor_type(new default_ctor));
+
+  p_to = static_cast<decltype(p_from)&&>(p_from);
+
+  expect(trivial_ctor_.object == static_cast<const trivial_ctor_type&>(p_to).object);
+  expect(default_ctor_.object == static_cast<const default_ctor_type&>(p_to).object);
+};
+
 test pool_of_pools = [] {
   using trivial_ctor_type = allocator<trivial_ctor>;
   using default_ctor_type = allocator<default_ctor>;
