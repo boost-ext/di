@@ -80,13 +80,13 @@ Common mistakes when using Dependency Injection are:
 ```cpp
 class Model {
  public:
-   Model(int width, int height) 
+   Model(int width, int height)
      : board(std::make_unique<Board>(width, height)) // Bad
-   { } 
+   { }
 
    explicit Model(std::unique_ptr<IBoard> board) // Better
      : board(std::move(board))
-   { } 
+   { }
 
    ...
 
@@ -105,7 +105,7 @@ class Model : public Service { // Bad
  public:
    explicit Model(std::unique_ptr<IBoard> board) // Bad
      : Service(std::move(board))
-   { } 
+   { }
 
    void update() {
      Service::do_something_with_board(); // Bad
@@ -116,7 +116,7 @@ class Model { // Better
  public:
    explicit Model(std::unique_ptr<Service> service) // Better
      : service(std::move(service))
-   { } 
+   { }
 
    void update() {
      service->do_something_with_board(); // Better
@@ -139,11 +139,11 @@ class Model {
  public:
    explicit Model(service_locator& sl) // Bad (ask)
      : service(sl.resolve<unique_ptr<Service>>())
-   { } 
+   { }
 
    explicit Model(std::unique_ptr<Service> service) // Better (tell)
      : service(std::move(service))
-   { } 
+   { }
 
    ...
 
@@ -314,9 +314,11 @@ but also can help you with...
 * [Design Patterns in C++: Creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
 
 ###Acknowledgements
+
 * Thanks to **Bartosz Kalinczuk** for code review and tips how to improve `[Boost].DI`
-* Thanks to **Sohail Somani** for support and tips how to improve `[Boost].DI`
+* Thanks to **Kanstantsin Chernik** for all his constributions to `[Boost].DI`
 * Thanks to **Olof Edlund** for very useful feedback and for all the improvements to the documentation
 * Thanks to **Rob Stewart** and **Robert Ramey** for documentation feedback and tips how to improve it
+* Thanks to **Sohail Somani** for support and tips how to improve `[Boost].DI`
 
 [Dagger2]: https://github.com/google/dagger
