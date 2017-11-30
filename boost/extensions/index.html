@@ -346,6 +346,8 @@ int main() {
   auto module = [] { return di::make_injector(di::bind&lt;&gt;().to(123)); };
 
   auto injector = di::make_injector(module()
+  // bind instance just to make sure that factory doesn't affect injector
+  , di::bind&lt;interface&gt;().to(std::make_shared&lt;implementation&gt;())
 
   //&lt;&lt;bind factory interface to implementation&gt;&gt;
   , di::bind&lt;ifactory&lt;interface&gt;&gt;().to(factory&lt;implementation&gt;{})
@@ -359,6 +361,9 @@ int main() {
 
   /*&lt;&lt;create `example`&gt;&gt;*/
   injector.create&lt;example&gt;();
+
+  // Check whether injector is affected by factory
+  assert(injector.create&lt;std::shared_ptr&lt;interface&gt;&gt;());
 }
 </code></pre>
 

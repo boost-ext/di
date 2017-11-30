@@ -203,6 +203,9 @@ public:
   injector(core::injector&lt;Ts...&gt;&amp;&amp;) noexcept;
   explicit injector(const TDeps&amp;...) noexcept;
 
+  template &lt;class T&gt;
+  injector&amp; operator=(T&amp;&amp; other) noexcept;
+
   template&lt;class T&gt; requires creatable&lt;T&gt;
   T create() const;
 };
