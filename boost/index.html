@@ -174,13 +174,13 @@ It's much cleaner to create the latter object beforehand and pass it to the form
 </ul>
 <pre><code class="cpp">class Model {
  public:
-   Model(int width, int height) 
+   Model(int width, int height)
      : board(std::make_unique&lt;Board&gt;(width, height)) // Bad
-   { } 
+   { }
 
    explicit Model(std::unique_ptr&lt;IBoard&gt; board) // Better
      : board(std::move(board))
-   { } 
+   { }
 
    ...
 
@@ -200,7 +200,7 @@ It's much better to always pass only dependecies which are required ONLY by the 
  public:
    explicit Model(std::unique_ptr&lt;IBoard&gt; board) // Bad
      : Service(std::move(board))
-   { } 
+   { }
 
    void update() {
      Service::do_something_with_board(); // Bad
@@ -211,7 +211,7 @@ class Model { // Better
  public:
    explicit Model(std::unique_ptr&lt;Service&gt; service) // Better
      : service(std::move(service))
-   { } 
+   { }
 
    void update() {
      service-&gt;do_something_with_board(); // Better
@@ -235,11 +235,11 @@ It's better to pass required dependencies direclty instead and use a DI framewor
  public:
    explicit Model(service_locator&amp; sl) // Bad (ask)
      : service(sl.resolve&lt;unique_ptr&lt;Service&gt;&gt;())
-   { } 
+   { }
 
    explicit Model(std::unique_ptr&lt;Service&gt; service) // Better (tell)
      : service(std::move(service))
-   { } 
+   { }
 
    ...
 
@@ -414,9 +414,10 @@ but also can help you with...</p>
 <h3 id="acknowledgements">Acknowledgements</h3>
 <ul>
 <li>Thanks to <strong>Bartosz Kalinczuk</strong> for code review and tips how to improve <code>[Boost].DI</code></li>
-<li>Thanks to <strong>Sohail Somani</strong> for support and tips how to improve <code>[Boost].DI</code></li>
+<li>Thanks to <strong>Kanstantsin Chernik</strong> for all his constributions to <code>[Boost].DI</code></li>
 <li>Thanks to <strong>Olof Edlund</strong> for very useful feedback and for all the improvements to the documentation</li>
 <li>Thanks to <strong>Rob Stewart</strong> and <strong>Robert Ramey</strong> for documentation feedback and tips how to improve it</li>
+<li>Thanks to <strong>Sohail Somani</strong> for support and tips how to improve <code>[Boost].DI</code></li>
 </ul>
 </div>
 
