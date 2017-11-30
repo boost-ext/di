@@ -62,24 +62,6 @@ Legend:
 | Approach    | compile-time | run-time | compile/run-time |
 | Errors      | compile-time errors | exceptions | compile-time errors/exceptions |
 
-* Environment
-    * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
-    * $CXX -O2
-
-| Create a unique objects tree for each iteration<br /><br />`TYPES: 64`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
-|  ------------------------ | ------------ | -------- | ---------- | -------------- |
-| **Clang-3.7**             | **Baseline** | **[Boost].DI** | **[dicpp]**    | **[Google.Fruit]**              |
-| Compilation time          |              | 3.082s       | 1m14.080s      | 34.461s / FRUIT_NO_LOOP_CHECK |
-| Execution time            |              | 0.002s       | -              | -                               |
-| Memory usage (stack/heap) |              | 1b/0b        | -              | -                               |
-| Executable size           |              | 72kb         | 4.4M           | 5.1M                            |
-| |  |  |  |
-| **GCC-5.2** |  |  |  |
-| Compilation time          |              |  | | |
-| Execution time            |              |  | | |
-| Memory usage (stack/heap) |              |  | | |
-| Executable size           |              |  | | |
-
 * To run benchmarks
 ```sh
 cd benchmark && make
@@ -106,7 +88,7 @@ cd benchmark && make
 * **Baseline**
     * Manual object creation
 
-| Create a unique objects tree for each iteration<br /><br />`TYPES: 64`  `BINDINGS: 0`  `ITERATIONS: 1024` | 
+| Create a unique objects tree for each iteration<br /><br />`TYPES: 64`  `BINDINGS: 0`  `ITERATIONS: 1024` | |
 | ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
 | **Clang-3.7 -O2 / Java8 / Mono4.2 --aot** | **Baseline** | **[Boost].DI** | **[Google.Fruit]**             | **[Google.Guice]** | **[Dagger2]** | **[Ninject]**   |
 | Compilation time                    | 0.063s       | 0.376s       | 2.329s / FRUIT_NO_LOOP_CHECK   | 0.570s             | 1.411s        | 0.144s + 0.079s |
@@ -169,4 +151,3 @@ cd benchmark && make
 [Google.Guice]: https://github.com/google/guice
 [Dagger2]: https://github.com/google/dagger
 [Ninject]: https://github.com/ninject/ninject
-
