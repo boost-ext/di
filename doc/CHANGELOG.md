@@ -1,7 +1,7 @@
-## [1.1.0] - 2017-05-04
+## [1.0.2] - 2017-XX-XX
 - **Additions**
   - Support for Clang-4.0
-  - Support for GCC-7.0
+  - Support for GCC-7
   - Support for MSVC-2017
   >
   - **Core**
@@ -44,6 +44,7 @@
 
     * [https://waffle.io/boost-experimental/di](https://waffle.io/boost-experimental/di)
 
+[1.0.2]: https://github.com/boost-experimental/di/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/boost-experimental/di/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/boost-experimental/di/compare/v0.5.0...v1.0.0
 [0.5.0]: https://github.com/boost-experimental/di/compare/v0.1.0...v0.5.0
