@@ -316,7 +316,7 @@ but also can help you with...
 ###Acknowledgements
 
 * Thanks to **Bartosz Kalinczuk** for code review and tips how to improve `[Boost].DI`
-* Thanks to **Kanstantsin Chernik** for all his constributions to `[Boost].DI`
+* Thanks to **Kanstantsin Chernik** for all his contributions to `[Boost].DI`
 * Thanks to **Olof Edlund** for very useful feedback and for all the improvements to the documentation
 * Thanks to **Rob Stewart** and **Robert Ramey** for documentation feedback and tips how to improve it
 * Thanks to **Sohail Somani** for support and tips how to improve `[Boost].DI`
