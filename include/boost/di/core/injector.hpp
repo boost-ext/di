@@ -269,17 +269,17 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : 
  private:
   template <class... TArgs>
   explicit injector(const from_deps&, TArgs... args) noexcept
-      : pool_t{copyable_t<deps>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
+      : pool_t{bindings_t<TArgs...>{}, core::pool_t<TArgs...>{static_cast<TArgs&&>(args)...}} {}
 
   template <class TInjector, class... TArgs>
   explicit injector(const from_injector&, TInjector&& injector, const aux::type_list<TArgs...>&) noexcept
 #if defined(__MSVC__)  // __pph__
       : pool_t {
-    copyable_t<deps>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
+    bindings_t<TArgs...>{}, pool_t { build<TArgs>(static_cast<TInjector&&>(injector))... }
   }
 #else   // __pph__
       : pool_t {
-    copyable_t<deps>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
+    bindings_t<TArgs...>{}, pool_t { TArgs{static_cast<TInjector&&>(injector)}... }
   }
 #endif  // __pph__
   {}

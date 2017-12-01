@@ -100,4 +100,15 @@ int main() {
 
     injector.create<example>();
   }
+
+  {
+    // clang-format off
+    auto injector1 = di::make_injector(di::bind<interface1>().to<implementation1>().in(shared));
+    // clang-format on
+
+    auto i1 = injector1.create<std::shared_ptr<interface1>>();
+    auto injector2 = di::make_injector(std::move(injector1));
+    // check whether shared scope was successfully moved
+    assert(i1 == injector2.create<std::shared_ptr<interface1>>());
+  }
 }
