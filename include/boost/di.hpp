@@ -1712,9 +1712,9 @@ using pool_t = pool<aux::type_list<TArgs...>>;
 template <class... TArgs>
 struct pool<aux::type_list<TArgs...>> : TArgs... {
   template <class... Ts>
-  explicit pool(Ts... args) noexcept : Ts(static_cast<Ts&&>(args))... {}
+  explicit pool(Ts... args) noexcept : TArgs(static_cast<TArgs&&>(args))... {}
   template <class... Ts, class TPool>
-  pool(const aux::type_list<Ts...>&, TPool p) noexcept : pool(static_cast<Ts&&>(p)...) {
+  pool(const aux::type_list<Ts...>&, TPool p) noexcept : pool(static_cast<TArgs&&>(p)...) {
     (void)p;
   }
   template <class T>
