@@ -2324,8 +2324,8 @@ struct copyable;
 template <class T>
 struct copyable_impl
     : aux::conditional<
-          aux::is_default_constructible<typename T::scope::template scope<typename T::expected, typename T::given>>::value,
-          aux::type_list<>, aux::type_list<T>> {};
+          aux::is_copy_constructible<typename T::scope::template scope<typename T::expected, typename T::given>>::value,
+          aux::type_list<T>, aux::type_list<>> {};
 template <class... TDeps>
 struct copyable<aux::type_list<TDeps...>> : aux::join<typename copyable_impl<TDeps>::type...> {};
 template <class TDeps>
