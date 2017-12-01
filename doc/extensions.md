@@ -3,6 +3,7 @@
 * [Assisted Injection](#assisted-injection)
 * [Concepts](#concepts)
 * [Factory](#factory)
+* [Shared Factory](#shared-factory)
 * [Generics / Typed Erasure Interfaces](#generics-typed-erasure-interfaces)
 * [Lazy](#lazy)
 * [Named Parameters](#named-parameters)
@@ -31,6 +32,9 @@
 
 ###Factory
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp)
+
+###Shared Factory
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/shared_factory.cpp)
 
 ###Generics / Typed Erasure Interfaces
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/generics.cpp)

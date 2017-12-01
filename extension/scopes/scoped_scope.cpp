@@ -20,6 +20,12 @@ class scoped_scope {
     template <class T_>
     using is_referable = typename di::wrappers::shared<scoped_scope, T>::template is_referable<T_>;
 
+    scope &operator=(scope &&other) noexcept {
+      this->object_ = other.object_;
+      other.object_ = nullptr;
+      return *this;
+    }
+
     template <class, class, class TProvider, class T_ = di::aux::decay_t<decltype(di::aux::declval<TProvider>().get())>>
     static decltype(di::wrappers::shared<scoped_scope, T_>{
         std::shared_ptr<T_>{std::shared_ptr<T_>{di::aux::declval<TProvider>().get()}}})
