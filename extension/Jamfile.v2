@@ -44,6 +44,7 @@ test-suite extensions :
     [ extension injections/assisted_injection.cpp ]
     [ extension injections/concepts.cpp ]
     [ extension injections/factory.cpp ]
+    [ extension injections/shared_factory.cpp ]
     [ extension injections/generics.cpp ]
     [ extension injections/lazy.cpp ]
     [ extension injections/named_parameters.cpp ]

@@ -24,7 +24,7 @@ struct factory_impl;
 
 template <class TInjector, class T, class I, class... TArgs>
 struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...> {
-  explicit factory_impl(const TInjector& injector) : injector_((TInjector&)injector) {}
+  explicit factory_impl(const TInjector& injector) : injector_(const_cast<TInjector&>(injector)) {}
 
   std::unique_ptr<I> create(TArgs&&... args) const override {
     // clang-format off
@@ -38,7 +38,17 @@ struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...>
     );
     // clang-format on
 
-    auto object = injector.template create<std::unique_ptr<T>>();
+    std::unique_ptr<T> object;
+#ifdef __EXCEPTIONS
+    try {
+      object = injector.template create<std::unique_ptr<T>>();
+    } catch (...) {
+      injector_ = std::move(injector);
+      throw;
+    }
+#else
+    object = injector.template create<std::unique_ptr<T>>();
+#endif
     injector_ = std::move(injector);
     return std::move(object);
   }
@@ -63,6 +73,13 @@ struct interface {
 //->
 
 struct implementation : interface {
+  void dummy1() override {}
+};
+
+struct implementation_exception : interface {
+#ifdef __EXCEPTIONS
+  implementation_exception() { throw 0; }
+#endif
   void dummy1() override {}
 };
 
@@ -98,8 +115,11 @@ int main() {
 
   // clang-format off
   auto injector = di::make_injector(module()
-  // bind instance just to make sure that factory doesn't affect injector
+  // <<bind instance just to make sure that factory doesn't affect injector>>
   , di::bind<interface>().to(std::make_shared<implementation>())
+
+  // <<bind instance which throws exception to make sure that exception doesn't affect injector>>
+  , di::bind<ifactory<implementation_exception>>().to(factory<implementation_exception>{})
 
   //<<bind factory interface to implementation>>
   , di::bind<ifactory<interface>>().to(factory<implementation>{})
@@ -114,6 +134,17 @@ int main() {
 
   /*<<create `example`>>*/
   injector.create<example>();
+
+/*<<create `implementation_exception`>>*/
+#ifdef __EXCEPTIONS
+  bool exception_thrown = false;
+  try {
+    injector.create<const implementation_exception&>();
+  } catch (...) {
+    exception_thrown = true;
+  }
+  assert(exception_thrown);
+#endif
 
   // Check whether injector is affected by factory
   assert(injector.create<std::shared_ptr<interface>>());
