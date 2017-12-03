@@ -10,26 +10,26 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/fwd.hpp"
 
-template <class T, class TDependency = aux::none_type, class TDeps = aux::none_type, bool TResolve = true>
+template <class, class TDependency = aux::none_type, class TDeps = aux::none_type, bool TResolve = true, bool IsRoot = false>
 struct fake_policy;
 
-template <class T, class TDependency, class TDeps>
-struct fake_policy<T, TDependency, TDeps, true> {
+template <class T, class TDependency, class TDeps, bool IsRoot>
+struct fake_policy<T, TDependency, TDeps, true, IsRoot> {
   using type = T;
   using name = no_name;
   using dependency = TDependency;
-  using is_root = std::false_type;
+  using is_root = aux::integral_constant<bool, IsRoot>;
 
   template <class, class, class>
   using resolve = TDependency;
 };
 
-template <class T, class TDependency, class TDeps>
-struct fake_policy<T, TDependency, TDeps, false> {
+template <class T, class TDependency, class TDeps, bool IsRoot>
+struct fake_policy<T, TDependency, TDeps, false, IsRoot> {
   using type = T;
   using name = no_name;
   using dependency = TDependency;
-  using is_root = std::false_type;
+  using is_root = aux::integral_constant<bool, IsRoot>;
 
   template <class, class, class TDefault>
   using resolve = TDefault;

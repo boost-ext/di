@@ -68,6 +68,36 @@ test constructible_policy_must_be_bound = [] {
   injector.create<c>();
 };
 
+template <class>
+struct is_shared_ptr : std::false_type {};
+
+template <class T>
+struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+
+test constructible_policy_creatable_type = [] {
+  class must_be_creatable_or_bound : public di::config {
+   public:
+    static auto policies(...) noexcept {
+      using namespace di::policies;
+      using namespace di::policies::operators;
+
+      const auto is_bound_root_shared_ptr = is_root<di::_>{} && is_shared_ptr<di::_>{} && is_bound<di::_>{};
+      const auto is_bound_not_root = !is_root<di::_>{} && is_bound<di::_>{};
+
+      return di::make_policies(constructible<include_root>(is_bound_root_shared_ptr || is_bound_not_root));
+    }
+  };
+
+  struct c {
+    c(std::shared_ptr<i1>, int) {}
+  };
+
+  const auto injector = di::make_injector<must_be_creatable_or_bound>(di::bind<c>().in(di::singleton),
+                                                                      di::bind<i1>().to<impl1>(), di::bind<int>().to(42));
+
+  injector.create<std::shared_ptr<c>>();
+};
+
 class disallow_raw_pointers : public di::config {
  public:
   static auto policies(...) noexcept {

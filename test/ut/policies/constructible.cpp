@@ -14,14 +14,14 @@
 
 namespace policies {
 
-template <class TPolicy, class T = std::false_type>
+template <bool IncludeRoot = false, class TPolicy, class T = std::false_type>
 bool constructible_test(const TPolicy&, const T& arg = {}) noexcept {
-  return decltype(constructible(arg)(fake_policy<TPolicy>{}))::value;
+  return decltype(constructible<IncludeRoot>(arg)(fake_policy<TPolicy>{}))::value;
 }
 
-template <class T = std::false_type, class T_, class TDependency, class TDeps, bool TResolve>
+template <bool IncludeRoot = false, class T = std::false_type, class T_, class TDependency, class TDeps, bool TResolve>
 bool constructible_test(const fake_policy<T_, TDependency, TDeps, TResolve>& policy, const T& arg = {}) noexcept {
-  return decltype(constructible(arg)(policy))::value;
+  return decltype(constructible<IncludeRoot>(arg)(policy))::value;
 }
 
 test nothing_is_allowed = [] {
@@ -48,6 +48,10 @@ test type_is_not_allowed = [] {
   test(float{});
   test(c{});
 };
+
+test root_type_is_allowed = [] { expect(constructible_test<include_root>(fake_policy<int>{}, std::is_same<int, _>{})); };
+
+test root_type_is_not_allowed = [] { expect(!constructible_test<include_root>(fake_policy<void>{}, std::is_same<int, _>{})); };
 
 test operator_not = [] {
   auto test_pass = [](auto type, auto allowed) {
@@ -105,6 +109,11 @@ test operator_and = [] {
 test is_type_bound = [] {
   expect(constructible_test(fake_policy<void, aux::none_type, aux::none_type, true>{}, is_bound<_>{}));
   expect(!constructible_test(fake_policy<void, aux::none_type, aux::none_type, false>{}, is_bound<_>{}));
+};
+
+test is_type_root = [] {
+  expect(is_root<_>::apply<fake_policy<void, aux::none_type, aux::none_type, false, true>>::value);
+  expect(!is_root<_>::apply<fake_policy<void, aux::none_type, aux::none_type, false, false>>::value);
 };
 
 test is_type_injected = [] {
