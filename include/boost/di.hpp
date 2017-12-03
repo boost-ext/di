@@ -2872,6 +2872,11 @@ struct type {
     // clang-format on
   };
 };
+template <class>
+struct is_root : detail::type_op {
+  template <class TArg>
+  struct apply : TArg::is_root {};
+};
 template <class T>
 struct is_bound : detail::type_op {
   struct not_resolved {};
@@ -2888,6 +2893,7 @@ struct is_injected : detail::type_op {
   template <class TArg, class U = aux::decay_t<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>>>
   struct apply : aux::conditional_t<aux::is_class<U>::value, typename type_traits::is_injectable<U>::type, aux::true_type> {};
 };
+constexpr auto include_root = true;
 namespace operators {
 template <class X, class Y>
 inline auto operator||(const X&, const Y&) {
@@ -2902,7 +2908,7 @@ inline auto operator!(const T&) {
   return detail::not_<T>{};
 }
 }
-template <class T>
+template <bool, class T>
 struct constructible_impl {
   template <class TArg, __BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
   aux::true_type operator()(const TArg&) const {
@@ -2913,13 +2919,26 @@ struct constructible_impl {
     return typename type<typename TArg::type>::template not_allowed_by<T>{};
   }
 };
-template <class T = aux::never<_>, __BOOST_DI_REQUIRES(aux::is_base_of<detail::type_op, T>::value) = 0>
+template <class T>
+struct constructible_impl<true, T> {
+  template <class TArg, __BOOST_DI_REQUIRES(T::template apply<TArg>::value) = 0>
+  aux::true_type operator()(const TArg&) const {
+    return {};
+  }
+  template <class TArg, __BOOST_DI_REQUIRES(!T::template apply<TArg>::value) = 0>
+  aux::false_type operator()(const TArg&) const {
+    return typename type<typename TArg::type>::template not_allowed_by<T>{};
+  }
+};
+template <bool IncludeRoot = false, class T = aux::never<_>,
+          __BOOST_DI_REQUIRES(aux::is_base_of<detail::type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {
-  return constructible_impl<T>{};
+  return constructible_impl<IncludeRoot, T>{};
 }
-template <class T = aux::never<_>, __BOOST_DI_REQUIRES(!aux::is_base_of<detail::type_op, T>::value) = 0>
+template <bool IncludeRoot = false, class T = aux::never<_>,
+          __BOOST_DI_REQUIRES(!aux::is_base_of<detail::type_op, T>::value) = 0>
 inline auto constructible(const T& = {}) {
-  return constructible_impl<detail::or_<T>>{};
+  return constructible_impl<IncludeRoot, detail::or_<T>>{};
 }
 }
 namespace providers {

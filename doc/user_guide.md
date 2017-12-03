@@ -138,7 +138,7 @@ Creates [injector] type.
 
 **Injection in a nutshell** (implementation detail)
 
-The main interface of the injector is a `create` method. 
+The main interface of the injector is a `create` method.
 When `create` method is called for type `T` the magic happens.
 Firstly, policies are verified (for example, whether the type `T` is allowed to be created).
 Then, the constructor traits are deduced (`ctor_traits` ) for type `T` and dependencies of the constructor
@@ -1165,13 +1165,18 @@ By default constructible policy disables creation of any constructor parameters.
     namespace policies {
       struct _ { }; // placeholder
 
+      constexpr auto include_root = true;
+
+      template<class T>
+      struct is_root; // true when is the root type (`create<RooType>()`)
+
       template<class T>
       struct is_bound; // true when type is bound with 'di::bind<T>'
 
       template <class T>
       struct is_injected; // true when type is injected using 'BOOST_DI_INJECT' or is 'fundamental'
 
-      template<class T>
+      template<bool IncludeRoot = false, class T>
       auto constructible(const T&) noexcept;
     }
 
@@ -1188,6 +1193,7 @@ By default constructible policy disables creation of any constructor parameters.
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
+| `is_root<T>` | - | Verify whether type `T` is a root type | true_type/false_type |
 | `is_bound<T>` | - | Verify whether type `T` is bound | true_type/false_type |
 | `is_injected<T>` | - | Verify whether type `T` is injected via [BOOST_DI_INJECT] | true_type/false_type |
 
