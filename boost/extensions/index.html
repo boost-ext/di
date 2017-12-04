@@ -48,6 +48,10 @@
     
 
     
+        <dt><span class="section"><a href="#shared-factory">Shared Factory</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</a></span></dt>
     
 
@@ -103,6 +107,7 @@
 <li><a href="#assisted-injection">Assisted Injection</a></li>
 <li><a href="#concepts">Concepts</a></li>
 <li><a href="#factory">Factory</a></li>
+<li><a href="#shared-factory">Shared Factory</a></li>
 <li><a href="#generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</a></li>
 <li><a href="#lazy">Lazy</a></li>
 <li><a href="#named-parameters">Named Parameters</a></li>
@@ -315,6 +320,13 @@ struct implementation : interface {
   void dummy1() override {}
 };
 
+struct implementation_exception : interface {
+#ifdef __EXCEPTIONS
+  implementation_exception() { throw 0; }
+#endif
+  void dummy1() override {}
+};
+
 struct implementation_with_args : interface {
   implementation_with_args(int i, double d) {
     assert(42 == i);
@@ -346,8 +358,11 @@ int main() {
   auto module = [] { return di::make_injector(di::bind&lt;&gt;().to(123)); };
 
   auto injector = di::make_injector(module()
-  // bind instance just to make sure that factory doesn't affect injector
+  // &lt;&lt;bind instance just to make sure that factory doesn't affect injector&gt;&gt;
   , di::bind&lt;interface&gt;().to(std::make_shared&lt;implementation&gt;())
+
+  // &lt;&lt;bind instance which throws exception to make sure that exception doesn't affect injector&gt;&gt;
+  , di::bind&lt;ifactory&lt;implementation_exception&gt;&gt;().to(factory&lt;implementation_exception&gt;{})
 
   //&lt;&lt;bind factory interface to implementation&gt;&gt;
   , di::bind&lt;ifactory&lt;interface&gt;&gt;().to(factory&lt;implementation&gt;{})
@@ -362,6 +377,17 @@ int main() {
   /*&lt;&lt;create `example`&gt;&gt;*/
   injector.create&lt;example&gt;();
 
+/*&lt;&lt;create `implementation_exception`&gt;&gt;*/
+#ifdef __EXCEPTIONS
+  bool exception_thrown = false;
+  try {
+    injector.create&lt;const implementation_exception&amp;&gt;();
+  } catch (...) {
+    exception_thrown = true;
+  }
+  assert(exception_thrown);
+#endif
+
   // Check whether injector is affected by factory
   assert(injector.create&lt;std::shared_ptr&lt;interface&gt;&gt;());
 }
@@ -369,6 +395,138 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/factory.cpp</a></li>
+</ul>
+<h3 id="shared-factory">Shared Factory</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+template &lt;class T, class TFunc&gt;
+struct shared_factory_impl {
+  shared_factory_impl(TFunc&amp;&amp; creation_func) : creation_func_(std::move(creation_func)), is_created_(false) {}
+
+  shared_factory_impl(const shared_factory_impl&amp; other)
+      : creation_func_(std::move(other.creation_func_)), object_(other.object_), is_created_(other.is_created_) {}
+
+  shared_factory_impl(shared_factory_impl&amp;&amp; other) noexcept
+      : creation_func_(std::move(other.creation_func_)), object_(std::move(other.object_)), is_created_(other.is_created_) {}
+
+  shared_factory_impl&amp; operator=(shared_factory_impl&amp;&amp; other) noexcept {
+    object_ = std::move(other.object_);
+    return *this;
+  }
+
+  template &lt;class TInjector, class TDependency&gt;
+  auto operator()(const TInjector&amp; const_injector, const TDependency&amp;) {
+    if (!is_created_) {
+      auto&amp; injector = const_cast&lt;TInjector&amp;&gt;(const_injector);
+      auto rebound_injector = di::make_injector(std::move(injector), di::bind&lt;T&gt;().in(di::unique)[di::override]);
+
+      std::shared_ptr&lt;T&gt; object;
+#ifdef __EXCEPTIONS
+      try {
+        object = creation_func_(rebound_injector);
+      } catch (...) {
+        injector = std::move(rebound_injector);
+        throw;
+      }
+#else
+      object = creation_func_(rebound_injector);
+#endif
+      injector = std::move(rebound_injector);
+
+      //&lt;&lt;should be saved after move otherwise will be overriden&gt;&gt;
+      object_ = object;
+      is_created_ = true;
+    }
+    return object_;
+  }
+
+ private:
+  TFunc&amp;&amp; creation_func_;
+  std::shared_ptr&lt;T&gt; object_;
+  bool is_created_;
+};
+
+template &lt;class T, class TFunc&gt;
+auto shared_factory(TFunc&amp;&amp; creation_func) {
+  return shared_factory_impl&lt;T, TFunc&gt;(std::move(creation_func));
+}
+
+template &lt;class T, class TFunc&gt;
+auto conditional_shared_factory(TFunc condition_func) {
+  return shared_factory&lt;T&gt;([&amp;](const auto&amp; injector) {
+    std::shared_ptr&lt;T&gt; object;
+    if (condition_func()) {
+      object = injector.template create&lt;std::shared_ptr&lt;T&gt;&gt;();
+    }
+    return object;
+  });
+}
+
+
+int main() {
+  assert(!implementation::ctor_calls());
+  assert(!implementation::dtor_calls());
+
+  {
+    //&lt;&lt;define injector&gt;&gt;
+    auto injector = di::make_injector(
+      di::bind&lt;implementation_exception&gt;().to(shared_factory&lt;implementation_exception&gt;([&amp;](const auto&amp; inner_injector)
+      {
+        //&lt;&lt;throws an exception here&gt;&gt;
+        return inner_injector.template create&lt;std::shared_ptr&lt;implementation_exception&gt;&gt;();
+      })),
+      //&lt;&lt;bind factory interface to implementation&gt;&gt;
+      di::bind&lt;implementation&gt;().to(shared_factory&lt;implementation&gt;([&amp;](const auto&amp; inner_injector)
+      {
+        static int calls = 0;
+        assert(1 == ++calls);
+        //&lt;&lt;shouldn't be recursive call here&gt;&gt;
+        return inner_injector.template create&lt;std::shared_ptr&lt;implementation&gt;&gt;();
+      })),
+      di::bind&lt;interface&gt;().to(conditional_shared_factory&lt;implementation&gt;([&amp;]()
+      {
+        static int calls = 0;
+        assert(1 == ++calls);
+        return true;
+      }))
+    );
+
+    //&lt;&lt;create `implementation` via `shared_factory`&gt;&gt;
+    auto i1 = injector.create&lt;std::shared_ptr&lt;implementation&gt;&gt;();
+    auto i2 = injector.create&lt;std::shared_ptr&lt;implementation&gt;&gt;();
+    assert(i1);
+    assert(i1 == i2);
+    assert(1 == implementation::ctor_calls());
+    assert(!implementation::dtor_calls());
+
+    //&lt;&lt;create `interface` via `conditional_shared_factory`&gt;&gt;
+    auto i3 = injector.create&lt;std::shared_ptr&lt;interface&gt;&gt;();
+
+#ifdef __EXCEPTIONS
+    bool exception_thrown = false;
+    try {
+      injector.create&lt;std::shared_ptr&lt;implementation_exception&gt;&gt;();
+    } catch (...) {
+      exception_thrown = true;
+    }
+    assert(exception_thrown);
+#endif
+
+    auto i4 = injector.create&lt;std::shared_ptr&lt;interface&gt;&gt;();
+    assert(i3);
+    assert(i3 == i4);
+    assert(2 == implementation::ctor_calls());
+    assert(!implementation::dtor_calls());
+  }
+  //&lt;&lt;Destroyed with injector&gt;&gt;
+  assert(2 == implementation::dtor_calls());
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/shared_factory.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/shared_factory.cpp</a></li>
 </ul>
 <h3 id="generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
@@ -832,6 +990,12 @@ class scoped_scope {
    public:
     template &lt;class T_&gt;
     using is_referable = typename di::wrappers::shared&lt;scoped_scope, T&gt;::template is_referable&lt;T_&gt;;
+
+    scope &amp;operator=(scope &amp;&amp;other) noexcept {
+      this-&gt;object_ = other.object_;
+      other.object_ = nullptr;
+      return *this;
+    }
 
     template &lt;class, class, class TProvider, class T_ = di::aux::decay_t&lt;decltype(di::aux::declval&lt;TProvider&gt;().get())&gt;&gt;
     static decltype(di::wrappers::shared&lt;scoped_scope, T_&gt;{
