@@ -1,4 +1,5 @@
-<a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
+<a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fboost-experimental%2Fdi.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fboost-experimental%2Fdi?ref=badge_shield)
+</a>
 <a href="https://github.com/boost-experimental/di/releases" target="_blank">![Version](https://badge.fury.io/gh/boost-experimental%2Fdi.svg)</a>
 <a href="https://travis-ci.org/boost-experimental/di" target="_blank">![Build Status](https://img.shields.io/travis/boost-experimental/di/cpp14.svg?label=linux/osx)</a>
 <a href="https://ci.appveyor.com/project/krzysztof-jusiak/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/krzysztof-jusiak/di/cpp14.svg?label=windows)</a>
@@ -404,3 +405,7 @@ retq
     * [ [0.5.0] - 2015-01-12](http://boost-experimental.github.io/di/CHANGELOG/index.html#-050-2015-01-12)
     * [ [0.1.0] - 2014-08-15](http://boost-experimental.github.io/di/CHANGELOG/index.html#-010-2014-08-15)
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fboost-experimental%2Fdi.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fboost-experimental%2Fdi?ref=badge_large)
