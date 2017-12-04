@@ -1071,6 +1071,15 @@ int main() {
 
     injector.create&lt;example&gt;();
   }
+
+  {
+    auto injector1 = di::make_injector(di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(shared));
+
+    auto i1 = injector1.create&lt;std::shared_ptr&lt;interface1&gt;&gt;();
+    auto injector2 = di::make_injector(std::move(injector1));
+    // check whether shared scope was successfully moved
+    assert(i1 == injector2.create&lt;std::shared_ptr&lt;interface1&gt;&gt;());
+  }
 }
 </code></pre>
 
