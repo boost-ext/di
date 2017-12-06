@@ -120,12 +120,12 @@ Creates [injector] type.
       class TConfig = di::config
     , class... TBindings
     > requires configurable<TConfig> && boundable<TBindings...>
-    auto make_injector(const TBindings&...) noexcept;
+    auto make_injector(TBindings...) noexcept;
 
 | Expression | Requirement | Description | Returns |
 | ---------- | ----------- | ----------- | ------- |
 | `TConfig` | [configurable]<TConfig\> | [Configuration] per [injector] | - |
-| `make_injector(const TBindings&...)` | [boundable]<TBindings...\> | Creates [injector] with given [Bindings] | [injector] |
+| `make_injector(TBindings...)` | [boundable]<TBindings...\> | Creates [injector] with given [Bindings] | [injector] |
 
 ***Test***
 ![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
