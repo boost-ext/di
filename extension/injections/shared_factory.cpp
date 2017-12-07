@@ -12,6 +12,23 @@
 
 namespace di = boost::di;
 
+//<<rebind only if expected and current type are same>>
+template <class TExpected, class T>
+struct injector_rebinder {
+  template <class TInjector>
+  auto rebind(TInjector& injector) {
+    return std::move(injector);
+  }
+};
+
+template <class T>
+struct injector_rebinder<T, T> {
+  template <class TInjector>
+  auto rebind(TInjector& injector) {
+    return di::make_injector(std::move(injector), di::bind<T>().in(di::unique)[di::override]);
+  }
+};
+
 template <class T, class TFunc>
 struct shared_factory_impl {
   shared_factory_impl(TFunc&& creation_func) : creation_func_(std::move(creation_func)), is_created_(false) {}
@@ -31,7 +48,7 @@ struct shared_factory_impl {
   auto operator()(const TInjector& const_injector, const TDependency&) {
     if (!is_created_) {
       auto& injector = const_cast<TInjector&>(const_injector);
-      auto rebound_injector = di::make_injector(std::move(injector), di::bind<T>().in(di::unique)[di::override]);
+      auto rebound_injector = injector_rebinder<typename TDependency::expected, T>{}.rebind(injector);
 
       std::shared_ptr<T> object;
 #ifdef __EXCEPTIONS
@@ -159,9 +176,9 @@ int main() {
     auto i4 = injector.create<std::shared_ptr<interface>>();
     assert(i3);
     assert(i3 == i4);
-    assert(2 == implementation::ctor_calls());
+    assert(1 == implementation::ctor_calls());
     assert(!implementation::dtor_calls());
   }
   //<<Destroyed with injector>>
-  assert(2 == implementation::dtor_calls());
+  assert(1 == implementation::dtor_calls());
 }
