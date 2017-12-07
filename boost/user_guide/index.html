@@ -299,7 +299,7 @@ public:
   class TConfig = di::config
 , class... TBindings
 &gt; requires configurable&lt;TConfig&gt; &amp;&amp; boundable&lt;TBindings...&gt;
-auto make_injector(const TBindings&amp;...) noexcept;
+auto make_injector(TBindings...) noexcept;
 </code></pre>
 <table>
 <thead>
@@ -318,7 +318,7 @@ auto make_injector(const TBindings&amp;...) noexcept;
 <td>-</td>
 </tr>
 <tr>
-<td><code>make_injector(const TBindings&amp;...)</code></td>
+<td><code>make_injector(TBindings...)</code></td>
 <td><a href="#di_boundable">boundable</a>&lt;TBindings...></td>
 <td>Creates <a href="#di_make_injector">injector</a> with given <a href="#bindings">Bindings</a></td>
 <td><a href="#di_make_injector">injector</a></td>
