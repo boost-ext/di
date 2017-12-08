@@ -475,7 +475,7 @@ auto make_injector(TBindings...) noexcept;
 <img alt="CPP(BTN)" src="../Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp" /></p>
 <p><br /><hr /></p>
 <p><strong>Injection in a nutshell</strong> (implementation detail)</p>
-<p>The main interface of the injector is a <code>create</code> method. 
+<p>The main interface of the injector is a <code>create</code> method.
 When <code>create</code> method is called for type <code>T</code> the magic happens.
 Firstly, policies are verified (for example, whether the type <code>T</code> is allowed to be created).
 Then, the constructor traits are deduced (<code>ctor_traits</code> ) for type <code>T</code> and dependencies of the constructor
@@ -2052,13 +2052,18 @@ By default constructible policy disables creation of any constructor parameters.
 <pre><code>namespace policies {
   struct _ { }; // placeholder
 
+  constexpr auto include_root = true;
+
+  template&lt;class T&gt;
+  struct is_root; // true when is the root type (`create&lt;RooType&gt;()`)
+
   template&lt;class T&gt;
   struct is_bound; // true when type is bound with 'di::bind&lt;T&gt;'
 
   template &lt;class T&gt;
   struct is_injected; // true when type is injected using 'BOOST_DI_INJECT' or is 'fundamental'
 
-  template&lt;class T&gt;
+  template&lt;bool IncludeRoot = false, class T&gt;
   auto constructible(const T&amp;) noexcept;
 }
 
@@ -2083,6 +2088,12 @@ namespace operators {
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>is_root&lt;T&gt;</code></td>
+<td>-</td>
+<td>Verify whether type <code>T</code> is a root type</td>
+<td>true_type/false_type</td>
+</tr>
 <tr>
 <td><code>is_bound&lt;T&gt;</code></td>
 <td>-</td>
