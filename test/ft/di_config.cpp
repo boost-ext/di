@@ -4,8 +4,13 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <memory>
+// clang-format off
+#include <initializer_list>  // has to be before, due to the bug in clang < 3.7
+// clang-format on
 #include "boost/di.hpp"
+#include <memory>
+#include <vector>
+#include <set>
 
 namespace di = boost::di;
 
@@ -96,6 +101,18 @@ test constructible_policy_creatable_type = [] {
                                                                       di::bind<i1>().to<impl1>(), di::bind<int>().to(42));
 
   injector.create<std::shared_ptr<c>>();
+};
+
+test constructible_policy_must_be_bound_array = [] {
+  struct c {
+    c(std::vector<int>, const std::set<float>&, std::vector<std::unique_ptr<i1>>, double /*not bound*/) {}
+  };
+
+  const auto injector = di::make_injector<must_be_bound>(di::bind<float[]>().to({1.f, 2.f, 3.f, 4.f}), di::bind<int>().to(42),
+                                                         di::bind<int[]>().to<int, int>(), di::bind<i1>().to<impl1>(),
+                                                         di::bind<impl1>().in(di::unique), di::bind<i1* []>().to<i1, impl1>());
+
+  injector.create<c>();
 };
 
 class disallow_raw_pointers : public di::config {

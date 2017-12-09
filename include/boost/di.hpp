@@ -967,7 +967,7 @@ using rebind_traits_t = typename rebind_traits<T, U>::type;
 }
 namespace core {
 template <class T, class... Ts>
-struct array_impl {
+struct array_impl : _ {
   using boost_di_inject__ = aux::type_list<Ts...>;
   explicit array_impl(type_traits::remove_named_t<Ts>&&... args)
       : array{static_cast<type_traits::remove_named_t<Ts>&&>(args)...} {}
@@ -2200,12 +2200,18 @@ struct allow_void : T {};
 template <>
 struct allow_void<void> : aux::true_type {};
 class policy {
-  template <class TArg, class TPolicy, class TPolicies>
+  template <class TArg, class TPolicy, class TPolicies,
+            __BOOST_DI_REQUIRES(!aux::is_base_of<_, aux::remove_reference_t<typename TArg::type>>::value) = 0>
   static void call_impl(const TPolicies& policies) noexcept {
     static_cast<const TPolicy&>(policies)(TArg{});
   }
+  template <class TArg, class, class TPolicies,
+            __BOOST_DI_REQUIRES(aux::is_base_of<_, aux::remove_reference_t<typename TArg::type>>::value) = 0>
+  static void call_impl(const TPolicies&) noexcept {}
   template <class TArg, class TPolicy>
-  struct try_call_impl : allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))> {};
+  struct try_call_impl
+      : aux::conditional_t<aux::is_base_of<_, aux::remove_reference_t<typename TArg::type>>::value, aux::true_type,
+                           allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))>> {};
 
  public:
   template <class, class>
