@@ -17,7 +17,7 @@
 namespace core {
 
 template <class T, class... Ts>
-struct array_impl {
+struct array_impl : _ {
   using boost_di_inject__ = aux::type_list<Ts...>;
   explicit array_impl(type_traits::remove_named_t<Ts>&&... args)
       : array{static_cast<type_traits::remove_named_t<Ts>&&>(args)...} {}

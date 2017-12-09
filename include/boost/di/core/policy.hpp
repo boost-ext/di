@@ -39,13 +39,20 @@ template <>
 struct allow_void<void> : aux::true_type {};
 
 class policy {
-  template <class TArg, class TPolicy, class TPolicies>
+  template <class TArg, class TPolicy, class TPolicies,
+            __BOOST_DI_REQUIRES(!aux::is_base_of<_, aux::remove_reference_t<typename TArg::type>>::value) = 0>
   static void call_impl(const TPolicies& policies) noexcept {
     static_cast<const TPolicy&>(policies)(TArg{});
   }
 
+  template <class TArg, class, class TPolicies,
+            __BOOST_DI_REQUIRES(aux::is_base_of<_, aux::remove_reference_t<typename TArg::type>>::value) = 0>
+  static void call_impl(const TPolicies&) noexcept {}
+
   template <class TArg, class TPolicy>
-  struct try_call_impl : allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))> {};
+  struct try_call_impl
+      : aux::conditional_t<aux::is_base_of<_, aux::remove_reference_t<typename TArg::type>>::value, aux::true_type,
+                           allow_void<decltype((aux::declval<TPolicy>())(aux::declval<TArg>()))>> {};
 
  public:
   template <class, class>
