@@ -13,6 +13,8 @@
 #include <regex>
 #include <sstream>
 #include <string>
+
+#define BOOST_DI_DISABLE_SHARED_PTR_DEDUCTION
 #include "boost/di.hpp"
 #include "common/utils.hpp"
 
