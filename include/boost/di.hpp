@@ -72,43 +72,89 @@ BOOST_DI_CFG_FWD
 #pragma warning(disable : 4822)
 #pragma warning(disable : 4505)
 #endif
+#if defined(_LIBCPP_VERSION)
+#define NAMESPACE_STD_BEGIN _LIBCPP_BEGIN_NAMESPACE_STD {
+#else
+#define NAMESPACE_STD_BEGIN namespace std {
+#endif
+#if defined(_LIBCPP_VERSION)
+#define NAMESPACE_STD_END _LIBCPP_END_NAMESPACE_STD
+#else
+#define NAMESPACE_STD_END }
+#endif
 #if __has_include(<__config>)
 #include <__config>
 #endif
-#if defined(_LIBCPP_VERSION)
-_LIBCPP_BEGIN_NAMESPACE_STD
+#if __has_include(<memory>)
+#include <memory>
 #else
-namespace std {
-#endif
+NAMESPACE_STD_BEGIN
 template <class>
 class shared_ptr;
 template <class>
 class weak_ptr;
 template <class, class>
 class unique_ptr;
-template <class>
-struct char_traits;
-template <class...>
-class tuple;
+NAMESPACE_STD_END
+#endif
+#if __has_include(<vector>)
+#include <vector>
+#else
+NAMESPACE_STD_BEGIN
 template <class, class>
 class vector;
+NAMESPACE_STD_END
+#endif
+#if __has_include(<set>)
+#include <set>
+#else
+NAMESPACE_STD_BEGIN
 template <class, class, class>
 class set;
-template <class>
-class move_iterator;
-#if defined(_LIBCPP_VERSION)
-_LIBCPP_END_NAMESPACE_STD
-#else
-}
+NAMESPACE_STD_END
 #endif
-namespace std {
+#if __has_include(<initializer_list>)
+#include <initializer_list>
+#else
+NAMESPACE_STD_BEGIN
 template <class>
 class initializer_list;
-}
+NAMESPACE_STD_END
+#endif
+#if __has_include(<tuple>)
+#include <tuple>
+#else
+NAMESPACE_STD_BEGIN
+template <class...>
+class tuple;
+NAMESPACE_STD_END
+#endif
+#if __has_include(<iterator>)
+#include <iterator>
+#else
+NAMESPACE_STD_BEGIN
+template <class>
+class move_iterator;
+NAMESPACE_STD_END
+#endif
+#if __has_include(<string>)
+#include <string>
+#else
+NAMESPACE_STD_BEGIN
+template <class>
+struct char_traits;
+NAMESPACE_STD_END
+#endif
+// clang-format off
+#if __has_include(<boost/shared_ptr.hpp>)
+// clang-format on
+#include <boost/shared_ptr.hpp>
+#else
 namespace boost {
 template <class>
 class shared_ptr;
 }
+#endif
 BOOST_DI_NAMESPACE_BEGIN
 struct _ {
   _(...) {}

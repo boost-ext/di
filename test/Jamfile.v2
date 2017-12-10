@@ -97,6 +97,7 @@ test-suite ft :
     [ test ft/di_config_global_policies.cpp ]
     [ test ft/di_config_global_provider.cpp ]
     [ test ft/di_errors.cpp : : : DISABLE_MEMCHECK ]
+    [ test ft/di_glibcxx_debug.cpp : : <define>BOOST_DI_TEST_HPP ]
     [ test ft/di_inject.cpp ]
     [ test ft/di_injector.cpp ]
     [ test ft/di_no_memory_inc.cpp ]
