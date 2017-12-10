@@ -5,6 +5,7 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 //<-
+#define BOOST_DI_DISABLE_SHARED_PTR_DEDUCTION
 #include <algorithm>
 #include <cassert>
 #include <functional>
