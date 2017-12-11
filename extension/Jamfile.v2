@@ -42,6 +42,7 @@ test-suite extensions :
     [ extension bindings/constructor_bindings.cpp ]
     [ extension bindings/contextual_bindings.cpp ]
     [ extension injections/assisted_injection.cpp ]
+    [ extension injections/extensible_injector.cpp ]
     [ extension injections/concepts.cpp ]
     [ extension injections/factory.cpp ]
     [ extension injections/shared_factory.cpp ]
