@@ -1,6 +1,7 @@
 * [Constructor Bindings](#constructor-bindings)
 * [Contextual Bindings](#contextual-bindings)
 * [Assisted Injection](#assisted-injection)
+* [Extensible Injector](#extensible-injector)
 * [Concepts](#concepts)
 * [Factory](#factory)
 * [Shared Factory](#shared-factory)
@@ -26,6 +27,9 @@
 
 ###Assisted Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp)
+
+###Extensible Injector
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/extensible_injector.cpp)
 
 ###Concepts
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp)
