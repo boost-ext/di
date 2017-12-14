@@ -1142,7 +1142,7 @@ test bind_template_to_type_templates_type = [] {
   expect(42 == object.t.i);
 };
 
-#if not defined(__MSVC__)
+#if !defined(__MSVC__)
 template <class T = class External>
 struct app4 {
   using type = T;
