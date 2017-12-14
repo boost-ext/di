@@ -163,7 +163,7 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
     }                                                                                                                   \
   }
 
-template <template <class...> class TWrapper, class T, class... Ts, template <class...> class X, class TScope, class Y>
+template <template <class...> class TWrapper, class T, class... Ts, template <class, class> class X, class TScope, class Y>
 auto generic_cast(const TWrapper<T, X<TScope, Y>>& arg) {
   return arg.wrapper_.operator T();
 }
