@@ -82,10 +82,12 @@
 
 #include <memory>
 #include <cassert>
+
+#include <boost/di.hpp>
+
 #if __has_include(<boost/shared_ptr.hpp>)
 #include <boost/shared_ptr.hpp>
 #endif
-#include <boost/di.hpp>
 
 namespace di = boost::di;
 

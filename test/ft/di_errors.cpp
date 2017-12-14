@@ -727,7 +727,7 @@ test not_configurable_config = [] {
 
 test make_policies_with_non_const_policy = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER < 1912
                         "policy<.*>::requires_<.*call_operator_with_one_argument>", "=.*non_const_policy"
 #else
                         "policy<.*non_const_policy>::requires_<.*call_operator_with_one_argument>"
@@ -764,7 +764,7 @@ test make_policies_with_non_movable_policy = [] {
 
 test config_wrong_policy = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER < 1912
                         "policy<.*>::requires_<.*call_operator_with_one_argument>", "=.*int"
 #else
                         "policy<.*int>::requires_<.*call_operator_with_one_argument>"
@@ -784,7 +784,7 @@ int main() { di::make_injector<test_config>(); }
 
     test config_policy_not_callable = [] {
       auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER < 1912
                             "policy<.*>::requires_<.*call_operator_with_one_argument>", "=.*dummy"
 #else
                             "policy<.*dummy>::requires_<.*call_operator_with_one_argument>"

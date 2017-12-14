@@ -485,6 +485,10 @@ struct deref_type<std::set<TKey, TCompare, TAllocator>> {
   using type = core::array<remove_qualifiers_t<typename deref_type<TKey>::type>>;
 };
 template <class T>
+struct deref_type<std::initializer_list<T>> {
+  using type = core::array<remove_qualifiers_t<typename deref_type<T>::type>>;
+};
+template <class T>
 using decay_t = typename deref_type<remove_qualifiers_t<T>>::type;
 template <class, class>
 struct is_same : false_type {};
