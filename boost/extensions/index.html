@@ -40,6 +40,10 @@
     
 
     
+        <dt><span class="section"><a href="#extensible-injector">Extensible Injector</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#concepts">Concepts</a></span></dt>
     
 
@@ -105,6 +109,7 @@
 <li><a href="#constructor-bindings">Constructor Bindings</a></li>
 <li><a href="#contextual-bindings">Contextual Bindings</a></li>
 <li><a href="#assisted-injection">Assisted Injection</a></li>
+<li><a href="#extensible-injector">Extensible Injector</a></li>
 <li><a href="#concepts">Concepts</a></li>
 <li><a href="#factory">Factory</a></li>
 <li><a href="#shared-factory">Shared Factory</a></li>
@@ -266,6 +271,106 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp</a></li>
+</ul>
+<h3 id="extensible-injector">Extensible Injector</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+template &lt;class TDependency&gt;
+class dependency_proxy
+    : di::core::dependency_base,
+      public di::core::dependency_impl&lt;di::core::dependency_concept&lt;typename TDependency::expected, typename TDependency::name&gt;,
+                                       dependency_proxy&lt;TDependency&gt;&gt; {
+ public:
+  using scope = typename TDependency::scope;
+  using expected = typename TDependency::expected;
+  using given = typename TDependency::given;
+  using name = typename TDependency::name;
+  using priority = typename TDependency::priority;
+
+  dependency_proxy(TDependency&amp; orig_dependency) noexcept : orig_dependency_(orig_dependency) {}
+
+  dependency_proxy(dependency_proxy&amp; other) noexcept : orig_dependency_(other.orig_dependency_) {}
+  dependency_proxy(dependency_proxy&amp;&amp; other) noexcept : orig_dependency_(other.orig_dependency_) {}
+
+ protected:
+  using scope_t = typename scope::template scope&lt;expected, given&gt;;
+
+  template &lt;class T&gt;
+  using is_referable = typename scope_t::template is_referable&lt;T&gt;;
+
+  template &lt;class T, class TName, class TProvider&gt;
+  static decltype(scope_t::template try_create&lt;T, TName&gt;(di::aux::declval&lt;TProvider&gt;())) try_create(const TProvider&amp;);
+
+  template &lt;class T, class TName, class TProvider&gt;
+  auto create(const TProvider&amp; provider) {
+    return static_cast&lt;di::core::dependency__&lt;TDependency&gt;&amp;&gt;(orig_dependency_).template create&lt;T, TName&gt;(provider);
+  }
+
+ private:
+  TDependency&amp; orig_dependency_;
+};
+
+template &lt;class TDependency, class TInjector&gt;
+auto make_extensible_impl(const di::aux::type&lt;TDependency&gt;&amp;, TInjector&amp; injector) {
+  auto&amp; dependency = di::core::binder::resolve&lt;typename TDependency::expected, typename TDependency::name&gt;(&amp;injector);
+  return dependency_proxy&lt;TDependency&gt;{dependency};
+}
+
+template &lt;class... TDeps, class TInjector&gt;
+auto make_extensible(const di::aux::type_list&lt;TDeps...&gt;&amp;, TInjector&amp; injector) {
+  return di::make_injector(make_extensible_impl(di::aux::type&lt;TDeps&gt;{}, injector)...);
+}
+
+template &lt;class TInjector&gt;
+auto make_extensible(TInjector&amp; injector) {
+  return make_extensible(typename TInjector::deps{}, injector);
+}
+
+
+int main() {
+  //&lt;&lt;create instance object&gt;&gt;
+  auto im3_orig = std::make_shared&lt;implementation3&gt;();
+
+  //&lt;&lt;define injector&gt;&gt;
+  auto orig_injector = di::make_injector(
+      //&lt;&lt;bind interface to implementation1&gt;&gt;
+      di::bind&lt;interface&gt;().to&lt;implementation1&gt;().in(di::unique)
+
+      //&lt;&lt;bind implementation3 to shared instance&gt;&gt;
+      , di::bind&lt;implementation3&gt;().to(im3_orig));
+
+  {
+    //&lt;&lt;define extended injector&gt;&gt;
+    auto extended_injector = di::make_injector(
+        //&lt;&lt;make extensible injector from original injector&gt;&gt;
+        make_extensible(orig_injector)
+
+        //&lt;&lt;override bound interface to implementation2&gt;&gt;
+        , di::bind&lt;interface&gt;().to&lt;implementation2&gt;().in(di::unique)[di::override]
+    );
+
+    //&lt;&lt;both injectors live together&gt;&gt;
+    auto orig_example = orig_injector.create&lt;example&gt;();
+    assert(1 == orig_example.i_-&gt;num());
+    assert(3 == orig_example.im3_-&gt;num());
+
+    auto extended_example = extended_injector.create&lt;example&gt;();
+    assert(2 == extended_example.i_-&gt;num());
+    assert(3 == extended_example.im3_-&gt;num());
+
+    //&lt;&lt;both injectors share the same dependency&gt;&gt;
+    assert(extended_example.im3_ == orig_example.im3_);
+    assert(im3_orig == orig_example.im3_);
+  }
+  //&lt;&lt;after death of extended dependency original dependency is still alive&gt;&gt;
+  assert(im3_orig == orig_injector.create&lt;std::shared_ptr&lt;implementation3&gt;&gt;());
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/extensible_injector.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/extensible_injector.cpp</a></li>
 </ul>
 <h3 id="concepts">Concepts</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
