@@ -12,6 +12,7 @@ endfunction()
 
 extension(bindings/constructor_bindings)
 extension(bindings/contextual_bindings)
+extension(injections/extensible_injector)
 extension(injections/assisted_injection)
 extension(injections/factory)
 extension(injections/shared_factory)
