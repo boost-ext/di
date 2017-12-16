@@ -1283,6 +1283,13 @@ int main() {
 </ul>
 <h3 id="shared-scope">Shared Scope</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+#if !defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
+#define BOOST_DI_THREAD_SAFE_EXTENTIONS true
+#endif
+
+#if BOOST_DI_THREAD_SAFE_EXTENTIONS
+#include &lt;mutex&gt;
+#endif
 
 namespace di = boost::di;
 
@@ -1291,6 +1298,15 @@ class shared_scope {
   template &lt;class, class T&gt;
   class scope {
    public:
+    scope() noexcept = default;
+
+#if BOOST_DI_THREAD_SAFE_EXTENTIONS
+    //&lt;&lt;lock mutex so that move will be synchronized&gt;&gt;
+    explicit scope(scope&amp;&amp; other) noexcept : scope(std::move(other), std::lock_guard&lt;std::mutex&gt;(other.mutex_)) {}
+    //&lt;&lt;syncronized move constructor&gt;&gt;
+    scope(scope&amp;&amp; other, const std::lock_guard&lt;std::mutex&gt;&amp;) noexcept : object_(std::move(other.object_)) {}
+#endif
+
     template &lt;class T_&gt;
     using is_referable = typename di::wrappers::shared&lt;shared_scope, T&gt;::template is_referable&lt;T_&gt;;
 
@@ -1301,12 +1317,19 @@ class shared_scope {
     template &lt;class, class, class TProvider&gt;
     auto create(const TProvider&amp; provider) {
       if (!object_) {
-        object_ = std::shared_ptr&lt;T&gt;{provider.get()};
+#if BOOST_DI_THREAD_SAFE_EXTENTIONS
+        std::lock_guard&lt;std::mutex&gt; lock(mutex_);
+        if (!object_)
+#endif
+          object_ = std::shared_ptr&lt;T&gt;{provider.get()};
       }
       return di::wrappers::shared&lt;shared_scope, T&gt;{object_};
     }
 
    private:
+#if BOOST_DI_THREAD_SAFE_EXTENTIONS
+    std::mutex mutex_;
+#endif
     std::shared_ptr&lt;T&gt; object_;
   };
 };
