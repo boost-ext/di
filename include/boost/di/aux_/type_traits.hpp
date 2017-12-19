@@ -357,7 +357,7 @@ struct unique<type<Rs...>> : type_list<Rs...> {};
 template <class... Ts>
 using unique_t = typename unique<type<>, Ts...>::type;
 
-__BOOST_DI_HAS_METHOD(is_callable_with, operator());
+__BOOST_DI_HAS_METHOD(is_invocable, operator());
 
 struct callable_base_impl {
   void operator()(...) {}

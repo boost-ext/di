@@ -137,7 +137,7 @@ class dependency
     return dependency{object};
   }
 
-  template <class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+  template <class T, __BOOST_DI_REQUIRES(externable<T>::value && !aux::is_callable<T>::value) = 0,
             __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
@@ -145,8 +145,22 @@ class dependency
     return dependency{static_cast<T&&>(object)};
   }
 
-  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+  template <class T, __BOOST_DI_REQUIRES(externable<T>::value&& aux::is_callable<T>::value) = 0>
+  auto to(T&& object) noexcept {
+    using dependency =
+        dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
+    return dependency{static_cast<T&&>(object)};
+  }
+
+  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value && !aux::is_callable<T>::value) = 0,
             __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  auto to(T&& object) noexcept {
+    using dependency = dependency<scopes::instance, deduce_traits_t<concepts::any_of<TExpected, TConcept>, T>,
+                                  typename ref_traits<T>::type, TName, TPriority>;
+    return dependency{static_cast<T&&>(object)};
+  }
+
+  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value&& aux::is_callable<T>::value) = 0>
   auto to(T&& object) noexcept {
     using dependency = dependency<scopes::instance, deduce_traits_t<concepts::any_of<TExpected, TConcept>, T>,
                                   typename ref_traits<T>::type, TName, TPriority>;

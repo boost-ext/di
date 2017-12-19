@@ -598,11 +598,11 @@ using unique_t = typename unique<type<>, Ts...>::type;
 template <class T, class... TArgs>
 decltype(::boost::di::v1_0_2::aux::declval<T>().operator()(::boost::di::v1_0_2::aux::declval<TArgs>()...),
          ::boost::di::v1_0_2::aux::true_type())
-is_callable_with_impl(int);
+is_invocable_impl(int);
 template <class, class...>
-::boost::di::v1_0_2::aux::false_type is_callable_with_impl(...);
+::boost::di::v1_0_2::aux::false_type is_invocable_impl(...);
 template <class T, class... TArgs>
-struct is_callable_with : decltype(is_callable_with_impl<T, TArgs...>(0)) {};
+struct is_invocable : decltype(is_invocable_impl<T, TArgs...>(0)) {};
 struct callable_base_impl {
   void operator()(...) {}
 };
@@ -742,8 +742,7 @@ struct is_related {
 template <class I, class T>
 struct is_related<true, I, T> {
   static constexpr auto value =
-      aux::is_callable<T>::value ||
-      (aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value));
+      aux::is_base_of<I, T>::value || (aux::is_convertible<T, I>::value && !aux::is_narrowed<I, T>::value);
 };
 template <bool, class>
 struct is_abstract {
@@ -1421,9 +1420,9 @@ struct has_result_type : ::boost::di::v1_0_2::aux::false_type {};
 template <class T>
 struct has_result_type<T, ::boost::di::v1_0_2::aux::valid_t<typename T::result_type>> : ::boost::di::v1_0_2::aux::true_type {};
 template <class TGiven, class TProvider, class... Ts>
-struct is_expr : aux::integral_constant<bool,
-                                        aux::is_callable_with<TGiven, typename TProvider::injector_t, Ts...>::value &&
-                                            !has_result_type<TGiven>::value> {};
+struct is_expr
+    : aux::integral_constant<
+          bool, aux::is_invocable<TGiven, typename TProvider::injector_t, Ts...>::value && !has_result_type<TGiven>::value> {};
 }
 template <class T>
 struct wrapper {
@@ -1499,7 +1498,7 @@ class instance {
                                   aux::is_callable<TExpected>::value) = 0>
     static wrappers::unique<instance, TExpected> try_create(const TProvider&) noexcept;
     template <class T, class, class TProvider,
-              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_invocable<TGiven>::value &&
                                   !aux::is_callable<TExpected>::value) = 0>
     static auto try_create(const TProvider&) noexcept
         -> detail::wrapper_traits_t<decltype(aux::declval<typename aux::identity<TGiven, T>::type>()())>;
@@ -1519,7 +1518,7 @@ class instance {
       return wrappers::unique<instance, TExpected>{object_};
     }
     template <class T, class, class TProvider,
-              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_invocable<TGiven>::value &&
                                   !aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const {
       using wrapper = detail::wrapper_traits_t<decltype(aux::declval<TGiven>()())>;
@@ -1716,15 +1715,27 @@ class dependency
     using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority>;
     return dependency{object};
   }
-  template <class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+  template <class T, __BOOST_DI_REQUIRES(externable<T>::value && !aux::is_callable<T>::value) = 0,
             __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
   auto to(T&& object) noexcept {
     using dependency =
         dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
     return dependency{static_cast<T&&>(object)};
   }
-  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value) = 0,
+  template <class T, __BOOST_DI_REQUIRES(externable<T>::value&& aux::is_callable<T>::value) = 0>
+  auto to(T&& object) noexcept {
+    using dependency =
+        dependency<scopes::instance, deduce_traits_t<TExpected, T>, typename ref_traits<T>::type, TName, TPriority>;
+    return dependency{static_cast<T&&>(object)};
+  }
+  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value && !aux::is_callable<T>::value) = 0,
             __BOOST_DI_REQUIRES_MSG(concepts::boundable<deduce_traits_t<TExpected, T>, aux::decay_t<T>, aux::valid<>>) = 0>
+  auto to(T&& object) noexcept {
+    using dependency = dependency<scopes::instance, deduce_traits_t<concepts::any_of<TExpected, TConcept>, T>,
+                                  typename ref_traits<T>::type, TName, TPriority>;
+    return dependency{static_cast<T&&>(object)};
+  }
+  template <class TConcept, class T, __BOOST_DI_REQUIRES(externable<T>::value&& aux::is_callable<T>::value) = 0>
   auto to(T&& object) noexcept {
     using dependency = dependency<scopes::instance, deduce_traits_t<concepts::any_of<TExpected, TConcept>, T>,
                                   typename ref_traits<T>::type, TName, TPriority>;
