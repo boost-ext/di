@@ -41,9 +41,9 @@ using wrapper_traits_t = typename wrapper_traits<T>::type;
 __BOOST_DI_HAS_TYPE(has_result_type, result_type);
 
 template <class TGiven, class TProvider, class... Ts>
-struct is_expr : aux::integral_constant<bool,
-                                        aux::is_callable_with<TGiven, typename TProvider::injector_t, Ts...>::value &&
-                                            !has_result_type<TGiven>::value> {};
+struct is_expr
+    : aux::integral_constant<
+          bool, aux::is_invocable<TGiven, typename TProvider::injector_t, Ts...>::value && !has_result_type<TGiven>::value> {};
 
 }  // detail
 
@@ -146,7 +146,7 @@ class instance {
     static wrappers::unique<instance, TExpected> try_create(const TProvider&) noexcept;
 
     template <class T, class, class TProvider,
-              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_invocable<TGiven>::value &&
                                   !aux::is_callable<TExpected>::value) = 0>
     static auto try_create(const TProvider&) noexcept
         -> detail::wrapper_traits_t<decltype(aux::declval<typename aux::identity<TGiven, T>::type>()())>;
@@ -170,7 +170,7 @@ class instance {
     }
 
     template <class T, class, class TProvider,
-              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_callable_with<TGiven>::value &&
+              __BOOST_DI_REQUIRES(!detail::is_expr<TGiven, TProvider>::value && aux::is_invocable<TGiven>::value &&
                                   !aux::is_callable<TExpected>::value) = 0>
     auto create(const TProvider&) const {
       using wrapper = detail::wrapper_traits_t<decltype(aux::declval<TGiven>()())>;

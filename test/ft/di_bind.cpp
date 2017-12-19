@@ -47,6 +47,9 @@ struct i3 {
 struct impl1 : i1 {
   void dummy1() override {}
 };
+struct impl1_final final : i1 {
+  void dummy1() override {}
+};
 struct impl1_int : i1 {
   explicit impl1_int(int i) : i(i) {}
   void dummy1() override {}
@@ -1170,6 +1173,40 @@ test bind_template_to_concept_type = [] {
   static_expect(std::is_same<ConceptImpl, typename decltype(object)::type>::value);
 };
 #endif
+
+test bind_final_class = [] {
+  struct c final {
+    explicit c(std::shared_ptr<i1> sp) : sp(sp) {}
+    std::shared_ptr<i1> sp;
+  };
+
+  auto injector = di::make_injector(di::bind<i1>().to<impl1_final>());
+  auto object = injector.create<c>();
+
+  expect(dynamic_cast<impl1_final *>(object.sp.get()));
+};
+
+test bind_final_class_instance = [] {
+  struct c final {
+    explicit c(std::shared_ptr<i1> sp) : sp(sp) {}
+    std::shared_ptr<i1> sp;
+  };
+
+  auto injector = di::make_injector(di::bind<i1>().to(std::make_shared<impl1_final>()));
+  auto object = injector.create<c>();
+
+  expect(dynamic_cast<impl1_final *>(object.sp.get()));
+};
+
+test bind_final_class_callable = [] {
+  struct c final {
+    int operator()() const { return {}; };
+  };
+
+  auto injector = di::make_injector(di::bind<std::function<int()>>().to<c>(), di::bind<int>().to([] { return 42; }));
+  expect(0 == injector.create<std::function<int()>>()());
+  expect(42 == injector.create<int>());
+};
 
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
