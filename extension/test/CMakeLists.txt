@@ -1,0 +1,29 @@
+#
+# Copyright (c) 2012-2017 Kris Jusiak (kris at jusiak dot net)
+#
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#
+function(test test)
+    string(REPLACE "/" "_" tmp ${test})
+    add_executable(test.${tmp} ${CMAKE_CURRENT_LIST_DIR}/${test}.cpp)
+    add_test(test.${tmp} test.${tmp})
+endfunction()
+
+test(bindings/constructor_bindings)
+test(bindings/contextual_bindings)
+test(injections/extensible_injector)
+test(injections/assisted_injection)
+test(injections/factory)
+test(injections/shared_factory)
+test(injections/generics)
+test(injections/lazy)
+test(injections/named_parameters)
+test(injections/xml_injection)
+test(policies/serialize)
+test(policies/types_dumper)
+test(policies/uml_dumper)
+test(providers/mocks_provider)
+test(scopes/scoped_scope)
+test(scopes/session_scope)
+test(scopes/shared_scope)
