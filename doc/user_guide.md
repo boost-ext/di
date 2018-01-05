@@ -303,7 +303,7 @@ Check out also [instance] scope to read more about binding to values: `di::bind<
 ![CPP(BTN)](Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp)
 ![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
 ![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)
-![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp)
+![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
 
 <br /><br /><br /><hr />
 
@@ -354,8 +354,8 @@ Use [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or [di::ctor_traits] or [di::i
 
 ![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)
 ![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
-![CPP(BTN)](Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/lazy.cpp)
-![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/xml_injection.cpp)
+![CPP(BTN)](Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/lazy.cpp)
+![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/xml_injection.cpp)
 
 <br /><br /><br /><hr />
 
@@ -393,7 +393,7 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 ***Example***
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
-![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/concepts.cpp)
+![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/concepts.cpp)
 
 <br /><hr />
 
@@ -556,8 +556,8 @@ Implementation of constructor doesn't require annotations, only constructor defi
 ***Example***
 
 ![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp)
-![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/named_parameters.cpp)
-![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/injections/assisted_injection.cpp)
+![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/named_parameters.cpp)
+![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/assisted_injection.cpp)
 
 <br /><hr />
 
@@ -612,9 +612,9 @@ If no scope will be given, [deduce] scope will be assumed.
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp)
-![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/scoped_scope.cpp)
-![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/session_scope.cpp)
-![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/scopes/shared_scope.cpp)
+![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped_scope.cpp)
+![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session_scope.cpp)
+![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared_scope.cpp)
 
 <br /><br /><br /><hr />
 
@@ -1081,7 +1081,7 @@ Basic provider creates objects on the heap (always).
 
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
 ![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
-![CPP(BTN)](Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/providers/mocks_provider.cpp)
+![CPP(BTN)](Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp)
 
 <br /><br /><br /><hr />
 
@@ -1140,8 +1140,8 @@ or set it globally via [BOOST_DI_CFG].
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
-![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 <br /><br /><br /><hr />
 
@@ -1214,8 +1214,8 @@ For example, `std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || 
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp)
-![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 <br /><br /><br /><hr />
 
