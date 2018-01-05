@@ -72,7 +72,7 @@ test(ft/di_no_memory_inc)
 set_source_files_properties(ft/di_no_std_inc.cpp PROPERTIES COMPILE_FLAGS -DBOOST_DI_TEST_HPP)
 test(ft/di_no_std_inc)
 
-if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC) 
+if(NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
     set_source_files_properties(ft/di_injector_except.cpp PROPERTIES COMPILE_FLAGS -fexceptions)
 endif()
 test(ft/di_injector_except)

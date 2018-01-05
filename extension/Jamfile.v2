@@ -9,13 +9,13 @@ import feature : extend-feature compose ;
 
 .argv = [ modules.peek : ARGV ] ;
 
-project boost.di :
+project boost.di.extensions :
     requirements
         <include>../include
-        <include>.
+        <include>include
 ;
 
-rule extension ( src + : cxxflags * : property * ) {
+rule test ( src + : cxxflags * : property * ) {
     cxx_flags = "" ;
     if $(cxxflags) {
         cxx_flags = "$(cxxflags)" ;
@@ -38,23 +38,23 @@ rule extension ( src + : cxxflags * : property * ) {
     run $(src) : : : $(toolset) : $(property) ;
 }
 
-test-suite extensions :
-    [ extension bindings/constructor_bindings.cpp ]
-    [ extension bindings/contextual_bindings.cpp ]
-    [ extension injections/assisted_injection.cpp ]
-    [ extension injections/extensible_injector.cpp ]
-    [ extension injections/concepts.cpp ]
-    [ extension injections/factory.cpp ]
-    [ extension injections/shared_factory.cpp ]
-    [ extension injections/generics.cpp ]
-    [ extension injections/lazy.cpp ]
-    [ extension injections/named_parameters.cpp ]
-    [ extension injections/xml_injection.cpp ]
-    [ extension policies/serialize.cpp ]
-    [ extension policies/types_dumper.cpp ]
-    [ extension policies/uml_dumper.cpp ]
-    [ extension providers/mocks_provider.cpp ]
-    [ extension scopes/scoped_scope.cpp ]
-    [ extension scopes/session_scope.cpp ]
-    [ extension scopes/shared_scope.cpp ]
+test-suite tests :
+    [ test test/bindings/constructor_bindings.cpp ]
+    [ test test/bindings/contextual_bindings.cpp ]
+    [ test test/injections/assisted_injection.cpp ]
+    [ test test/injections/extensible_injector.cpp ]
+    [ test test/injections/concepts.cpp ]
+    [ test test/injections/factory.cpp ]
+    [ test test/injections/shared_factory.cpp ]
+    [ test test/injections/generics.cpp ]
+    [ test test/injections/lazy.cpp ]
+    [ test test/injections/named_parameters.cpp ]
+    [ test test/injections/xml_injection.cpp ]
+    [ test test/policies/serialize.cpp ]
+    [ test test/policies/types_dumper.cpp ]
+    [ test test/policies/uml_dumper.cpp ]
+    [ test test/providers/mocks_provider.cpp ]
+    [ test test/scopes/scoped_scope.cpp ]
+    [ test test/scopes/session_scope.cpp ]
+    [ test test/scopes/shared_scope.cpp ]
 ;
