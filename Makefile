@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2012-2017 Kris Jusiak (kris at jusiak dot net)
+# Copyright (c) 2012-2018 Kris Jusiak (kris at jusiak dot net)
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -47,10 +47,12 @@ check_pph: pph
 	@git diff include/boost/di.hpp
 	@git diff --quiet include/boost/di.hpp
 
-check_style:
-	@find include example extension test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i
+check_style: style
 	@git diff include example extension test
 	@exit `git ls-files -m include example extension test | wc -l`
+
+style:
+	@find include example extension test -iname "*.hpp" -or -iname "*.cpp" | xargs $(CLANG_FORMAT) -i
 
 check_static_analysis:
 	@$(CLANG_TIDY) -header-filter='boost/di' `find example extension test -type f -iname "*.cpp"` -- -std=c++1y -I include -I test -include common/test.hpp
