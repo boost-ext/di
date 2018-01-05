@@ -1,11 +1,29 @@
-## [1.0.2] - 2017-XX-XX
-- **Additions**
-  - Support for Clang-4.0
-  - Support for GCC-7
-  - Support for MSVC-2017
-  >
-  - **Core**
-    - [Support for injecting templates/concepts]()
+## [1.0.2] - 2018-01-04
+-  **Additions**
+    - Support for Clang-4.0
+    - Support for GCC-7
+    - Support for MSVC-2017
+    - Fixed support for MSVC-2015 Update 3
+    >
+    - **Core**
+      - [Support for injecting templates/concepts](http://boost-experimental.github.io/di/examples/index.html#binding-templates)
+    >
+    - **Extensions**
+      - [Extensions are now avaialbe as header files](https://github.com/boost-experimental/di/tree/cpp14/extension/include/boost/di/extension)
+      - [Extensible Injector](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
+      - [Shared Factory](http://boost-experimental.github.io/di/extensions/index.html#shared-factory)
+>
+- **Bug Fixes**
+    - [Implementation class cannot be marked as `final`](https://github.com/boost-experimental/di/issues/249)
+    - [Creation with Factory doesn't allow to pass exceptions through](https://github.com/boost-experimental/di/issues/239)
+    - [Bound policy doesn't work with multiple bindings](https://github.com/boost-experimental/di/issues/238)
+    - [Problems compiling with _GLIBCXX_DEBUG defined](https://github.com/boost-experimental/di/issues/235)
+    - [Exception in ctor not propagated](https://github.com/boost-experimental/di/issues/227)
+    - [Unable to compile with VS 2017 RC, VS 2015 works fine](https://github.com/boost-experimental/di/issues/226)
+    - [Broken under VS2015 Update 3](https://github.com/boost-experimental/di/issues/219)
+>
+- **Contributions**
+    - Kanstantsin Chernik
 
 ## [1.0.1] - 2016-05-04
 - **Breaking Changes**
@@ -16,8 +34,8 @@
     - Support for GCC-6
     >
     - **Extensions**
-        - [Contextual Bindings](http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings)
-        - [Serialize](http://boost-experimental.github.io/di/extensions/index.html#serialize)
+      - [Contextual Bindings](http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings)
+      - [Serialize](http://boost-experimental.github.io/di/extensions/index.html#serialize)
 >
 - **Bug Fixes**
     - [Link error if di.hpp is included in two cpp-files](https://github.com/boost-experimental/di/issues/212)
@@ -39,10 +57,6 @@
 - Support for Clang3.2+
 
 ---
-
-* TODO
-
-    * [https://waffle.io/boost-experimental/di](https://waffle.io/boost-experimental/di)
 
 [1.0.2]: https://github.com/boost-experimental/di/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/boost-experimental/di/compare/v1.0.0...v1.0.1
