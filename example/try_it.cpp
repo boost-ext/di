@@ -10,6 +10,10 @@
 
 namespace di = boost::di;
 
+#if defined(_MSC_VER)
+class Greater;
+#endif
+
 struct iworld {
   virtual ~iworld() noexcept = default;
 };
@@ -25,10 +29,8 @@ struct hello {
   }
 };
 
-class Greater;
-
 /// aggregate initialization `example{hello, world}`
-template <class T = Greater>
+template <class T = class Greater>
 struct example {
   T h;
   iworld& w;
@@ -37,9 +39,9 @@ struct example {
 int main() {
   // clang-format off
   const auto injector = di::make_injector(
-    di::bind<iworld>().to<world>()    // bind interface to implementation
-  , di::bind<>().to(42)               // bind int to value 42
-  , di::bind<Greater>().to<hello>()   // bind template to type
+     di::bind<iworld>().to<world>()    // bind interface to implementation
+   , di::bind<>().to(42)               // bind int to value 42
+   , di::bind<class Greater>().to<hello>()   // bind template to type
   );
   // clang-format off
 
