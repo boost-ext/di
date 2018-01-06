@@ -6,12 +6,14 @@
     - Fixed support for MSVC-2015 Update 3
     >
     - **Core**
-      - [Support for injecting templates/concepts](http://boost-experimental.github.io/di/examples/index.html#binding-templates)
+        - [Support for injecting
+templates/concepts](http://boost-experimental.github.io/di/examples/index.html#binding-templates)
     >
     - **Extensions**
-      - [Extensions are now avaialbe as header files](https://github.com/boost-experimental/di/tree/cpp14/extension/include/boost/di/extension)
-      - [Extensible Injector](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
-      - [Shared Factory](http://boost-experimental.github.io/di/extensions/index.html#shared-factory)
+        - [Extensions are now available using header
+files](https://github.com/boost-experimental/di/tree/cpp14/extension/include/boost/di/extension)
+        - [Extensible Injector](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
+        - [Shared Factory](http://boost-experimental.github.io/di/extensions/index.html#shared-factory)
 >
 - **Bug Fixes**
     - [Implementation class cannot be marked as `final`](https://github.com/boost-experimental/di/issues/249)
@@ -23,7 +25,7 @@
     - [Broken under VS2015 Update 3](https://github.com/boost-experimental/di/issues/219)
 >
 - **Contributions**
-    - Kanstantsin Chernik
+    - [Kanstantsin Chernik](https://github.com/kanstantsin-chernik)
 
 ## [1.0.1] - 2016-05-04
 - **Breaking Changes**
@@ -34,8 +36,8 @@
     - Support for GCC-6
     >
     - **Extensions**
-      - [Contextual Bindings](http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings)
-      - [Serialize](http://boost-experimental.github.io/di/extensions/index.html#serialize)
+        - [Contextual Bindings](http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings)
+        - [Serialize](http://boost-experimental.github.io/di/extensions/index.html#serialize)
 >
 - **Bug Fixes**
     - [Link error if di.hpp is included in two cpp-files](https://github.com/boost-experimental/di/issues/212)
