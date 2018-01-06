@@ -36,6 +36,7 @@ struct example {
     assert(factor == 123.0);
   }
 };
+//->
 
 int main() {
   /*<<assisted_injection declaration using std function>>*/

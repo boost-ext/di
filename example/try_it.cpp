@@ -10,9 +10,11 @@
 
 namespace di = boost::di;
 
+//<-
 #if defined(_MSC_VER)
 class Greater;
 #endif
+//->
 
 struct iworld {
   virtual ~iworld() noexcept = default;

@@ -33,6 +33,7 @@ struct implementation1 : interface1 {
 struct interface2 {
   virtual ~interface2() noexcept = default;
 };
+
 struct implementation2 : interface2 {
   static auto &ctor_calls() {
     static auto calls = 0;

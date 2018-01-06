@@ -48,6 +48,8 @@ int main() {
   injector.create<example>();
 }
 
+//<-
 #else
 int main() {}
 #endif
+//->

@@ -12,10 +12,12 @@
 
 namespace di = boost::di;
 
+//<-
 #if defined(_MSC_VER)
 class Type;
 class Number;
 #endif
+//->
 
 template <class T = class Type, class TNumber = class Number>
 struct hello {
