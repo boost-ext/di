@@ -15,6 +15,12 @@
 
   
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.0/gh-fork-ribbon.min.css" />
+  <style>
+    .github-fork-ribbon.left-bottom:before {
+        background-color: #333;
+    }
+  </style>
 
   <link rel="stylesheet" href="../css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../css/theme_extra.css" type="text/css" />
@@ -170,6 +176,8 @@
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      <a class="github-fork-ribbon left-bottom fixed" href="https://github.com/boost-experimental/di" title="Fork me on GitHub">Fork me on GitHub</a>
 
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
@@ -399,28 +407,201 @@
 </ul>
 </li>
 </ul>
-<p>| Create a unique objects tree for each iteration<br /><br /><code>TYPES: 64</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code> | |
-| ----------------------------------- | ------------ | ------------ | ------------------------------ | ------------------ | ------------- | --------------- |
-| <strong>Clang-3.7 -O2 / Java8 / Mono4.2 --aot</strong> | <strong>Baseline</strong> | <strong>[Boost].DI</strong> | <strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong>             | <strong><a href="https://github.com/google/guice">Google.Guice</a></strong> | <strong><a href="https://github.com/google/dagger">Dagger2</a></strong> | <strong><a href="https://github.com/ninject/ninject">Ninject</a></strong>   |
-| Compilation time                    | 0.063s       | 0.376s       | 2.329s / FRUIT_NO_LOOP_CHECK   | 0.570s             | 1.411s        | 0.144s + 0.079s |
-| Executable size                     | 4.2K         | 8.5K         | 213K                           | -                  | -             | -               |
-| Execution time                      | 0.002s       | 0.002s       | 0.037s                         | 0.528s             | 0.157s        | 1.131s          |
-| <code>TYPES: 128</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code> | 
-| Compilation time                    | 0.082s       | 0.706s       | 4.375s / FRUIT_NO_LOOP_CHECK   | 0.642s             | 1.903s        | 0.149s + 0.093s |
-| Executable size                     | 4.2K         | 8.5K         | 513K                           | -                  | -             | -               |
-| Execution time                      | 0.002s       | 0.002s       | 0.074s                         | 0.544s             | 0.210s        | 2.230s          |
-| <code>TYPES: 256</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code> | 
-| Compilation time                    | 0.131s       | 1.328s       | 9.641s / FRUIT_NO_LOOP_CHECK   | 0.783s             | 2.814s        | 0.151s + 0.114s |
-| Executable size                     | 4.2K         | 8.7K         | 1.4M                           | -                  | -             | -               |
-| Execution time                      | 0.003s       | 0.003s       | 0.154s                         | 0.723s             | 0.323s        | 4.838s          |
-| <code>TYPES: 512</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code> | 
-| Compilation time                    | 0.215s       | 2.459s       | 23.924s / FRUIT_NO_LOOP_CHECK  | 1.054s             | 4.231s        | 0.157s + 0.161  |
-| Executable size                     | 8.2K         | 13K          | 4.2M                           | -                  | -             | -               |
-| Execution time                      | 0.003s       | 0.003s       | 0.328s                         | 0.943s             | 0.547s        | 11.123s         |
-| <code>TYPES: 1024</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code> | 
-| Compilation time                    | 0.402s       | 4.911s       | 1m9.601s / FRUIT_NO_LOOP_CHECK | 1.357s             | 5.943s        | 0.167s + 0.258  |
-| Executable size                     | 12K          | 17K          | 15M                            | -                  | -             | -               |
-| Execution time                      | 0.004s       | 0.004s       | 0.765s                         | 1.334s             | 0.998s        | 21.808s         |</p>
+<table>
+<thead>
+<tr>
+<th>Create a unique objects tree for each iteration<br /><br /><code>TYPES: 64</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Clang-3.7 -O2 / Java8 / Mono4.2 --aot</strong></td>
+<td><strong>Baseline</strong></td>
+<td><strong>[Boost].DI</strong></td>
+<td><strong><a href="https://github.com/google/fruit">Google.Fruit</a></strong></td>
+<td><strong><a href="https://github.com/google/guice">Google.Guice</a></strong></td>
+<td><strong><a href="https://github.com/google/dagger">Dagger2</a></strong></td>
+<td><strong><a href="https://github.com/ninject/ninject">Ninject</a></strong></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.063s</td>
+<td>0.376s</td>
+<td>2.329s / FRUIT_NO_LOOP_CHECK</td>
+<td>0.570s</td>
+<td>1.411s</td>
+<td>0.144s + 0.079s</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>4.2K</td>
+<td>8.5K</td>
+<td>213K</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.002s</td>
+<td>0.002s</td>
+<td>0.037s</td>
+<td>0.528s</td>
+<td>0.157s</td>
+<td>1.131s</td>
+</tr>
+<tr>
+<td><code>TYPES: 128</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.082s</td>
+<td>0.706s</td>
+<td>4.375s / FRUIT_NO_LOOP_CHECK</td>
+<td>0.642s</td>
+<td>1.903s</td>
+<td>0.149s + 0.093s</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>4.2K</td>
+<td>8.5K</td>
+<td>513K</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.002s</td>
+<td>0.002s</td>
+<td>0.074s</td>
+<td>0.544s</td>
+<td>0.210s</td>
+<td>2.230s</td>
+</tr>
+<tr>
+<td><code>TYPES: 256</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.131s</td>
+<td>1.328s</td>
+<td>9.641s / FRUIT_NO_LOOP_CHECK</td>
+<td>0.783s</td>
+<td>2.814s</td>
+<td>0.151s + 0.114s</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>4.2K</td>
+<td>8.7K</td>
+<td>1.4M</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.003s</td>
+<td>0.003s</td>
+<td>0.154s</td>
+<td>0.723s</td>
+<td>0.323s</td>
+<td>4.838s</td>
+</tr>
+<tr>
+<td><code>TYPES: 512</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.215s</td>
+<td>2.459s</td>
+<td>23.924s / FRUIT_NO_LOOP_CHECK</td>
+<td>1.054s</td>
+<td>4.231s</td>
+<td>0.157s + 0.161</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>8.2K</td>
+<td>13K</td>
+<td>4.2M</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.003s</td>
+<td>0.003s</td>
+<td>0.328s</td>
+<td>0.943s</td>
+<td>0.547s</td>
+<td>11.123s</td>
+</tr>
+<tr>
+<td><code>TYPES: 1024</code>  <code>BINDINGS: 0</code>  <code>ITERATIONS: 1024</code></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Compilation time</td>
+<td>0.402s</td>
+<td>4.911s</td>
+<td>1m9.601s / FRUIT_NO_LOOP_CHECK</td>
+<td>1.357s</td>
+<td>5.943s</td>
+<td>0.167s + 0.258</td>
+</tr>
+<tr>
+<td>Executable size</td>
+<td>12K</td>
+<td>17K</td>
+<td>15M</td>
+<td>-</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Execution time</td>
+<td>0.004s</td>
+<td>0.004s</td>
+<td>0.765s</td>
+<td>1.334s</td>
+<td>0.998s</td>
+<td>21.808s</td>
+</tr>
+</tbody>
+</table>
 <ul>
 <li>To run benchmarks</li>
 </ul>
@@ -600,7 +781,7 @@
   </div>
 
 <div class="rst-versions" role="note" style="cursor: pointer">
-    <span class="rst-current-version" data-toggle="rst-current-version">
+    <span style="background-color: rgb(52, 49, 49);" class="rst-current-version" data-toggle="rst-current-version">
       
       
         <span><a href="../try_it/index.html" style="color: #fcfcfc;">&laquo; Previous</a></span>

@@ -246,6 +246,21 @@ int main() {
 
 namespace di = boost::di;
 
+
+int main() {
+  /*&lt;&lt;assisted_injection declaration using std function&gt;&gt;*/
+  using example_assisted_injection = std::function&lt;std::unique_ptr&lt;example&gt;(int, double)&gt;;
+
+  auto injector = di::make_injector(
+      di::bind&lt;int&gt;().to(87)
+    , di::bind&lt;interface&gt;().to&lt;implementation&gt;()
+      /*&lt;&lt;bind `example_assisted_injection` to assisted_injection creating `example`&gt;&gt;*/
+    , di::bind&lt;example_assisted_injection&gt;().to(di::extension::assisted_injection&lt;example&gt;())
+  );
+
+  auto f = injector.create&lt;example_assisted_injection&gt;();
+  f(42, 123.0);
+}
 </code></pre>
 
 <ul>
@@ -327,8 +342,7 @@ int main() {
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/extensible_injector.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/extensible_injector.cpp</a></li>
 </ul>
 <h3 id="concepts">Concepts</h3>
-<pre><code class="cpp">#if defined(__cpp_concepts)
-
+<pre><code class="cpp">
 #include &quot;boost/di/extension/injections/concepts.hpp&quot;
 
 #include &lt;cassert&gt;
@@ -347,7 +361,7 @@ struct DummyImpl {
 auto dummy_concept = [] {};
 
 struct example {
-  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept) Dummy d, (named = dummy_concept) std::unique_ptr&lt;Dummy&gt; up) {
+  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept)Dummy d, (named = dummy_concept)std::unique_ptr&lt;Dummy&gt; up) {
     assert(42 == i);
     static_assert(std::is_same&lt;decltype(t), int&gt;::value, &quot;&quot;);
     assert(87 == t);
@@ -366,9 +380,6 @@ int main() {
   injector.create&lt;example&gt;();
 }
 
-#else
-int main() {}
-#endif
 </code></pre>
 
 <ul>
@@ -708,9 +719,6 @@ int main() {
   injector.create&lt;example&gt;();
 }
 
-#else
-int main() {}
-#endif
 </code></pre>
 
 <ul>
@@ -942,6 +950,20 @@ int main() {
 
 namespace di = boost::di;
 
+
+int main() {
+  /*&lt;&lt;define injector&gt;&gt;*/
+  auto injector = di::make_injector&lt;di::extension::uml_dumper&gt;(
+    di::bind&lt;i0&gt;().to&lt;c0&gt;()
+  , di::bind&lt;int&gt;().named(int_1).to(42)
+  , di::bind&lt;int&gt;().named(int_2).to(42)
+  );
+
+  /*&lt;&lt;iterate through created objects with `types_dumper`&gt;&gt;*/
+  injector.create&lt;c3&gt;();
+
+  /*&lt;&lt;output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]&gt;&gt;*/
+}
 </code></pre>
 
 <ul>

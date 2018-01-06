@@ -1231,6 +1231,20 @@ The only thing we have to do is to implement how to dump our objects.</p>
 
 namespace di = boost::di;
 
+
+int main() {
+  /*&lt;&lt;define injector&gt;&gt;*/
+  auto injector = di::make_injector&lt;di::extension::uml_dumper&gt;(
+    di::bind&lt;i0&gt;().to&lt;c0&gt;()
+  , di::bind&lt;int&gt;().named(int_1).to(42)
+  , di::bind&lt;int&gt;().named(int_2).to(42)
+  );
+
+  /*&lt;&lt;iterate through created objects with `types_dumper`&gt;&gt;*/
+  injector.create&lt;c3&gt;();
+
+  /*&lt;&lt;output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]&gt;&gt;*/
+}
 </code></pre>
 
 <ul>

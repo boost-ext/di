@@ -148,9 +148,6 @@
 
 namespace di = boost::di;
 
-#if defined(_MSC_VER)
-class Greater;
-#endif
 
 struct iworld {
   virtual ~iworld() noexcept = default;
@@ -416,10 +413,6 @@ int main() {
 
 namespace di = boost::di;
 
-#if defined(_MSC_VER)
-class Type;
-class Number;
-#endif
 
 template &lt;class T = class Type, class TNumber = class Number&gt;
 struct hello {
