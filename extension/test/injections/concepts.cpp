@@ -4,7 +4,9 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+//<-
 #if defined(__cpp_concepts)
+//->
 
 #include "boost/di/extension/injections/concepts.hpp"
 
@@ -24,7 +26,7 @@ struct DummyImpl {
 auto dummy_concept = [] {};
 
 struct example {
-  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept) Dummy d, (named = dummy_concept) std::unique_ptr<Dummy> up) {
+  BOOST_DI_INJECT(example, int i, auto t, (named = dummy_concept)Dummy d, (named = dummy_concept)std::unique_ptr<Dummy> up) {
     assert(42 == i);
     static_assert(std::is_same<decltype(t), int>::value, "");
     assert(87 == t);
@@ -45,6 +47,8 @@ int main() {
   injector.create<example>();
 }
 
+//<-
 #else
 int main() {}
 #endif
+//->

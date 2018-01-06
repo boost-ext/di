@@ -68,16 +68,26 @@ function compile_and_run(id) {
         }
     }
 
+    code = cpp_code[id].getValue();
+    code_files = '[';
+    code_files += '{ "file" : "boost/di.hpp", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp")) + ' }';
+
+    var lines = code.split('\n');
+    for(var line = 0; line < lines.length; line++){
+      var found = lines[line].match(/(boost\/di\/.*)[">]/);
+      if (found != null) {
+        code_files += ', { "file" : "' + found[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/include/" + found[1])) + ' }'
+      }
+    }
+    code_files += ']';
+
     http.send(
-        JSON.stringify({
-          "code" : cpp_code[id].getValue()
-        , "codes" : [{
-              "file" : "boost/di.hpp"
-            , "code" : get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp")
-           }]
-         , "options": "warning,cpp-pedantic-errors,optimize,boost-1.60,c++1y"
-         , "compiler" : "clang-head"
-         , "compiler-option-raw": "-I." + "\n" + "-fno-color-diagnostics"
+      JSON.stringify({
+         "code" : code
+       , "codes" : JSON.parse(code_files)
+       , "options": "warning,cpp-pedantic-errors,optimize,boost-1.66,c++1y"
+       , "compiler" : "clang-head"
+       , "compiler-option-raw": "-I." + "\n" + "-fno-color-diagnostics"
     }));
 }
 

@@ -27,6 +27,7 @@ struct c2 {
 struct c3 {
   c3(std::shared_ptr<c1>, std::shared_ptr<c2>) {}
 };
+//->
 
 int main() {
   /*<<define injector>>*/
