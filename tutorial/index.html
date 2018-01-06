@@ -439,7 +439,7 @@ exactly '0'. <code>[Boost].DI</code> will take care of everything for us!</p>
 <p>Check out also other examples. Please, notice that the diagram was also generated using <code>[Boost].DI</code> but we will get into that a bit later.</p>
 <p><img alt="CPP(BTN)" src="../Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp" />
 <img alt="CPP(BTN)" src="../Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp" />
-<img alt="CPP(BTN)" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" /></p>
+<img alt="CPP(BTN)" src="../Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp" /></p>
 <p><br /><hr /></p>
 <h3 id="2-basic-first-steps-with-bindings">2. [Basic] First steps with bindings</h3>
 <p>But objects tree is not everything. A lot of classes uses interfaces or required a value to be passed.
@@ -610,7 +610,7 @@ boost/di.hpp:2683:80: type&lt;int&gt;::is_bound_more_than_once
 <img alt="CPP(BTN)" src="../Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp" />
 <img alt="CPP(BTN)" src="../Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp" />
 <img alt="CPP(BTN)" src="../Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp" />
-<img alt="CPP(BTN)" src="../Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp" /></p>
+<img alt="CPP(BTN)" src="../Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp" /></p>
 <p><br /><br /><br /><hr /></p>
 <h3 id="3-basic-decide-the-life-times">3. [Basic] Decide the life times</h3>
 <p>So far so good but where are these objects stored?
@@ -996,11 +996,11 @@ more clear. Usually, it's a really hard task as creation of objects may happen a
 if the responsibility for creation  objects will be given to <code>[Boost].DI</code> we get such functionality for free.
 The only thing we have to do is to implement how to dump our objects.</p>
 <p>Let's dump our dependencies using <a href="http://plantuml.com">Plant UML</a> format.</p>
-<p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp" />
+<p><img alt="CPP" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp" />
 <a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></p>
 <p>See also.  <br /><br />
 <img alt="CPP(BTN)" src="../Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp" />
-<img alt="CPP(BTN)" src="../Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp" /></p>
+<img alt="CPP(BTN)" src="../Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp" /></p>
 <p><br /></p>
 <p>On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
 smart pointers and disallow raw pointers too. We may want to have a <code>view</code> only with const parameters being passed, etc.
@@ -1077,7 +1077,7 @@ Please check them out and write your own!</p>
   <div role="contentinfo">
     <!-- Copyright etc -->
     
-      <p>Copyright &copy; 2012-2017 Kris Jusiak (kris at jusiak net)</p>
+      <p>Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)</p>
     
   </div>
 

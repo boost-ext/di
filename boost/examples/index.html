@@ -52,6 +52,10 @@
     
 
     
+        <dt><span class="section"><a href="#binding-templates">Binding Templates</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#automatic-injection">Automatic Injection</a></span></dt>
     
 
@@ -120,6 +124,7 @@
 <li><a href="#forward-bindings">Forward Bindings</a></li>
 <li><a href="#multiple-bindings">Multiple Bindings</a></li>
 <li><a href="#binding-non-owning-pointer">Binding Non-owning Pointer</a></li>
+<li><a href="#binding-templates">Binding Templates</a></li>
 <li><a href="#automatic-injection">Automatic Injection</a></li>
 <li><a href="#constructor-signature">Constructor Signature</a></li>
 <li><a href="#constructor-injection">Constructor Injection</a></li>
@@ -143,6 +148,10 @@
 
 namespace di = boost::di;
 
+#if defined(_MSC_VER)
+class Greater;
+#endif
+
 struct iworld {
   virtual ~iworld() noexcept = default;
 };
@@ -158,9 +167,7 @@ struct hello {
   }
 };
 
-class Greater;
-
-template &lt;class T = Greater&gt;
+template &lt;class T = class Greater&gt;
 struct example {
   T h;
   iworld&amp; w;
@@ -168,9 +175,9 @@ struct example {
 
 int main() {
   const auto injector = di::make_injector(
-    di::bind&lt;iworld&gt;().to&lt;world&gt;()    // bind interface to implementation
-  , di::bind&lt;&gt;().to(42)               // bind int to value 42
-  , di::bind&lt;Greater&gt;().to&lt;hello&gt;()   // bind template to type
+     di::bind&lt;iworld&gt;().to&lt;world&gt;()    // bind interface to implementation
+   , di::bind&lt;&gt;().to(42)               // bind int to value 42
+   , di::bind&lt;class Greater&gt;().to&lt;hello&gt;()   // bind template to type
   );
 
   injector.create&lt;example&gt;();
@@ -403,6 +410,46 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_non_owning_ptr.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_non_owning_ptr.cpp</a></li>
+</ul>
+<h3 id="binding-templates">Binding Templates</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+
+namespace di = boost::di;
+
+#if defined(_MSC_VER)
+class Type;
+class Number;
+#endif
+
+template &lt;class T = class Type, class TNumber = class Number&gt;
+struct hello {
+  using type = T;
+  explicit hello(const TNumber&amp; number) : number{number} {}
+  TNumber number;
+};
+
+template &lt;class T = int&gt;
+struct world {
+  using type = T;
+};
+
+int main() {
+  auto i = 42;
+
+  const auto injector = di::make_injector(
+     di::bind&lt;class Type&gt;().to&lt;world&gt;()
+   , di::bind&lt;class Number&gt;().to&lt;int&gt;(i)
+  );
+
+  const auto hw = injector.create&lt;hello&gt;();
+
+  static_assert(std::is_same&lt;int, decltype(hw)::type::type&gt;{}, &quot;Type != int&quot;);
+  assert(42 == hw.number);
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_templates.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_templates.cpp</a></li>
 </ul>
 <h3 id="automatic-injection">Automatic Injection</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
@@ -1079,7 +1126,7 @@ hljs.configure({languages:['cpp']});
 hljs.initHighlightingOnLoad();
 </script>
 
-<div class="copyright-footer">Copyright &copy; 2012-2017 Kris Jusiak (kris at jusiak net)
+<div class="copyright-footer">Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)
       <p>Distributed under the Boost Software License, Version 1.0.
       (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at
       <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)

@@ -340,7 +340,7 @@ int main() {
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp"> Hello World Example</a></li>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp"> Automatic Injection Example</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp"> UML Dumper Extension</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp"> UML Dumper Extension</a></li>
 </ul>
 <p><br /><hr /></p>
 <h3 id="2-basic-first-steps-with-bindings">2. [Basic] First steps with bindings</h3>
@@ -680,7 +680,7 @@ int main() {
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp"> Forward Bindings Example</a></li>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp"> Dynamic Bindings Example</a></li>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp"> Multiple Bindings Example</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/bindings/constructor_bindings.cpp"> Constructor Bindings Extension</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp"> Constructor Bindings Extension</a></li>
 </ul>
 <p><br /><br /><br /><hr /></p>
 <h3 id="3-basic-decide-the-life-times">3. [Basic] Decide the life times</h3>
@@ -1225,64 +1225,21 @@ more clear. Usually, it's a really hard task as creation of objects may happen a
 if the responsibility for creation  objects will be given to <code>[Boost].DI</code> we get such functionality for free.
 The only thing we have to do is to implement how to dump our objects.</p>
 <p>Let's dump our dependencies using <a href="http://plantuml.com">Plant UML</a> format.</p>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+<pre><code class="cpp">#include &quot;boost/di/extension/policies/uml_dumper.hpp&quot;
+
+#include &lt;memory&gt;
 
 namespace di = boost::di;
 
-
-/**
- * http://plantuml.sourceforge.net/objects.html
- * ./uml_dumper | java -jar plantuml.jar -p &gt; uml_dumper.png
- */
-class uml_dumper : public di::config {
- public:
-  uml_dumper() { std::cout &lt;&lt; &quot;@startuml uml_dumper.png&quot; &lt;&lt; std::endl; }
-  ~uml_dumper() { std::cout &lt;&lt; &quot;@enduml&quot; &lt;&lt; std::endl; }
-
-  static auto policies(...) noexcept {
-    /*&lt;&lt;define `uml dumper` directly in policies configuration&gt;&gt;*/
-    return di::make_policies([&amp;](auto type) {
-      using T = decltype(type);
-      using name = typename T::name;
-      using given = typename T::given;
-
-      auto root = v[i - 1];
-      if (root != &amp;typeid(nullptr)) {
-        std::cout &lt;&lt; &quot;\&quot;&quot; &lt;&lt; root-&gt;name() &lt;&lt; &quot;\&quot; .. \&quot;&quot; &lt;&lt; typeid(given).name()
-                  &lt;&lt; ((*(name*)(0))() ? std::string(&quot; [&quot;) + (*(name*)(0))() + std::string(&quot;]&quot;) : &quot;&quot;) &lt;&lt; &quot;\&quot;&quot; &lt;&lt; std::endl;
-      }
-
-      auto ctor_size = T::arity::value;
-      while (ctor_size--) {
-        v.insert((v.begin() + i), &amp;typeid(given));
-      }
-      ++i;
-    });
-  }
-};
-
-int main() {
-  /*&lt;&lt;define injector&gt;&gt;*/
-  auto injector = di::make_injector&lt;uml_dumper&gt;(
-    di::bind&lt;i0&gt;().to&lt;c0&gt;()
-  , di::bind&lt;int&gt;().named(int_1).to(42)
-  , di::bind&lt;int&gt;().named(int_2).to(42)
-  );
-
-  /*&lt;&lt;iterate through created objects with `types_dumper`&gt;&gt;*/
-  injector.create&lt;c3&gt;();
-
-  /*&lt;&lt;output [@images/uml_dumper.png [$images/uml_dumper.png [width 75%] [height 75%] ]]&gt;&gt;*/
-}
 </code></pre>
 
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/uml_dumper.cpp</a>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp</a>
 <a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></li>
 </ul>
 <p>See also.  <br /><br />
 <em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp"> Custom Policy Example</a>
-</em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/policies/types_dumper.cpp"> Types Dumper Extension</a></p>
+</em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp"> Types Dumper Extension</a></p>
 <p><br /></p>
 <p>On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
 smart pointers and disallow raw pointers too. We may want to have a <code>view</code> only with const parameters being passed, etc.
@@ -1357,7 +1314,7 @@ hljs.configure({languages:['cpp']});
 hljs.initHighlightingOnLoad();
 </script>
 
-<div class="copyright-footer">Copyright &copy; 2012-2017 Kris Jusiak (kris at jusiak net)
+<div class="copyright-footer">Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)
       <p>Distributed under the Boost Software License, Version 1.0.
       (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at
       <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)

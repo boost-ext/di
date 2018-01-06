@@ -147,7 +147,7 @@
         
             <ul>
             
-                <li class="toctree-l3"><a href="#102-2017-xx-xx">1.0.2 - 2017-XX-XX</a></li>
+                <li class="toctree-l3"><a href="#102-2018-01-04">1.0.2 - 2018-01-04</a></li>
                 
             
                 <li class="toctree-l3"><a href="#101-2016-05-04">1.0.1 - 2016-05-04</a></li>
@@ -201,15 +201,37 @@
           <div role="main">
             <div class="section">
               
-                <h2 id="102-2017-xx-xx"><a href="https://github.com/boost-experimental/di/compare/v1.0.1...v1.0.2">1.0.2</a> - 2017-XX-XX</h2>
+                <h2 id="102-2018-01-04"><a href="https://github.com/boost-experimental/di/compare/v1.0.1...v1.0.2">1.0.2</a> - 2018-01-04</h2>
 <ul>
-<li><strong>Additions</strong></li>
+<li><strong>Additions</strong><ul>
 <li>Support for Clang-4.0</li>
 <li>Support for GCC-7</li>
-<li>Support for MSVC-2017<blockquote></blockquote>
+<li>Support for MSVC-2017</li>
+<li>Fixed support for MSVC-2015 Update 3<blockquote></blockquote>
 </li>
-<li><strong>Core</strong><ul>
-<li><a href="">Support for injecting templates/concepts</a></li>
+<li><strong>Core</strong></li>
+<li><a href="http://boost-experimental.github.io/di/examples/index.html#binding-templates">Support for injecting templates/concepts</a><blockquote></blockquote>
+</li>
+<li><strong>Extensions</strong></li>
+<li><a href="https://github.com/boost-experimental/di/tree/cpp14/extension/include/boost/di/extension">Extensions are now avaialbe as header files</a></li>
+<li><a href="http://boost-experimental.github.io/di/extensions/index.html#extensible-injector">Extensible Injector</a></li>
+<li><a href="http://boost-experimental.github.io/di/extensions/index.html#shared-factory">Shared Factory</a><blockquote></blockquote>
+</li>
+</ul>
+</li>
+<li><strong>Bug Fixes</strong><ul>
+<li><a href="https://github.com/boost-experimental/di/issues/249">Implementation class cannot be marked as <code>final</code></a></li>
+<li><a href="https://github.com/boost-experimental/di/issues/239">Creation with Factory doesn't allow to pass exceptions through</a></li>
+<li><a href="https://github.com/boost-experimental/di/issues/238">Bound policy doesn't work with multiple bindings</a></li>
+<li><a href="https://github.com/boost-experimental/di/issues/235">Problems compiling with _GLIBCXX_DEBUG defined</a></li>
+<li><a href="https://github.com/boost-experimental/di/issues/227">Exception in ctor not propagated</a></li>
+<li><a href="https://github.com/boost-experimental/di/issues/226">Unable to compile with VS 2017 RC, VS 2015 works fine</a></li>
+<li><a href="https://github.com/boost-experimental/di/issues/219">Broken under VS2015 Update 3</a><blockquote></blockquote>
+</li>
+</ul>
+</li>
+<li><strong>Contributions</strong><ul>
+<li>Kanstantsin Chernik</li>
 </ul>
 </li>
 </ul>
@@ -224,11 +246,9 @@
 <li>Support for Clang-3.9</li>
 <li>Support for GCC-6<blockquote></blockquote>
 </li>
-<li><strong>Extensions</strong><ul>
+<li><strong>Extensions</strong></li>
 <li><a href="http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings">Contextual Bindings</a></li>
 <li><a href="http://boost-experimental.github.io/di/extensions/index.html#serialize">Serialize</a><blockquote></blockquote>
-</li>
-</ul>
 </li>
 </ul>
 </li>
@@ -257,14 +277,6 @@
 <li>Support for Clang3.2+</li>
 </ul>
 <hr />
-<ul>
-<li>
-<p>TODO</p>
-<ul>
-<li><a href="https://waffle.io/boost-experimental/di">https://waffle.io/boost-experimental/di</a></li>
-</ul>
-</li>
-</ul>
               
             </div>
           </div>
@@ -303,7 +315,7 @@
   <div role="contentinfo">
     <!-- Copyright etc -->
     
-      <p>Copyright &copy; 2012-2017 Kris Jusiak (kris at jusiak net)</p>
+      <p>Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)</p>
     
   </div>
 
