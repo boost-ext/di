@@ -1,5 +1,9 @@
+## [1.1.0] - YYYY-MM-DD
+- **Additions**
+- **Bug Fixes**
+
 ## [1.0.2] - 2018-01-04
--  **Additions**
+- **Additions**
     - Support for Clang-4.0
     - Support for GCC-7
     - Support for MSVC-2017
@@ -60,6 +64,7 @@ files](https://github.com/boost-experimental/di/tree/cpp14/extension/include/boo
 
 ---
 
+[1.1.0]: https://github.com/boost-experimental/di/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/boost-experimental/di/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/boost-experimental/di/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/boost-experimental/di/compare/v0.5.0...v1.0.0
