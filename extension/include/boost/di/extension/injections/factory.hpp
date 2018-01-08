@@ -9,7 +9,7 @@
 #include <memory>
 
 #include "boost/di.hpp"
-#include "extensible_injector.hpp"
+#include "boost/di/extension/injections/extensible_injector.hpp"
 
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
