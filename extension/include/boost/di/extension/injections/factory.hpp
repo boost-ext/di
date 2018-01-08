@@ -9,6 +9,7 @@
 #include <memory>
 
 #include "boost/di.hpp"
+#include "extensible_injector.hpp"
 
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
@@ -29,7 +30,7 @@ struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...>
   std::unique_ptr<I> create(TArgs&&... args) const override {
     // clang-format off
     auto injector = make_injector(
-      std::move(injector_)
+      make_extensible(injector_)
 #if (__clang_major__ == 3) && (__clang_minor__ > 4) || defined(__GCC___) || defined(__MSVC__)
     , bind<TArgs>().to(std::forward<TArgs>(args))[override]...
 #else // wknd for clang 3.4
@@ -38,19 +39,7 @@ struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...>
     );
     // clang-format on
 
-    std::unique_ptr<T> object;
-#if defined(__EXCEPTIONS)
-    try {
-      object = injector.template create<std::unique_ptr<T>>();
-    } catch (...) {
-      injector_ = std::move(injector);
-      throw;
-    }
-#else
-    object = injector.template create<std::unique_ptr<T>>();
-#endif
-    injector_ = std::move(injector);
-    return std::move(object);
+    return injector.template create<std::unique_ptr<T>>();
   }
 
  private:

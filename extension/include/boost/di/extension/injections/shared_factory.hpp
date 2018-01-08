@@ -9,6 +9,10 @@
 #include <memory>
 
 #include "boost/di.hpp"
+#include "extensible_injector.hpp"
+#if BOOST_DI_THREAD_SAFE == true
+#include <mutex>
+#endif
 
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
@@ -17,8 +21,8 @@ namespace extension {
 template <class TExpected, class T>
 struct injector_rebinder {
   template <class TInjector>
-  auto rebind(TInjector& injector) {
-    return std::move(injector);
+  auto& rebind(TInjector& injector) {
+    return injector;
   }
 };
 
@@ -26,7 +30,7 @@ template <class T>
 struct injector_rebinder<T, T> {
   template <class TInjector>
   auto rebind(TInjector& injector) {
-    return make_injector(std::move(injector), bind<T>().in(unique)[override]);
+    return make_injector(make_extensible(injector), bind<T>().in(unique)[override]);
   }
 };
 
@@ -37,9 +41,17 @@ struct shared_factory_impl {
   shared_factory_impl(const shared_factory_impl& other)
       : creation_func_(std::move(other.creation_func_)), object_(other.object_), is_created_(other.is_created_) {}
 
+#if BOOST_DI_THREAD_SAFE == true
+  //<<lock mutex so that move will be synchronized>>
+  explicit shared_factory_impl(shared_factory_impl&& other) noexcept
+      : shared_factory_impl(std::move(other), std::lock_guard<std::mutex>(other.mutex_)) {}
+  //<<syncronized move constructor>>
+  shared_factory_impl(shared_factory_impl&& other, const std::lock_guard<std::mutex>&) noexcept
+      : creation_func_(std::move(other.creation_func_)), object_(std::move(other.object_)), is_created_(other.is_created_) {}
+#else
   shared_factory_impl(shared_factory_impl&& other) noexcept
       : creation_func_(std::move(other.creation_func_)), object_(std::move(other.object_)), is_created_(other.is_created_) {}
-
+#endif
   shared_factory_impl& operator=(shared_factory_impl&& other) noexcept {
     object_ = std::move(other.object_);
     return *this;
@@ -48,25 +60,16 @@ struct shared_factory_impl {
   template <class TInjector, class TDependency>
   auto operator()(const TInjector& const_injector, const TDependency&) {
     if (!is_created_) {
-      auto& injector = const_cast<TInjector&>(const_injector);
-      auto rebound_injector = injector_rebinder<typename TDependency::expected, T>{}.rebind(injector);
-
-      std::shared_ptr<T> object;
-#ifdef __EXCEPTIONS
-      try {
-        object = creation_func_(rebound_injector);
-      } catch (...) {
-        injector = std::move(rebound_injector);
-        throw;
-      }
-#else
-      object = creation_func_(rebound_injector);
+#if BOOST_DI_THREAD_SAFE == true
+      std::lock_guard<std::mutex> lock(mutex_);
+      if (!is_created_)
 #endif
-      injector = std::move(rebound_injector);
-
-      //<<should be saved after move otherwise will be overriden>>
-      object_ = object;
-      is_created_ = true;
+      {
+        is_created_ = true;
+        auto& injector = const_cast<TInjector&>(const_injector);
+        const auto& rebound_injector = injector_rebinder<typename TDependency::expected, T>{}.rebind(injector);
+        object_ = creation_func_(rebound_injector);
+      }
     }
     return object_;
   }
@@ -75,6 +78,9 @@ struct shared_factory_impl {
   TFunc&& creation_func_;
   std::shared_ptr<T> object_;
   bool is_created_;
+#if BOOST_DI_THREAD_SAFE == true
+  std::mutex mutex_;
+#endif
 };
 
 template <class T, class TFunc>
