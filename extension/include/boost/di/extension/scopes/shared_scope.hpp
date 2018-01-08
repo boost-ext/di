@@ -10,12 +10,7 @@
 
 #include "boost/di.hpp"
 
-//<<by default shared scope is synchronized>>
-#if !defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
-#define BOOST_DI_THREAD_SAFE_EXTENTIONS true
-#endif
-
-#if defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
+#if BOOST_DI_THREAD_SAFE == true
 #include <mutex>
 #endif
 
@@ -29,7 +24,7 @@ class shared_scope {
    public:
     scope() noexcept = default;
 
-#if defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
+#if BOOST_DI_THREAD_SAFE == true
     //<<lock mutex so that move will be synchronized>>
     explicit scope(scope&& other) noexcept : scope(std::move(other), std::lock_guard<std::mutex>(other.mutex_)) {}
     //<<syncronized move constructor>>
@@ -46,7 +41,7 @@ class shared_scope {
     template <class, class, class TProvider>
     auto create(const TProvider& provider) {
       if (!object_) {
-#if defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
+#if BOOST_DI_THREAD_SAFE == true
         std::lock_guard<std::mutex> lock(mutex_);
         if (!object_)
 #endif
@@ -56,7 +51,7 @@ class shared_scope {
     }
 
    private:
-#if defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
+#if BOOST_DI_THREAD_SAFE == true
     std::mutex mutex_;
 #endif
     std::shared_ptr<T> object_;

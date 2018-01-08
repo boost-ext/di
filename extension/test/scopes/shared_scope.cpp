@@ -8,17 +8,6 @@
 
 #include <cassert>
 
-//<-
-//<<by default shared scope is synchronized>>
-#if !defined(BOOST_DI_THREAD_SAFE_EXTENTIONS)
-#define BOOST_DI_THREAD_SAFE_EXTENTIONS true
-#endif
-
-#if BOOST_DI_THREAD_SAFE_EXTENTIONS
-#include <mutex>
-#endif
-//->
-
 namespace di = boost::di;
 
 //<-
