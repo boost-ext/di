@@ -9,8 +9,8 @@
 #include <memory>
 
 #include "boost/di.hpp"
-#include "extensible_injector.hpp"
-#if BOOST_DI_THREAD_SAFE == true
+#include "boost/di/extension/injections/extensible_injector.hpp"
+#if !defined(BOOST_DI_NOT_THREAD_SAFE)
 #include <mutex>
 #endif
 
@@ -41,7 +41,7 @@ struct shared_factory_impl {
   shared_factory_impl(const shared_factory_impl& other)
       : creation_func_(std::move(other.creation_func_)), object_(other.object_), is_created_(other.is_created_) {}
 
-#if BOOST_DI_THREAD_SAFE == true
+#if !defined(BOOST_DI_NOT_THREAD_SAFE)
   //<<lock mutex so that move will be synchronized>>
   explicit shared_factory_impl(shared_factory_impl&& other) noexcept
       : shared_factory_impl(std::move(other), std::lock_guard<std::mutex>(other.mutex_)) {}
@@ -60,7 +60,7 @@ struct shared_factory_impl {
   template <class TInjector, class TDependency>
   auto operator()(const TInjector& const_injector, const TDependency&) {
     if (!is_created_) {
-#if BOOST_DI_THREAD_SAFE == true
+#if !defined(BOOST_DI_NOT_THREAD_SAFE)
       std::lock_guard<std::mutex> lock(mutex_);
       if (!is_created_)
 #endif
@@ -78,7 +78,7 @@ struct shared_factory_impl {
   TFunc&& creation_func_;
   std::shared_ptr<T> object_;
   bool is_created_;
-#if BOOST_DI_THREAD_SAFE == true
+#if !defined(BOOST_DI_NOT_THREAD_SAFE)
   std::mutex mutex_;
 #endif
 };

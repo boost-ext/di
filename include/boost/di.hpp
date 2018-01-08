@@ -20,9 +20,6 @@
 #if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)
 #define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1
 #endif
-#if !defined(BOOST_DI_THREAD_SAFE)
-#define BOOST_DI_THREAD_SAFE true
-#endif
 #if defined(BOOST_DI_CFG_FWD)
 BOOST_DI_CFG_FWD
 #endif
