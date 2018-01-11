@@ -46,9 +46,20 @@ class dependency_proxy
   TDependency& orig_dependency_;
 };
 
+template <class T>
+struct remove_any_of {
+  using type = T;
+};
+template <class T, class... Ts>
+struct remove_any_of<di::concepts::any_of<T, Ts...>> {
+  using type = T;
+};
+
 template <class TDependency, class TInjector>
 auto make_extensible_impl(const aux::type<TDependency>&, TInjector& injector) {
-  auto& dependency = core::binder::resolve<typename TDependency::expected, typename TDependency::name>(&injector);
+  auto& dependency =
+      core::binder::resolve<typename remove_any_of<typename TDependency::expected>::type, typename TDependency::name>(
+          &injector);
   return dependency_proxy<TDependency>{dependency};
 }
 
