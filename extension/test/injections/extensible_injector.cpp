@@ -43,7 +43,7 @@ int main() {
   // clang-format off
   auto orig_injector = di::make_injector(
       //<<bind interface to implementation1>>
-      di::bind<interface>().to<implementation1>().in(di::unique)
+      di::bind<interface, implementation1>().to<implementation1>().in(di::unique)
 
       //<<bind implementation3 to shared instance>>
       , di::bind<implementation3>().to(im3_orig));
