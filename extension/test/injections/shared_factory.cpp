@@ -10,12 +10,17 @@
 
 namespace di = boost::di;
 
-struct interface {
-  virtual ~interface() noexcept = default;
+struct interface1 {
+  virtual ~interface1() noexcept = default;
   virtual void dummy() = 0;
 };
 
-struct implementation : interface {
+struct interface2 {
+  virtual ~interface2() noexcept = default;
+  virtual void dummy() = 0;
+};
+
+struct implementation : interface1, interface2 {
   static auto& ctor_calls() {
     static auto calls = 0;
     return calls;
@@ -29,7 +34,7 @@ struct implementation : interface {
   void dummy() override {}
 };
 
-struct implementation_exception : interface {
+struct implementation_exception : interface1 {
 #if defined(__EXCEPTIONS)
   implementation_exception() { throw 0; }
 #endif
@@ -50,14 +55,14 @@ int main() {
         return inner_injector.template create<std::shared_ptr<implementation_exception>>();
       })),
       //<<bind factory interface to implementation>>
-      di::bind<implementation>().to(di::extension::shared_factory<implementation>([&](const auto& inner_injector)
+      di::bind<interface1, implementation>().to(di::extension::shared_factory<implementation>([&](const auto& inner_injector)
       {
         static int calls = 0;
         assert(1 == ++calls);
         //<<shouldn't be recursive call here>>
-        return inner_injector.template create<std::shared_ptr<implementation>>();
+		return inner_injector.template create<std::shared_ptr<implementation>>();
       })),
-      di::bind<interface>().to(di::extension::conditional_shared_factory<implementation>([&]()
+      di::bind<interface2>().to(di::extension::conditional_shared_factory<implementation>([&]()
       {
         static int calls = 0;
         assert(1 == ++calls);
@@ -67,7 +72,7 @@ int main() {
     // clang-format on
 
     //<<create `implementation` via `shared_factory`>>
-    auto i1 = injector.create<std::shared_ptr<implementation>>();
+    auto i1 = injector.create<std::shared_ptr<interface1>>();
     auto i2 = injector.create<std::shared_ptr<implementation>>();
     assert(i1);
     assert(i1 == i2);
@@ -75,7 +80,7 @@ int main() {
     assert(!implementation::dtor_calls());
 
     //<<create `interface` via `conditional_shared_factory`>>
-    auto i3 = injector.create<std::shared_ptr<interface>>();
+    auto i3 = injector.create<std::shared_ptr<interface2>>();
 
 //<<make sure that exception doesn't affect injector>>
 #if defined(__EXCEPTIONS)
@@ -88,7 +93,7 @@ int main() {
     assert(exception_thrown);
 #endif
 
-    auto i4 = injector.create<std::shared_ptr<interface>>();
+    auto i4 = injector.create<std::shared_ptr<interface2>>();
     assert(i3);
     assert(i3 == i4);
     assert(1 == implementation::ctor_calls());
