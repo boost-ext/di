@@ -70,10 +70,8 @@ inline auto build(TInjector&& injector) noexcept {
 #endif
 
 template <class TConfig __BOOST_DI_CORE_INJECTOR_POLICY(, class TPolicies = pool<>)(), class... TDeps>
-class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>) : injector_base, pool<bindings_t<TDeps...>> {
-  friend struct binder;
-  template <class>
-  friend struct pool;
+class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
+    : injector_base, public pool<bindings_t<TDeps...>> {
   using pool_t = pool<bindings_t<TDeps...>>;
 
  protected:
