@@ -2821,7 +2821,7 @@ template <class TConfig, class T, class... TGivens>
 struct injector<TConfig, int, core::dependency<scopes::instance, T, aux::type_list<TGivens...>>>
     : core::injector<TConfig, core::pool<>, core::dependency<scopes::instance, T, aux::type_list<TGivens...>>> {
   template <class... Ts>
-  injector(core::injector<Ts...>&& injector) noexcept
+  injector(core::injector<Ts...>&& injector)
       : core::injector<TConfig, core::pool<>, core::dependency<scopes::instance, T, aux::type_list<TGivens...>>>(
             static_cast<core::injector<Ts...>&&>(injector)) {
     using injector_t = core::injector<Ts...>;

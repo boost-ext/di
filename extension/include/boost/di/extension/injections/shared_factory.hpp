@@ -30,7 +30,7 @@ template <class T>
 struct injector_rebinder<T, T> {
   template <class TInjector>
   auto rebind(TInjector& injector) {
-    return make_injector(make_extensible(injector), bind<T>().in(unique)[override]);
+    return di::make_injector(di::injector<std::shared_ptr<T>>(make_extensible(injector)), di::bind<T>().in(di::unique)[di::override]);
   }
 };
 

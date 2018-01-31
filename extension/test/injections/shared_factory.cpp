@@ -44,7 +44,7 @@ int main() {
     //<<define injector>>
     // clang-format off
     auto injector = di::make_injector(
-	  di::bind<implementation_exception>().to(di::extension::shared_factory<implementation_exception>([&](const auto& inner_injector)
+	    di::bind<implementation_exception>().to(di::extension::shared_factory<implementation_exception>([&](const auto& inner_injector)
       {
         //<<throws an exception here>>
         return inner_injector.template create<std::shared_ptr<implementation_exception>>();
