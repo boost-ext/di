@@ -49,7 +49,7 @@ int main() {
     //<<define injector>>
     // clang-format off
     auto injector = di::make_injector(
-	  di::bind<implementation_exception>().to(di::extension::shared_factory<implementation_exception>([&](const auto& inner_injector)
+      di::bind<implementation_exception>().to(di::extension::shared_factory<implementation_exception>([&](const auto& inner_injector)
       {
         //<<throws an exception here>>
         return inner_injector.template create<std::shared_ptr<implementation_exception>>();
@@ -60,7 +60,7 @@ int main() {
         static int calls = 0;
         assert(1 == ++calls);
         //<<shouldn't be recursive call here>>
-		return inner_injector.template create<std::shared_ptr<implementation>>();
+        return inner_injector.template create<std::shared_ptr<implementation>>();
       })),
       di::bind<interface2>().to(di::extension::conditional_shared_factory<implementation>([&]()
       {
