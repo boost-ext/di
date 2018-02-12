@@ -17,16 +17,6 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-//<<rebind to avoid recursion>>
-template <class TExpected, class TGiven>
-struct injector_rebinder {
-  template <class TInjector>
-  auto rebind(TInjector& injector) {
-    using override_dep = core::dependency<scopes::unique, TExpected, TGiven, no_name, core::override>;
-    return make_injector(make_extensible(injector), override_dep{});
-  }
-};
-
 template <class T, class TFunc>
 struct shared_factory_impl {
   shared_factory_impl(TFunc&& creation_func) : creation_func_(std::move(creation_func)), is_created_(false) {}
@@ -60,7 +50,9 @@ struct shared_factory_impl {
       {
         is_created_ = true;
         auto& injector = const_cast<TInjector&>(const_injector);
-        const auto rebound_injector = injector_rebinder<typename TDependency::expected, T>{}.rebind(injector);
+        using override_dep = core::dependency<scopes::unique, typename TDependency::expected, T, no_name, core::override>;
+        //<<rebind to avoid recursion>>
+        const auto rebound_injector = make_injector(make_extensible(injector), override_dep{});
         object_ = creation_func_(rebound_injector);
       }
     }
