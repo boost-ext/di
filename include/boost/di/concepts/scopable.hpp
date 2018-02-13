@@ -56,6 +56,8 @@ struct provider__ {
   T* get(const TMemory& = {}) const {
     return nullptr;
   }
+
+  config& cfg() const;
 };
 
 template <class T>

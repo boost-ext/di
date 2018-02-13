@@ -612,9 +612,9 @@ If no scope will be given, [deduce] scope will be assumed.
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp)
-![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped_scope.cpp)
-![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session_scope.cpp)
-![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared_scope.cpp)
+![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp)
+![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp)
+![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp)
 
 <br /><br /><br /><hr />
 

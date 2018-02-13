@@ -7,12 +7,13 @@
 #pragma once
 
 #include <memory>
-
-#include "boost/di.hpp"
-
+#include <typeindex>
+#include <unordered_map>
 #if !defined(BOOST_DI_NOT_THREAD_SAFE)
 #include <mutex>
 #endif
+
+#include "boost/di.hpp"
 
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
@@ -39,8 +40,11 @@ class shared {
     static auto try_create(const TProvider& provider)
         -> decltype(wrappers::shared<shared, T>{std::shared_ptr<T>{provider.get()}});
 
+    /**
+     * `in(shared)` version
+     */
     template <class, class, class TProvider>
-    auto create(const TProvider& provider) {
+    wrappers::shared<shared, T> create(const TProvider& provider) & {
       if (!object_) {
 #if !defined(BOOST_DI_NOT_THREAD_SAFE)
         std::lock_guard<std::mutex> lock(mutex_);
@@ -51,16 +55,73 @@ class shared {
       return wrappers::shared<shared, T>{object_};
     }
 
+    /**
+     * Deduce scope version
+     */
+    template <class, class, class TProvider>
+    wrappers::shared<shared, T> create(const TProvider& provider) && {
+      auto& object = provider.cfg().template data<T>();
+      if (!object) {
+#if !defined(BOOST_DI_NOT_THREAD_SAFE)
+        std::lock_guard<std::mutex> lock(mutex_);
+        if (!object)
+#endif
+          object = std::shared_ptr<T>{provider.get()};
+      }
+      return wrappers::shared<shared, T>{std::static_pointer_cast<T>(object)};
+    }
+
    private:
 #if !defined(BOOST_DI_NOT_THREAD_SAFE)
     std::mutex mutex_;
 #endif
-    std::shared_ptr<T> object_;
+    std::shared_ptr<T> object_; /// used by `in(shared)`, otherwise destroyed immediately
   };
 };
 } // detail
 
 static constexpr detail::shared shared{};
+
+class shared_config : public di::config {
+  template<class T>
+  struct type { static void id() { } };
+  template<class T>
+  static auto type_id() { return reinterpret_cast<std::size_t>(&type<T>::id); }
+
+public:
+  template <class T>
+  struct scope_traits {
+    using type = typename di::config::scope_traits<T>::type;
+  };
+
+  template <class T>
+  struct scope_traits<T&> {
+    using type = detail::shared;
+  };
+
+  template <class T>
+  struct scope_traits<std::shared_ptr<T>> {
+    using type = detail::shared;
+  };
+
+  template <class T>
+  struct scope_traits<boost::shared_ptr<T>> {
+    using type = detail::shared;
+  };
+
+  template <class T>
+  struct scope_traits<std::weak_ptr<T>> {
+    using type = detail::shared;
+  };
+
+  template<class T>
+  auto& data() {
+    return data_[type_id<T>()];
+  }
+
+private:
+  std::unordered_map<std::size_t, std::shared_ptr<void>> data_{};
+};
 
 }  // extension
 BOOST_DI_NAMESPACE_END
