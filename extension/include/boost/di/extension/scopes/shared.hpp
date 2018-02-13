@@ -17,7 +17,8 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-class shared_scope {
+namespace detail {
+class shared {
  public:
   template <class, class T>
   class scope {
@@ -32,11 +33,11 @@ class shared_scope {
 #endif
 
     template <class T_>
-    using is_referable = typename wrappers::shared<shared_scope, T>::template is_referable<T_>;
+    using is_referable = typename wrappers::shared<shared, T>::template is_referable<T_>;
 
     template <class, class, class TProvider>
     static auto try_create(const TProvider& provider)
-        -> decltype(wrappers::shared<shared_scope, T>{std::shared_ptr<T>{provider.get()}});
+        -> decltype(wrappers::shared<shared, T>{std::shared_ptr<T>{provider.get()}});
 
     template <class, class, class TProvider>
     auto create(const TProvider& provider) {
@@ -47,7 +48,7 @@ class shared_scope {
 #endif
           object_ = std::shared_ptr<T>{provider.get()};
       }
-      return wrappers::shared<shared_scope, T>{object_};
+      return wrappers::shared<shared, T>{object_};
     }
 
    private:
@@ -57,8 +58,9 @@ class shared_scope {
     std::shared_ptr<T> object_;
   };
 };
+} // detail
 
-static constexpr shared_scope shared{};
+static constexpr detail::shared shared{};
 
 }  // extension
 BOOST_DI_NAMESPACE_END
