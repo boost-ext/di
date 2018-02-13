@@ -6,8 +6,11 @@
 //
 #include "boost/di/config.hpp"
 #include <type_traits>
+#include <memory>
+#include <type_traits>
 #include <utility>
 #include "common/fakes/fake_injector.hpp"
+#include "common/common.hpp"
 
 struct policy1 {
   template <class T>
@@ -27,4 +30,27 @@ test make_policies_types = [] {
 test default_config = [] {
   expect(std::is_same<providers::stack_over_heap, decltype(std::declval<config>().provider((fake_injector<>*)0))>{});
   expect(std::is_same<core::pool<aux::type_list<>>, decltype(std::declval<config>().policies((fake_injector<>*)0))>{});
+};
+
+struct c {};
+
+test traits = [] {
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<int>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<c>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<const int&>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<int*>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<const int*>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<std::shared_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<const std::shared_ptr<int>&>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<boost::shared_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<const boost::shared_ptr<int>&>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<std::weak_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<const std::weak_ptr<int>&>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<int&>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<std::unique_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<std::unique_ptr<int, deleter<int>>>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<std::shared_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::singleton, typename config::scope_traits<std::weak_ptr<int>>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<int&&>::type>{});
+  static_expect(std::is_same<scopes::unique, typename config::scope_traits<const int&&>::type>{});
 };

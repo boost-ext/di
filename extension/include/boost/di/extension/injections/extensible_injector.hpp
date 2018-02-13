@@ -32,8 +32,8 @@ class dependency_proxy : core::dependency_base,
  protected:
   using scope_t = typename scope::template scope<expected, given>;
 
-  template <class T>
-  using is_referable = typename scope_t::template is_referable<T>;
+  template <class T, class TConfig>
+  using is_referable = typename scope_t::template is_referable<T, TConfig>;
 
   template <class T, class Name, class TProvider>
   static decltype(scope_t::template try_create<T, Name>(aux::declval<TProvider>())) try_create(const TProvider&);

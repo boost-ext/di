@@ -29,6 +29,7 @@ struct try_provider;
 template <class T, class TInjector, class TProvider, class TInitialization, template <class...> class TList, class... TCtor>
 struct try_provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInjector, TProvider> {
   using injector_t = TInjector;
+  using config = typename injector_t::config;
 
   template <class>
   struct is_creatable {
@@ -50,6 +51,7 @@ template <class T, class TName, class TInjector, class TInitialization, template
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName, TInjector> {
   using provider_t = decltype(aux::declval<injector__<TInjector>>().cfg().provider((TInjector*)0));
   using injector_t = TInjector;
+  using config = typename injector_t::config;
 
   template <class, class... TArgs>
   struct is_creatable {
@@ -89,6 +91,7 @@ struct provider;
 template <class T, class TInjector, class TInitialization, template <class...> class TList, class... TCtor>
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInjector> {
   using injector_t = TInjector;
+  using config = typename injector_t::config;
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {

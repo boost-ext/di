@@ -42,6 +42,24 @@ test call_policy_lambda = [] {
   expect(1 == called);
 };
 
+class scope_traits_config : public di::config {
+ public:
+  template <class T>
+  struct scope_traits {
+    using type = typename di::config::scope_traits<T>::type;
+  };
+
+  template <class T>
+  struct scope_traits<std::shared_ptr<T>> {
+    using type = di::scopes::unique;
+  };
+};
+
+test call_policy_scope_traits = [] {
+  auto injector = di::make_injector<scope_traits_config>();
+  expect(injector.create<std::shared_ptr<int>>() != injector.create<std::shared_ptr<int>>());
+};
+
 class local_config_policy : public di::config {
  public:
   auto policies(...) noexcept {

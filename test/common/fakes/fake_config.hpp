@@ -9,9 +9,10 @@
 
 #include "boost/di/core/pool.hpp"
 #include "boost/di/providers/heap.hpp"
+#include "boost/di/config.hpp"
 
-template <class = void>
-struct fake_config {
+template <class T = void>
+struct fake_config : BOOST_DI_NAMESPACE::config {
   auto policies(...) noexcept { return core::pool<>{}; }
   auto provider(...) noexcept { return providers::heap{}; }
 };
