@@ -75,20 +75,24 @@ class shared {
 #if !defined(BOOST_DI_NOT_THREAD_SAFE)
     std::mutex mutex_;
 #endif
-    std::shared_ptr<T> object_; /// used by `in(shared)`, otherwise destroyed immediately
+    std::shared_ptr<T> object_;  /// used by `in(shared)`, otherwise destroyed immediately
   };
 };
-} // detail
+}  // detail
 
 static constexpr detail::shared shared{};
 
 class shared_config : public di::config {
-  template<class T>
-  struct type { static void id() { } };
-  template<class T>
-  static auto type_id() { return reinterpret_cast<std::size_t>(&type<T>::id); }
+  template <class T>
+  struct type {
+    static void id() {}
+  };
+  template <class T>
+  static auto type_id() {
+    return reinterpret_cast<std::size_t>(&type<T>::id);
+  }
 
-public:
+ public:
   template <class T>
   struct scope_traits {
     using type = typename di::config::scope_traits<T>::type;
@@ -114,12 +118,12 @@ public:
     using type = detail::shared;
   };
 
-  template<class T>
+  template <class T>
   auto& data() {
     return data_[type_id<T>()];
   }
 
-private:
+ private:
   std::unordered_map<std::size_t, std::shared_ptr<void>> data_{};
 };
 

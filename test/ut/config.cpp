@@ -5,12 +5,11 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/config.hpp"
-#include <type_traits>
 #include <memory>
 #include <type_traits>
 #include <utility>
-#include "common/fakes/fake_injector.hpp"
 #include "common/common.hpp"
+#include "common/fakes/fake_injector.hpp"
 
 struct policy1 {
   template <class T>

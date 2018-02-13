@@ -22,24 +22,24 @@ struct scope {
   struct requires_ : aux::false_type {};
 };
 
-template<class>
+template <class>
 struct scope__ {
-  template<class...>
+  template <class...>
   struct scope {
-    template<class...>
+    template <class...>
     using is_referable = aux::true_type;
 
-    template<class T, class, class TProvider>
+    template <class T, class, class TProvider>
     T try_create(const TProvider&);
 
-    template<class T, class, class TProvider>
+    template <class T, class, class TProvider>
     T create(const TProvider&);
   };
 };
 
-template<class>
+template <class>
 struct config__ {
-  template<class T>
+  template <class T>
   struct scope_traits {
     using type = scope__<T>;
   };

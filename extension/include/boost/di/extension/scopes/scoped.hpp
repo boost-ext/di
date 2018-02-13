@@ -29,8 +29,7 @@ class scoped {
     }
 
     template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<scoped, T_>{
-        std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    static decltype(wrappers::shared<scoped, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
     try_create(const TProvider &);
 
     template <class T_, class, class TProvider>
@@ -54,7 +53,7 @@ class scoped {
     std::shared_ptr<T> *object_ = nullptr;
   };
 };
-} // detail
+}  // detail
 
 static constexpr detail::scoped scoped{};
 
