@@ -36,7 +36,7 @@ aux::false_type configurable_impl(...);
 
 template <class T>
 auto configurable_impl(T &&)
-    -> aux::is_valid_expr<decltype(T::provider((injector<T>*)0)), decltype(T::policies((injector<T>*)0))>;
+    -> aux::is_valid_expr<decltype(aux::declval<T>().provider((injector<T>*)0)), decltype(aux::declval<T>().policies((injector<T>*)0))>;
 
 template <class T1, class T2>
 struct get_configurable_error : aux::type_list<T1, T2> {};
@@ -56,8 +56,8 @@ struct get_configurable_error<aux::true_type, aux::true_type> : aux::true_type {
 
 template <class T>
 auto is_configurable(const aux::true_type&) {
-  return typename get_configurable_error<decltype(providable<decltype(T::provider((injector<T>*)0))>()),
-                                         decltype(callable<decltype(T::policies((injector<T>*)0))>())>::type{};
+  return typename get_configurable_error<decltype(providable<decltype(aux::declval<T>().provider((injector<T>*)0))>()),
+                                         decltype(callable<decltype(aux::declval<T>().policies((injector<T>*)0))>())>::type{};
 }
 
 template <class T>
