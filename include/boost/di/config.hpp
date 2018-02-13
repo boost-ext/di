@@ -11,11 +11,10 @@
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/core/pool.hpp"
-#include "boost/di/providers/stack_over_heap.hpp"
 #include "boost/di/fwd.hpp"
+#include "boost/di/providers/stack_over_heap.hpp"
 #include "boost/di/scopes/singleton.hpp"
 #include "boost/di/scopes/unique.hpp"
-
 
 #if !defined(BOOST_DI_CFG)                       // __pph__
 #define BOOST_DI_CFG BOOST_DI_NAMESPACE::config  // __pph__

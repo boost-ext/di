@@ -252,7 +252,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   }
 
  private:
-  explicit injector(const from_deps&) noexcept { }
+  explicit injector(const from_deps&) noexcept {}
 
   template <class... TArgs>
   explicit injector(const from_deps&, TArgs... args) noexcept
@@ -283,9 +283,9 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using provider_t = core::provider<ctor_t, TName, injector>;
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
-    __BOOST_DI_CORE_INJECTOR_POLICY(
-        using ctor_args_t = typename ctor_t::second::second;
-        policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(((injector*)this)->cfg().policies(this));)
+    __BOOST_DI_CORE_INJECTOR_POLICY(using ctor_args_t = typename ctor_t::second::second;
+                                    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(
+                                        ((injector*)this)->cfg().policies(this));)
     () return wrapper<T, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }
@@ -300,9 +300,9 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using wrapper_t =
         decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, config, dependency__<dependency_t>>;
-    __BOOST_DI_CORE_INJECTOR_POLICY(
-        using ctor_args_t = typename ctor_t::second::second;
-        policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(((injector*)this)->cfg().policies(this));)
+    __BOOST_DI_CORE_INJECTOR_POLICY(using ctor_args_t = typename ctor_t::second::second;
+                                    policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(
+                                        ((injector*)this)->cfg().policies(this));)
     () return successful::wrapper<create_t, wrapper_t>{
         static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
   }

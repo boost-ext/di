@@ -16,11 +16,12 @@ class deduce {
   class scope {
    public:
     template <class T, class TConfig>
-    using is_referable = typename TConfig::template scope_traits<T>::type::template scope<TExpected, TGiven>::template is_referable<T, TConfig>;
+    using is_referable =
+        typename TConfig::template scope_traits<T>::type::template scope<TExpected, TGiven>::template is_referable<T, TConfig>;
 
     template <class T, class TName, class TProvider>
-    static decltype(typename TProvider::config::template scope_traits<T>::type::template scope<TExpected, TGiven>{}.template try_create<T, TName>(
-        aux::declval<TProvider>()))
+    static decltype(typename TProvider::config::template scope_traits<T>::type::template scope<TExpected, TGiven>{}
+                        .template try_create<T, TName>(aux::declval<TProvider>()))
     try_create(const TProvider&);
 
     template <class T, class TName, class TProvider>

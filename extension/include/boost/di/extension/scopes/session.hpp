@@ -59,7 +59,7 @@ class session {
     return is_in_session;
   }
 };
-} // detail
+}  // detail
 
 template <class TName, class TScope = scopes::singleton>
 auto session(const TName&, const TScope& = {}) {

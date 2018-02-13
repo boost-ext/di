@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 #include "boost/di/scopes/deduce.hpp"
-#include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_injector.hpp"
+#include "common/fakes/fake_provider.hpp"
 #include "common/fakes/fake_scope.hpp"
 
 namespace scopes {
@@ -20,7 +20,10 @@ struct fake_scope_config {
   };
 };
 
-test create = [] { expect(0 == static_cast<int>(deduce::scope<int, int>{}.create<int, no_name>(fake_provider<int, fake_injector<int>, fake_scope_config>{}))); };
+test create = [] {
+  expect(0 == static_cast<int>(
+                  deduce::scope<int, int>{}.create<int, no_name>(fake_provider<int, fake_injector<int>, fake_scope_config>{})));
+};
 
 test create_from_scope = [] {
   fake_scope<>::calls() = 0;

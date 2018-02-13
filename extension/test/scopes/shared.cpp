@@ -11,7 +11,7 @@
 namespace di = boost::di;
 
 //<-
-template<class...>
+template <class...>
 static auto& calls() {
   static auto i = 0;
   return i;
@@ -134,13 +134,13 @@ int main() {
     assert((calls<implementation3, ctor>() == 1));
     assert((calls<implementation3, dtor>() == 0));
 
-  } // injector dies
+  }  // injector dies
   assert((calls<implementation1, ctor>() == 2));
-  assert((calls<implementation1, dtor>() == 1)); // not destroyed
+  assert((calls<implementation1, dtor>() == 1));  // not destroyed
 
   assert((calls<implementation2, ctor>() == 2));
-  assert((calls<implementation2, dtor>() == 2)); // explicit scope destroyed with injector
+  assert((calls<implementation2, dtor>() == 2));  // explicit scope destroyed with injector
 
   assert((calls<implementation3, ctor>() == 1));
-  assert((calls<implementation3, dtor>() == 1)); // deduced scope destroyed with config/injector
+  assert((calls<implementation3, dtor>() == 1));  // deduced scope destroyed with config/injector
 }

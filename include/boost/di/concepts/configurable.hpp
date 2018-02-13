@@ -35,8 +35,8 @@ struct injector {
 aux::false_type configurable_impl(...);
 
 template <class T>
-auto configurable_impl(T &&)
-    -> aux::is_valid_expr<decltype(aux::declval<T>().provider((injector<T>*)0)), decltype(aux::declval<T>().policies((injector<T>*)0))>;
+auto configurable_impl(T &&) -> aux::is_valid_expr<decltype(aux::declval<T>().provider((injector<T>*)0)),
+                                                   decltype(aux::declval<T>().policies((injector<T>*)0))>;
 
 template <class T1, class T2>
 struct get_configurable_error : aux::type_list<T1, T2> {};

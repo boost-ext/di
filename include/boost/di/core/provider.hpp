@@ -99,8 +99,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
     return cfg().provider(injector_).template get<T>(
-        TInitialization{}, memory,
-        ((const injector__<TInjector>*)injector_)->create_successful_impl(aux::type<TCtor>{})...);
+        TInitialization{}, memory, ((const injector__<TInjector>*)injector_)->create_successful_impl(aux::type<TCtor>{})...);
   }
 
   auto& super() const { return *injector_; }
@@ -108,7 +107,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
 
   const TInjector* injector_;
 };
-} // successful
-} // core
+}  // successful
+}  // core
 
 #endif

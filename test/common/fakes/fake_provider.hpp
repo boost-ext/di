@@ -8,8 +8,8 @@
 #define BOOST_DI_FAKE_PROVIDER_HPP
 
 #include "boost/di/type_traits/memory_traits.hpp"
-#include "common/fakes/fake_injector.hpp"
 #include "common/fakes/fake_config.hpp"
+#include "common/fakes/fake_injector.hpp"
 
 template <class T = aux::none_type, class TInjector = fake_injector<T>, class TConfig = fake_config<>>
 struct fake_provider {
@@ -32,7 +32,7 @@ struct fake_provider {
   }
 
   auto& super() const { return *injector_; }
-  auto& cfg() const  { return injector_->cfg(); }
+  auto& cfg() const { return injector_->cfg(); }
 
   TInjector* injector_ = nullptr;
 };
