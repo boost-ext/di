@@ -106,10 +106,13 @@ class mocks_provider : public config {
  public:
   template <class TInjector>
   auto provider(const TInjector*) noexcept {
-    return mock_provider<TInjector>{expectations};
+    return mock_provider<TInjector>{expectations_};
   }
 
-  expectations expectations;
+  auto& expectations() { return expectations_; }
+
+ private:
+  class expectations expectations_;
 };
 
 template <class TInjector>
@@ -130,8 +133,8 @@ auto mocks_injector(TDeps... args) noexcept {
 }
 
 template <class TInjector, class R, class T, class... TArgs>
-expectations& expect(TInjector& injector, R (T::*)(TArgs...)) {
-  auto& expectations = ((di::core::injector__<TInjector>&)injector).cfg().expectations;
+auto& expect(TInjector& injector, R (T::*)(TArgs...)) {
+  auto& expectations = ((di::core::injector__<TInjector>&)injector).cfg().expectations();
   expectations.add(std::type_index(typeid(T)), [] {
     assert(false && "not implemented");
     return nullptr;
