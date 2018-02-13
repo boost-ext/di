@@ -12,8 +12,8 @@
 
 template <class = void>
 struct fake_config {
-  static auto policies(...) noexcept { return core::pool<>{}; }
-  static auto provider(...) noexcept { return providers::heap{}; }
+  auto policies(...) noexcept { return core::pool<>{}; }
+  auto provider(...) noexcept { return providers::heap{}; }
 };
 
 #endif

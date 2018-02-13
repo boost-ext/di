@@ -36,6 +36,30 @@ test call_policy_lambda = [] {
   auto injector = di::make_injector<config>();
   expect(0 == injector.create<int>());
   expect(1 == called);
+
+  called = 0;
+  expect(0 == injector.create<int>());
+  expect(1 == called);
+};
+
+class local_config_policy : public di::config {
+ public:
+  auto policies(...) noexcept {
+    return di::make_policies([this](auto) { called = ++called_; });
+  }
+
+  int called_{};
+};
+
+test local_config_storage_policy = [] {
+  called = 0;
+  auto injector = di::make_injector<local_config_policy>();
+  expect(0 == injector.create<int>());
+  expect(1 == called);
+
+  called = 0;
+  expect(0 == injector.create<int>());
+  expect(2 == called);
 };
 
 class config_provider : public di::config {

@@ -51,6 +51,11 @@ struct fake_injector : core::injector_base {
   auto create_successful_impl(const aux::type<named<TName, T>>&) const noexcept {
     return T{};
   }
+
+  config& cfg() { return config_; }
+
+ private:
+  config config_;
 };
 
 #endif

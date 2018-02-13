@@ -48,7 +48,7 @@ struct provider;
 
 template <class T, class TName, class TInjector, class TInitialization, template <class...> class TList, class... TCtor>
 struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName, TInjector> {
-  using provider_t = decltype(TInjector::config::provider((TInjector*)0));
+  using provider_t = decltype(aux::declval<injector__<TInjector>>().cfg().provider((TInjector*)0));
   using injector_t = TInjector;
 
   template <class, class... TArgs>
@@ -58,7 +58,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
-    return get_impl(memory, static_cast<const injector__<TInjector>*>(injector_)->create_impl(aux::type<TCtor>{})...);
+    return get_impl(memory, ((const injector__<TInjector>*)injector_)->create_impl(aux::type<TCtor>{})...);
   }
 
   template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(is_creatable<TMemory, TArgs...>::value) = 0>
@@ -67,7 +67,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
     (void)aux::conditional_t<injector__<TInjector>::template is_creatable<T>::value, _, creating<T>>{};
 #endif  // __pph__
 
-    return TInjector::config::provider(injector_).template get<T>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
+    return ((injector__<TInjector>*)injector_)->cfg().provider(injector_).template get<T>(TInitialization{}, memory, static_cast<TArgs&&>(args)...);
   }
 
   template <class TMemory, class... TArgs, __BOOST_DI_REQUIRES(!is_creatable<TMemory, TArgs...>::value) = 0>
@@ -83,7 +83,6 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
 };
 
 namespace successful {
-
 template <class, class>
 struct provider;
 
@@ -93,14 +92,14 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
 
   template <class TMemory = type_traits::heap>
   auto get(const TMemory& memory = {}) const {
-    return TInjector::config::provider(injector_).template get<T>(
+    return ((injector__<TInjector>*)injector_)->cfg().provider(injector_).template get<T>(
         TInitialization{}, memory,
-        static_cast<const injector__<TInjector>*>(injector_)->create_successful_impl(aux::type<TCtor>{})...);
+        ((const injector__<TInjector>*)injector_)->create_successful_impl(aux::type<TCtor>{})...);
   }
 
   const TInjector* injector_;
 };
-}
-}  // successful::core
+} // successful
+} // core
 
 #endif

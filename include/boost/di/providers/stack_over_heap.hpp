@@ -21,12 +21,12 @@ class stack_over_heap {
   };
 
   template <class T, class... TArgs>
-  auto get(const type_traits::direct&, const type_traits::heap&, TArgs&&... args) {
+  auto get(const type_traits::direct&, const type_traits::heap&, TArgs&&... args) const {
     return new T(static_cast<TArgs&&>(args)...);
   }
 
   template <class T, class... TArgs>
-  auto get(const type_traits::uniform&, const type_traits::heap&, TArgs&&... args) {
+  auto get(const type_traits::uniform&, const type_traits::heap&, TArgs&&... args) const {
     return new T{static_cast<TArgs&&>(args)...};
   }
 
