@@ -13,13 +13,14 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-class scoped_scope {
+namespace detail {
+class scoped {
  public:
   template <class, class T>
   class scope {
    public:
-    template <class T_>
-    using is_referable = typename wrappers::shared<scoped_scope, T>::template is_referable<T_>;
+    template <class T_, class>
+    using is_referable = typename wrappers::shared<scoped, T>::template is_referable<T_>;
 
     scope &operator=(scope &&other) noexcept {
       this->object_ = other.object_;
@@ -28,8 +29,7 @@ class scoped_scope {
     }
 
     template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<scoped_scope, T_>{
-        std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    static decltype(wrappers::shared<scoped, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
     try_create(const TProvider &);
 
     template <class T_, class, class TProvider>
@@ -47,14 +47,15 @@ class scoped_scope {
       if (!object_) {
         object_ = new std::shared_ptr<T>{provider.get()};
       }
-      return wrappers::shared<scoped_scope, T, std::shared_ptr<T> &>{*object_};
+      return wrappers::shared<scoped, T, std::shared_ptr<T> &>{*object_};
     }
 
     std::shared_ptr<T> *object_ = nullptr;
   };
 };
+}  // detail
 
-static constexpr scoped_scope scoped{};
+static constexpr detail::scoped scoped{};
 
 }  // extension
 BOOST_DI_NAMESPACE_END

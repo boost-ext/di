@@ -22,8 +22,33 @@ struct scope {
   struct requires_ : aux::false_type {};
 };
 
+template <class>
+struct scope__ {
+  template <class...>
+  struct scope {
+    template <class...>
+    using is_referable = aux::true_type;
+
+    template <class T, class, class TProvider>
+    T try_create(const TProvider&);
+
+    template <class T, class, class TProvider>
+    T create(const TProvider&);
+  };
+};
+
+template <class>
+struct config__ {
+  template <class T>
+  struct scope_traits {
+    using type = scope__<T>;
+  };
+};
+
 template <class T>
 struct provider__ {
+  using config = config__<T>;
+
   template <class TMemory = type_traits::heap>
   aux::conditional_t<aux::is_same<TMemory, type_traits::stack>::value, T, T*> try_get(const TMemory& = {}) const;
 
@@ -31,6 +56,8 @@ struct provider__ {
   T* get(const TMemory& = {}) const {
     return nullptr;
   }
+
+  config& cfg() const;
 };
 
 template <class T>
@@ -40,7 +67,7 @@ scopable_impl(...);
 
 template <class T>
 auto scopable_impl(T &&)
-    -> aux::is_valid_expr<typename T::template scope<_, _>::template is_referable<_>,
+    -> aux::is_valid_expr<typename T::template scope<_, _>::template is_referable<_, config__<_>>,
                           decltype(T::template scope<_, _>::template try_create<_, _>(provider__<_>{})),
                           decltype(aux::declval<typename T::template scope<_, _>>().template create<_, _>(provider__<_>{}))>;
 

@@ -8,10 +8,19 @@
 #define BOOST_DI_FAKE_PROVIDER_HPP
 
 #include "boost/di/type_traits/memory_traits.hpp"
+#include "common/fakes/fake_config.hpp"
 #include "common/fakes/fake_injector.hpp"
 
-template <class T = aux::none_type>
+template <class T = aux::none_type, class TInjector = fake_injector<T>, class TConfig = fake_config<>>
 struct fake_provider {
+  using injector = TInjector;
+  using config = TConfig;
+
+  static auto& provide_calls() {
+    static int calls = 0;
+    return calls;
+  }
+
   auto get(const type_traits::heap& = {}) const noexcept {
     ++provide_calls();
     return new T{};
@@ -22,13 +31,10 @@ struct fake_provider {
     return T{};
   }
 
-  static auto& provide_calls() {
-    static int calls = 0;
-    return calls;
-  }
+  auto& super() const { return *injector_; }
+  auto& cfg() const { return injector_->cfg(); }
 
-  fake_injector<T>* injector_ = nullptr;
-  using injector_t = fake_injector<T>;
+  TInjector* injector_ = nullptr;
 };
 
 #endif

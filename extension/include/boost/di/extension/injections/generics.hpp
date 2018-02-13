@@ -180,17 +180,13 @@ struct generics_provider {
     static constexpr auto value = true;
   };
 
-  template <class T, class TMemory, class... TArgs>
-  auto get(const di::type_traits::direct&, const TMemory&  // stack/heap
-           ,
-           TArgs&&... args) const {
+  template <class T, class TMemory /*stack/heap*/, class... TArgs>
+  auto get(const di::type_traits::direct&, const TMemory&, TArgs&&... args) const {
     return new T(generic_cast(args)...);
   }
 
-  template <class T, class TMemory, class... TArgs>
-  auto get(const di::type_traits::uniform&, const TMemory&  // stack/heap
-           ,
-           TArgs&&... args) const {
+  template <class T, class TMemory /*stack/heap*/, class... TArgs>
+  auto get(const di::type_traits::uniform&, const TMemory&, TArgs&&... args) const {
     return new T{generic_cast(args)...};
   }
 };

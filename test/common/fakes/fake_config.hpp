@@ -7,13 +7,14 @@
 #ifndef BOOST_DI_FAKE_CONFIG_HPP
 #define BOOST_DI_FAKE_CONFIG_HPP
 
+#include "boost/di/config.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/providers/heap.hpp"
 
-template <class = void>
-struct fake_config {
-  static auto policies(...) noexcept { return core::pool<>{}; }
-  static auto provider(...) noexcept { return providers::heap{}; }
+template <class T = void>
+struct fake_config : BOOST_DI_NAMESPACE::config {
+  auto policies(...) noexcept { return core::pool<>{}; }
+  auto provider(...) noexcept { return providers::heap{}; }
 };
 
 #endif

@@ -25,7 +25,7 @@ class singleton {
   template <class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
   class scope {
    public:
-    template <class T_>
+    template <class T_, class>
     using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
 
     template <class, class, class TProvider>
@@ -48,7 +48,7 @@ class singleton {
   template <class _, class T>
   class scope<_, T, aux::true_type> {
    public:
-    template <class T_>
+    template <class T_, class>
     using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
 
     template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
