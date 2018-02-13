@@ -13,8 +13,13 @@
 
 template <class T = aux::none_type, class TInjector = fake_injector<T>, class TConfig = fake_config<>>
 struct fake_provider {
-  using injector_t = TInjector;
+  using injector = TInjector;
   using config = TConfig;
+
+  static auto& provide_calls() {
+    static int calls = 0;
+    return calls;
+  }
 
   auto get(const type_traits::heap& = {}) const noexcept {
     ++provide_calls();
@@ -26,10 +31,8 @@ struct fake_provider {
     return T{};
   }
 
-  static auto& provide_calls() {
-    static int calls = 0;
-    return calls;
-  }
+  auto& super() const { return *injector_; }
+  auto& cfg() const  { return injector_->cfg(); }
 
   TInjector* injector_ = nullptr;
 };
