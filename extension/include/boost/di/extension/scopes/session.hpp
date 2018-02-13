@@ -31,8 +31,8 @@ class session {
     using scope_type = typename TScope::template scope<TExpected, TGiven>;
 
    public:
-    template <class T>
-    using is_referable = typename scope_type::template is_referable<T>;
+    template <class T, class TConfig>
+    using is_referable = typename scope_type::template is_referable<T, TConfig>;
 
     template <class T, class TName, class TProvider>
 #if defined(__MSVC__)

@@ -6,24 +6,25 @@
 //
 #include "boost/di/scopes/deduce.hpp"
 #include "common/fakes/fake_provider.hpp"
+#include "common/fakes/fake_injector.hpp"
 #include "common/fakes/fake_scope.hpp"
-
-struct c {};
-
-namespace type_traits {
-template <>
-struct scope_traits<c> {
-  using type = fake_scope<>;
-};
-}  // type_traits
 
 namespace scopes {
 
-test create = [] { expect(0 == static_cast<int>(deduce::scope<int, int>{}.create<int, no_name>(fake_provider<int>{}))); };
+struct c {};
+
+struct fake_scope_config {
+  template <class>
+  struct scope_traits {
+    using type = fake_scope<>;
+  };
+};
+
+test create = [] { expect(0 == static_cast<int>(deduce::scope<int, int>{}.create<int, no_name>(fake_provider<int, fake_injector<int>, fake_scope_config>{}))); };
 
 test create_from_scope = [] {
   fake_scope<>::calls() = 0;
-  c c_ = deduce::scope<c, c>{}.create<c, no_name>(fake_provider<c>{});
+  c c_ = deduce::scope<c, c>{}.create<c, no_name>(fake_provider<c, fake_injector<c>, fake_scope_config>{});
   (void)c_;
   expect(1 == fake_scope<>::calls());
 };

@@ -32,7 +32,7 @@ class shared {
     scope(scope&& other, const std::lock_guard<std::mutex>&) noexcept : object_(std::move(other.object_)) {}
 #endif
 
-    template <class T_>
+    template <class T_, class>
     using is_referable = typename wrappers::shared<shared, T>::template is_referable<T_>;
 
     template <class, class, class TProvider>

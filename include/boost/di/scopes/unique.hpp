@@ -17,7 +17,7 @@ class unique {
   template <class, class>
   class scope {
    public:
-    template <class>
+    template <class...>
     using is_referable = aux::false_type;
 
     template <class T, class, class TProvider>

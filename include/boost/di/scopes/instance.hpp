@@ -57,7 +57,7 @@ class instance {
  public:
   template <class, class TGiven, class = int>
   struct scope {
-    template <class>
+    template <class...>
     using is_referable = aux::false_type;
 
     explicit scope(const TGiven& object) : object_{object} {}
@@ -75,7 +75,7 @@ class instance {
 
   template <class TExpected, class TGiven>
   struct scope<TExpected, std::shared_ptr<TGiven>> {
-    template <class T>
+    template <class T, class>
     using is_referable = typename wrappers::shared<instance, TGiven>::template is_referable<aux::remove_qualifiers_t<T>>;
 
     explicit scope(const std::shared_ptr<TGiven>& object) : object_{object} {}
@@ -93,7 +93,7 @@ class instance {
 
   template <class TExpected, class TGiven>
   struct scope<TExpected, std::initializer_list<TGiven>> {
-    template <class>
+    template <class...>
     using is_referable = aux::false_type;
 
     scope(const std::initializer_list<TGiven>& object) : object_(object) {}
@@ -111,7 +111,7 @@ class instance {
 
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven&, __BOOST_DI_REQUIRES(!aux::is_callable<TGiven>::value)> {
-    template <class>
+    template <class...>
     using is_referable = aux::true_type;
 
     explicit scope(TGiven& object) : object_{object} {}
@@ -129,7 +129,7 @@ class instance {
 
   template <class TExpected, class TGiven>
   struct scope<TExpected, TGiven, __BOOST_DI_REQUIRES(aux::is_callable<TGiven>::value)> {
-    template <class>
+    template <class...>
     using is_referable =
         aux::integral_constant<bool, !aux::is_callable<TExpected>::value || !detail::has_result_type<TExpected>::value>;
 
@@ -268,7 +268,7 @@ class instance {
     };
 
    public:
-    template <class>
+    template <class...>
     using is_referable = aux::true_type;
 
     template <class TInjector, __BOOST_DI_REQUIRES(aux::is_a<core::injector_base, TInjector>::value) = 0>

@@ -19,7 +19,7 @@ class scoped {
   template <class, class T>
   class scope {
    public:
-    template <class T_>
+    template <class T_, class>
     using is_referable = typename wrappers::shared<scoped, T>::template is_referable<T_>;
 
     scope &operator=(scope &&other) noexcept {
