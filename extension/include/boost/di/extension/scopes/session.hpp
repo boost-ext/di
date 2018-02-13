@@ -13,8 +13,9 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
+namespace detail {
 template <class, class TScope>
-class session_scope {
+class session {
   class session_guard {
    public:
     explicit session_guard(bool& guard) : guard_(guard) { guard = true; }
@@ -58,10 +59,11 @@ class session_scope {
     return is_in_session;
   }
 };
+} // detail
 
 template <class TName, class TScope = scopes::singleton>
 auto session(const TName&, const TScope& = {}) {
-  return session_scope<TName, TScope>{};
+  return detail::session<TName, TScope>{};
 }
 
 }  // extension

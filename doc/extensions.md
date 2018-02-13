@@ -67,10 +67,10 @@
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp)
 
 ###Scoped Scope
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped_scope.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp)
 
 ###Session Scope
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session_scope.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp)
 
 ###Shared Scope
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared_scope.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp)
