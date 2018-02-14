@@ -2385,7 +2385,7 @@ namespace core {
 namespace successful {
 template <class T, class TWrapper>
 struct wrapper {
-  inline operator T() noexcept { return __BOOST_DI_TYPE_WKND(T) wrapper_; }
+  inline operator T() noexcept { return wrapper_; }
   TWrapper wrapper_;
 };
 }
