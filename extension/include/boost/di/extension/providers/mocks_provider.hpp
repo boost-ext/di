@@ -40,7 +40,7 @@ class mocks_provider : public config {
     template <class T>
     class mock {
      public:
-      explicit mock(const expectations& exp) : expectations_(exp) {}
+      explicit mock(const extension::expectations& exp) : expectations_(exp) {}
       virtual ~mock() noexcept = default;
 
       virtual int _1() {
@@ -54,7 +54,7 @@ class mocks_provider : public config {
       }
 
      private:
-      const expectations& expectations_;
+      const extension::expectations& expectations_;
     };
 
     template <class>
@@ -100,7 +100,7 @@ class mocks_provider : public config {
       static constexpr auto value = true;
     };
 
-    const expectations& expectations_;
+    const extension::expectations& expectations_;
   };
 
  public:
@@ -112,7 +112,7 @@ class mocks_provider : public config {
   auto& expectations() { return expectations_; }
 
  private:
-  class expectations expectations_;
+  extension::expectations expectations_;
 };
 
 template <class TInjector>
