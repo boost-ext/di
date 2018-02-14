@@ -1055,7 +1055,7 @@ int main() {
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp</a></li>
 </ul>
 <h3 id="scoped-scope">Scoped Scope</h3>
-<pre><code class="cpp">#include &quot;boost/di/extension/scopes/scoped_scope.hpp&quot;
+<pre><code class="cpp">#include &quot;boost/di/extension/scopes/scoped.hpp&quot;
 
 #include &lt;cassert&gt;
 
@@ -1099,10 +1099,10 @@ int main() {
 </code></pre>
 
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped_scope.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped_scope.cpp</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp</a></li>
 </ul>
 <h3 id="session-scope">Session Scope</h3>
-<pre><code class="cpp">#include &quot;boost/di/extension/scopes/session_scope.hpp&quot;
+<pre><code class="cpp">#include &quot;boost/di/extension/scopes/session.hpp&quot;
 
 #include &lt;cassert&gt;
 
@@ -1144,10 +1144,10 @@ int main() {
 </code></pre>
 
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session_scope.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session_scope.cpp</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp</a></li>
 </ul>
 <h3 id="shared-scope">Shared Scope</h3>
-<pre><code class="cpp">#include &quot;boost/di/extension/scopes/shared_scope.hpp&quot;
+<pre><code class="cpp">#include &quot;boost/di/extension/scopes/shared.hpp&quot;
 
 #include &lt;cassert&gt;
 
@@ -1169,7 +1169,7 @@ class example {
 
 int main() {
   {
-    auto injector = di::make_injector(
+    auto injector = di::make_injector&lt;di::extension::shared_config&gt;(
       di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared)  // di::unique will fail (sp1 == sp2)
     , di::bind&lt;interface1&gt;().to&lt;implementation2&gt;().named(name).in(di::extension::shared)
     );
@@ -1178,9 +1178,9 @@ int main() {
 
   {
     di::injector&lt;std::shared_ptr&lt;interface1&gt;&gt; injector =
-      di::make_injector(
+      di::make_injector&lt;di::extension::shared_config&gt;(
         di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared)
-      );
+    );
 
     injector.create&lt;std::shared_ptr&lt;interface1&gt;&gt;();
     // injector.create&lt;std::unique_ptr&lt;interface1&gt;&gt;(); // error, std::unique_ptr&lt;interface1&gt; is not exposed
@@ -1188,28 +1188,64 @@ int main() {
 
   {
     di::injector&lt;BOOST_DI_EXPOSE((named = name)std::shared_ptr&lt;interface1&gt;), std::shared_ptr&lt;interface1&gt;&gt; injector =
-        di::make_injector(
-          di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared).named(name)
-        , di::bind&lt;interface1&gt;().to&lt;implementation2&gt;().in(di::extension::shared).named(name)[di::override]
-        , di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared)
-        );
+        di::make_injector&lt;di::extension::shared_config&gt;(
+        di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared).named(name)
+      , di::bind&lt;interface1&gt;().to&lt;implementation2&gt;().in(di::extension::shared).named(name)[di::override]
+      , di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared)
+    );
 
     injector.create&lt;example&gt;();
   }
 
   {
-    auto injector1 = di::make_injector(di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared));
+    auto injector1 = di::make_injector&lt;di::extension::shared_config&gt;(di::bind&lt;interface1&gt;().to&lt;implementation1&gt;().in(di::extension::shared));
 
     auto i1 = injector1.create&lt;std::shared_ptr&lt;interface1&gt;&gt;();
-    auto injector2 = di::make_injector(std::move(injector1));
+    auto injector2 = di::make_injector&lt;di::extension::shared_config&gt;(std::move(injector1));
     // check whether shared scope was successfully moved
     assert(i1 == injector2.create&lt;std::shared_ptr&lt;interface1&gt;&gt;());
   }
+
+  calls&lt;implementation1, ctor&gt;() = 0;
+  calls&lt;implementation1, dtor&gt;() = 0;
+  calls&lt;implementation2, ctor&gt;() = 0;
+  calls&lt;implementation2, dtor&gt;() = 0;
+  calls&lt;implementation3, ctor&gt;() = 0;
+  calls&lt;implementation3, dtor&gt;() = 0;
+  {
+    const auto injector = di::make_injector&lt;di::extension::shared_config&gt;(
+       di::bind&lt;implementation1&gt;().in(di::singleton)          /// explicit singleton scope
+     , di::bind&lt;implementation2&gt;().in(di::extension::shared)  /// explicit shared scope
+     , di::bind&lt;interface1&gt;().to&lt;implementation3&gt;()           /// deduced shared scope
+    );
+
+    injector.create&lt;implementation1&gt;();
+    injector.create&lt;implementation2&gt;();
+    assert(dynamic_cast&lt;interface1*&gt;(injector.create&lt;std::shared_ptr&lt;interface1&gt;&gt;().get()));
+
+    assert((calls&lt;implementation1, ctor&gt;() == 2));
+    assert((calls&lt;implementation1, dtor&gt;() == 1));
+
+    assert((calls&lt;implementation2, ctor&gt;() == 2));
+    assert((calls&lt;implementation2, dtor&gt;() == 1));
+
+    assert((calls&lt;implementation3, ctor&gt;() == 1));
+    assert((calls&lt;implementation3, dtor&gt;() == 0));
+
+  }  // injector dies
+  assert((calls&lt;implementation1, ctor&gt;() == 2));
+  assert((calls&lt;implementation1, dtor&gt;() == 1));  // not destroyed
+
+  assert((calls&lt;implementation2, ctor&gt;() == 2));
+  assert((calls&lt;implementation2, dtor&gt;() == 2));  // explicit scope destroyed with injector
+
+  assert((calls&lt;implementation3, ctor&gt;() == 1));
+  assert((calls&lt;implementation3, dtor&gt;() == 1));  // deduced scope destroyed with config/injector
 }
 </code></pre>
 
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared_scope.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared_scope.cpp</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp</a></li>
 </ul>
 </div>
 

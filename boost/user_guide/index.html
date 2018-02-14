@@ -1404,7 +1404,7 @@ struct scope {
 struct custom_scope {
   template &lt;class TExpected, class&gt;
   struct scope {
-    template &lt;class&gt;
+    template &lt;class...&gt;
     using is_referable = std::false_type;
 
     template &lt;class T, class, class TProvider&gt;
@@ -1428,9 +1428,9 @@ int main() {
 <p><strong><em>Example</em></strong></p>
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp"> Custom Scope Example</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped_scope.cpp"> Scoped Scope Extension</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session_scope.cpp"> Session Scope Extension</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared_scope.cpp"> Shared Scope Extension</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp"> Scoped Scope Extension</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp"> Session Scope Extension</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp"> Shared Scope Extension</a></li>
 </ul>
 <p><br /><br /><br /><hr /></p>
 <p><a id="di_deduce"></a>
