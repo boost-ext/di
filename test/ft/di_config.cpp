@@ -84,7 +84,7 @@ class config_provider : public di::config {
  public:
   static auto provider(...) noexcept {
     ++called;
-    return di::providers::heap{};
+    return di::providers::stack_over_heap{};
   }
 };
 

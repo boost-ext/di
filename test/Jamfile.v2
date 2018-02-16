@@ -72,7 +72,6 @@ test-suite ut :
     [ test ut/core/provider.cpp ]
     [ test ut/core/wrapper.cpp ]
     [ test ut/policies/constructible.cpp ]
-    [ test ut/providers/heap.cpp ]
     [ test ut/providers/stack_over_heap.cpp ]
     [ test ut/scopes/deduce.cpp ]
     [ test ut/scopes/instance.cpp ]

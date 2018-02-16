@@ -4,13 +4,12 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_PROVIDERS_HEAP_HPP
-#define BOOST_DI_PROVIDERS_HEAP_HPP
+#pragma once
 
-#include "boost/di/concepts/creatable.hpp"
-#include "boost/di/type_traits/ctor_traits.hpp"
+#include "boost/di.hpp"
 
-namespace providers {
+BOOST_DI_NAMESPACE_BEGIN
+namespace extension {
 
 class heap {
  public:
@@ -30,6 +29,5 @@ class heap {
   }
 };
 
-}  // providers
-
-#endif
+}  // extension
+BOOST_DI_NAMESPACE_END

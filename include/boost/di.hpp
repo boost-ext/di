@@ -3042,23 +3042,6 @@ inline auto constructible(const T& = {}) {
   return constructible_impl<IncludeRoot, detail::or_<T>>{};
 }
 }
-namespace providers {
-class heap {
- public:
-  template <class TInitialization, class T, class... TArgs>
-  struct is_creatable {
-    static constexpr auto value = concepts::creatable<TInitialization, T, TArgs...>::value;
-  };
-  template <class T, class TMemory, class... TArgs>
-  auto get(const type_traits::direct&, const TMemory&, TArgs&&... args) const {
-    return new T(static_cast<TArgs&&>(args)...);
-  }
-  template <class T, class TMemory, class... TArgs>
-  auto get(const type_traits::uniform&, const TMemory&, TArgs&&... args) const {
-    return new T{static_cast<TArgs&&>(args)...};
-  }
-};
-}
 #define __BOOST_DI_IF(cond, t, f) __BOOST_DI_IF_I(cond, t, f)
 #define __BOOST_DI_REPEAT(i, m, ...) __BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
 #define __BOOST_DI_CAT(a, ...) __BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)

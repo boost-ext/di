@@ -12,6 +12,7 @@
 * [Serialize](#serialize)
 * [Types Dumper](#types-dumper)
 * [UML Dumper](#uml-dumper)
+* [Heap Provider](#heap-provider)
 * [Mocks Provider](#mocks-provider)
 * [Scoped Scope](#scoped-scope)
 * [Session Scope](#session-scope)
@@ -62,6 +63,9 @@
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 [![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
+
+###Heap Provider
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/heap.cpp)
 
 ###Mocks Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp)
