@@ -43,6 +43,11 @@ struct config__ {
   struct scope_traits {
     using type = scope__<T>;
   };
+
+  template <class T>
+  struct memory_traits {
+    using type = type_traits::heap;
+  };
 };
 
 template <class T>

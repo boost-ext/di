@@ -679,8 +679,6 @@ template <class T>
 struct memory_traits<T, __BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
   using type = heap;
 };
-template <class T>
-using memory_traits_t = typename memory_traits<T>::type;
 }
 namespace wrappers {
 template <class TScope, class T, class TObject = std::shared_ptr<T>>
@@ -833,12 +831,13 @@ class unique {
     template <class...>
     using is_referable = aux::false_type;
     template <class T, class, class TProvider>
-    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(
+                                                 typename TProvider::config::template memory_traits<T>::type{}))>{
+        aux::declval<TProvider>().get(typename TProvider::config::template memory_traits<T>::type{})})
     try_create(const TProvider&);
     template <class T, class, class TProvider>
     auto create(const TProvider& provider) const {
-      using memory = type_traits::memory_traits_t<T>;
+      using memory = typename TProvider::config::template memory_traits<T>::type;
       using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
       return wrapper{provider.get(memory{})};
     }
@@ -1045,6 +1044,10 @@ struct config__ {
   template <class T>
   struct scope_traits {
     using type = scope__<T>;
+  };
+  template <class T>
+  struct memory_traits {
+    using type = type_traits::heap;
   };
 };
 template <class T>
@@ -1887,6 +1890,8 @@ struct config {
   }
   template <class T>
   using scope_traits = type_traits::scope_traits<T>;
+  template <class T>
+  using memory_traits = type_traits::memory_traits<T>;
 };
 namespace detail {
 template <class...>
