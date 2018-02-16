@@ -19,6 +19,9 @@ struct i {
   virtual ~i() noexcept = default;
 };
 
+template <class T>
+using memory_traits_t = typename memory_traits<T>::type;
+
 test traits = [] {
   static_expect(std::is_same<stack, memory_traits_t<int>>{});
   static_expect(std::is_same<stack, memory_traits_t<c>>{});

@@ -60,6 +60,53 @@ test call_policy_scope_traits = [] {
   expect(injector.create<std::shared_ptr<int>>() != injector.create<std::shared_ptr<int>>());
 };
 
+class new_call;
+class del_call;
+
+struct on_heap {
+  template<class>
+  static auto& calls() {
+    static auto i = 0;
+    return i;
+  }
+
+  void *operator new(size_t size) {
+    ++calls<new_call>();
+    return ::operator new(size);
+  }
+
+  void operator delete(void *ptr) {
+    ++calls<del_call>();
+    ::operator delete(ptr);
+  }
+};
+
+class memory_traits_config : public di::config {
+ public:
+  template <class T>
+  struct memory_traits {
+    using type = di::type_traits::heap;
+  };
+};
+
+test call_policy_default_memory_traits = [] {
+  auto injector = di::make_injector();
+  expect(0 == on_heap::calls<new_call>());
+  expect(0 == on_heap::calls<del_call>());
+  injector.create<on_heap>();
+  expect(0 == on_heap::calls<new_call>());
+  expect(0 == on_heap::calls<del_call>());
+};
+
+test call_policy_memory_traits = [] {
+  auto injector = di::make_injector<memory_traits_config>();
+  expect(0 == on_heap::calls<new_call>());
+  expect(0 == on_heap::calls<del_call>());
+  injector.create<on_heap>();
+  expect(1 == on_heap::calls<new_call>());
+  expect(1 == on_heap::calls<del_call>());
+};
+
 class local_config_policy : public di::config {
  public:
   auto policies(...) noexcept {

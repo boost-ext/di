@@ -55,9 +55,6 @@ struct memory_traits<T, __BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
   using type = heap;
 };
 
-template <class T>
-using memory_traits_t = typename memory_traits<T>::type;
-
 }  // type_traits
 
 #endif

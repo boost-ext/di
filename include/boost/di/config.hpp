@@ -10,6 +10,7 @@
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
 #include "boost/di/type_traits/scope_traits.hpp"
+#include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/fwd.hpp"
@@ -37,6 +38,9 @@ struct config {
 
   template <class T>
   using scope_traits = type_traits::scope_traits<T>;
+
+  template <class T>
+  using memory_traits = type_traits::memory_traits<T>;
 };
 
 #endif

@@ -7,7 +7,6 @@
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
-#include "boost/di/type_traits/memory_traits.hpp"
 #include "boost/di/wrappers/unique.hpp"
 
 namespace scopes {
@@ -21,13 +20,13 @@ class unique {
     using is_referable = aux::false_type;
 
     template <class T, class, class TProvider>
-    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(typename TProvider::config::template memory_traits<T>::type{}))>{
+        aux::declval<TProvider>().get(typename TProvider::config::template memory_traits<T>::type{})})
     try_create(const TProvider&);
 
     template <class T, class, class TProvider>
     auto create(const TProvider& provider) const {
-      using memory = type_traits::memory_traits_t<T>;
+      using memory = typename TProvider::config::template memory_traits<T>::type;
       using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
       return wrapper{provider.get(memory{})};
     }
