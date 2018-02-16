@@ -9,12 +9,11 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/type_traits/scope_traits.hpp"
 #include "boost/di/concepts/callable.hpp"
 #include "boost/di/core/pool.hpp"
 #include "boost/di/fwd.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
-#include "boost/di/scopes/singleton.hpp"
-#include "boost/di/scopes/unique.hpp"
 
 #if !defined(BOOST_DI_CFG)                       // __pph__
 #define BOOST_DI_CFG BOOST_DI_NAMESPACE::config  // __pph__
@@ -37,29 +36,7 @@ struct config {
   }
 
   template <class T>
-  struct scope_traits {
-    using type = scopes::unique;
-  };
-
-  template <class T>
-  struct scope_traits<T&> {
-    using type = scopes::singleton;
-  };
-
-  template <class T>
-  struct scope_traits<std::shared_ptr<T>> {
-    using type = scopes::singleton;
-  };
-
-  template <class T>
-  struct scope_traits<boost::shared_ptr<T>> {
-    using type = scopes::singleton;
-  };
-
-  template <class T>
-  struct scope_traits<std::weak_ptr<T>> {
-    using type = scopes::singleton;
-  };
+  using scope_traits = type_traits::scope_traits<T>;
 };
 
 #endif
