@@ -357,6 +357,13 @@ struct unique<type<Rs...>> : type_list<Rs...> {};
 template <class... Ts>
 using unique_t = typename unique<type<>, Ts...>::type;
 
+false_type has_shared_ptr__(...);
+
+#if !defined(BOOST_DI_DISABLE_SHARED_PTR_DEDUCTION)  // __pph__
+template <class T>
+auto has_shared_ptr__(T &&) -> is_valid_expr<decltype(std::shared_ptr<T>{})>;
+#endif  // __pph__
+
 __BOOST_DI_HAS_METHOD(is_invocable, operator());
 
 struct callable_base_impl {
