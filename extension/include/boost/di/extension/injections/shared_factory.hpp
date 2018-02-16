@@ -28,7 +28,7 @@ struct shared_factory_impl {
   //<<lock mutex so that move will be synchronized>>
   explicit shared_factory_impl(shared_factory_impl&& other) noexcept
       : shared_factory_impl(std::move(other), std::lock_guard<std::mutex>(other.mutex_)) {}
-  //<<syncronized move constructor>>
+  //<<synchronized move constructor>>
   shared_factory_impl(shared_factory_impl&& other, const std::lock_guard<std::mutex>&) noexcept
       : creation_func_(std::move(other.creation_func_)), object_(std::move(other.object_)), is_created_(other.is_created_) {}
 #else
