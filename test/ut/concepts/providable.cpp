@@ -66,8 +66,6 @@ test wrong_get = [] {
       std::is_same<provider<provider_wrong_get>::requires_<get, is_creatable>, providable<provider_wrong_get>>::value);
 };
 
-test providable_providers = [] {
-  static_expect(providable<providers::stack_over_heap>::value);
-};
+test providable_providers = [] { static_expect(providable<providers::stack_over_heap>::value); };
 
 }  // concepts

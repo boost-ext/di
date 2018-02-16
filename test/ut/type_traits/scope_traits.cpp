@@ -13,7 +13,7 @@ namespace type_traits {
 
 struct c {};
 
-template<class T>
+template <class T>
 using scope_traits_t = typename scope_traits<T>::type;
 
 test traits = [] {

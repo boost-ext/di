@@ -6,8 +6,8 @@
 //
 #include "boost/di/extension/providers/heap.hpp"
 
-#include <memory>
 #include <cassert>
+#include <memory>
 
 namespace di = boost::di;
 
@@ -15,8 +15,8 @@ class new_call;
 class del_call;
 
 struct example {
-  template<class>
-  static auto& calls() {
+  template <class>
+  static auto &calls() {
     static auto i = 0;
     return i;
   }
