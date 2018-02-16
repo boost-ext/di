@@ -64,18 +64,18 @@ class new_call;
 class del_call;
 
 struct on_heap {
-  template<class>
+  template <class>
   static auto& calls() {
     static auto i = 0;
     return i;
   }
 
-  void *operator new(size_t size) {
+  void* operator new(size_t size) {
     ++calls<new_call>();
     return ::operator new(size);
   }
 
-  void operator delete(void *ptr) {
+  void operator delete(void* ptr) {
     ++calls<del_call>();
     ::operator delete(ptr);
   }

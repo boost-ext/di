@@ -20,7 +20,8 @@ class unique {
     using is_referable = aux::false_type;
 
     template <class T, class, class TProvider>
-    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(typename TProvider::config::template memory_traits<T>::type{}))>{
+    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(
+                                                 typename TProvider::config::template memory_traits<T>::type{}))>{
         aux::declval<TProvider>().get(typename TProvider::config::template memory_traits<T>::type{})})
     try_create(const TProvider&);
 
