@@ -53,6 +53,7 @@ test-suite tests :
     [ test test/policies/serialize.cpp ]
     [ test test/policies/types_dumper.cpp ]
     [ test test/policies/uml_dumper.cpp ]
+    [ test test/providers/heap.cpp ]
     [ test test/providers/mocks_provider.cpp ]
     [ test test/scopes/scoped.cpp ]
     [ test test/scopes/session.cpp ]

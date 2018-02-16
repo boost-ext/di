@@ -8,7 +8,7 @@
 #include <type_traits>
 #include "boost/di/aux_/compiler.hpp"
 #include "boost/di/config.hpp"
-#include "boost/di/providers/heap.hpp"
+#include "boost/di/providers/stack_over_heap.hpp"
 
 namespace concepts {
 
@@ -31,7 +31,7 @@ test just_policies = [] {
 
 class config_just_provider {
  public:
-  static auto provider(...) noexcept { return providers::heap{}; }
+  static auto provider(...) noexcept { return providers::stack_over_heap{}; }
 };
 
 test just_provider = [] {
@@ -43,7 +43,7 @@ test just_provider = [] {
 class config_private_access {
  private:
   static auto policies(...) noexcept { return make_policies(); }
-  static auto provider(...) noexcept { return providers::heap{}; }
+  static auto provider(...) noexcept { return providers::stack_over_heap{}; }
 };
 
 #if !defined(__MSVC__)
@@ -57,7 +57,7 @@ test private_access = [] {
 class config_inheritance_impl {
  public:
   static auto policies(...) noexcept { return make_policies(); }
-  static auto provider(...) noexcept { return providers::heap{}; }
+  static auto provider(...) noexcept { return providers::stack_over_heap{}; }
 };
 
 class config_inheritance : public config_inheritance_impl {};
@@ -67,7 +67,7 @@ test inheritance = [] { static_expect(configurable<config_inheritance>::value); 
 class config_okay {
  public:
   static auto policies(...) noexcept { return make_policies(); }
-  static auto provider(...) noexcept { return providers::heap{}; }
+  static auto provider(...) noexcept { return providers::stack_over_heap{}; }
 };
 
 test okay = [] { static_expect(configurable<config_okay>::value); };
@@ -81,7 +81,7 @@ class config_okay_type {
 
   template <class T>
   static auto provider(const T&) noexcept {
-    return providers::heap{};
+    return providers::stack_over_heap{};
   }
 };
 

@@ -129,7 +129,6 @@ test-suite user_guide :
     [ example user_guide/policies_constructible_local.cpp ]
     [ example user_guide/policies_print_type_extended.cpp ]
     [ example user_guide/policies_print_types.cpp ]
-    [ example user_guide/providers_heap.cpp ]
     [ example user_guide/providers_heap_no_throw.cpp ]
     [ example user_guide/providers_stack_over_heap.cpp ]
     [ example user_guide/scopes_custom.cpp ]

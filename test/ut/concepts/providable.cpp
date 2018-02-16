@@ -7,7 +7,6 @@
 #include "boost/di/concepts/providable.hpp"
 #include <type_traits>
 #include "boost/di/aux_/compiler.hpp"
-#include "boost/di/providers/heap.hpp"
 #include "boost/di/providers/stack_over_heap.hpp"
 
 namespace concepts {
@@ -68,7 +67,6 @@ test wrong_get = [] {
 };
 
 test providable_providers = [] {
-  static_expect(providable<providers::heap>::value);
   static_expect(providable<providers::stack_over_heap>::value);
 };
 
