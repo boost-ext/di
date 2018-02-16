@@ -644,6 +644,229 @@ struct function_traits<R (T::*)(TArgs...) const> {
 template <class T>
 using function_traits_t = typename function_traits<T>::args;
 }
+namespace type_traits {
+struct stack {};
+struct heap {};
+template <class T, class = int>
+struct memory_traits {
+  using type = stack;
+};
+template <class T>
+struct memory_traits<T*> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<const T&> {
+  using type = typename memory_traits<T>::type;
+};
+template <class T, class TDeleter>
+struct memory_traits<std::unique_ptr<T, TDeleter>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<std::shared_ptr<T>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<boost::shared_ptr<T>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<std::weak_ptr<T>> {
+  using type = heap;
+};
+template <class T>
+struct memory_traits<T, __BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
+  using type = heap;
+};
+template <class T>
+using memory_traits_t = typename memory_traits<T>::type;
+}
+namespace wrappers {
+template <class TScope, class T, class TObject = std::shared_ptr<T>>
+struct shared {
+  using scope = TScope;
+  template <class>
+  struct is_referable_impl : aux::true_type {};
+  template <class I>
+  struct is_referable_impl<std::shared_ptr<I>> : aux::is_same<I, T> {};
+  template <class I>
+  struct is_referable_impl<boost::shared_ptr<I>> : aux::false_type {};
+  template <class T_>
+  using is_referable = is_referable_impl<aux::remove_qualifiers_t<T_>>;
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator std::shared_ptr<I>() const noexcept {
+    return object;
+  }
+  inline operator std::shared_ptr<T>&() noexcept { return object; }
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator boost::shared_ptr<I>() const noexcept {
+    struct sp_holder {
+      std::shared_ptr<T> object;
+      void operator()(...) noexcept { object.reset(); }
+    };
+    return {object.get(), sp_holder{object}};
+  }
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator std::weak_ptr<I>() const noexcept {
+    return object;
+  }
+  inline operator T&() noexcept { return *object; }
+  inline operator const T&() const noexcept { return *object; }
+  TObject object;
+};
+template <class TScope, class T>
+struct shared<TScope, T&> {
+  using scope = TScope;
+  template <class>
+  struct is_referable : aux::true_type {};
+  explicit shared(T& object) : object(&object) {}
+  template <class I>
+  explicit shared(I);
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  inline operator I() const noexcept {
+    return *object;
+  }
+  inline operator T&() const noexcept { return *object; }
+  T* object = nullptr;
+};
+}
+namespace scopes {
+class singleton {
+ public:
+  template <class, class T, class = decltype(aux::has_shared_ptr__(aux::declval<T>()))>
+  class scope {
+   public:
+    template <class T_, class>
+    using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
+    template <class, class, class TProvider>
+    static decltype(wrappers::shared<singleton, T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
+        const TProvider&);
+    template <class, class, class TProvider>
+    auto create(const TProvider& provider) {
+      return create_impl(provider);
+    }
+
+   private:
+    template <class TProvider>
+    wrappers::shared<singleton, T&> create_impl(const TProvider& provider) {
+      static auto object(provider.get(type_traits::stack{}));
+      return wrappers::shared<singleton, T&>(object);
+    }
+  };
+  template <class _, class T>
+  class scope<_, T, aux::true_type> {
+   public:
+    template <class T_, class>
+    using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
+    template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
+    static decltype(wrappers::shared<singleton, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
+    try_create(const TProvider&);
+    template <class, class, class TProvider>
+    auto create(const TProvider& provider) {
+      return create_impl<aux::decay_t<decltype(provider.get())>>(provider);
+    }
+
+   private:
+    template <class T_, class TProvider>
+    auto create_impl(const TProvider& provider) {
+      static std::shared_ptr<T_> object{provider.get()};
+      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
+    }
+  };
+};
+}
+namespace wrappers {
+template <class TScope, class T>
+struct unique {
+  using scope = TScope;
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  inline operator I() const noexcept {
+    return object;
+  }
+  inline operator T &&() noexcept { return static_cast<T&&>(object); }
+  T object;
+};
+template <class TScope, class T>
+struct unique<TScope, T*> {
+  using scope = TScope;
+#if defined(__MSVC__)
+  explicit unique(T* object) : object(object) {}
+#endif
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
+  inline operator I() const noexcept {
+    struct scoped_ptr {
+      aux::owner<T*> ptr;
+      ~scoped_ptr() noexcept { delete ptr; }
+    };
+    return *scoped_ptr{object}.ptr;
+  }
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator aux::owner<I*>() const noexcept {
+    return object;
+  }
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
+  inline operator aux::owner<const I*>() const noexcept {
+    return object;
+  }
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator std::shared_ptr<I>() const noexcept {
+    return std::shared_ptr<I>{object};
+  }
+  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator boost::shared_ptr<I>() const noexcept {
+    return boost::shared_ptr<I>{object};
+  }
+  template <class I, class D, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
+  inline operator std::unique_ptr<I, D>() const noexcept {
+    return std::unique_ptr<I, D>{object};
+  }
+  T* object = nullptr;
+};
+}
+namespace scopes {
+class unique {
+ public:
+  template <class, class>
+  class scope {
+   public:
+    template <class...>
+    using is_referable = aux::false_type;
+    template <class T, class, class TProvider>
+    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
+        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
+    try_create(const TProvider&);
+    template <class T, class, class TProvider>
+    auto create(const TProvider& provider) const {
+      using memory = type_traits::memory_traits_t<T>;
+      using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
+      return wrapper{provider.get(memory{})};
+    }
+  };
+};
+}
+namespace type_traits {
+template <class T>
+struct scope_traits {
+  using type = scopes::unique;
+};
+template <class T>
+struct scope_traits<T&> {
+  using type = scopes::singleton;
+};
+template <class T>
+struct scope_traits<std::shared_ptr<T>> {
+  using type = scopes::singleton;
+};
+template <class T>
+struct scope_traits<boost::shared_ptr<T>> {
+  using type = scopes::singleton;
+};
+template <class T>
+struct scope_traits<std::weak_ptr<T>> {
+  using type = scopes::singleton;
+};
+}
 namespace core {
 template <class T, class = typename aux::is_a<injector_base, T>::type>
 struct bindings_impl;
@@ -795,44 +1018,6 @@ struct boundable__ {
 };
 template <class... Ts>
 using boundable = typename boundable__<Ts...>::type;
-}
-namespace type_traits {
-struct stack {};
-struct heap {};
-template <class T, class = int>
-struct memory_traits {
-  using type = stack;
-};
-template <class T>
-struct memory_traits<T*> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<const T&> {
-  using type = typename memory_traits<T>::type;
-};
-template <class T, class TDeleter>
-struct memory_traits<std::unique_ptr<T, TDeleter>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<std::shared_ptr<T>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<boost::shared_ptr<T>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<std::weak_ptr<T>> {
-  using type = heap;
-};
-template <class T>
-struct memory_traits<T, __BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
-  using type = heap;
-};
-template <class T>
-using memory_traits_t = typename memory_traits<T>::type;
 }
 namespace concepts {
 template <class...>
@@ -1231,103 +1416,6 @@ template <class TInitialization, class TName, class T, class... TArgs>
 T creatable_error() {
   return creatable_error_impl<TInitialization, TName, T, aux::type_list<TArgs...>>{};
 }
-}
-namespace wrappers {
-template <class TScope, class T, class TObject = std::shared_ptr<T>>
-struct shared {
-  using scope = TScope;
-  template <class>
-  struct is_referable_impl : aux::true_type {};
-  template <class I>
-  struct is_referable_impl<std::shared_ptr<I>> : aux::is_same<I, T> {};
-  template <class I>
-  struct is_referable_impl<boost::shared_ptr<I>> : aux::false_type {};
-  template <class T_>
-  using is_referable = is_referable_impl<aux::remove_qualifiers_t<T_>>;
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator std::shared_ptr<I>() const noexcept {
-    return object;
-  }
-  inline operator std::shared_ptr<T>&() noexcept { return object; }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator boost::shared_ptr<I>() const noexcept {
-    struct sp_holder {
-      std::shared_ptr<T> object;
-      void operator()(...) noexcept { object.reset(); }
-    };
-    return {object.get(), sp_holder{object}};
-  }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator std::weak_ptr<I>() const noexcept {
-    return object;
-  }
-  inline operator T&() noexcept { return *object; }
-  inline operator const T&() const noexcept { return *object; }
-  TObject object;
-};
-template <class TScope, class T>
-struct shared<TScope, T&> {
-  using scope = TScope;
-  template <class>
-  struct is_referable : aux::true_type {};
-  explicit shared(T& object) : object(&object) {}
-  template <class I>
-  explicit shared(I);
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-  inline operator I() const noexcept {
-    return *object;
-  }
-  inline operator T&() const noexcept { return *object; }
-  T* object = nullptr;
-};
-}
-namespace wrappers {
-template <class TScope, class T>
-struct unique {
-  using scope = TScope;
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-  inline operator I() const noexcept {
-    return object;
-  }
-  inline operator T &&() noexcept { return static_cast<T&&>(object); }
-  T object;
-};
-template <class TScope, class T>
-struct unique<TScope, T*> {
-  using scope = TScope;
-#if defined(__MSVC__)
-  explicit unique(T* object) : object(object) {}
-#endif
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-  inline operator I() const noexcept {
-    struct scoped_ptr {
-      aux::owner<T*> ptr;
-      ~scoped_ptr() noexcept { delete ptr; }
-    };
-    return *scoped_ptr{object}.ptr;
-  }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator aux::owner<I*>() const noexcept {
-    return object;
-  }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, const I*>::value) = 0>
-  inline operator aux::owner<const I*>() const noexcept {
-    return object;
-  }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator std::shared_ptr<I>() const noexcept {
-    return std::shared_ptr<I>{object};
-  }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator boost::shared_ptr<I>() const noexcept {
-    return boost::shared_ptr<I>{object};
-  }
-  template <class I, class D, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
-  inline operator std::unique_ptr<I, D>() const noexcept {
-    return std::unique_ptr<I, D>{object};
-  }
-  T* object = nullptr;
-};
 }
 namespace scopes {
 class instance;
@@ -1781,72 +1869,6 @@ class stack_over_heap {
   }
 };
 }
-namespace scopes {
-class singleton {
- public:
-  template <class, class T, class = decltype(aux::has_shared_ptr__(aux::declval<T>()))>
-  class scope {
-   public:
-    template <class T_, class>
-    using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
-    template <class, class, class TProvider>
-    static decltype(wrappers::shared<singleton, T&>{aux::declval<TProvider>().get(type_traits::stack{})}) try_create(
-        const TProvider&);
-    template <class, class, class TProvider>
-    auto create(const TProvider& provider) {
-      return create_impl(provider);
-    }
-
-   private:
-    template <class TProvider>
-    wrappers::shared<singleton, T&> create_impl(const TProvider& provider) {
-      static auto object(provider.get(type_traits::stack{}));
-      return wrappers::shared<singleton, T&>(object);
-    }
-  };
-  template <class _, class T>
-  class scope<_, T, aux::true_type> {
-   public:
-    template <class T_, class>
-    using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
-    template <class, class, class TProvider, class T_ = aux::decay_t<decltype(aux::declval<TProvider>().get())>>
-    static decltype(wrappers::shared<singleton, T_>{std::shared_ptr<T_>{std::shared_ptr<T_>{aux::declval<TProvider>().get()}}})
-    try_create(const TProvider&);
-    template <class, class, class TProvider>
-    auto create(const TProvider& provider) {
-      return create_impl<aux::decay_t<decltype(provider.get())>>(provider);
-    }
-
-   private:
-    template <class T_, class TProvider>
-    auto create_impl(const TProvider& provider) {
-      static std::shared_ptr<T_> object{provider.get()};
-      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
-    }
-  };
-};
-}
-namespace scopes {
-class unique {
- public:
-  template <class, class>
-  class scope {
-   public:
-    template <class...>
-    using is_referable = aux::false_type;
-    template <class T, class, class TProvider>
-    static decltype(wrappers::unique<unique, decltype(aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{}))>{
-        aux::declval<TProvider>().get(type_traits::memory_traits_t<T>{})})
-    try_create(const TProvider&);
-    template <class T, class, class TProvider>
-    auto create(const TProvider& provider) const {
-      using memory = type_traits::memory_traits_t<T>;
-      using wrapper = wrappers::unique<unique, decltype(provider.get(memory{}))>;
-      return wrapper{provider.get(memory{})};
-    }
-  };
-};
-}
 #if !defined(BOOST_DI_CFG)
 #define BOOST_DI_CFG ::boost::di::v1_1_0::config
 #endif
@@ -1864,25 +1886,7 @@ struct config {
     return make_policies();
   }
   template <class T>
-  struct scope_traits {
-    using type = scopes::unique;
-  };
-  template <class T>
-  struct scope_traits<T&> {
-    using type = scopes::singleton;
-  };
-  template <class T>
-  struct scope_traits<std::shared_ptr<T>> {
-    using type = scopes::singleton;
-  };
-  template <class T>
-  struct scope_traits<boost::shared_ptr<T>> {
-    using type = scopes::singleton;
-  };
-  template <class T>
-  struct scope_traits<std::weak_ptr<T>> {
-    using type = scopes::singleton;
-  };
+  using scope_traits = type_traits::scope_traits<T>;
 };
 namespace detail {
 template <class...>
