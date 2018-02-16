@@ -596,6 +596,11 @@ template <class... Rs>
 struct unique<type<Rs...>> : type_list<Rs...> {};
 template <class... Ts>
 using unique_t = typename unique<type<>, Ts...>::type;
+false_type has_shared_ptr__(...);
+#if !defined(BOOST_DI_DISABLE_SHARED_PTR_DEDUCTION)
+template <class T>
+auto has_shared_ptr__(T &&) -> is_valid_expr<decltype(std::shared_ptr<T>{})>;
+#endif
 template <class T, class... TArgs>
 decltype(::boost::di::v1_1_0::aux::declval<T>().operator()(::boost::di::v1_1_0::aux::declval<TArgs>()...),
          ::boost::di::v1_1_0::aux::true_type())
@@ -1777,14 +1782,9 @@ class stack_over_heap {
 };
 }
 namespace scopes {
-aux::false_type has_shared_ptr__(...);
-#if !defined(BOOST_DI_DISABLE_SHARED_PTR_DEDUCTION)
-template <class T>
-auto has_shared_ptr__(T &&) -> aux::is_valid_expr<decltype(std::shared_ptr<T>{})>;
-#endif
 class singleton {
  public:
-  template <class, class T, class = decltype(has_shared_ptr__(aux::declval<T>()))>
+  template <class, class T, class = decltype(aux::has_shared_ptr__(aux::declval<T>()))>
   class scope {
    public:
     template <class T_, class>
