@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_SCOPES_UNIQUE_HPP
 #define BOOST_DI_SCOPES_UNIQUE_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/wrappers/unique.hpp"
 
 namespace scopes {
@@ -35,5 +36,7 @@ class unique {
 };
 
 }  // scopes
+
+static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
 
 #endif
