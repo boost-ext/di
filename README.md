@@ -395,6 +395,7 @@ retq
     * [Serialize](http://boost-experimental.github.io/di/extensions/index.html#serialize)
     * [Types Dumper](http://boost-experimental.github.io/di/extensions/index.html#types-dumper)
     * [UML Dumper](http://boost-experimental.github.io/di/extensions/index.html#uml-dumper)
+    * [Heap Provider](http://boost-experimental.github.io/di/extensions/index.html#heap-provider)
     * [Mocks Provider](http://boost-experimental.github.io/di/extensions/index.html#mocks-provider)
     * [Scoped Scope](http://boost-experimental.github.io/di/extensions/index.html#scoped-scope)
     * [Session Scope](http://boost-experimental.github.io/di/extensions/index.html#session-scope)
