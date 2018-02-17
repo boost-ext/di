@@ -1076,7 +1076,7 @@ Basic provider creates objects on the heap (always).
 | `get(const TInit&, const TMemory&, TArgs&&...)` | `TInit` -> direct/uniform, `TMemory` -> heap/stack | Creates type `T` with `TArgs...` | `T` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp)
 ***Example***
 
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
