@@ -6,6 +6,7 @@
 #ifndef BOOST_DI_SCOPES_DEDUCE_HPP
 #define BOOST_DI_SCOPES_DEDUCE_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 
 namespace scopes {
@@ -34,5 +35,7 @@ class deduce {
 };
 
 }  // scopes
+
+static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
 
 #endif

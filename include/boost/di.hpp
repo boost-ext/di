@@ -1093,6 +1093,7 @@ class deduce {
   };
 };
 }
+static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
 namespace concepts {
 template <class T>
 struct abstract_type {
@@ -1828,6 +1829,7 @@ class singleton {
   };
 };
 }
+static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 namespace scopes {
 class unique {
  public:
@@ -1850,6 +1852,7 @@ class unique {
   };
 };
 }
+static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
 namespace type_traits {
 template <class T>
 struct scope_traits {
@@ -1921,9 +1924,6 @@ struct bind :
 #endif
 {};
 static constexpr __BOOST_DI_UNUSED core::override override{};
-static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
-static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
-static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 namespace concepts {
 struct get {};
 struct is_creatable {};

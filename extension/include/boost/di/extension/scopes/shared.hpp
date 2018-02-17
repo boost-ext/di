@@ -29,7 +29,7 @@ class shared {
 #if !defined(BOOST_DI_NOT_THREAD_SAFE)
     //<<lock mutex so that move will be synchronized>>
     explicit scope(scope&& other) noexcept : scope(std::move(other), std::lock_guard<std::mutex>(other.mutex_)) {}
-    //<<syncronized move constructor>>
+    //<<synchronized move constructor>>
     scope(scope&& other, const std::lock_guard<std::mutex>&) noexcept : object_(std::move(other.object_)) {}
 #endif
 

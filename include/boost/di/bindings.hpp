@@ -50,8 +50,5 @@ struct bind :
 {};
 
 static constexpr __BOOST_DI_UNUSED core::override override{};
-static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
-static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
-static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 
 #endif

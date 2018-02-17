@@ -7,6 +7,7 @@
 #ifndef BOOST_DI_SCOPES_SINGLETON_HPP
 #define BOOST_DI_SCOPES_SINGLETON_HPP
 
+#include "boost/di/aux_/compiler.hpp"
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/type_traits/memory_traits.hpp"  // type_traits::stack
 #include "boost/di/wrappers/shared.hpp"
@@ -63,5 +64,7 @@ class singleton {
 };
 
 }  // scopes
+
+static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 
 #endif
