@@ -84,6 +84,10 @@
     
 
     
+        <dt><span class="section"><a href="#heap-provider">Heap Provider</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#mocks-provider">Mocks Provider</a></span></dt>
     
 
@@ -120,6 +124,7 @@
 <li><a href="#serialize">Serialize</a></li>
 <li><a href="#types-dumper">Types Dumper</a></li>
 <li><a href="#uml-dumper">UML Dumper</a></li>
+<li><a href="#heap-provider">Heap Provider</a></li>
 <li><a href="#mocks-provider">Mocks Provider</a></li>
 <li><a href="#scoped-scope">Scoped Scope</a></li>
 <li><a href="#session-scope">Session Scope</a></li>
@@ -991,6 +996,53 @@ int main() {
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp</a></li>
 </ul>
 <p><a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></p>
+<h3 id="heap-provider">Heap Provider</h3>
+<pre><code class="cpp">#include &quot;boost/di/extension/providers/heap.hpp&quot;
+
+#include &lt;cassert&gt;
+#include &lt;memory&gt;
+
+namespace di = boost::di;
+
+class new_call;
+class del_call;
+
+struct example {
+  template &lt;class&gt;
+  static auto &amp;calls() {
+    static auto i = 0;
+    return i;
+  }
+
+  void *operator new(size_t size) {
+    ++calls&lt;new_call&gt;();
+    return ::operator new(size);
+  }
+
+  void operator delete(void *ptr) {
+    ++calls&lt;del_call&gt;();
+    ::operator delete(ptr);
+  }
+};
+
+int main() {
+  struct heap_config : di::config {
+    auto provider(...) const noexcept { return di::extension::heap{}; }
+  };
+
+  auto injector = di::make_injector&lt;heap_config&gt;();
+
+  assert(0 == example::calls&lt;new_call&gt;());
+  assert(0 == example::calls&lt;del_call&gt;());
+  injector.create&lt;example&gt;();
+  assert(1 == example::calls&lt;new_call&gt;());
+  assert(1 == example::calls&lt;del_call&gt;());
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/heap.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/heap.cpp</a></li>
+</ul>
 <h3 id="mocks-provider">Mocks Provider</h3>
 <pre><code class="cpp">#include &quot;boost/di/extension/providers/mocks_provider.hpp&quot;
 

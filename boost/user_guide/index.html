@@ -2532,16 +2532,30 @@ int main() {
 </table>
 <p><strong><em>Test</em></strong></p>
 <pre><code class="cpp">
+class heap_no_throw {
+ public:
+  template &lt;class...&gt;
+  struct is_creatable {
+    static constexpr auto value = true;
+  };
+
+  template &lt;class T         // implementation
+          , class TInit     // direct()/uniform{}
+          , class TMemory   // heap/stack
+          , class... TArgs&gt;
+  auto get(const TInit&amp;, const TMemory&amp;, TArgs&amp;&amp;... args) const noexcept {
+    return new (std::nothrow) T{std::forward&lt;TArgs&gt;(args)...};
+  }
+};
+
 class my_provider : public di::config {
  public:
-  static auto provider(...) noexcept { return di::providers::heap{}; }
+  static auto provider(...) noexcept { return heap_no_throw{}; }
 };
 
 int main() {
   auto injector = di::make_injector&lt;my_provider&gt;();
-  injector.create&lt;int&gt;();                           // heap
-  std::unique_ptr&lt;int&gt; i{injector.create&lt;int*&gt;()};  // heap
-  (void)i;
+  assert(0 == injector.create&lt;int&gt;());
 }
 </code></pre>
 
