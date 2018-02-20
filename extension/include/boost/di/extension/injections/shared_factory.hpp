@@ -17,21 +17,21 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-struct no_recursion {};
+struct no_recursion;
 
 template <class TPreventRecursion>
 struct injector_rebinder {
   template <class TDependency, class TInjector>
-  auto& rebind(TInjector& injector) {
-    return injector;
+  auto rebind(TInjector& injector) {
+    return make_injector(make_extensible(injector), TDependency{});
   }
 };
 
 template <>
-struct injector_rebinder<no_recursion> {
+struct injector_rebinder<std::false_type> {
   template <class TDependency, class TInjector>
-  auto rebind(TInjector& injector) {
-    return make_injector(make_extensible(injector), TDependency{});
+  auto& rebind(TInjector& injector) {
+    return injector;
   }
 };
 
@@ -87,12 +87,12 @@ struct shared_factory_impl {
 #endif
 };
 
-template <class T, class TPreventRecursion = void, class TFunc>
+template <class T, class TPreventRecursion = std::false_type, class TFunc>
 auto shared_factory(TFunc&& creation_func) {
   return shared_factory_impl<T, TPreventRecursion, TFunc>(std::move(creation_func));
 }
 
-template <class T, class TPreventRecursion = void, class TFunc>
+template <class T, class TPreventRecursion = std::false_type, class TFunc>
 auto conditional_shared_factory(TFunc condition_func) {
   return shared_factory<T, TPreventRecursion>([&](const auto& injector) {
     std::shared_ptr<T> object;
