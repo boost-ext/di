@@ -22,16 +22,16 @@ constexpr auto no_recursion = true;
 template <bool NoRecursion>
 struct injector_rebinder {
   template <class TDependency, class TInjector>
-  auto rebind(TInjector& injector) {
-    return make_injector(make_extensible(injector), TDependency{});
+  auto& rebind(TInjector& injector) {
+    return injector;
   }
 };
 
 template <>
-struct injector_rebinder<false> {
+struct injector_rebinder<no_recursion> {
   template <class TDependency, class TInjector>
-  auto& rebind(TInjector& injector) {
-    return injector;
+  auto rebind(TInjector& injector) {
+    return make_injector(make_extensible(injector), TDependency{});
   }
 };
 
