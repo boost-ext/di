@@ -9,6 +9,7 @@
 #include <cassert>
 
 namespace di = boost::di;
+namespace ext = di::extension;
 
 struct interface1 {
   virtual ~interface1() noexcept = default;
@@ -49,20 +50,20 @@ int main() {
     //<<define injector>>
     // clang-format off
     auto injector = di::make_injector(
-      di::bind<implementation_exception>().to(di::extension::shared_factory<implementation_exception>([&](const auto& inner_injector)
+      di::bind<implementation_exception>().to(ext::shared_factory<implementation_exception>([&](const auto& inner_injector)
       {
         //<<throws an exception here>>
         return inner_injector.template create<std::shared_ptr<implementation_exception>>();
       })),
       //<<bind factory interface to implementation>>
-      di::bind<interface1, implementation>().to(di::extension::shared_factory<implementation>([&](const auto& inner_injector)
+      di::bind<interface1, implementation>().to(ext::shared_factory<implementation, ext::no_recursion>([&](const auto& inner_injector)
       {
         static int calls = 0;
         assert(1 == ++calls);
         //<<shouldn't be recursive call here>>
         return inner_injector.template create<std::shared_ptr<implementation>>();
       })),
-      di::bind<interface2>().to(di::extension::conditional_shared_factory<implementation>([&]()
+      di::bind<interface2>().to(ext::conditional_shared_factory<implementation>([&]()
       {
         static int calls = 0;
         assert(1 == ++calls);
