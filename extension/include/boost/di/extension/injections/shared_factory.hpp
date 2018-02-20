@@ -17,7 +17,25 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-template <class T, class TFunc>
+struct no_recursion {};
+
+template <class TPreventRecursion>
+struct injector_rebinder {
+  template <class TDependency, class TInjector>
+  auto& rebind(TInjector& injector) {
+    return injector;
+  }
+};
+
+template <>
+struct injector_rebinder<no_recursion> {
+  template <class TDependency, class TInjector>
+  auto rebind(TInjector& injector) {
+    return make_injector(make_extensible(injector), TDependency{});
+  }
+};
+
+template <class T, class TPreventRecursion, class TFunc>
 struct shared_factory_impl {
   shared_factory_impl(TFunc&& creation_func) : creation_func_(std::move(creation_func)), is_created_(false) {}
 
@@ -49,10 +67,11 @@ struct shared_factory_impl {
 #endif
       {
         is_created_ = true;
-        auto& injector = const_cast<TInjector&>(const_injector);
+
         using override_dep = core::dependency<scopes::unique, typename TDependency::expected, T, no_name, core::override>;
         //<<rebind to avoid recursion>>
-        const auto rebound_injector = make_injector(make_extensible(injector), override_dep{});
+        auto& orig_injector = const_cast<TInjector&>(const_injector);
+        const auto& rebound_injector = injector_rebinder<TPreventRecursion>{}.rebind<override_dep>(orig_injector);
         object_ = creation_func_(rebound_injector);
       }
     }
@@ -68,14 +87,14 @@ struct shared_factory_impl {
 #endif
 };
 
-template <class T, class TFunc>
+template <class T, class TPreventRecursion = void, class TFunc>
 auto shared_factory(TFunc&& creation_func) {
-  return shared_factory_impl<T, TFunc>(std::move(creation_func));
+  return shared_factory_impl<T, TPreventRecursion, TFunc>(std::move(creation_func));
 }
 
-template <class T, class TFunc>
+template <class T, class TPreventRecursion = void, class TFunc>
 auto conditional_shared_factory(TFunc condition_func) {
-  return shared_factory<T>([&](const auto& injector) {
+  return shared_factory<T, TPreventRecursion>([&](const auto& injector) {
     std::shared_ptr<T> object;
     if (condition_func()) {
       object = injector.template create<std::shared_ptr<T>>();
