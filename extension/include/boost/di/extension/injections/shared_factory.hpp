@@ -17,9 +17,9 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-struct no_recursion;
+constexpr auto no_recursion = true;
 
-template <class TPreventRecursion>
+template <bool NoRecursion>
 struct injector_rebinder {
   template <class TDependency, class TInjector>
   auto rebind(TInjector& injector) {
@@ -28,14 +28,14 @@ struct injector_rebinder {
 };
 
 template <>
-struct injector_rebinder<std::false_type> {
+struct injector_rebinder<false> {
   template <class TDependency, class TInjector>
   auto& rebind(TInjector& injector) {
     return injector;
   }
 };
 
-template <class T, class TPreventRecursion, class TFunc>
+template <class T, bool NoRecursion, class TFunc>
 struct shared_factory_impl {
   shared_factory_impl(TFunc&& creation_func) : creation_func_(std::move(creation_func)), is_created_(false) {}
 
@@ -71,7 +71,7 @@ struct shared_factory_impl {
         using override_dep = core::dependency<scopes::unique, typename TDependency::expected, T, no_name, core::override>;
         //<<rebind to avoid recursion>>
         auto& orig_injector = const_cast<TInjector&>(const_injector);
-        const auto& rebound_injector = injector_rebinder<TPreventRecursion>{}.template rebind<override_dep>(orig_injector);
+        const auto& rebound_injector = injector_rebinder<NoRecursion>{}.template rebind<override_dep>(orig_injector);
         object_ = creation_func_(rebound_injector);
       }
     }
@@ -87,14 +87,14 @@ struct shared_factory_impl {
 #endif
 };
 
-template <class T, class TPreventRecursion = std::false_type, class TFunc>
+template <class T, bool NoRecursion = false, class TFunc>
 auto shared_factory(TFunc&& creation_func) {
-  return shared_factory_impl<T, TPreventRecursion, TFunc>(std::move(creation_func));
+  return shared_factory_impl<T, NoRecursion, TFunc>(std::move(creation_func));
 }
 
-template <class T, class TPreventRecursion = std::false_type, class TFunc>
+template <class T, bool NoRecursion = false, class TFunc>
 auto conditional_shared_factory(TFunc condition_func) {
-  return shared_factory<T, TPreventRecursion>([&](const auto& injector) {
+  return shared_factory<T, NoRecursion>([&](const auto& injector) {
     std::shared_ptr<T> object;
     if (condition_func()) {
       object = injector.template create<std::shared_ptr<T>>();
