@@ -71,7 +71,7 @@ struct shared_factory_impl {
         using override_dep = core::dependency<scopes::unique, typename TDependency::expected, T, no_name, core::override>;
         //<<rebind to avoid recursion>>
         auto& orig_injector = const_cast<TInjector&>(const_injector);
-        const auto& rebound_injector = injector_rebinder<TPreventRecursion>{}.rebind<override_dep>(orig_injector);
+        const auto& rebound_injector = injector_rebinder<TPreventRecursion>{}.template rebind<override_dep>(orig_injector);
         object_ = creation_func_(rebound_injector);
       }
     }
