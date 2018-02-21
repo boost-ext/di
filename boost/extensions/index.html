@@ -505,6 +505,7 @@ int main() {
 #include &lt;cassert&gt;
 
 namespace di = boost::di;
+namespace ext = di::extension;
 
 struct interface1 {
   virtual ~interface1() noexcept = default;
@@ -544,20 +545,20 @@ int main() {
   {
     //&lt;&lt;define injector&gt;&gt;
     auto injector = di::make_injector(
-      di::bind&lt;implementation_exception&gt;().to(di::extension::shared_factory&lt;implementation_exception&gt;([&amp;](const auto&amp; inner_injector)
+      di::bind&lt;implementation_exception&gt;().to(ext::shared_factory&lt;implementation_exception&gt;([&amp;](const auto&amp; inner_injector)
       {
         //&lt;&lt;throws an exception here&gt;&gt;
         return inner_injector.template create&lt;std::shared_ptr&lt;implementation_exception&gt;&gt;();
       })),
       //&lt;&lt;bind factory interface to implementation&gt;&gt;
-      di::bind&lt;interface1, implementation&gt;().to(di::extension::shared_factory&lt;implementation&gt;([&amp;](const auto&amp; inner_injector)
+      di::bind&lt;interface1, implementation&gt;().to(ext::shared_factory&lt;implementation, ext::no_recursion&gt;([&amp;](const auto&amp; inner_injector)
       {
         static int calls = 0;
         assert(1 == ++calls);
         //&lt;&lt;shouldn't be recursive call here&gt;&gt;
         return inner_injector.template create&lt;std::shared_ptr&lt;implementation&gt;&gt;();
       })),
-      di::bind&lt;interface2&gt;().to(di::extension::conditional_shared_factory&lt;implementation&gt;([&amp;]()
+      di::bind&lt;interface2&gt;().to(ext::conditional_shared_factory&lt;implementation&gt;([&amp;]()
       {
         static int calls = 0;
         assert(1 == ++calls);
