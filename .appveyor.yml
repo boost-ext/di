@@ -4,7 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-version: 1.0.{build}
+version: di.{build}
 clone_folder: c:\di
 shallow_clone: true
 
@@ -49,7 +49,7 @@ install:
   - appveyor DownloadFile http://downloads.sourceforge.net/mingw-w64/x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z
   - 7z x x86_64-5.2.0-release-posix-seh-rt_v4-rev1.7z > nul
   - call "%VSPATH%"\vcvarsall %PLATFORM%
-  - set PATH=C:\cmake-3.7.2-win32-x86\bin;mingw64\bin;%PATH%;
+  - set PATH=C:\cmake-3.7.2-win32-x86\bin;mingw64\bin;"C:\Program Files (x86)\Dr. Memory\bin";%PATH%;
 
 build_script:
   - mingw32-make all
