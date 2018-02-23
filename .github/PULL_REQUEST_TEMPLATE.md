@@ -1,11 +1,10 @@
+Problem:
+-
+
+Solution:
+-
+
 Issue: #
 
-Proposed changes:
--
--
-
-Thread/exception safety:
-
-
-Reviewvers:
+Reviewers:
 @
