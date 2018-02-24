@@ -246,7 +246,7 @@ retq
 #### Quick guide - Bind concepts
 
 ```cpp
-struct Stremable {
+struct Streamable {
  template<class T>
  auto requires(T&& t) -> decltype(
    int( t.read() ),
@@ -264,8 +264,8 @@ class example {
 
 int main() {
   const auto injector = di::make_injector(
-    di::bind<Stremable(class ExchangeStream)>.to<exchange>(),
-    di::bind<Stremable(class EngineStream)>.to<engine>()
+    di::bind<Streamable(class ExchangeStream)>.to<exchange>(),
+    di::bind<Streamable(class EngineStream)>.to<engine>()
   );
 
   injector.create<example>();
