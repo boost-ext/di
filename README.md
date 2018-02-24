@@ -9,12 +9,12 @@
 
 # [Boost].DI
 
-Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/try_it/index.html))
+Your C++14 **one header only** Dependency Injection library with no dependencies ([__Try it online!__](http://boost-experimental.github.io/di/try_it/index.html))
 
 ### Quick start
 
 #### Download
-[Boost].DI requires only one file. Get the latest header [here!](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
+> [Boost].DI requires only one file. Get the latest header [here!](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)
 
 #### Include
 ```cpp
@@ -24,10 +24,14 @@ namespace di = boost::di;
 
 #### Compile
 
-```sh
-gcc/clang$ $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors file.cpp
-msvc$      cl /std:c++14 /Ox /W3 file.cpp
-```
+* **GCC/Clang**
+  ```sh
+  $CXX -std=c++14 -O2 -fno-exceptions -fno-rtti -Wall -Werror -pedantic-errors file.cpp
+  ```
+* **MSVC**
+  ```sh
+  cl /std:c++14 /Ox /W3 file.cpp
+  ```
 
 #### Quick guide - Create object graph
 
@@ -409,3 +413,8 @@ retq
     * [ [0.5.0] - 2015-01-12](http://boost-experimental.github.io/di/CHANGELOG/index.html#-050-2015-01-12)
     * [ [0.1.0] - 2014-08-15](http://boost-experimental.github.io/di/CHANGELOG/index.html#-010-2014-08-15)
 
+[](GENERATE_TOC_END)
+
+---
+
+**Disclaimer** `Boost.DI` is not an official Boost library.
