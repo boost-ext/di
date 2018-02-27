@@ -1208,6 +1208,17 @@ test bind_final_class_callable = [] {
   expect(42 == injector.create<int>());
 };
 
+test bind_multiple_empty_injectors = [] {
+  auto i1 = di::make_injector();
+  const auto module1 = [] { return [] {}; };
+  const auto module2 = [] { return di::make_injector([] {}); };
+
+  const auto injector =
+      di::make_injector([] {}, [] {}, di::make_injector([] {}), std::move(i1), di::make_injector([] {}), module1(), module2());
+
+  expect(0 == injector.create<int>());
+};
+
 #if defined(__cpp_variable_templates)
 test bind_mix = [] {
   constexpr auto i = 42;

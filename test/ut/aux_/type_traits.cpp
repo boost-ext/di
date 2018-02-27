@@ -282,4 +282,23 @@ test is_array_types = [] {
   static_expect(is_array<int* []>::value);
 };
 
+test is_empty_expr_types = [] {
+  struct c {};
+  auto empty = [] {};
+  const auto const_empty = [] {};
+  const auto const_args = [](int) {};
+  auto init = [i = 0]{};
+  int _{};
+  auto capture = [_] {};
+
+  static_expect(!is_empty_expr<c>::value);
+  static_expect(!is_empty_expr<void>::value);
+  static_expect(!is_empty_expr<int>::value);
+  static_expect(is_empty_expr<decltype(empty)>::value);
+  static_expect(is_empty_expr<decltype(const_empty)>::value);
+  static_expect(!is_empty_expr<decltype(const_args)>::value);
+  static_expect(!is_empty_expr<decltype(init)>::value);
+  static_expect(!is_empty_expr<decltype(capture)>::value);
+};
+
 }  // aux

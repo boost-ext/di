@@ -45,8 +45,10 @@ test bind_any_of = [] {
 };
 
 test bind_deps = [] {
+  const auto empty_expr = [] {};
   static_expect(boundable<aux::type_list<>>::value);
   static_expect(boundable<aux::type_list<fake_dependency<int>>>::value);
+  static_expect(boundable<aux::type_list<decltype(empty_expr)>>::value);
   static_expect(std::is_same<type_<int>::is_bound_more_than_once,
                              boundable<aux::type_list<fake_dependency<int>, fake_dependency<int>>>>::value);
   static_expect(

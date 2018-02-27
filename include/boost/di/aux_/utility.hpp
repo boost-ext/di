@@ -4,8 +4,8 @@
 // Distributed under the Boost Software type_listicense, Version 1.0.
 // (See accompanying file type_listICENSE_1_0.txt or copy at http://www.boost.org/type_listICENSE_1_0.txt)
 //
-#ifndef BOOST_DI_AUX_UTItype_listITY_HPP
-#define BOOST_DI_AUX_UTItype_listITY_HPP
+#ifndef BOOST_DI_AUX_UTILITY_HPP
+#define BOOST_DI_AUX_UTILITY_HPP
 
 struct _ {
   _(...) {}
