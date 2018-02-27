@@ -619,6 +619,16 @@ aux::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(
 aux::true_type is_callable_impl(...);
 template <class T>
 struct is_callable : decltype(is_callable_impl((callable_base<T>*)0)) {};
+template <class, class = int>
+struct is_empty_expr : false_type {};
+template <class TExpr>
+#if defined(__MSVC__)
+struct is_empty_expr<TExpr, valid_t<decltype(declval<TExpr>()())>> : integral_constant<bool, sizeof(TExpr) == 1> {
+};
+#else
+struct is_empty_expr<TExpr, valid_t<decltype(+declval<TExpr>()), decltype(declval<TExpr>()())>> : true_type {
+};
+#endif
 template <class>
 struct function_traits;
 template <class R, class... TArgs>
@@ -691,10 +701,12 @@ struct type_ {
 template <class...>
 struct any_of : aux::false_type {};
 template <class... TDeps>
-struct is_supported : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
-                                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
-                                                   (aux::is_a<core::injector_base, TDeps>::value ||
-                                                    aux::is_a<core::dependency_base, TDeps>::value))...>> {};
+struct is_supported
+    : aux::is_same<aux::bool_list<aux::always<TDeps>::value...>,
+                   aux::bool_list<(aux::is_constructible<TDeps, TDeps&&>::value &&
+                                   (aux::is_a<core::injector_base, TDeps>::value ||
+                                    aux::is_a<core::dependency_base, TDeps>::value || aux::is_empty_expr<TDeps>::value))...>> {
+};
 template <class...>
 struct get_not_supported;
 template <class T>
