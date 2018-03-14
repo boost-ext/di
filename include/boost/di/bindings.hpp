@@ -30,6 +30,11 @@ struct bind<int, TScope, T> {
   using type = core::dependency<TScope, T>;
 };
 
+template <class TScope, class T, class U>
+struct bind<int, TScope, T(U)> {
+  using type = core::dependency<TScope, T, T, U>;
+};
+
 template <class TScope, class... Ts>
 struct bind<int, TScope, Ts...> {
   using type = core::dependency<TScope, concepts::any_of<Ts...>>;

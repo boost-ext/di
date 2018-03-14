@@ -910,8 +910,7 @@ namespace type_traits {
 template <class, class = int>
 struct is_injectable : ::boost::di::v1_1_0::aux::false_type {};
 template <class T>
-struct is_injectable<T, ::boost::di::v1_1_0::aux::valid_t<typename T::boost_di_inject__>>
-    : ::boost::di::v1_1_0::aux::true_type {};
+struct is_injectable<T, ::boost::di::v1_1_0::aux::valid_t<typename T::inject>> : ::boost::di::v1_1_0::aux::true_type {};
 struct direct {};
 struct uniform {};
 template <class T, int>
@@ -951,13 +950,19 @@ template <class T, class = void, class = typename is_injectable<T>::type>
 struct ctor_traits__;
 template <class T, class, class = typename is_injectable<ctor_traits<T>>::type>
 struct ctor_traits_impl;
+template <class>
+struct inject;
+template <class T, class... Ts>
+struct inject<T(Ts...)> {
+  using type = di::aux::type_list<di::named<T, Ts>...>;
+};
 template <class T, class _>
-struct ctor_traits__<T, _, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
+struct ctor_traits__<T, _, aux::true_type> : aux::pair<T, aux::pair<direct, typename inject<typename T::inject>::type>> {};
 template <class T, class _>
 struct ctor_traits__<T, _, aux::false_type> : ctor_traits_impl<T, _> {};
 template <class T, class _>
 struct ctor_traits_impl<T, _, aux::true_type>
-    : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
+    : aux::pair<T, aux::pair<direct, typename inject<typename ctor_traits<T>::inject>::type>> {};
 template <class T, class _>
 struct ctor_traits_impl<T, _, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
 }
@@ -965,19 +970,19 @@ template <class T, class>
 struct ctor_traits : type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>> {};
 template <class T>
 struct ctor_traits<std::initializer_list<T>> {
-  using boost_di_inject__ = aux::type_list<>;
+  using inject = aux::type_list<>;
 };
 template <class... Ts>
 struct ctor_traits<std::tuple<Ts...>> {
-  using boost_di_inject__ = aux::type_list<Ts...>;
+  using inject = aux::type_list<Ts...>;
 };
 template <class T>
 struct ctor_traits<T, __BOOST_DI_REQUIRES(aux::is_same<std::char_traits<char>, typename T::traits_type>::value)> {
-  using boost_di_inject__ = aux::type_list<>;
+  using inject = aux::type_list<>;
 };
 template <class T>
 struct ctor_traits<T, __BOOST_DI_REQUIRES(!aux::is_class<T>::value)> {
-  using boost_di_inject__ = aux::type_list<>;
+  using inject = aux::type_list<>;
 };
 namespace type_traits {
 template <class T>
@@ -1919,6 +1924,10 @@ template <class TScope, class T>
 struct bind<int, TScope, T> {
   using type = core::dependency<TScope, T>;
 };
+template <class TScope, class T, class U>
+struct bind<int, TScope, T(U)> {
+  using type = core::dependency<TScope, T, T, U>;
+};
 template <class TScope, class... Ts>
 struct bind<int, TScope, Ts...> {
   using type = core::dependency<TScope, concepts::any_of<Ts...>>;
@@ -2158,9 +2167,9 @@ struct any_type_1st_ref {
 #endif
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
-            class = __BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
+            class = __BOOST_DI_REQUIRES(is_creatable__<di::named<TParent, T&>, TInjector, TError>::value)>
   operator T&() const {
-    return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
+    return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<di::named<TParent, T&>>{});
   }
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<const T&, TInjector, TRefError>::value),
@@ -2225,7 +2234,8 @@ struct any_type_1st_ref {
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
   operator T&() const {
-    return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
+    return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(
+        aux::type<di::named<TParent, T&>>{});
   }
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<const T&, TInjector>::value)>

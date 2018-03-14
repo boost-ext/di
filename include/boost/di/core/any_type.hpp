@@ -115,9 +115,9 @@ struct any_type_1st_ref {
 
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
-            class = __BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
+            class = __BOOST_DI_REQUIRES(is_creatable__<di::named<TParent, T&>, TInjector, TError>::value)>
   operator T&() const {
-    return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&>{});
+    return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<di::named<TParent, T&>>{});
   }
 
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
@@ -197,7 +197,7 @@ struct any_type_1st_ref {
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
   operator T&() const {
-    return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&>{});
+    return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<di::named<TParent, T&>>{});
   }
 
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
