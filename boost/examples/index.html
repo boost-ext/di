@@ -434,10 +434,19 @@ int main() {
    , di::bind&lt;class Number&gt;().to&lt;int&gt;(i)
   );
 
-  const auto hw = injector.create&lt;hello&gt;();
+  {
+    const auto hw = injector.create&lt;hello&gt;();
 
-  static_assert(std::is_same&lt;int, decltype(hw)::type::type&gt;{}, &quot;Type != int&quot;);
-  assert(42 == hw.number);
+    static_assert(std::is_same&lt;int, decltype(hw)::type::type&gt;{}, &quot;Type != int&quot;);
+    assert(42 == hw.number);
+  }
+
+  {
+    const auto hw = injector.create&lt;std::shared_ptr&lt;decltype(injector.create&lt;hello&gt;())&gt;&gt;();
+
+    static_assert(std::is_same&lt;int, decltype(hw)::element_type::type::type&gt;{}, &quot;Type != int&quot;);
+    assert(42 == hw-&gt;number);
+  }
 }
 </code></pre>
 
