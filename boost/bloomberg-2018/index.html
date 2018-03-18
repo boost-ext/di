@@ -900,7 +900,7 @@ const auto injector = di::make_injector(        |  |  |
    |     Unique scope   Unique scope -> T, T&&, T*, std::unique_ptr<T>
    |     +---+          +------+
    |     |              |
->--+-----+--------------+------------+---------> Application life time
+>--+---+-+--------------+------------+---------> Application life time
    |   |                             |
    |   | Shared scope                |
    |   +-----------------------------+ Injector life time
