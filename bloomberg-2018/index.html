@@ -85,7 +85,10 @@ Kris Jusiak, Quantlab Financial
     * [[Boost].DI](https://github.com/boost-experimental/di)
       * Overview / Design / Benchmarks
       * Boost your design by example
-      * Features for free
+      * Showcase
+        * Refactoring
+        * Testing
+        * Quality enforcement
 * Summary
 
 ==============================================================================
@@ -1174,7 +1177,7 @@ int main() {
 
 ----
 
-## Features for Free
+## Showcase
 
 ----
 
@@ -1235,7 +1238,7 @@ int main() {
 
 ----
 
-### Unit testing for free
+### Easy Mocking for Unit testing
 
 ```cpp
 "should print read text"_test = [] {
@@ -1254,7 +1257,7 @@ int main() {
 
 ----
 
-### Integration testing for free
+### Easy Faking for Integration testing
 
 ```cpp
 "print read text"_test = [] {
@@ -1275,7 +1278,7 @@ int main() {
 
 ----
 
-### Implementing features for free
+### Implementing features by wiring
 
 ```
 Scenario: Value from an input file is displayed on the QtWindow
@@ -1334,9 +1337,11 @@ QtPrinter{height{500}, width{800}}; // Compile error
 QtPrinter{500, 800};                // Compile error
 ```
 
+> Named parameters play nicely with Dependency Injection
+
 ----
 
-### Implementing features for free
+### Implementing features by wiring
 
 ```cpp
 constexpr auto module = [](std::string_view printer) {
@@ -1362,7 +1367,7 @@ int main(int argc, char** argv) {
 
 ----
 
-### Enforce guidelines for free
+### Quality enforcement
 
 ```cpp
 class no_raw_pointers : public di::config {
@@ -1375,11 +1380,11 @@ class no_raw_pointers : public di::config {
 };
 ```
 
-> Guideline: No raw pointers
+> Guideline / Policy: No raw pointers
 
 ----
 
-### Enforce guidelines for free
+### Quality enforcement
 
 ```cpp
 int main() {
@@ -1393,7 +1398,7 @@ int main() {
 
 ----
 
-### Enforce guidelines for free
+### Quality enforcement
 
 ```cpp
 class AppWithRaw {
@@ -1425,7 +1430,7 @@ error: inline function 'policies::type<Readable*>::
 
 ----
 
-### [[Boost].DI](https://github.com/boost-experimental/di) - More features...
+### [[Boost].DI](https://github.com/boost-experimental/di) - More Features...
 
 * Core ([Examples](http://boost-experimental.github.io/di/examples))
     * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
