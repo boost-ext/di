@@ -6,6 +6,7 @@
 //
 //<-
 #include <cassert>
+#include <memory>
 #include <type_traits>
 //->
 #include <boost/di.hpp>
@@ -41,8 +42,17 @@ int main() {
   );
   // clang-format on
 
-  const auto hw = injector.create<hello>();
+  {
+    const auto hw = injector.create<hello>();
 
-  static_assert(std::is_same<int, decltype(hw)::type::type>{}, "Type != int");
-  assert(42 == hw.number);
+    static_assert(std::is_same<int, decltype(hw)::type::type>{}, "Type != int");
+    assert(42 == hw.number);
+  }
+
+  {
+    const auto hw = injector.create<std::shared_ptr<decltype(injector.create<hello>())>>();
+
+    static_assert(std::is_same<int, decltype(hw)::element_type::type::type>{}, "Type != int");
+    assert(42 == hw->number);
+  }
 }
