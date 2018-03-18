@@ -391,7 +391,7 @@ int main() {
 
 ```cpp
 class Printable {
-  void* ptr_{}; // Small Buffer Optimization (SBO)
+  void* ptr_{}; // Possible Small Buffer Optimization (SBO)
   struct { void (*print)(void*, int);
            void (*delete_ptr)(void*);
   } const vptr_{};
