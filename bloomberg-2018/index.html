@@ -1,0 +1,1557 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Boost Your Design With Dependency Injection</title>
+
+		<meta name="description" content="'Embedding' a Meta State Machine">
+		<meta name="author" content="Kris Jusiak">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/league.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+
+          <section data-markdown=""
+                   data-separator="^====+$"
+                   data-separator-vertical="^----+$"
+                   data-notes="^Note:">
+					<script type="text/template">
+
+#### Bloomberg, 2018
+
+---
+
+## Boost your design with
+## Dependency Injection
+
+---
+
+Kris Jusiak, Quantlab Financial
+
+#### [kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
+
+==============================================================================
+
+## "The only way to go fast is to go well", Uncle Bob
+
+==============================================================================
+
+### Agenda
+
+* #### Boost your design
+    * SOLID vs `STUPID`
+      * Single Responsibility Principle
+      * Dependency Inversion Principle
+        * Polymorphism
+          * Dynamic Polymorphism
+          * Type-Erasure
+          * Static Polymorphism
+          * Concepts
+    * Problems / Motivation
+
+----
+
+### Agenda
+
+* #### Dependency Injection
+    * [[Boost].DI](https://github.com/boost-experimental/di)
+      * Overview / Design / Benchmarks
+      * Boost your design by example
+      * Features for free
+* Summary
+
+==============================================================================
+
+### Thanks to...
+
+<img src="images/kostya.jpeg" style="width: 30%; background:none; border:none; box-shadow:none;" />
+
+#### Kanstantsin Chernik (Kostya)
+
+==============================================================================
+
+## Boost your design...
+
+----
+
+### Design Goals
+
+* Declarative
+  * Expresses `WHAT`, not `HOW`!
+* Loosely coupled
+  * Easy to extend, maintain, reuse
+* Testable
+  * Easy to mock
+* ...
+      There is much more!
+
+----
+
+<center>
+  <a href="https://www.amazon.co.uk/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882">
+    <img src="images/clean_code.jpg" style="width: 40%; background:none; border:none; box-shadow:none;" />
+  </a>
+</center>
+
+----
+
+## Boost your design
+
+## By example
+
+----
+
+### Story: Print a value from a file (BDD Style)
+
+```
+Scenario: Value from a file is displayed
+ Given an 'input.txt' file with an integer value in it
+   And console terminal is ready
+ When the App runs
+ Then the integer value from 'input.txt' should
+      be printed on the terminal console
+```
+
+----
+
+### KISS - ~~Keep it simple~~, `STUPID` / God Object
+
+```cpp
+class Manager {                                 // Indescriptive Naming
+public:                                         // God Object
+  void printValue(int);
+  int readValue();
+  ...
+};
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+```cpp
+class App {
+public:
+  App() : manager{std::make_shared<Manager>()};// Untestability
+                                               // Tight Coupling
+  __attribute__((always_inline)) void run() {  // Premature Optimization
+    Logger::instance()                         // Singleton
+      << "run:" << manager()->readValue() << '\n';
+
+    manager->printValue(manager->readValue());  // Duplication
+  }
+
+private:
+  std::shared_ptr<Manager> manager;
+};
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+----
+
+### KISS - ~~Keep it simple~~, `STUPID` / God Object
+
+* (+/-) Does the job?
+* (-) Tightly coupled
+  * Hard to extend / maintain / reuse
+* (-) Untestable
+* (-) Complex
+  * Hard to follow
+
+----
+
+### SOLID vs STUPID
+
+<table><tr>
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td><u>Single Responsibility</u></td></tr>
+    <tr><td><b>O</b></td><td>Open-close</td></tr>
+    <tr><td><b>L</b></td><td>Liskov substitution</td></tr>
+    <tr><td><b>I</b></td><td>Interface segregation</td></tr>
+    <tr><td><b>D</b></td><td><u>Dependency inversion</u></td></tr>
+  </table>
+ </td>
+
+ <td>
+  <table>
+    <tr><td><b>S</b></td><td>Singleton</td></tr>
+    <tr><td><b>T</b></td><td>Tight Coupling</td></tr>
+    <tr><td><b>U</b></td><td>Untestability</td></tr>
+    <tr><td><b>P</b></td><td>Premature Optimization</td></tr>
+    <tr><td><b>I</b></td><td>Indescriptive Naming</td></tr>
+    <tr><td><b>D</b></td><td>Duplication</td></tr>
+  </table>
+ </td>
+
+ </tr>
+</table>
+
+----
+
+### Single Responsibility Principle
+
+<img style="background:none; border:none; box-shadow:none;" src="images/single_responsibility_principle.jpg" width="50%" />
+
+> A class should have only one reason to change
+
+----
+
+### Single Responsibility Principle
+
+```cpp
+/**
+ * Responsibility: Can read a value
+ */
+class Reader {
+ public:
+   explicit Reader(std::string_view path);
+   int read() const;
+};
+```
+
+```cpp
+/**
+ * Responsibility: Can print a value
+ */
+class Printer {
+ public:
+   void print(int i);
+};
+```
+
+----
+
+### Single Responsibility Principle
+
+```cpp
+class App {
+  const Reader reader{};
+  Printer printer{};
+
+public:
+  explicit App(std::string_view path)
+    : reader{path} { }    // Dependencies carrying
+
+  void run() {
+    const auto value = reader.read();
+    printer.print(value); // Law of Demeter
+                          // "Only talk to your
+                          //  immediate friends"
+  }
+};
+```
+
+----
+
+### Single Responsibility Principle
+
+
+```cpp
+int main() {
+  App app{"input.txt"};
+  app.run();
+}
+```
+
+----
+
+### Single Responsibility Principle
+
+![app](images/app2.png)
+
+* (+/-) We can somewhat test it in isolation besides the App
+* (-) Reader/Printer tightly coupled to the App
+* (-) Reader requires a file for testing
+
+----
+
+### Dependency Inversion Principle
+
+<img style="background:none; border:none; box-shadow:none;" src="images/dependency_inversion_principle.jpg" width="50%" />
+
+> Depends on abstractions, not on implementations
+
+----
+
+### Dynamic Polymorphism
+
+```cpp
+class Readable {                       class Printable {
+public:                                 public:
+  virtual ~Readable() = default;          virtual ~Printable() = default;
+  virtual int read() const = 0;           virtual void print(int) = 0;
+};                                     };
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+```cpp
+class FileReader                       class ConsolePrinter
+ : public Readable {                     : public Printable {
+public:                                 public:
+  explicit FileReader(std::istream&);     void print(int) override final;
+  int read() const override final;     };
+};
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+> We can have different implementations of readers/printers!
+
+----
+
+### Dynamic Polymorphism
+
+```cpp
+class App {
+  std::shared_ptr<const Readable> reader;
+  std::shared_ptr<Printable> printer;
+
+public:
+  /**
+   * Dependency Injection
+   *   "Don't call us, we'll call you", Hollywood principle
+   */
+  App(std::shared_ptr<const Readable> reader,
+      std::shared_ptr<Printable> printer);
+
+  void run();
+};
+```
+
+----
+
+### Dynamic Polymorphism
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                     // Wiring
+  auto reader = std::make_shared<FileReader>(file);   // Wiring
+  auto printer = std::make_shared<ConsolePrinter>();  // Wiring
+  App app{reader, printer};                           // Wiring
+  app.run();
+}
+```
+
+> Wiring separates the creation logic from the business logic
+
+----
+
+### Dynamic Polymorphism
+
+![app](images/app1.png)
+
+* (+) Reader/Printer aren't tightly coupled to the App
+* (-) Intrusive (Inheritance)
+* (-) Reference/Pointer semantics
+* (-) Dynamic Allocations
+* (-) Performance (Dynamic dispatch / Indirect call)
+
+----
+
+### Dynamic polymorphism
+
+<center>
+  <a href="https://channel9.msdn.com/Events/GoingNative/2013/Inheritance-Is-The-Base-Class-of-Evil">
+    <img src="images/runtime_polymorphism.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
+  </a>
+</center>
+
+----
+
+### Type-Erasure
+
+```cpp
+class Printable {
+  void* ptr_{}; // Small Buffer Optimization (SBO)
+  struct { void (*print)(void*, int);
+           void (*delete_ptr)(void*);
+  } const vptr_{};
+
+public:
+ template<class T> Printable(T t) // non explicit
+  : ptr_{new T{t}}, vptr_{
+      [](void* self, int value) { static_cast<T*>(self)->print(value); },
+      [](void* self) { delete static_cast<T*>(self); } } { }
+ ~Printable() { vptr_.delete_ptr(ptr_); }
+
+ void print(int value) { vptr_.print(ptr_, value); }
+};
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+----
+
+### Type-Erasure
+
+* Standard
+  * [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)
+
+* Libraries
+  * [Boost.TypeErasure](http://www.boost.org/doc/libs/1_66_0/doc/html/boost_typeerasure.html)
+  * [Adobe.Poly](http://stlab.adobe.com/classadobe_1_1poly.html)
+  * [Folly.Poly](https://github.com/facebook/folly)
+  * [Dyno](https://github.com/ldionne/dyno)
+
+* Proposals
+  * [Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf)
+
+----
+
+### Type-Erasure
+
+```cpp
+class FileReader { // No inhertiance
+public:
+  explicit FileReader(std::istream&);
+  int read() const;
+};
+```
+
+```cpp
+class ConsolePrinter { // No inhertiance
+public:
+  void print(int);
+};
+```
+
+----
+
+### Type-Erasure
+
+```cpp
+class App {
+  const Readable reader;
+  Printable printer;
+
+public:
+  App(const Readable reader, Printable printer)
+    : reader{reader}, printer{printer} {}
+
+  void run();
+};
+```
+
+----
+
+### Type-Erasure
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};            // Wiring
+  const Readable reader = FileReader{file};  // Wiring
+  Printable printer = ConsolePrinter();      // Wiring
+  App app{reader, printer};                  // Wiring
+  app.run();
+}
+```
+
+----
+
+### Type-Erasure
+
+* (+) Reader/Printer aren't tightly coupled to the App
+* (+) Non-intrusive (no inheritance)
+* (+) 100% value semantics
+* (+/-) May allocate
+* (-) Boilerplate (Missing language support)
+* (-) Performance (Dynamic dispatch / Indirect call)
+
+----
+
+#### Policy Design / Design by introspection
+
+<center>
+  <a href="https://www.youtube.com/watch?v=29h6jGtZD-U">
+    <img src="images/design_by_introspection.png" style="width: 90%; background:none; border:none; box-shadow:none;" />
+  </a>
+</center>
+
+----
+
+### Static polymorphism
+
+```cpp
+class FileReader;
+class ConsolePrinter;
+```
+
+> Same as with type-erasure!
+
+----
+
+### Static polymorphism
+
+```cpp
+template<class TReader, class TPrinter>
+class App {
+  const TReader reader;
+  TPrinter printer;
+
+public:
+  App(const TReader reader, TPrinter printer)
+    : reader{reader}, printer{printer}
+  { }
+
+  void run();
+};
+```
+
+> Most dependencies are known at compile time!
+
+----
+
+### Static polymorphism
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                       // Wiring
+  const FileReader reader{file};                        // Wiring
+  ConsolePrinter printer{};                             // Wiring
+  App/*<FileReader, ConsolePrinter>*/{reader, printer}; // Wiring
+  App.run();
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+### Static polymorphism
+
+* (+) Reader/Printer aren't tightly coupled to the App
+* (+) Performance
+* (+) Non-intrusive (no inheritance)
+* (-) Non-descriptive error messages
+* (-) Slower compilation times
+* (-) Templates are contagious (Code bloat)
+
+---
+
+STL example: `std::vector`
+
+----
+
+### Concepts - C++20
+
+```cpp
+template <class T>
+concept Readable = requires(const T reader) {
+  { reader.read() } -> int;
+};
+```
+
+```cpp
+template <class T>
+concept Printable = requires(T printer, int value) {
+  printer.print(value);
+};
+```
+
+----
+
+### Concepts - C++20
+
+```cpp
+template<Readable TReader, Printable TPrinter>
+ // requires Readable<TReader> and Printable<TPrinter>
+class App {
+  const TReader reader;
+  TPrinter printer;
+
+public:
+  App(const TReader reader, TPrinter printer)
+    : reader{reader}, printer{printer} {}
+
+  void run();
+};
+```
+
+----
+
+### Concepts - C++20
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};           // Wiring
+  const Readable reader = FileReader{file}; // Wiring
+  Printable printer = ConsolePrinter{};     // Wiring
+  App{reader, printer};                     // Wiring
+  App.run();
+}
+```
+
+----
+
+### Concepts - C++20
+
+* (+) Reader/Printer aren't tightly coupled to the App
+* (+) Explicit requirements/constraints
+* (+) Better error messages
+* (+) Non-intrusive (no inheritance)
+* (+) Performance
+* (-) Slower compilation times
+* (-) Templates are contagious (Code bloat)
+
+----
+
+### What all these solutions have in common?
+
+----
+
+### The good part...
+
+----
+
+### Composition Root
+
+
+```cpp
+int main() {
+  App{}.run();
+}
+```
+
+> A unique location in an application where modules are composed together
+
+> Simplifies writing integration tests
+
+----
+
+### The bad part...
+
+----
+
+### Manual wiring
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                         // Wiring
+  const auto reader = std::make_shared<FileReader>(file); // Wiring
+  auto printer = std::make_shared<ConsolePrinter>();      // Wiring
+  App app{reader, printer};                               // Wiring
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                         // Wiring
+  const FileReader reader{file};                          // Wiring
+  ConsolePrinter printer{};                               // Wiring
+  App<FileReader, ConsolePrinter>{reader, printer};       // Wiring
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                         // Wiring
+  const Readable reader = FileReader{file};               // Wiring
+  Printable printer = ConsolePrinter();                   // Wiring
+  App app{reader, printer};                               // Wiring
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+### Manual wiring
+
+<img src="images/wiring.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
+
+* Boilerplate / Tedious
+* Hard to maintain
+  * Order is important!
+* Multiple configurations
+  * Release, Debug, Testing
+
+----
+
+### Manual Wiring
+
+* #### Single Responsibility + Dependency Inversion Principles
+  =>
+    * #### A lot of classes
+    =>
+      * #### Wiring Mess
+      =>
+        * #### Hard to maintain + Deadlines / Pressure
+        =>
+          * #### Hacks / Workarounds (~~SRP / DI~~)
+
+-----
+
+### Solution
+
+#### Simplify/Remove the wiring mess
+  #### By Automating dependency injection?
+=>
+### [[Boost].DI](https://github.com/boost-experimental/di)
+
+==============================================================================
+
+### [[Boost].DI](https://github.com/boost-experimental/di) - C++ Dependency Injection Library
+
+* Deduces constructor parameters and required scopes for them
+* Resolves required dependencies
+* Creates dependencies and inject them
+
+https://github.com/boost-experimental/di
+
+---
+
+**Disclaimer** `[Boost].DI` is not an official Boost library
+
+----
+
+### Overview
+
+* One header - 3k LOC - (boost/di.hpp) / generated
+* Neither Boost nor STL is required
+* No 'if's, 'virtual's, 'exception's, macros, run-time errors
+* Non-intrusive
+* Supported compilers (C++14)
+  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+----
+
+### Quality / per commit
+
+* Travis/Appveyor build on Linux/OS X/Windows
+  * Builds with
+    `-Wall -Wextra -Werror -pedantic -pedantic-errors`
+  * Clang static analysis / Clang-tidy (static check)
+  * Valgrind / Dr. Memory (dynamic memory check)
+  * Clang-format (style check)
+* Documentation deployment to 'GitHub/gh-pages'
+
+----
+
+### Quality / Tests
+
+* Unit tests (99% test code coverage)
+* Functional tests
+* Performance tests / [Benchmarks](https://github.com/boost-experimental/di/tree/cpp14/benchmark)
+* Compilation-error tests ([Validates error message](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di_compile_time.cpp))
+* Run-time performance tests ([Compares generated assembler opcodes](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di_run_time.cpp))
+
+---
+
+100+ examples / 15+ extensions
+
+----
+
+### Goals
+
+* Guarantee object creation at compile-time
+  * Types are resolved at compile-time
+  * Short and intuitive error messages
+
+* Non-intrusive
+  * Constructor parameters deduction without reflection
+
+----
+
+### Goals
+
+* Performance
+  * Non-overhead (faster than written by hand)
+
+* Compilation times
+  * Compiles **faster than Java-Dagger2!**
+
+* Extendible
+  * Custom scopes/policies/providers
+
+----
+
+### Design
+
+| | |
+|-|-|
+| [Bindings](http://boost-experimental.github.io/di/user_guide/index.html#bindings) | Wiring Domain Specific Language |
+| [Scopes]((http://boost-experimental.github.io/di/user_guide/index.html#scopes) | Responsible for maintaining objects life time |
+| [Providers](http://boost-experimental.github.io/di/user_guide/index.html#providers) | Responsible for creating objects |
+| [Policies](http://boost-experimental.github.io/di/user_guide/index.html#policies) | Compile-time limitations for types / Run-time types visitor |
+| [Config](http://boost-experimental.github.io/di/user_guide/index.html#configuration) | Configuration for Policies and Providers |
+
+----
+
+### Dependency Injection Libraries
+
+<img src="images/libraries.png" style="width: 150%; background:none; border:none; box-shadow:none;" />
+
+----
+
+### Benchmarks (GCC-7/Java8)
+
+<img src="images/benchmark_512.png" style="width: 150%; background:none; border:none; box-shadow:none;" />
+
+Types = 512 | Constructor parameters <= 6
+
+----
+
+## [[Boost].DI](https://github.com/boost-experimental/di) by example
+
+```cpp
+#include <boost/di.hpp>
+namespace di = boost::di;
+```
+
+----
+
+### Automatic Injection (Object graph)
+
+```cpp
+App::App(const Reader reader, Printer printer);
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+##### Manual DI - Wiring mess
+
+```cpp
+int main() {
+  auto reader = Reader{};          // Wiring
+  auto printer = Printer{};        // Wiring
+  auto app = App{reader, printer}; // Wiring
+  app.run();
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+##### [Boost].DI
+
+```cpp
+int main() {
+  di::create<App>().run(); // Cache friendly object layout
+                           // Whole graph is known at compile time
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+### Bindings
+
+```cpp
+template<typename TReader = class Readable>
+class App {    ^
+ public:       |
+  App(const TReader&, std::unique_ptr<Printable>, config);
+};           ^                            ^           ^
+             |                            \--------\  |
+             \----------------------------------\  |  |
+                                                |  |  |
+const auto injector = di::make_injector(        |  |  |
+   di::bind<class Readable>.to<FileReader>(), --/  |  |
+   di::bind<Printable>.to<ConsolePrinter>(), ------/  |
+   di::bind<config>.to("127.0.0.1", 8080) ------------/
+);
+```
+
+* Full Object graph is being deduced
+* Non-polymorphic types don't have to be bound
+
+----
+
+### Performance
+
+```cpp
+injector.create<std::unique_ptr<App>>();
+```
+
+##### ASM x86-64
+
+```
+push   %rbx
+mov    %rdi,%rbx
+mov    $0x8,%edi
+callq  0x4009f0 <_Znwm@plt>
+movq   $0x400e78,(%rax)
+mov    %rax,(%rbx)
+mov    %rbx,%rax
+pop    %rbx
+retq
+```
+
+##### Same as
+
+```cpp
+std::make_unique<App>();
+```
+
+----
+
+### Compile-Time error messages
+
+```cpp
+int main() {
+  const auto injector = di::make_injector(
+     di::bind<class Readable>.to<FileReader>(),
+  // di::bind<Printable>.to<ConsolePrinter>() // Missing wiring
+  );
+  injector.create<App>();
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+error: 'create<App>' is deprecated: creatable constraint
+  injector.create<App>();           not satisfied
+           ^
+note 'create<App>' has been explicitly marked deprecated here
+  create
+  ^
+error: inline function 'abstract_type<Printable>::is_not_bound::error'
+ error(_ = "type is not bound, did you forget to add:
+           'di::bind<interface>.to<implementation>()'?");
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+## How is that helping with the Wiring Mess?
+
+----
+
+## Boost your design with [[Boost].DI](https://github.com/boost-experimental/di)
+
+## By example
+
+----
+
+### Dynamic polymorphism
+
+```cpp
+class Readable {                       class Printable {
+public:                                 public:
+  virtual ~Readable() = default;          virtual ~Printable() = default;
+  virtual int read() const = 0;           virtual void print(int) = 0;
+};                                     };
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+```cpp
+App::App(std::shared_ptr<const Readable> reader,
+         std::shared_ptr<Printable> printer);
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+----
+
+### Dynamic polymorphism
+
+##### Manual DI
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                     // Wiring
+  auto reader = std::make_shared<FileReader>(file);   // Wiring
+  auto printer = std::make_shared<ConsolePrinter>();  // Wiring
+  App app{reader, printer};                           // Wiring
+  app.run();
+}
+```
+
+##### [Boost].DI
+```cpp
+int main() {
+  const auto injector = di::make_injector(
+    di::bind<std::istream>.to<std::fstream>("input.txt"),
+    di::bind<class Readable>.to<FileReader>(),
+    di::bind<class Printable>.to<ConsolePrinter>()
+  );
+  auto app = injector.create<App>();
+  app.run();
+}
+```
+
+----
+
+### Modules
+
+```cpp
+constexpr auto module = [] {
+  return di::make_injector(
+    di::bind<std::istream>.to<std::fstream>("input.txt"),
+    di::bind<class Readable>.to<FileReader>(),
+    di::bind<class Printable>.to<ConsolePrinter>()
+  );
+};
+```
+
+```cpp
+int main() {
+  auto app = module().create<App>();
+  app.run();
+}
+```
+
+> Modules might be combined from other modules
+
+----
+
+### Type-Erasure
+
+```cpp
+class Readable;   // Type-Erased
+class Printable;  // Type-Erased
+```
+
+```cpp
+App::App(const Readable reader, Printable printer);
+```
+
+----
+
+### Type-Erasure
+
+##### Manual DI
+```cpp
+int main() {
+  std::fstream file{"input.txt"};            // Wiring
+  const Readable reader = FileReader{file};  // Wiring
+  Printable printer = ConsolePrinter();      // Wiring
+  App app{reader, printer};                  // Wiring
+  app.run();
+}
+```
+
+##### [Boost].DI
+
+```cpp
+int main() {
+  auto app = module().create<App>();
+  app.run();
+}
+```
+
+----
+
+### Static polymorphism
+
+```cpp
+template<typename TReader  = class Readable,   // Named template
+         typename TPrinter = class Printable>  // Named template
+class App {
+  App(const TReader& reader, TPrinter& printer);
+  ...
+};
+```
+
+----
+
+### Static polymorphism
+
+##### Manual DI
+```cpp
+int main() {
+  std::fstream file{"input.txt"};                   // Wiring
+  const FileReader reader{file};                    // Wiring
+  ConsolePrinter printer{};                         // Wiring
+  App<FileReader, ConsolePrinter>{reader, printer}; // Wiring
+  App.run();
+}
+```
+
+##### [Boost].DI
+```cpp
+int main() {
+  auto app = module().create<App>();
+  app.run();
+}
+```
+
+----
+
+### Concepts - C++20
+
+```cpp
+template <class T>
+concept Readable = requires(const T reader) {
+  { reader.read() } -> int;
+};
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+template <class T>
+concept Printable = requires(T printer, int value) {
+  printer.print(value);
+};
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+template<Readable TReader   = class Readable,   // Named template
+         Printable TPrinter = class Printable>  // Named template
+class App {
+ public:
+  App(const TReader reader, TPrinter printer);
+  ...
+};
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+### Concepts - C++20
+
+##### Manual DI
+```cpp
+int main() {
+  std::fstream file{"input.txt"};           // Wiring
+  const Readable reader = FileReader{file}; // Wiring
+  Printable printer = ConsolePrinter{};     // Wiring
+  App{reader, printer};                     // Wiring
+  App.run();
+}
+```
+
+##### [Boost].DI
+```cpp
+int main() {
+  auto app = module().create<App>();
+  app.run();
+}
+```
+
+----
+
+## Features for Free
+
+----
+
+### Refactoring for free
+
+#### Dynamic Polymorphism
+
+```cpp
+class App {
+ public:
+  App(std::shared_ptr<const Readable> reader,
+      std::shared_ptr<Printable> printer);
+  ...
+};
+```
+
+#### Type-Erasure + Static Polymorphism
+
+```cpp
+template<typename TPrinter = class Printable>
+class App {
+ public:
+  App(TPrinter& printer, const Readable reader);
+  ...
+};
+```
+
+----
+
+### Refactoring for free
+
+##### Manual DI
+
+```cpp
+int main() {
+  std::fstream file{"input.txt"};
+  auto printer = ConsolePrinter{};                  // Wiring DIFF
+  Readable reader = FileReader{file};               // Wiring DIFF
+  auto app = App<ConsolePrinter>{printer, reader};  // Wiring DIFF
+  app.run();
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+##### [Boost].DI
+
+```cpp
+int main() {
+  auto app = module().create<App>(); // Same old, same old...
+  app.run();
+}
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+## "If you liked it then you should have put a test on it", Beyonce rule
+
+----
+
+### Unit testing for free
+
+```cpp
+"should print read text"_test = [] {
+  auto [app, mocks] = testing::make<App>(); // Creates System Under Test
+                                            // and mocks
+
+  EXPECT_CALL(mocks<Readable>(), read).WillOnce(Return(42));
+  EXPECT_CALL(mocks<Printable>(), print, 42);
+
+  app.run();
+};
+```
+<!-- .element: style="margin-left:-3%; width:105%" -->
+
+> Automatic mocks injection using [GUnit](https://github.com/cpp-testing/GUnit)
+
+----
+
+### Integration testing for free
+
+```cpp
+"print read text"_test = [] {
+  const auto injector = di::make_injector(
+    module(),
+    di::bind<std::istream>.to([] {
+      std::stringstream str;
+      str << "test...";
+      return str;
+    }) [di::override] // overrides the original stream data
+  );
+
+  app.run();
+
+  EXPECT(...);
+}
+```
+
+----
+
+### Implementing features for free
+
+```
+Scenario: Value from an input file is displayed on the QtWindow
+ Given an 'input.txt' file with an integer value in it
+   And the first command line argument equals to "QtPrinter"
+ When the App runs
+ Then the integer value from 'input.txt' should
+      be printed on the QtWindow
+```
+
+----
+
+### Strong types for strong interfaces
+
+```cpp
+class QtPrinter {
+ public:
+  QtPrinter(int width, int height); // Weak interface
+};
+```
+
+```cpp
+QtPrinter{600, 800}; // Okay
+QtPrinter{800, 600}; // Oops
+```
+
+----
+
+### Strong types for strong interfaces
+
+<center>
+  <a href="https://www.youtube.com/watch?v=WVleZqzTw2k">
+    <img src="images/strong_types_for_strong_interfaces.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
+  </a>
+</center>
+
+----
+
+### Strong types for strong interfaces
+
+```cpp
+using width  = named<int, class Width>;
+using height = named<int, class Height>;
+```
+
+```cpp
+class QtPrinter {
+ public:
+  QtPrinter(width, height); // Strong interface
+};
+```
+
+```cpp
+QtPrinter{width{500}, height{800}}; // Okay
+QtPrinter{height{500}, width{800}}; // Compile error
+QtPrinter{500, 800};                // Compile error
+```
+
+----
+
+### Implementing features for free
+
+```cpp
+constexpr auto module = [](std::string_view printer) {
+  return di::make_injector(
+    di::bind<std::istream>.to<std::fstream>("input.txt"),
+    di::bind<class Readable>.to<FileReader>(),
+    di::bind<class Printable>.to([&](const auto& injector) {
+      return printer == "QtPrinter"
+        ? injector.create<QtPrinter>(width{1024}, height{768})
+        : injector.create<ConsolePrinter>();
+    })
+  );
+};
+```
+
+```cpp
+int main(int argc, char** argv) {
+  assert(argc == 2);
+  auto app = module(argv[1]).create<App>();
+  app.run();
+}
+```
+
+----
+
+### Enforce guidelines for free
+
+```cpp
+class no_raw_pointers : public di::config {
+ public:
+  auto policies(...) const {
+    return di::make_policies(
+      constructible(not std::is_pointer<di::_>{})
+    );
+  }
+};
+```
+
+> Guideline: No raw pointers
+
+----
+
+### Enforce guidelines for free
+
+```cpp
+int main() {
+  const auto injector = di::make_injector<no_raw_pointers>(
+    module()
+  );
+
+  injector.create<App>(); // Okay
+}
+```
+
+----
+
+### Enforce guidelines for free
+
+```cpp
+class AppWithRaw {
+ public:
+  AppWithRaw(Readable*, std::shared_ptr<Printable>);
+  ...
+};
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+injector.create<AppWithRaw>(); // Compile error
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+```cpp
+error: 'create<AppWithRaw>' is deprecated: creatable constraint
+  injector.create<AppWithRaw>();           not satisfied
+           ^
+note 'create<AppWithRaw>' has been explicitly marked deprecated here
+  create
+  ^
+error: inline function 'policies::type<Readable*>::
+  not_allowed_by<not_<std::is_pointer<_>>>::error' is not defined
+ error(_ = "type disabled by constructible policy, 
+            added by make_injector<CONFIG>!");
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+### [[Boost].DI](https://github.com/boost-experimental/di) - More features...
+
+* Core ([Examples](http://boost-experimental.github.io/di/examples))
+    * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
+* Extensions ([Examples](http://boost-experimental.github.io/di/extensions))
+    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization, ...
+
+==============================================================================
+
+## Summary
+
+----
+
+### Good practises are good practices for a reason!
+
+SOLID >> `STUPID`
+
+----
+
+### Dependency Injection
+
+* (+) Loosely coupled code
+* (+) Easy to test code
+* (-) Wiring Mess
+
+----
+
+### [[Boost].DI](https://github.com/boost-experimental/di)
+
+* (+) Promotes loosely coupled code
+* (+) Removes / Cleanup the wiring mess
+* (+) Simplify refactoring / Adding new features
+* (+) Makes testing / enforcing guidelines easier
+* (-) Steeper learning curve
+
+==============================================================================
+
+### Questions?
+
+| [Boost].DI |  |
+| ------- | ------------- |
+| Documentation | http://boost-experimental.github.io/di |
+| Source Code | https://github.com/boost-experimental/di |
+| Try it online! | http://boost-experimental.github.io/di/try_it |
+
+-
+
+#### [kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
+					</script>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // Turns fragments on and off globally
+        fragments: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: true,
+
+        // Hides the address bar on mobile devices
+        hideAddressBar: true,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style
+        transition: 'convex', // none/fade/slide/convex/concave/zoom
+
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Parallax background image
+        parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+        // Parallax background size
+        parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+        // Number of pixels to move the parallax background per slide
+        // - Calculated automatically unless specified
+        // - Set to 0 to disable movement along an axis
+        parallaxBackgroundHorizontal: null,
+        parallaxBackgroundVertical: null,
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
