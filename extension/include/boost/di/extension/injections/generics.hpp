@@ -135,7 +135,7 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
   void** ptr;                                                                                                      \
   name() = default;                                                                                                \
   template <class T>                                                                                               \
-  inline name(const T& t, int) : self(&t), ptr(vtable<std::decay_t<T>>()) {                                        \
+  inline name(const T& t, int) : self{&t}, ptr{vtable<std::decay_t<T>>()} {                                        \
     name_impl<std::decay_t<T>, 0>(ptr);                                                                            \
   }                                                                                                                \
   template <class T, int N, std::enable_if_t<!::boost::di::extension::has_info__<self_t, id + N>::value, int> = 0> \
@@ -146,7 +146,7 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
     ptr[N] = *(void**)(&f);                                                                                        \
     name_impl<T, N + 1>(ptr);                                                                                      \
   }                                                                                                                \
-  template <class T>                                                                                               \
+  template <class T, class = std::enable_if_t<!std::is_convertible<T, name>::value>>                               \
   inline name(const T& t) : name(t, 0)
 
 #define REQUIRES(name, ...) REQUIRES_IMPL(__COUNTER__, name, __VA_ARGS__)
@@ -163,33 +163,6 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
       return (*(type::type*)(&vtable[i - id]))(self COMMA_IF(__VA_ARGS__) PASS(__VA_ARGS__));                           \
     }                                                                                                                   \
   }
-
-template <template <class...> class TWrapper, class T, class... Ts, template <class, class> class X, class TScope, class Y>
-auto generic_cast(const TWrapper<T, X<TScope, Y>>& arg) {
-  return arg.wrapper_.operator T();
-}
-
-template <class T>
-decltype(auto) generic_cast(const T& arg) {
-  return arg;
-}
-
-struct generics_provider {
-  template <class TInitialization, class T, class... TArgs>
-  struct is_creatable {
-    static constexpr auto value = true;
-  };
-
-  template <class T, class TMemory /*stack/heap*/, class... TArgs>
-  auto get(const di::type_traits::direct&, const TMemory&, TArgs&&... args) const {
-    return new T(generic_cast(args)...);
-  }
-
-  template <class T, class TMemory /*stack/heap*/, class... TArgs>
-  auto get(const di::type_traits::uniform&, const TMemory&, TArgs&&... args) const {
-    return new T{generic_cast(args)...};
-  }
-};
 
 }  // extension
 BOOST_DI_NAMESPACE_END

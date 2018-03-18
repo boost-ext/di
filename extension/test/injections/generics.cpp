@@ -27,19 +27,15 @@ struct implementation2 {
 };
 
 struct example {
-  BOOST_DI_INJECT(example, interface i) : i(i) {}
+  explicit example(interface i) : i{i} {}
   interface i;
 };
 
 int main() {
   /*<override `di` provider configuration>*/
-  struct generics_provider_config : di::config {
-    static auto provider(...) noexcept { return di::extension::generics_provider{}; }
-  };
-
   {
     // clang-format off
-    const auto injector = di::make_injector<generics_provider_config>(
+    const auto injector = di::make_injector(
       di::bind<interface>().to<implementation1>()
     );
     // clang-format on
@@ -51,7 +47,7 @@ int main() {
 
   {
     // clang-format off
-    const auto injector = di::make_injector<generics_provider_config>(
+    const auto injector = di::make_injector(
       di::bind<interface>().to<implementation2>()
     );
     // clang-format on
