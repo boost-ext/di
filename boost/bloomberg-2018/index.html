@@ -109,7 +109,7 @@ Kris Jusiak, Quantlab Financial
 * Loosely coupled
   * Easy to extend, maintain, reuse
 * Testable
-  * Easy to mock
+  * Easy to fake / mock
 * ...
       There is much more!
 
@@ -145,32 +145,32 @@ Scenario: Value from a file is displayed
 ### KISS - ~~Keep it simple~~, `STUPID` / God Object
 
 ```cpp
-class Manager {                                 // Indescriptive Naming
-public:                                         // God Object
-  void printValue(int);
-  int readValue();
+class Manager {                                     // Indescriptive Naming
+ public:                                            // God Object
+  void print(int);
+  int read() const;
   ...
 };
 ```
-<!-- .element: style="margin-left:-3%; width:105%" -->
+<!-- .element: style="margin-left:-3%; width:110%" -->
 
 ```cpp
 class App {
-public:
-  App() : manager{std::make_shared<Manager>()};// Untestability
-                                               // Tight Coupling
-  __attribute__((always_inline)) void run() {  // Premature Optimization
-    Logger::instance()                         // Singleton
-      << "run:" << manager()->readValue() << '\n';
+ public:
+  App() : manager{std::make_shared<Manager>()};   // Untestability
+                                                  // Tight Coupling
+  __attribute__((always_inline)) void run() {     // Premature Optimization
+    Logger::instance()                            // Singleton
+      << "run:" << manager()->read() << '\n';
 
-    manager->printValue(manager->readValue());  // Duplication
+    manager->print(manager->read());              // Duplication
   }
 
 private:
-  std::shared_ptr<Manager> manager;
+  std::shared_ptr<Manager> manager;               // Premature Pessimization
 };
 ```
-<!-- .element: style="margin-left:-3%; width:105%" -->
+<!-- .element: style="margin-left:-3%; width:110%" -->
 
 ----
 
@@ -241,7 +241,7 @@ class Reader {
  */
 class Printer {
  public:
-   void print(int i);
+   void print(int);
 };
 ```
 
@@ -251,18 +251,18 @@ class Printer {
 
 ```cpp
 class App {
-  const Reader reader{};
-  Printer printer{};
+  const Reader reader{};              // Tight
+  Printer printer{};                  // Coupling
 
 public:
   explicit App(std::string_view path)
-    : reader{path} { }    // Dependencies carrying
+    : reader{path} { }                // Dependencies carrying
 
   void run() {
     const auto value = reader.read();
-    printer.print(value); // Law of Demeter
-                          // "Only talk to your
-                          //  immediate friends"
+    printer.print(value);             // Law of Demeter
+                                      // "Only talk to your
+                                      //  immediate friends"
   }
 };
 ```
@@ -285,6 +285,7 @@ int main() {
 
 ![app](images/app2.png)
 
+* (+) No god objects
 * (+/-) We can somewhat test it in isolation besides the App
 * (-) Reader/Printer tightly coupled to the App
 * (-) Reader requires a file for testing
@@ -320,7 +321,7 @@ public:                                 public:
 ```
 <!-- .element: style="margin-left:-3%; width:105%" -->
 
-> We can have different implementations of readers/printers!
+> We can have different implementations of readers / printers!
 
 ----
 
@@ -410,6 +411,7 @@ public:
 
 * Standard
   * [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)
+  * [Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) (Proposal)
 
 * Libraries
   * [Boost.TypeErasure](http://www.boost.org/doc/libs/1_66_0/doc/html/boost_typeerasure.html)
@@ -417,16 +419,13 @@ public:
   * [Folly.Poly](https://github.com/facebook/folly)
   * [Dyno](https://github.com/ldionne/dyno)
 
-* Proposals
-  * [Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf)
-
 ----
 
 ### Type-Erasure
 
 ```cpp
 class FileReader { // No inhertiance
-public:
+ public:
   explicit FileReader(std::istream&);
   int read() const;
 };
@@ -434,7 +433,7 @@ public:
 
 ```cpp
 class ConsolePrinter { // No inhertiance
-public:
+ public:
   void print(int);
 };
 ```
@@ -496,8 +495,18 @@ int main() {
 ### Static polymorphism
 
 ```cpp
-class FileReader;
-class ConsolePrinter;
+class FileReader { // No inhertiance
+ public:
+  explicit FileReader(std::istream&);
+  int read() const;
+};
+```
+
+```cpp
+class ConsolePrinter { // No inhertiance
+ public:
+  void print(int);
+};
 ```
 
 > Same as with type-erasure!
@@ -507,7 +516,7 @@ class ConsolePrinter;
 ### Static polymorphism
 
 ```cpp
-template<class TReader, class TPrinter>
+template<class TReader, class TPrinter> // templates
 class App {
   const TReader reader;
   TPrinter printer;
@@ -529,25 +538,24 @@ public:
 
 ```cpp
 int main() {
-  std::fstream file{"input.txt"};                       // Wiring
-  const FileReader reader{file};                        // Wiring
-  ConsolePrinter printer{};                             // Wiring
-  App/*<FileReader, ConsolePrinter>*/{reader, printer}; // Wiring
+  std::fstream file{"input.txt"};                   // Wiring
+  const FileReader reader{file};                    // Wiring
+  ConsolePrinter printer{};                         // Wiring
+  App<FileReader, ConsolePrinter>{reader, printer}; // Wiring
   App.run();
 }
 ```
-<!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 
 ### Static polymorphism
 
 * (+) Reader/Printer aren't tightly coupled to the App
-* (+) Performance
+* (+) Performance (inlining)
 * (+) Non-intrusive (no inheritance)
 * (-) Non-descriptive error messages
 * (-) Slower compilation times
-* (-) Templates are contagious (Code bloat)
+* (-) Templates are contagious (code bloat)
 
 ---
 
@@ -576,7 +584,7 @@ concept Printable = requires(T printer, int value) {
 ### Concepts - C++20
 
 ```cpp
-template<Readable TReader, Printable TPrinter>
+template<Readable TReader, Printable TPrinter> // concepts
  // requires Readable<TReader> and Printable<TPrinter>
 class App {
   const TReader reader;
@@ -612,9 +620,9 @@ int main() {
 * (+) Explicit requirements/constraints
 * (+) Better error messages
 * (+) Non-intrusive (no inheritance)
-* (+) Performance
+* (+) Performance (inlining)
 * (-) Slower compilation times
-* (-) Templates are contagious (Code bloat)
+* (-) Templates are contagious (code bloat)
 
 ----
 
@@ -685,7 +693,7 @@ int main() {
 
 * Boilerplate / Tedious
 * Hard to maintain
-  * Order is important!
+  * Order is important
 * Multiple configurations
   * Release, Debug, Testing
 
@@ -767,7 +775,7 @@ https://github.com/boost-experimental/di
 
 ### Goals
 
-* Guarantee object creation at compile-time
+* Compile-time object creation guarantee
   * Types are resolved at compile-time
   * Short and intuitive error messages
 
@@ -779,13 +787,13 @@ https://github.com/boost-experimental/di
 ### Goals
 
 * Performance
-  * Non-overhead (faster than written by hand)
+  * No overhead (at least as fast as hand written)
 
 * Compilation times
   * Compiles **faster than Java-Dagger2!**
 
 * Extendible
-  * Custom scopes/policies/providers
+  * Custom scopes / policies / providers
 
 ----
 
@@ -831,7 +839,7 @@ App::App(const Reader reader, Printer printer);
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
-##### Manual DI - Wiring mess
+##### Manual DI
 
 ```cpp
 int main() {
@@ -873,7 +881,7 @@ const auto injector = di::make_injector(        |  |  |
 );
 ```
 
-* Full Object graph is being deduced
+* Full Object graph is being deduced (recursively)
 * Non-polymorphic types don't have to be bound
 
 ----
@@ -1057,10 +1065,11 @@ int main() {
 template<typename TReader  = class Readable,   // Named template
          typename TPrinter = class Printable>  // Named template
 class App {
-  App(const TReader& reader, TPrinter& printer);
+  App(const TReader reader, TPrinter printer);
   ...
 };
 ```
+<!-- .element: style="margin-left:0%; width:100%" -->
 
 ----
 
@@ -1231,7 +1240,7 @@ int main() {
       std::stringstream str;
       str << "test...";
       return str;
-    }) [di::override] // overrides the original stream data
+    }) [di::override] // Overrides the original stream data
   );
 
   app.run();
@@ -1336,7 +1345,7 @@ class no_raw_pointers : public di::config {
  public:
   auto policies(...) const {
     return di::make_policies(
-      constructible(not std::is_pointer<di::_>{})
+      di::policies::constructible(not std::is_pointer<di::_>{})
     );
   }
 };
