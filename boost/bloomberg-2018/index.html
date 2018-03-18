@@ -518,11 +518,11 @@ class ConsolePrinter { // No inhertiance
 ```cpp
 template<class TReader, class TPrinter> // templates
 class App {
-  const TReader reader;
-  TPrinter printer;
+  const TReader& reader;
+  TPrinter& printer;
 
 public:
-  App(const TReader reader, TPrinter printer)
+  App(const TReader& reader, TPrinter& printer)
     : reader{reader}, printer{printer}
   { }
 
@@ -587,11 +587,11 @@ concept Printable = requires(T printer, int value) {
 template<Readable TReader, Printable TPrinter> // concepts
  // requires Readable<TReader> and Printable<TPrinter>
 class App {
-  const TReader reader;
-  TPrinter printer;
+  const TReader& reader;
+  TPrinter& printer;
 
 public:
-  App(const TReader reader, TPrinter printer)
+  App(const TReader& reader, TPrinter& printer)
     : reader{reader}, printer{printer} {}
 
   void run();
@@ -742,6 +742,7 @@ https://github.com/boost-experimental/di
 * Neither Boost nor STL is required
 * No 'if's, 'virtual's, 'exception's, macros, run-time errors
 * Non-intrusive
+* Exception / Thread safe
 * Supported compilers (C++14)
   * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
@@ -883,6 +884,29 @@ const auto injector = di::make_injector(        |  |  |
 
 * Full Object graph is being deduced (recursively)
 * Non-polymorphic types don't have to be bound
+
+----
+
+### Scopes
+
+```
+              T&, shared_ptr<T>, weak_ptr<T> <-------------------+
+                                                                 |
+   +-------------------------------------------+ Singleton scope +
+   |
+   |     Unique scope   Unique scope -> T, T&&, T*, std::unique_ptr<T>
+   |     +---+          +------+
+   |     |              |
+>--+-----+--------------+------------+---------> Application life time
+   |   |                             |
+   |   | Shared scope                |
+   |   +-----------------------------+ Injector life time
+   |
+   +------------------------------------+ Instance / User scope
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+> Shared scope / Instance scope aren't deduced by default but deduction rules might be changed
 
 ----
 
@@ -1065,7 +1089,7 @@ int main() {
 template<typename TReader  = class Readable,   // Named template
          typename TPrinter = class Printable>  // Named template
 class App {
-  App(const TReader reader, TPrinter printer);
+  App(const TReader& reader, TPrinter& printer);
   ...
 };
 ```
@@ -1119,7 +1143,7 @@ template<Readable TReader   = class Readable,   // Named template
          Printable TPrinter = class Printable>  // Named template
 class App {
  public:
-  App(const TReader reader, TPrinter printer);
+  App(const TReader& reader, TPrinter& printer);
   ...
 };
 ```
@@ -1394,7 +1418,7 @@ note 'create<AppWithRaw>' has been explicitly marked deprecated here
   ^
 error: inline function 'policies::type<Readable*>::
   not_allowed_by<not_<std::is_pointer<_>>>::error' is not defined
- error(_ = "type disabled by constructible policy, 
+ error(_ = "type disabled by constructible policy,
             added by make_injector<CONFIG>!");
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->

@@ -26,11 +26,11 @@ class ConsolePrinter final {
 template<typename TReader = class Readable,
          typename TPrinter = class Printable>
 class App {
-  const TReader reader;
-  TPrinter printer;
+  const TReader& reader;
+  TPrinter& printer;
 
 public:
-  App(const TReader reader, TPrinter printer)
+  App(const TReader& reader, TPrinter& printer)
     : reader{reader}, printer{printer} {}
 
   void run() {
