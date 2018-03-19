@@ -74,7 +74,7 @@ Kris Jusiak, Quantlab Financial
           * Dynamic Polymorphism
           * Type-Erasure
           * Static Polymorphism
-          * Concepts
+          * Concepts - C++20
     * Problems / Motivation
 
 ----
@@ -427,7 +427,7 @@ public:
 ### Type-Erasure
 
 ```cpp
-class FileReader { // No inhertiance
+class FileReader { // No inheritance
  public:
   explicit FileReader(std::istream&);
   int read() const;
@@ -435,7 +435,7 @@ class FileReader { // No inhertiance
 ```
 
 ```cpp
-class ConsolePrinter { // No inhertiance
+class ConsolePrinter { // No inheritance
  public:
   void print(int);
 };
@@ -498,7 +498,7 @@ int main() {
 ### Static polymorphism
 
 ```cpp
-class FileReader { // No inhertiance
+class FileReader { // No inheritance
  public:
   explicit FileReader(std::istream&);
   int read() const;
@@ -506,7 +506,7 @@ class FileReader { // No inhertiance
 ```
 
 ```cpp
-class ConsolePrinter { // No inhertiance
+class ConsolePrinter { // No inheritance
  public:
   void print(int);
 };
@@ -1177,6 +1177,47 @@ int main() {
 
 ----
 
+### Wiring under the hood
+
+#### Dynamic Polymorphism
+```cpp
+di::bind<class Readable>.to<FileReader>() // 'class' is optional
+               ^            ^
+               Interface -> Implementation (Inheritance)
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+#### Type-Erasure
+```cpp
+di::bind<class Readable>.to<FileReader>() // 'class' is optional
+               ^            ^
+               Type      -> Erased-Type (No Inheritance)
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
+### Wiring under the hood
+
+#### Static Polymorphism
+```cpp
+di::bind<class Readable>.to<FileReader>()
+         ^                  ^
+        Fwd declaration ->  Type (Might be templated)
+        (Tag)
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+#### Concepts - C++20
+```cpp
+di::bind<class Readable>.to<FileReader>()
+         ^                  ^
+         Concept-Name   ->  Type (Has to satisfy the concept)
+```
+<!-- .element: style="margin-left:0%; width:100%" -->
+
+----
+
 ## Showcase
 
 ----
@@ -1401,24 +1442,24 @@ int main() {
 ### Quality enforcement
 
 ```cpp
-class AppWithRaw {
+class AppWithRawPtr {
  public:
-  AppWithRaw(Readable*, std::shared_ptr<Printable>);
+  AppWithRawPrt(Readable*, std::shared_ptr<Printable>);
   ...
 };
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
 ```cpp
-injector.create<AppWithRaw>(); // Compile error
+injector.create<AppWithRawPtr>(); // Compile error
 ```
 <!-- .element: style="margin-left:0%; width:100%" -->
 
 ```cpp
-error: 'create<AppWithRaw>' is deprecated: creatable constraint
-  injector.create<AppWithRaw>();           not satisfied
+error: 'create<AppWithRawPtr>' is deprecated: creatable constraint
+  injector.create<AppWithRawPtr>();           not satisfied
            ^
-note 'create<AppWithRaw>' has been explicitly marked deprecated here
+note 'create<AppWithRawPtr>' has been explicitly marked deprecated here
   create
   ^
 error: inline function 'policies::type<Readable*>::
