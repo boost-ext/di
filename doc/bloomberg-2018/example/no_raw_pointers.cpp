@@ -73,9 +73,9 @@ class no_raw_pointers : public di::config {
   }
 };
 
-class AppWithRaw {
+class AppWithRawPtr {
  public:
-  AppWithRaw(Readable*, std::shared_ptr<Printable>);
+  AppWithRawPtr(Readable*, std::shared_ptr<Printable>);
   void run();
 };
 
@@ -88,7 +88,7 @@ int main() {
   }
 
   {
-  auto app = injector.create<AppWithRaw>(); // Compile error
+  auto app = injector.create<AppWithRawPtr>(); // Compile error
   app.run();
   }
 }
