@@ -56,7 +56,7 @@
     
 
     
-        <dt><span class="section"><a href="#generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</a></span></dt>
+        <dt><span class="section"><a href="#type-erasure">Type Erasure</a></span></dt>
     
 
     
@@ -117,7 +117,7 @@
 <li><a href="#concepts">Concepts</a></li>
 <li><a href="#factory">Factory</a></li>
 <li><a href="#shared-factory">Shared Factory</a></li>
-<li><a href="#generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</a></li>
+<li><a href="#type-erasure">Type Erasure</a></li>
 <li><a href="#lazy">Lazy</a></li>
 <li><a href="#named-parameters">Named Parameters</a></li>
 <li><a href="#xml-injection">XML Injection</a></li>
@@ -601,60 +601,70 @@ int main() {
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/shared_factory.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/shared_factory.cpp</a></li>
 </ul>
-<h3 id="generics-typed-erasure-interfaces">Generics / Typed Erasure Interfaces</h3>
-<pre><code class="cpp">#include &quot;boost/di/extension/injections/generics.hpp&quot;
+<h3 id="type-erasure">Type Erasure</h3>
+<pre><code class="cpp">#include &quot;boost/di/extension/injections/type_erasure.hpp&quot;
 
 #include &lt;cassert&gt;
+#include &lt;sstream&gt;
 
 namespace di = boost::di;
 
 /*&lt;&lt;generic interface&gt;&gt;*/
-struct interface {
-  GENERIC(interface) {}
-  bool update(int i) REQUIRES(update, i);
+struct Drawable {
+  TYPE_ERASURE(Drawable) {}
+
+  auto draw(std::ostream&amp; out) const
+    -&gt; void REQUIRES(draw, out);
 };
 
-/*&lt;&lt;implementation without inheritance&gt;&gt;*/
-struct implementation1 {
-  bool update(int i) { return i == 42; }
+/*&lt;&lt;No inheritance&gt;&gt;*/
+struct Square {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
 };
 
-/*&lt;&lt;implementation without inheritance&gt;&gt;*/
-struct implementation2 {
-  bool update(int i) { return i != 42; }
+/*&lt;&lt;No inheritance&gt;&gt;*/
+struct Circle {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
 };
 
-struct example {
-  explicit example(interface i) : i{i} {}
-  interface i;
+class Example {
+ public:
+  explicit Example(const Drawable drawable) : drawable{drawable} {}
+  void draw(std::ostream&amp; out) const { drawable.draw(out); }
+
+ private:
+  Drawable drawable;
 };
 
 int main() {
-  /*&lt;override `di` provider configuration&gt;*/
   {
+    std::stringstream str{};
+
     const auto injector = di::make_injector(
-      di::bind&lt;interface&gt;().to&lt;implementation1&gt;()
+      di::bind&lt;Drawable&gt;().to&lt;Square&gt;()
     );
 
-    auto object = injector.create&lt;example&gt;();
-    assert(!object.i.update(0));  /// calls implementation1.update(0)
-    assert(object.i.update(42));  /// calls implementation1.update(42)
+    auto example = injector.create&lt;Example&gt;();
+    example.draw(str);
+    assert(&quot;Square&quot; == str.str());
   }
 
   {
+    std::stringstream str{};
+
     const auto injector = di::make_injector(
-      di::bind&lt;interface&gt;().to&lt;implementation2&gt;()
+      di::bind&lt;Drawable&gt;().to&lt;Circle&gt;()
     );
 
-    auto object = injector.create&lt;example&gt;();
-    assert(object.i.update(0));    /// calls implementation2.update(0)
-    assert(!object.i.update(42));  /// calls implementation2.update(42)
+    auto example = injector.create&lt;Example&gt;();
+    example.draw(str);
+    assert(&quot;Circle&quot; == str.str());
   }
 }
 </code></pre>
 
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/generics.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/generics.cpp</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/type_erasure.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/type_erasure.cpp</a></li>
 </ul>
 <h3 id="lazy">Lazy</h3>
 <pre><code class="cpp">#include &quot;boost/di/extension/injections/lazy.hpp&quot;
