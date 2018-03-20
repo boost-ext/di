@@ -14,155 +14,120 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-template <class...>
-struct valid {
-  using type = int;
-};
-
-template <class... Ts>
-using valid_t = typename valid<Ts...>::type;
-
-template <int, class T>
-struct type_id_type {};
-
-template <class, class...>
-struct type_id_impl;
-
-template <std::size_t... Ns, class... Ts>
-struct type_id_impl<std::index_sequence<Ns...>, Ts...> : type_id_type<Ns, Ts>... {};
-
-template <class... Ts>
-struct type_id : type_id_impl<std::make_index_sequence<sizeof...(Ts)>, Ts...> {};
-
-template <class T, int, int N>
-auto get_id_impl(type_id_type<N, T>*) {
-  return N;
-}
-template <class T, int D>
-auto get_id_impl(...) {
-  return D;
-}
-template <class TIds, int D, class T>
-auto get_id() {
-  return get_id_impl<T, D>((TIds*)0);
-}
-
 template <class T>
 struct identity {
   using type = T;
 };
 
-template <int N, class D, class T>
-auto get_type_impl(type_id_type<N, T>*) {
-  return identity<T>{};
-}
-template <int, class D>
-auto get_type_impl(...) {
-  return identity<D>{};
-}
-
-template <class TIds, class D, int N>
-struct get_type {
-  using underlying_type = decltype(get_type_impl<N, D>((TIds*)0));
-  using type = typename underlying_type::type;
-};
-
-template <class TIds, int N, class D = void>
-using get_type_t = typename get_type<TIds, D, N>::type;
-
 template <class>
-struct get_size;
-
-template <template <class...> class T, class... Ts>
-struct get_size<T<Ts...>> {
-  static constexpr auto value = sizeof...(Ts);
-};
-
-template <class>
-struct function_traits;
+struct type_erasure_traits;
 
 template <class R, class T, class... TArgs>
-struct function_traits<R (T::*)(TArgs...) const> {
-  using type = R (*)(const void*, TArgs...);
-  using result = R;
-  using args = type_id<TArgs...>;
+struct type_erasure_traits<R (T::*)(TArgs...) const> {
+  using type = R (*)(void*, TArgs...);
 };
 
 template <class R, class T, class... TArgs>
-struct function_traits<R (T::*)(TArgs...)> {
-  using type = R (*)(const void*, TArgs...);
-  using result = R;
-  using args = type_id<TArgs...>;
+struct type_erasure_traits<R (T::*)(TArgs...)> {
+  using type = R (*)(void*, TArgs...);
 };
 
-template <class, int, class = int>
-struct has_info__ : std::false_type {};
+template <class R, class... TArgs>
+struct type_erasure_traits<R(TArgs...)> {
+  using type = R (*)(void*, TArgs...);
+};
 
-template <class T, int N>
-struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : std::true_type {};
+template <class R, class... TArgs>
+struct type_erasure_traits<R(TArgs...) const> {
+  using type = R (*)(void*, TArgs...);
+};
 
-#define ARGS_IMPL(i, ...) \
-  __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT)()::boost::di::extension::get_type_t<typename type::args, i> p##i
-#define ARGS(...)                                                                    \
-  __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_REPEAT) \
-  (__BOOST_DI_SIZE(__VA_ARGS__), ARGS_IMPL, __VA_ARGS__)
+template <int n>
+struct counter : counter<n - 1> {
+  int _{};
+};
 
-#define PASS_IMPL(i, ...) __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT)() p##i
-#define PASS(...)                                                                    \
-  __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_REPEAT) \
-  (__BOOST_DI_SIZE(__VA_ARGS__), PASS_IMPL, __VA_ARGS__)
-#define COMMA_IF(...) __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_COMMA)()
+template <>
+struct counter<0> {};
 
-#define TYPE_ERASURE(name)                                                                                         \
-  static constexpr auto id = __COUNTER__ + 1;                                                                      \
-  using self_t = name;                                                                                             \
-  template <int, class = void>                                                                                     \
-  struct info__;                                                                                                   \
-  template <int N, std::enable_if_t<!::boost::di::extension::has_info__<self_t, id + N>::value, int> = 0>          \
-  static constexpr auto count() {                                                                                  \
-    return N;                                                                                                      \
-  }                                                                                                                \
-  template <int N, std::enable_if_t<::boost::di::extension::has_info__<self_t, id + N>::value, int> = 0>           \
-  static constexpr auto count() {                                                                                  \
-    return count<N + 1>();                                                                                         \
-  }                                                                                                                \
-  template <class T>                                                                                               \
-  static auto& vtable() {                                                                                          \
-    static void* fs[count<0>()];                                                                                   \
-    return fs;                                                                                                     \
-  }                                                                                                                \
-  const void* self;                                                                                                \
-  void** ptr;                                                                                                      \
-  name() = default;                                                                                                \
-  template <class T>                                                                                               \
-  inline name(const T& t, int) : self{&t}, ptr{vtable<std::decay_t<T>>()} {                                        \
-    name_impl<std::decay_t<T>, 0>(ptr);                                                                            \
-  }                                                                                                                \
-  template <class T, int N, std::enable_if_t<!::boost::di::extension::has_info__<self_t, id + N>::value, int> = 0> \
-  static void name_impl(void**) {}                                                                                 \
-  template <class T, int N, std::enable_if_t<::boost::di::extension::has_info__<self_t, id + N>::value, int> = 0>  \
-  static void name_impl(void** ptr) {                                                                              \
-    auto f = &info__<id + N>::template f<T>;                                                                       \
-    ptr[N] = *(void**)(&f);                                                                                        \
-    name_impl<T, N + 1>(ptr);                                                                                      \
-  }                                                                                                                \
-  template <class T, class = std::enable_if_t<!std::is_convertible<T, name>::value>>                               \
-  inline name(const T& t) : name(t, 0)
+template <class I, int MaxFunSize = 8>
+class type_erasure {
+ public:
+  type_erasure() = default;
 
-#define REQUIRES(name, ...) REQUIRES_IMPL(__COUNTER__, name, __VA_ARGS__)
-#define REQUIRES_IMPL(i, name, ...)                                                                                     \
-  { return info__<i>::call(self, ptr COMMA_IF(__VA_ARGS__) __VA_ARGS__); }                                              \
-  template <class V>                                                                                                    \
-  struct info__<i, V> {                                                                                                 \
-    using type = ::boost::di::extension::function_traits<decltype(&self_t::name)>;                                      \
-    template <class T>                                                                                                  \
-    static inline typename type::result f(const void* ptr COMMA_IF(__VA_ARGS__) ARGS(__VA_ARGS__)) {                    \
-      return ((T*)ptr)->name(PASS(__VA_ARGS__));                                                                        \
-    }                                                                                                                   \
-    static inline typename type::result call(const void* self, void** vtable COMMA_IF(__VA_ARGS__) ARGS(__VA_ARGS__)) { \
-      return (*(type::type*)(&vtable[i - id]))(self COMMA_IF(__VA_ARGS__) PASS(__VA_ARGS__));                           \
-    }                                                                                                                   \
+  template <class Tgt, class = std::enable_if_t<!std::is_convertible<std::decay_t<Tgt>, type_erasure>::value>>
+  type_erasure(Tgt&& tgt) : type_erasure(std::forward<Tgt>(tgt), std::make_index_sequence<cs_counter<I>>{}) {}
+
+  template <class Tgt, class T = std::decay_t<Tgt>, std::size_t... Ns>
+  type_erasure(Tgt&& tgt, std::index_sequence<Ns...>) : ptr_{new T{std::forward<Tgt>(tgt)}}, vtable_{vtable<Tgt>()} {
+    vtable_[0] = (void*)I::template dtor<T>;
+    vtable_[1] = (void*)I::template copy_ctor<T>;
+    (void)aux::swallow{0, (set<Ns, T>(identity<typename type_erasure_traits<typename decltype(
+                                          I::fsign__(std::integral_constant<int, Ns>{}))::type>::type>{}),
+                           0)...};
   }
+
+  type_erasure(const type_erasure& other)
+      : ptr_{(reinterpret_cast<void* (*)(void*)>(other.vtable_[1]))(other.ptr_)}, vtable_{other.vtable_} {}
+
+  type_erasure(type_erasure&& other) : ptr_{other.ptr_}, vtable_{other.vtable_} { other.ptr_ = nullptr; }
+
+  ~type_erasure() { (reinterpret_cast<void (*)(void*)>(vtable_[0]))(ptr_); }
+
+ protected:
+  using type__ = I;
+
+  static counter<1> fnext__(counter<1>);
+
+  template <class T>
+  static constexpr auto cs_counter = sizeof(T::fnext__(::boost::di::extension::counter<MaxFunSize + 1>())) / sizeof(int) - 1;
+
+  template <int Id, class TSign, class... Ts>
+  decltype(auto) call__(Ts&&... args) const {
+    return (*reinterpret_cast<typename type_erasure_traits<TSign>::type*>(&vtable_[2 + Id]))(ptr_, args...);
+  }
+
+  static constexpr auto CS_MAX_COUNT = MaxFunSize;
+
+ private:
+  template <class T>
+  static auto& vtable() {
+    static void* fs[2 + cs_counter<I>];
+    return fs;
+  }
+
+  template <class T>
+  static void dtor(void* self) {
+    delete static_cast<T*>(self);
+  }
+
+  template <class T>
+  static void* copy_ctor(void* self) {
+    return new T{*static_cast<T*>(self)};
+  }
+
+  template <int Id, class T, class R, class... Ts>
+  decltype(auto) set(identity<R (*)(void*, Ts...)>) {
+    vtable_[2 + Id] =
+        (void*)static_cast<R (*)(std::integral_constant<int, Id>, void*, Ts...)>(I::template fcall__<T, R, Ts...>);
+  }
+
+  void* ptr_{};
+  void** vtable_{};
+};
+
+#define REQUIRES(name, ...) REQUIRES_IMPL(name, decltype(&type__::name), __VA_ARGS__)
+#define REQUIRES_SIGN(name, sign, ...) REQUIRES_IMPL(name, sign, __VA_ARGS__)
+#define REQUIRES_IMPL(name, sign, ...)                                                                                     \
+  { return call__<__BOOST_DI_CAT(name, __LINE__)::value, sign>(__VA_ARGS__); }                                             \
+  using __BOOST_DI_CAT(name, __LINE__) =                                                                                   \
+      std::integral_constant<int, sizeof(fnext__(::boost::di::extension::counter<CS_MAX_COUNT + 1>())) / sizeof(int) - 1>; \
+  static ::boost::di::extension::identity<sign> fsign__(__BOOST_DI_CAT(name, __LINE__));                                   \
+  template <class T, class R, class... Ts>                                                                                 \
+  static R fcall__(__BOOST_DI_CAT(name, __LINE__), void* ptr, Ts... args) {                                                \
+    return static_cast<T*>(ptr)->name(args...);                                                                            \
+  }                                                                                                                        \
+  static auto fnext__(::boost::di::extension::counter<__BOOST_DI_CAT(name, __LINE__)::value + 2> id)->decltype(id)
 
 }  // extension
 BOOST_DI_NAMESPACE_END
