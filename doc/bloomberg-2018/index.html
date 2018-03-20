@@ -66,7 +66,7 @@ Kris Jusiak, Quantlab Financial
 
 ### Agenda
 
-* #### Boost your design
+* #### Boost your design...
     * SOLID vs `STUPID`
       * Single Responsibility Principle
       * Dependency Inversion Principle
@@ -81,7 +81,7 @@ Kris Jusiak, Quantlab Financial
 
 ### Agenda
 
-* #### Dependency Injection
+* #### ... with Dependency Injection
     * [[Boost].DI](https://github.com/boost-experimental/di)
       * Overview / Design / Benchmarks
       * Boost your design by example
@@ -93,7 +93,7 @@ Kris Jusiak, Quantlab Financial
 
 ==============================================================================
 
-### Thanks to...
+### Thanks
 
 <img src="images/kostya.jpeg" style="width: 30%; background:none; border:none; box-shadow:none;" />
 
@@ -633,7 +633,7 @@ int main() {
 
 ----
 
-### The good part...
+### The good part
 
 ----
 
@@ -652,7 +652,7 @@ int main() {
 
 ----
 
-### The bad part...
+### The bad part
 
 ----
 
@@ -725,11 +725,9 @@ int main() {
 
 ==============================================================================
 
-### [[Boost].DI](https://github.com/boost-experimental/di) - C++ Dependency Injection Library
+### [[Boost].DI](https://github.com/boost-experimental/di)
 
-* Deduces constructor parameters and required scopes for them
-* Resolves required dependencies
-* Creates dependencies and inject them
+> C++ Dependency Injection Library
 
 https://github.com/boost-experimental/di
 
@@ -741,7 +739,7 @@ https://github.com/boost-experimental/di
 
 ### Overview
 
-* One header - 3k LOC - (boost/di.hpp) / generated
+* One header - 3k LOC - ([boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)) / generated
 * Neither Boost nor STL is required
 * No 'if's, 'virtual's, 'exception's, macros, run-time errors
 * Non-intrusive
@@ -917,6 +915,10 @@ const auto injector = di::make_injector(        |  |  |
 
 ```cpp
 injector.create<std::unique_ptr<App>>();
+```
+
+```sh
+$CXX -std=c++14 app.cpp # 0.092s
 ```
 
 ##### ASM x86-64
@@ -1283,18 +1285,17 @@ int main() {
 
 ```cpp
 "should print read text"_test = [] {
-  auto [app, mocks] = testing::make<App>(); // Creates System Under Test
-                                            // and mocks
+  auto [app, mocks] = testing::make<App, StrictGMock>();
 
-  EXPECT_CALL(mocks<Readable>(), read).WillOnce(Return(42));
-  EXPECT_CALL(mocks<Printable>(), print, 42);
+  EXPECT_CALL(mocks.get<class Readable>(), read).WillOnce(Return(42));
+  EXPECT_CALL(mocks.get<class Printable>(), print, 42);
 
   app.run();
 };
 ```
 <!-- .element: style="margin-left:-3%; width:105%" -->
 
-> Automatic mocks injection using [GUnit](https://github.com/cpp-testing/GUnit)
+> Automatic mocks injection using [GUnit](https://github.com/cpp-testing/GUnit) / No more `MOCK_METHODX`
 
 ----
 
@@ -1471,12 +1472,12 @@ error: inline function 'policies::type<Readable*>::
 
 ----
 
-### [[Boost].DI](https://github.com/boost-experimental/di) - More Features...
+### [[Boost].DI](https://github.com/boost-experimental/di) - More Features
 
-* Core ([Examples](http://boost-experimental.github.io/di/examples))
-    * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
-* Extensions ([Examples](http://boost-experimental.github.io/di/extensions))
-    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization, ...
+* [Examples](http://boost-experimental.github.io/di/examples)
+    * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies, ...
+* [Extensions](http://boost-experimental.github.io/di/extensions)
+    * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, ...
 
 ==============================================================================
 
