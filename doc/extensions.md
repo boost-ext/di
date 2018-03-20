@@ -5,7 +5,6 @@
 * [Concepts](#concepts)
 * [Factory](#factory)
 * [Shared Factory](#shared-factory)
-* [Type Erasure](#type-erasure)
 * [Lazy](#lazy)
 * [Named Parameters](#named-parameters)
 * [XML Injection](#xml-injection)
@@ -40,9 +39,6 @@
 
 ###Shared Factory
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/shared_factory.cpp)
-
-###Type Erasure
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/type_erasure.cpp)
 
 ###Lazy
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/lazy.cpp)
