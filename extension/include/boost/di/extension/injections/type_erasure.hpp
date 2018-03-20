@@ -113,7 +113,7 @@ struct has_info__<T, N, valid_t<typename T::template info__<N, void>::type>> : s
   (__BOOST_DI_SIZE(__VA_ARGS__), PASS_IMPL, __VA_ARGS__)
 #define COMMA_IF(...) __BOOST_DI_IF(__BOOST_DI_IS_EMPTY(__VA_ARGS__), __BOOST_DI_EAT, __BOOST_DI_COMMA)()
 
-#define GENERIC(name)                                                                                              \
+#define TYPE_ERASURE(name)                                                                                         \
   static constexpr auto id = __COUNTER__ + 1;                                                                      \
   using self_t = name;                                                                                             \
   template <int, class = void>                                                                                     \

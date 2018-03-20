@@ -46,7 +46,7 @@ test-suite tests :
     [ test test/injections/concepts.cpp ]
     [ test test/injections/factory.cpp ]
     [ test test/injections/shared_factory.cpp ]
-    [ test test/injections/generics.cpp ]
+    [ test test/injections/type_erasure.cpp ]
     [ test test/injections/lazy.cpp ]
     [ test test/injections/named_parameters.cpp ]
     [ test test/injections/xml_injection.cpp ]
