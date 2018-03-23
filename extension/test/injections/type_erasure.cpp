@@ -8,16 +8,27 @@
 
 #include <cassert>
 #include <sstream>
+#include <string>
 
 namespace di = boost::di;
 
 /*<<generic interface>>*/
 // clang-format off
-struct Drawable {
-  TYPE_ERASURE(Drawable) {}
+struct Drawable : di::extension::type_erasure<Drawable> {
+  using type_erasure<Drawable>::type_erasure;
 
   auto draw(std::ostream& out) const
     -> void REQUIRES(draw, out);
+};
+
+struct Updatable : di::extension::type_erasure<Updatable> {
+  using type_erasure<Updatable>::type_erasure;
+
+  auto update(int i)
+    -> int REQUIRES_SIGN(update, int(int), i);
+
+  auto update(const std::string& str)
+    -> int REQUIRES_SIGN(update, int(const std::string&), str);
 };
 // clang-format on
 
@@ -31,13 +42,29 @@ struct Circle {
   void draw(std::ostream& out) const { out << "Circle"; }
 };
 
+/*<<No inheritance>>*/
+struct Number {
+  int update(int i) { return i; }
+  int update(const std::string& str) { return std::stoi(str); }
+};
+
 class Example {
  public:
-  explicit Example(const Drawable drawable) : drawable{drawable} {}
-  void draw(std::ostream& out) const { drawable.draw(out); }
+  Example(const Drawable drawable, Updatable updatable)
+    : drawable{drawable}, updatable{updatable} {}
+
+  void draw(std::ostream& out) const {
+    drawable.draw(out);
+  }
+
+  template<class T>
+  auto update(const T& value) {
+    return updatable.update(value);
+  }
 
  private:
-  Drawable drawable;
+  const Drawable drawable;
+  Updatable updatable;
 };
 
 int main() {
@@ -46,13 +73,16 @@ int main() {
 
     // clang-format off
     const auto injector = di::make_injector(
-      di::bind<Drawable>().to<Square>()
+      di::bind<Drawable>().to<Square>(),
+      di::bind<Updatable>().to<Number>()
     );
     // clang-format on
 
     auto example = injector.create<Example>();
     example.draw(str);
     assert("Square" == str.str());
+    assert(42 == example.update(42));
+    assert(42 == example.update("42"));
   }
 
   {
@@ -60,12 +90,15 @@ int main() {
 
     // clang-format off
     const auto injector = di::make_injector(
-      di::bind<Drawable>().to<Circle>()
+      di::bind<Drawable>().to<Circle>(),
+      di::bind<Updatable>().to<Number>()
     );
     // clang-format on
 
     auto example = injector.create<Example>();
     example.draw(str);
     assert("Circle" == str.str());
+    assert(42 == example.update(42));
+    assert(42 == example.update("42"));
   }
 }
