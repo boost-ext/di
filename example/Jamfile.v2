@@ -70,7 +70,12 @@ test-suite example :
     [ example pool_provider.cpp ]
     [ example scopes.cpp ]
     [ example try_it.cpp ]
-    [ example type_erasure.cpp ]
+;
+
+test-suite polymorphism :
+    [ example polymorphism/inheritance.cpp ]
+    [ example polymorphism/type_erasure.cpp ]
+    [ example polymorphism/templates.cpp ]
 ;
 
 test-suite performance :
