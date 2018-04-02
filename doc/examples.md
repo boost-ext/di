@@ -19,7 +19,10 @@
 * [Custom Provider](#custom-provider)
 * [Pool Provider](#pool-provider)
 * [Configuration](#configuration)
-* [Type Erasure](#type-erasure)
+* [Polymorphism](#polymorphism)
+    * [Inheritance](#inheritance)
+    * [Type-Erasure](#type-erasure)
+    * [Templates](#templates)
 
 ---
 
@@ -87,5 +90,14 @@
 ###Configuration
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
 
+###Polymorphism
+* See [https://github.com/boost-experimental/di/tree/cpp14/example/polymorphism](https://github.com/boost-experimental/di/tree/cpp14/example/polymorphism)
+
+###Inheritance
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/inheritance.cpp)
+
 ###Type Erasure
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/type_erasure.cpp)
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp)
+
+###Templates
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp)

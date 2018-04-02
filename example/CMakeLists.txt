@@ -33,7 +33,10 @@ example(multiple_interfaces)
 example(pool_provider)
 example(scopes)
 example(try_it)
-example(type_erasure)
+
+example(polymorphism/inheritance)
+example(polymorphism/type_erasure)
+example(polymorphism/templates)
 
 example(performance/create_bound_interface)
 example(performance/create_bound_interface_via_exposed_module)

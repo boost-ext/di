@@ -4,16 +4,15 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include <boost/di.hpp>
 #include <cassert>
 #include <functional>
 #include <memory>
 #include <sstream>
 #include <type_traits>
 
-namespace di = boost::di;
+#include "common/config.hpp"
 
-/*<<generic interface>>*/
+/*<<Type erasure>>*/
 class Drawable {
   std::shared_ptr<void> ptr{};
 
@@ -24,42 +23,27 @@ class Drawable {
   std::function<void(std::ostream&)> draw;
 };
 
-/*<<No inheritance>>*/
+class Example {
+ public:
+  explicit Example(const Drawable drawable) : drawable{drawable} {}
+
+  void draw(std::ostream& out) const { drawable.draw(out); }
+
+ private:
+  const Drawable drawable;
+};
+
 struct Square {
   void draw(std::ostream& out) const { out << "Square"; }
 };
 
-/*<<No inheritance>>*/
 struct Circle {
   void draw(std::ostream& out) const { out << "Circle"; }
 };
 
 int main() {
-  {
-    std::stringstream str{};
-
-    // clang-format off
-    const auto injector = di::make_injector(
-      di::bind<Drawable>().to<Square>()
-    );
-    // clang-format on
-
-    auto drawable = injector.create<Drawable>();
-    drawable.draw(str);
-    assert("Square" == str.str());
-  }
-
-  {
-    std::stringstream str{};
-
-    // clang-format off
-    const auto injector = di::make_injector(
-      di::bind<Drawable>().to<Circle>()
-    );
-    // clang-format on
-
-    auto drawable = injector.create<Drawable>();
-    drawable.draw(str);
-    assert("Circle" == str.str());
-  }
+  std::stringstream str{};
+  auto example = config().create<Example>();
+  example.draw(str);
+  assert("Square" == str.str());
 }
