@@ -31,7 +31,7 @@ matrix:
 # Style
 #
   - os: linux
-    dist: precise
+    dist: trusty
     env: CHECK=ON CLANG_FORMAT=clang-format-4.0 CLANG_TIDY=clang-tidy-4.0
     addons: { apt: { packages: ["clang-format-4.0", "clang-tidy-4.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
 
@@ -39,42 +39,47 @@ matrix:
 # CMake
 #
   - os: linux
-    dist: precise
+    dist: trusty
     env: BS=cmake CXX=clang++-3.6
-    addons: { apt: { packages: ["clang-3.6", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.6"] } }
-    dist: precise
+    addons: { apt: { packages: ["clang-3.6", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-3.6"] } }
+    dist: trusty
 
   - os: linux
     env: BS=cmake CXX=clang++-3.7
-    addons: { apt: { packages: ["clang-3.7", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.7"] } }
+    addons: { apt: { packages: ["clang-3.7", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-3.7"] } }
 
   - os: linux
-    dist: precise
+    dist: trusty
     env: BS=cmake CXX=clang++-3.8
-    addons: { apt: { packages: ["clang-3.8", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"] } }
+    addons: { apt: { packages: ["clang-3.8", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-3.8"] } }
 
   - os: linux
-    dist: precise
+    dist: trusty
     env: BS=cmake  CXX=clang++-3.9
-    addons: { apt: { packages: ["clang-3.9", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.9"] } }
+    addons: { apt: { packages: ["clang-3.9", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-3.9"] } }
 
   - os: linux
-    dist: precise
+    dist: trusty
     env: BS=cmake CXX=clang++-4.0
     addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
 
   - os: linux
-    dist: precise
-    env: BS=cmake CXX=clang++-4.0 LIBCXX=ON
-    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+    dist: trusty
+    env: BS=cmake CXX=clang++-5.0
+    addons: { apt: { packages: ["clang-5.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
 
   - os: linux
-    dist: precise
+    dist: trusty
+    env: BS=cmake CXX=clang++-5.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-5.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+
+  - os: linux
+    dist: trusty
     env: BS=cmake CXX=g++-5
     addons: { apt: { packages: ["g++-5", "libstdc++-5-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: linux
-    dist: precise
+    dist: trusty
     env: BS=cmake CXX=g++-6
     addons: { apt: { packages: ["g++-6", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
@@ -99,9 +104,9 @@ matrix:
 # Bjam
 #
   - os: linux
-    dist: precise
-    env: BS=bjam TOOLSET=clang CXX=clang++-4.0
-    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+    dist: trusty
+    env: BS=bjam TOOLSET=clang CXX=clang++-5.0
+    addons: { apt: { packages: ["clang-5.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
 
   - os: linux
     dist: trusty
@@ -116,9 +121,9 @@ matrix:
 # Static analysis
 #
   - os: linux
-    dist: precise
-    env: BS=cmake VARIANT=analyze CXX=clang++-4.0 LIBCXX=ON
-    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+    dist: trusty
+    env: BS=cmake VARIANT=analyze CXX=clang++-5.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-5.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
 
   - os: linux
     dist: trusty
@@ -133,7 +138,7 @@ matrix:
 # Dynamic analysis
 #
   - os: linux
-    dist: precise
+    dist: trusty
     env: BS=cmake MEMCHECK=valgrind CXX=clang++-4.0 LIBCXX=ON
     addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
 
@@ -158,7 +163,7 @@ matrix:
 # Benchmarks
 #
   #- os: linux
-    #dist: precise
+    #dist: trusty
     #env: BS=cmake BENCHMARK=QUICK CXX=clang++-4.0 LIBCXX=ON
     #addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
 

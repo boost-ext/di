@@ -287,9 +287,9 @@ test is_empty_expr_types = [] {
   auto empty = [] {};
   const auto const_empty = [] {};
   const auto const_args = [](int) {};
-  auto init = [i = 0]{};
+  auto init = [i = 0] { (void)i; };
   int _{};
-  auto capture = [_] {};
+  auto capture = [_] { (void)_; };
 
   static_expect(!is_empty_expr<c>::value);
   static_expect(!is_empty_expr<void>::value);
