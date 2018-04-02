@@ -111,6 +111,10 @@
         <dt><span class="section"><a href="#configuration">Configuration</a></span></dt>
     
 
+    
+        <dt><span class="section"><a href="#type-erasure">Type Erasure</a></span></dt>
+    
+
 </dl>
 </div>
 
@@ -139,6 +143,7 @@
 <li><a href="#custom-provider">Custom Provider</a></li>
 <li><a href="#pool-provider">Pool Provider</a></li>
 <li><a href="#configuration">Configuration</a></li>
+<li><a href="#type-erasure">Type Erasure</a></li>
 </ul>
 <hr />
 <h3 id="hello-world">Hello World</h3>
@@ -1118,6 +1123,67 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp</a></li>
+</ul>
+<h3 id="type-erasure">Type Erasure</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+#include &lt;cassert&gt;
+#include &lt;functional&gt;
+#include &lt;memory&gt;
+#include &lt;sstream&gt;
+#include &lt;type_traits&gt;
+
+namespace di = boost::di;
+
+/*&lt;&lt;generic interface&gt;&gt;*/
+class Drawable {
+  std::shared_ptr&lt;void&gt; ptr{};
+
+ public:
+  template &lt;class T, class = std::enable_if_t&lt;!std::is_convertible&lt;T, Drawable&gt;::value&gt;&gt;
+  Drawable(T t) : ptr{std::make_shared&lt;T&gt;(t)}, draw{[this](auto&amp;... args) { static_cast&lt;T*&gt;(ptr.get())-&gt;draw(args...); }} {}
+
+  std::function&lt;void(std::ostream&amp;)&gt; draw;
+};
+
+/*&lt;&lt;No inheritance&gt;&gt;*/
+struct Square {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
+};
+
+/*&lt;&lt;No inheritance&gt;&gt;*/
+struct Circle {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
+};
+
+int main() {
+  {
+    std::stringstream str{};
+
+    const auto injector = di::make_injector(
+      di::bind&lt;Drawable&gt;().to&lt;Square&gt;()
+    );
+
+    auto drawable = injector.create&lt;Drawable&gt;();
+    drawable.draw(str);
+    assert(&quot;Square&quot; == str.str());
+  }
+
+  {
+    std::stringstream str{};
+
+    const auto injector = di::make_injector(
+      di::bind&lt;Drawable&gt;().to&lt;Circle&gt;()
+    );
+
+    auto drawable = injector.create&lt;Drawable&gt;();
+    drawable.draw(str);
+    assert(&quot;Circle&quot; == str.str());
+  }
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/type_erasure.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/type_erasure.cpp</a></li>
 </ul>
 </div>
 
