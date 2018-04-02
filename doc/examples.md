@@ -19,6 +19,7 @@
 * [Custom Provider](#custom-provider)
 * [Pool Provider](#pool-provider)
 * [Configuration](#configuration)
+* [Type Erasure](#type-erasure)
 
 ---
 
@@ -85,3 +86,6 @@
 
 ###Configuration
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
+
+###Type Erasure
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/type_erasure.cpp)

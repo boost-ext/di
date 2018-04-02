@@ -4,22 +4,26 @@
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-#include "boost/di/extension/injections/type_erasure.hpp"
-
+#include <boost/di.hpp>
 #include <cassert>
+#include <functional>
+#include <memory>
 #include <sstream>
+#include <type_traits>
 
 namespace di = boost::di;
 
 /*<<generic interface>>*/
-// clang-format off
-struct Drawable {
-  TYPE_ERASURE(Drawable) {}
+class Drawable {
+ public:
+  template <class T, class = std::enable_if_t<!std::is_convertible<T, Drawable>::value>>
+  Drawable(T t) : ptr{std::make_shared<T>(t)}, draw{[this](auto&... args) { static_cast<T*>(ptr.get())->draw(args...); }} {}
 
-  auto draw(std::ostream& out) const
-    -> void REQUIRES(draw, out);
+  std::function<void(std::ostream&)> draw;
+
+ private:
+  std::shared_ptr<void> ptr{};
 };
-// clang-format on
 
 /*<<No inheritance>>*/
 struct Square {
@@ -29,15 +33,6 @@ struct Square {
 /*<<No inheritance>>*/
 struct Circle {
   void draw(std::ostream& out) const { out << "Circle"; }
-};
-
-class Example {
- public:
-  explicit Example(const Drawable drawable) : drawable{drawable} {}
-  void draw(std::ostream& out) const { drawable.draw(out); }
-
- private:
-  Drawable drawable;
 };
 
 int main() {
@@ -50,8 +45,8 @@ int main() {
     );
     // clang-format on
 
-    auto example = injector.create<Example>();
-    example.draw(str);
+    auto drawable = injector.create<Drawable>();
+    drawable.draw(str);
     assert("Square" == str.str());
   }
 
@@ -64,8 +59,8 @@ int main() {
     );
     // clang-format on
 
-    auto example = injector.create<Example>();
-    example.draw(str);
+    auto drawable = injector.create<Drawable>();
+    drawable.draw(str);
     assert("Circle" == str.str());
   }
 }
