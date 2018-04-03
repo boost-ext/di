@@ -23,6 +23,7 @@
     * [Inheritance](#inheritance)
     * [Type-Erasure](#type-erasure)
     * [Templates](#templates)
+    * [Concepts](#concepts)
 
 ---
 
@@ -101,3 +102,6 @@
 
 ###Templates
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp)
+
+###Concepts
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/concepts.cpp)

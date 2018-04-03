@@ -388,6 +388,7 @@ retq
     * [Inheritance](http://boost-experimental.github.io/di/examples/index.html#inheritance)
     * [Type Erasure](http://boost-experimental.github.io/di/examples/index.html#type-erasure)
     * [Templates](http://boost-experimental.github.io/di/examples/index.html#templates)
+    * [Concepts](http://boost-experimental.github.io/di/examples/index.html#concepts)
 * [Extensions](http://boost-experimental.github.io/di/extensions/index.html)
     * [Constructor Bindings](http://boost-experimental.github.io/di/extensions/index.html#constructor-bindings)
     * [Contextual Bindings](http://boost-experimental.github.io/di/extensions/index.html#contextual-bindings)
