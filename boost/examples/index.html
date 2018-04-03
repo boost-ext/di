@@ -127,6 +127,10 @@
         <dt><span class="section"><a href="#templates">Templates</a></span></dt>
     
 
+    
+        <dt><span class="section"><a href="#concepts">Concepts</a></span></dt>
+    
+
 </dl>
 </div>
 
@@ -159,6 +163,7 @@
 <li><a href="#inheritance">Inheritance</a></li>
 <li><a href="#type-erasure">Type-Erasure</a></li>
 <li><a href="#templates">Templates</a></li>
+<li><a href="#concepts">Concepts</a></li>
 </ul>
 </li>
 </ul>
@@ -1273,6 +1278,50 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp</a></li>
+</ul>
+<h3 id="concepts">Concepts</h3>
+<pre><code class="cpp">#include &lt;cassert&gt;
+#include &lt;sstream&gt;
+
+#include &quot;common/config.hpp&quot;
+
+
+template &lt;class T&gt;
+concept bool Drawable = not boost::di::aux::is_complete&lt;T&gt;::value or requires(T t, std::ostream&amp; out) {
+  t.draw(out);
+};
+
+/*&lt;&lt;Static polymorphism - templates&gt;&gt;*/
+template &lt;Drawable TDrawable = class Drawable&gt;
+class Example {
+ public:
+  explicit Example(const TDrawable drawable) : drawable(drawable) {}
+
+  void draw(std::ostream&amp; out) const { drawable.draw(out); }
+
+ private:
+  const TDrawable drawable;
+};
+
+struct Square {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
+};
+
+struct Circle {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
+};
+
+int main() {
+  std::stringstream str{};
+  auto example = config().create&lt;Example&gt;();
+  example.draw(str);
+  assert(&quot;Square&quot; == str.str());
+}
+
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/concepts.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/concepts.cpp</a></li>
 </ul>
 </div>
 
