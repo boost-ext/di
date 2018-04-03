@@ -112,7 +112,19 @@
     
 
     
+        <dt><span class="section"><a href="#polymorphism">Polymorphism</a></span></dt>
+    
+
+    
+        <dt><span class="section"><a href="#inheritance">Inheritance</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#type-erasure">Type Erasure</a></span></dt>
+    
+
+    
+        <dt><span class="section"><a href="#templates">Templates</a></span></dt>
     
 
 </dl>
@@ -143,7 +155,12 @@
 <li><a href="#custom-provider">Custom Provider</a></li>
 <li><a href="#pool-provider">Pool Provider</a></li>
 <li><a href="#configuration">Configuration</a></li>
-<li><a href="#type-erasure">Type Erasure</a></li>
+<li><a href="#polymorphism">Polymorphism</a><ul>
+<li><a href="#inheritance">Inheritance</a></li>
+<li><a href="#type-erasure">Type-Erasure</a></li>
+<li><a href="#templates">Templates</a></li>
+</ul>
+</li>
 </ul>
 <hr />
 <h3 id="hello-world">Hello World</h3>
@@ -1124,17 +1141,63 @@ int main() {
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp</a></li>
 </ul>
+<h3 id="polymorphism">Polymorphism</h3>
+<ul>
+<li>See <a href="https://github.com/boost-experimental/di/tree/cpp14/example/polymorphism">https://github.com/boost-experimental/di/tree/cpp14/example/polymorphism</a></li>
+</ul>
+<h3 id="inheritance">Inheritance</h3>
+<pre><code class="cpp">#include &lt;cassert&gt;
+#include &lt;memory&gt;
+#include &lt;sstream&gt;
+
+#include &quot;common/config.hpp&quot;
+
+/*&lt;&lt;Dynamic polymorphism - inheritance&gt;&gt;*/
+class Drawable {
+ public:
+  virtual ~Drawable() noexcept = default;
+  virtual void draw(std::ostream&amp;) const = 0;
+};
+
+class Example {
+ public:
+  explicit Example(std::unique_ptr&lt;const Drawable&gt; drawable) : drawable{std::move(drawable)} {}
+
+  void draw(std::ostream&amp; out) const { drawable-&gt;draw(out); }
+
+ private:
+  std::unique_ptr&lt;const Drawable&gt; drawable;
+};
+
+struct Square : Drawable {
+  void draw(std::ostream&amp; out) const override { out &lt;&lt; &quot;Square&quot;; }
+};
+
+struct Circle : Drawable {
+  void draw(std::ostream&amp; out) const override { out &lt;&lt; &quot;Circle&quot;; }
+};
+
+int main() {
+  std::stringstream str{};
+  auto example = config().create&lt;Example&gt;();
+  example.draw(str);
+  assert(&quot;Square&quot; == str.str());
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/inheritance.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/inheritance.cpp</a></li>
+</ul>
 <h3 id="type-erasure">Type Erasure</h3>
-<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
-#include &lt;cassert&gt;
+<pre><code class="cpp">#include &lt;cassert&gt;
 #include &lt;functional&gt;
 #include &lt;memory&gt;
 #include &lt;sstream&gt;
 #include &lt;type_traits&gt;
 
-namespace di = boost::di;
+#include &quot;common/config.hpp&quot;
 
-/*&lt;&lt;generic interface&gt;&gt;*/
+/*&lt;&lt;Type erasure&gt;&gt;*/
 class Drawable {
   std::shared_ptr&lt;void&gt; ptr{};
 
@@ -1145,45 +1208,71 @@ class Drawable {
   std::function&lt;void(std::ostream&amp;)&gt; draw;
 };
 
-/*&lt;&lt;No inheritance&gt;&gt;*/
+class Example {
+ public:
+  explicit Example(const Drawable drawable) : drawable{drawable} {}
+
+  void draw(std::ostream&amp; out) const { drawable.draw(out); }
+
+ private:
+  const Drawable drawable;
+};
+
 struct Square {
   void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
 };
 
-/*&lt;&lt;No inheritance&gt;&gt;*/
 struct Circle {
   void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
 };
 
 int main() {
-  {
-    std::stringstream str{};
-
-    const auto injector = di::make_injector(
-      di::bind&lt;Drawable&gt;().to&lt;Square&gt;()
-    );
-
-    auto drawable = injector.create&lt;Drawable&gt;();
-    drawable.draw(str);
-    assert(&quot;Square&quot; == str.str());
-  }
-
-  {
-    std::stringstream str{};
-
-    const auto injector = di::make_injector(
-      di::bind&lt;Drawable&gt;().to&lt;Circle&gt;()
-    );
-
-    auto drawable = injector.create&lt;Drawable&gt;();
-    drawable.draw(str);
-    assert(&quot;Circle&quot; == str.str());
-  }
+  std::stringstream str{};
+  auto example = config().create&lt;Example&gt;();
+  example.draw(str);
+  assert(&quot;Square&quot; == str.str());
 }
 </code></pre>
 
 <ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/type_erasure.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/type_erasure.cpp</a></li>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp</a></li>
+</ul>
+<h3 id="templates">Templates</h3>
+<pre><code class="cpp">#include &lt;cassert&gt;
+#include &lt;sstream&gt;
+
+#include &quot;common/config.hpp&quot;
+
+/*&lt;&lt;Static polymorphism - templates&gt;&gt;*/
+template &lt;typename TDrawable = class Drawable&gt;
+class Example {
+ public:
+  explicit Example(const TDrawable drawable) : drawable(drawable) {}
+
+  void draw(std::ostream&amp; out) const { drawable.draw(out); }
+
+ private:
+  const TDrawable drawable;
+};
+
+struct Square {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
+};
+
+struct Circle {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
+};
+
+int main() {
+  std::stringstream str{};
+  auto example = config().create&lt;Example&gt;();
+  example.draw(str);
+  assert(&quot;Square&quot; == str.str());
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp</a></li>
 </ul>
 </div>
 
