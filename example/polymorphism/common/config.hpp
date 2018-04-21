@@ -6,6 +6,7 @@ namespace di = boost::di;
 
 class Drawable;
 struct Square;
+struct Circle;
 
 const auto config = [] {
   // clang-format off
