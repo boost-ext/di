@@ -124,6 +124,10 @@
     
 
     
+        <dt><span class="section"><a href="#variant">Variant</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#templates">Templates</a></span></dt>
     
 
@@ -162,6 +166,7 @@
 <li><a href="#polymorphism">Polymorphism</a><ul>
 <li><a href="#inheritance">Inheritance</a></li>
 <li><a href="#type-erasure">Type-Erasure</a></li>
+<li><a href="#variant">Variant</a></li>
 <li><a href="#templates">Templates</a></li>
 <li><a href="#concepts">Concepts</a></li>
 </ul>
@@ -1241,6 +1246,52 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp</a></li>
+</ul>
+<h3 id="variant">Variant</h3>
+<pre><code class="cpp">#if defined(__cpp_lib_variant)
+#include &lt;cassert&gt;
+#include &lt;sstream&gt;
+#include &lt;variant&gt;
+
+#include &quot;common/config.hpp&quot;
+
+struct Square {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
+};
+
+struct Circle {
+  void draw(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
+};
+
+class Drawable : public std::variant&lt;Square, Circle&gt; {
+ public:
+  using std::variant&lt;Square, Circle&gt;::variant;
+};
+
+/*&lt;&lt;Variant&gt;&gt;*/
+class Example {
+ public:
+  explicit Example(const Drawable drawable) : drawable{drawable} {}
+
+  void draw(std::ostream&amp; out) const {
+    std::visit([&amp;out](const auto&amp; drawable) { drawable.draw(out); }, drawable);
+  }
+
+ private:
+  const Drawable drawable;
+};
+
+int main() {
+  std::stringstream str{};
+  auto example = config().create&lt;Example&gt;();
+  example.draw(str);
+  assert(&quot;Square&quot; == str.str());
+}
+
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/variant.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/variant.cpp</a></li>
 </ul>
 <h3 id="templates">Templates</h3>
 <pre><code class="cpp">#include &lt;cassert&gt;
