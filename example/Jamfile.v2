@@ -73,10 +73,11 @@ test-suite example :
 ;
 
 test-suite polymorphism :
-    [ example polymorphism/inheritance.cpp ]
-    [ example polymorphism/type_erasure.cpp ]
-    [ example polymorphism/templates.cpp ]
     [ example polymorphism/concepts.cpp ]
+    [ example polymorphism/inheritance.cpp ]
+    [ example polymorphism/templates.cpp ]
+    [ example polymorphism/type_erasure.cpp ]
+    [ example polymorphism/variant.cpp ]
 ;
 
 test-suite performance :
