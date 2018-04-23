@@ -44,7 +44,6 @@ struct dependency__ : T {
 
 template <class T>
 struct injector__ : T {
-  using T::try_create;
   using T::create_impl;
   using T::create_successful_impl;
   using T::cfg;
@@ -52,7 +51,10 @@ struct injector__ : T {
 #if defined(__MSVC__)  // __pph__
   template <class... Ts>
   using is_creatable = typename T::template is_creatable<Ts...>;
+  template <class... Ts>
+  using try_create = typename T::template try_create<Ts...>;
 #else   // __pph__
+  using T::try_create;
   using T::is_creatable;
 #endif  // __pph__
 };
