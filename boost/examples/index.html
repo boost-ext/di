@@ -1343,7 +1343,7 @@ concept bool Drawable = not boost::di::aux::is_complete&lt;T&gt;::value or requi
 };
 
 /*&lt;&lt;Static polymorphism - templates&gt;&gt;*/
-template &lt;Drawable TDrawable = class Drawable&gt;
+template &lt;Drawable TDrawable = class Drawable&gt;  // requires Drawable&lt;TDrawable&gt;
 class Example {
  public:
   explicit Example(const TDrawable drawable) : drawable(drawable) {}
