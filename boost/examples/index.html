@@ -1169,10 +1169,9 @@ class Drawable {
   virtual void draw(std::ostream&amp;) const = 0;
 };
 
-class Example {
+class App {
  public:
-  explicit Example(std::unique_ptr&lt;const Drawable&gt; drawable) : drawable{std::move(drawable)} {}
-
+  explicit App(std::unique_ptr&lt;const Drawable&gt; drawable) : drawable{std::move(drawable)} {}
   void draw(std::ostream&amp; out) const { drawable-&gt;draw(out); }
 
  private:
@@ -1189,7 +1188,7 @@ struct Circle : Drawable {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create&lt;Example&gt;();
+  auto example = config().create&lt;App&gt;();
   example.draw(str);
   assert(&quot;Square&quot; == str.str());
 }
@@ -1218,10 +1217,9 @@ class Drawable {
   std::function&lt;void(std::ostream&amp;)&gt; draw;
 };
 
-class Example {
+class App {
  public:
-  explicit Example(const Drawable drawable) : drawable{drawable} {}
-
+  explicit App(const Drawable drawable) : drawable{drawable} {}
   void draw(std::ostream&amp; out) const { drawable.draw(out); }
 
  private:
@@ -1238,7 +1236,7 @@ struct Circle {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create&lt;Example&gt;();
+  auto example = config().create&lt;App&gt;();
   example.draw(str);
   assert(&quot;Square&quot; == str.str());
 }
@@ -1269,9 +1267,9 @@ class Drawable : public std::variant&lt;Square, Circle&gt; {
 };
 
 /*&lt;&lt;Variant&gt;&gt;*/
-class Example {
+class App {
  public:
-  explicit Example(const Drawable drawable) : drawable{drawable} {}
+  explicit App(const Drawable drawable) : drawable{drawable} {}
 
   void draw(std::ostream&amp; out) const {
     std::visit([&amp;out](const auto&amp; drawable) { drawable.draw(out); }, drawable);
@@ -1283,7 +1281,7 @@ class Example {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create&lt;Example&gt;();
+  auto example = config().create&lt;App&gt;();
   example.draw(str);
   assert(&quot;Square&quot; == str.str());
 }
@@ -1301,10 +1299,9 @@ int main() {
 
 /*&lt;&lt;Static polymorphism - templates&gt;&gt;*/
 template &lt;typename TDrawable = class Drawable&gt;
-class Example {
+class App {
  public:
-  explicit Example(const TDrawable drawable) : drawable(drawable) {}
-
+  explicit App(const TDrawable drawable) : drawable(drawable) {}
   void draw(std::ostream&amp; out) const { drawable.draw(out); }
 
  private:
@@ -1321,7 +1318,7 @@ struct Circle {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create&lt;Example&gt;();
+  auto example = config().create&lt;App&gt;();
   example.draw(str);
   assert(&quot;Square&quot; == str.str());
 }
@@ -1342,12 +1339,11 @@ concept bool Drawable = not boost::di::aux::is_complete&lt;T&gt;::value or requi
   t.draw(out);
 };
 
-/*&lt;&lt;Static polymorphism - templates&gt;&gt;*/
+/*&lt;&lt;Static polymorphism - concepts&gt;&gt;*/
 template &lt;Drawable TDrawable = class Drawable&gt;  // requires Drawable&lt;TDrawable&gt;
-class Example {
+class App {
  public:
-  explicit Example(const TDrawable drawable) : drawable(drawable) {}
-
+  explicit App(const TDrawable drawable) : drawable{drawable} {}
   void draw(std::ostream&amp; out) const { drawable.draw(out); }
 
  private:
@@ -1364,7 +1360,7 @@ struct Circle {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create&lt;Example&gt;();
+  auto example = config().create&lt;App&gt;();
   example.draw(str);
   assert(&quot;Square&quot; == str.str());
 }
