@@ -17,10 +17,9 @@ class Drawable {
   virtual void draw(std::ostream&) const = 0;
 };
 
-class Example {
+class App {
  public:
-  explicit Example(std::unique_ptr<const Drawable> drawable) : drawable{std::move(drawable)} {}
-
+  explicit App(std::unique_ptr<const Drawable> drawable) : drawable{std::move(drawable)} {}
   void draw(std::ostream& out) const { drawable->draw(out); }
 
  private:
@@ -37,7 +36,7 @@ struct Circle : Drawable {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create<Example>();
+  auto example = config().create<App>();
   example.draw(str);
   assert("Square" == str.str());
 }

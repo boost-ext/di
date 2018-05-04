@@ -25,9 +25,9 @@ class Drawable : public std::variant<Square, Circle> {
 };
 
 /*<<Variant>>*/
-class Example {
+class App {
  public:
-  explicit Example(const Drawable drawable) : drawable{drawable} {}
+  explicit App(const Drawable drawable) : drawable{drawable} {}
 
   void draw(std::ostream& out) const {
     std::visit([&out](const auto& drawable) { drawable.draw(out); }, drawable);
@@ -39,7 +39,7 @@ class Example {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create<Example>();
+  auto example = config().create<App>();
   example.draw(str);
   assert("Square" == str.str());
 }
