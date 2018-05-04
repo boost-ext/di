@@ -18,12 +18,11 @@ concept bool Drawable = not boost::di::aux::is_complete<T>::value or requires(T 
   t.draw(out);
 };
 
-/*<<Static polymorphism - templates>>*/
+/*<<Static polymorphism - concepts>>*/
 template <Drawable TDrawable = class Drawable>  // requires Drawable<TDrawable>
-class Example {
+class App {
  public:
-  explicit Example(const TDrawable drawable) : drawable(drawable) {}
-
+  explicit App(const TDrawable drawable) : drawable{drawable} {}
   void draw(std::ostream& out) const { drawable.draw(out); }
 
  private:
@@ -40,7 +39,7 @@ struct Circle {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create<Example>();
+  auto example = config().create<App>();
   example.draw(str);
   assert("Square" == str.str());
 }

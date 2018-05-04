@@ -23,10 +23,9 @@ class Drawable {
   std::function<void(std::ostream&)> draw;
 };
 
-class Example {
+class App {
  public:
-  explicit Example(const Drawable drawable) : drawable{drawable} {}
-
+  explicit App(const Drawable drawable) : drawable{drawable} {}
   void draw(std::ostream& out) const { drawable.draw(out); }
 
  private:
@@ -43,7 +42,7 @@ struct Circle {
 
 int main() {
   std::stringstream str{};
-  auto example = config().create<Example>();
+  auto example = config().create<App>();
   example.draw(str);
   assert("Square" == str.str());
 }
