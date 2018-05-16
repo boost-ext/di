@@ -56,7 +56,7 @@ create<T> (
   }
 };
 
-}  // detail
+}  // namespace detail
 
 template <class T, class... Ts>
 using injector = detail::injector<

@@ -179,6 +179,6 @@ T creatable_error() {
   return creatable_error_impl<TInitialization, TName, T, aux::type_list<TArgs...>>{};
 }
 
-}  // concepts
+}  // namespace concepts
 
 #endif

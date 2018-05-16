@@ -37,6 +37,6 @@ struct scope_traits<std::weak_ptr<T>> {
   using type = scopes::singleton;
 };
 
-}  // type_traits
+}  // namespace type_traits
 
 #endif

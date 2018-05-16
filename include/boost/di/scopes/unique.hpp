@@ -35,7 +35,7 @@ class unique {
   };
 };
 
-}  // scopes
+}  // namespace scopes
 
 static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
 

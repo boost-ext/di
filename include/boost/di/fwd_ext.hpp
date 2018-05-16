@@ -99,7 +99,7 @@ NAMESPACE_STD_END
 namespace boost {
 template <class>
 class shared_ptr;
-}  // boost
+}  // namespace boost
 #endif                           // __pph__
 
 #undef NAMESPACE_STD_BEGIN  // __pph__

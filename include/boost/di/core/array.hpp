@@ -41,12 +41,12 @@ struct array<T()> : T {
   using boost_di_inject__ = aux::type_list<>;
 };
 
-}  // core
+}  // namespace core
 
 namespace type_traits {
 template <class _, class T, class... Ts>
 struct ctor_traits__<core::array<_, Ts...>, T, aux::false_type>
     : type_traits::ctor_traits__<core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<T>>(), Ts...>> {};
-}  // type_traits
+}  // namespace type_traits
 
 #endif

@@ -34,4 +34,4 @@ test create_singleton_from_ptr_to_const_ptr = [] {
   expect(&object1 == &object2);
 };
 
-}  // scopes
+}  // namespace scopes

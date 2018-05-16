@@ -26,7 +26,7 @@ template <class T>
 struct is_related<true, Concept, T> {
   static constexpr auto value = true;
 };
-}  // concepts
+}  // namespace concepts
 
 BOOST_DI_NAMESPACE_END
 
@@ -1143,6 +1143,23 @@ test bind_template_to_type_templates_type = [] {
   static_expect(std::is_same<classA<classB>, std::decay_t<decltype(object.t)>>::value);
   static_expect(std::is_same<classB, std::decay_t<typename decltype(object.t)::type>>::value);
   expect(42 == object.t.i);
+};
+
+template <typename T = A>
+struct appc {
+  explicit appc(T &t) : t(t) { static_expect(std::is_same<T, std::vector<std::string>>::value); }
+  T &t;
+};
+
+test bind_template_to_container_type = [] {
+  using T = std::vector<std::string>;
+  T t{"str1", "str2"};
+  const auto injector = di::make_injector(di::bind<A>().to<T>(), di::bind<>().to(t));
+  auto object = injector.create<appc>();
+
+  expect(2 == object.t.size());
+  expect("str1" == object.t[0]);
+  expect("str2" == object.t[1]);
 };
 
 #if !defined(__MSVC__)

@@ -41,6 +41,6 @@ class stack_over_heap {
   }
 };
 
-}  // providers
+}  // namespace providers
 
 #endif

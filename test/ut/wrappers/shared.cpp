@@ -41,4 +41,4 @@ test to_weak_ptr = [] {
   expect(!object.lock());
 };
 
-}  // wrappers
+}  // namespace wrappers

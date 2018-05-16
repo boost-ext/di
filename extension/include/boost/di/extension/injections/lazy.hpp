@@ -32,5 +32,5 @@ class lazy {
   T (*f)(const void *) = nullptr;
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

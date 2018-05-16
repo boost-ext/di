@@ -66,4 +66,4 @@ test to = [] {
   expect(std::is_same<int, typename dep2::given>::value);
 };
 
-}  // core
+}  // namespace core

@@ -47,4 +47,4 @@ test traits = [] {
 #endif
 };
 
-}  // type_traits
+}  // namespace type_traits

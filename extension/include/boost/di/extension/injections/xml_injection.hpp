@@ -49,5 +49,5 @@ class inject_from_xml {
 template <class... TImpl>
 struct xml : inject_from_xml<TImpl...> {};
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

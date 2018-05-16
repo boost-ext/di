@@ -145,4 +145,4 @@ test complex_opeartors = [] {
   expect(test(fake_policy<double, aux::none_type, aux::none_type, true>{}));
 };
 
-}  // policies
+}  // namespace policies

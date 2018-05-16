@@ -12,4 +12,4 @@ namespace core {
 
 test successful_wrapper = [] { expect(0 == static_cast<int>(wrapper<int, fake_wrapper>{})); };
 
-}  // core
+}  // namespace core

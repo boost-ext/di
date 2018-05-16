@@ -37,4 +37,4 @@ test array_ctor_named = [] {
   expect(*a[1] == 87);
 };
 
-}  // core
+}  // namespace core

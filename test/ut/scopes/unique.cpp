@@ -24,4 +24,4 @@ test create_shared_but_unique = [] {
   expect(object1 != object2);
 };
 
-}  // scopes
+}  // namespace scopes

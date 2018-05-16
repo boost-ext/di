@@ -184,13 +184,13 @@ class dependency
 #endif  // __pph__
 
  protected:
-  using scope_t::is_referable;
   using scope_t::create;
+  using scope_t::is_referable;
   using scope_t::try_create;
   template <class, class>
   static void try_create(...);
 };
 
-}  // core
+}  // namespace core
 
 #endif

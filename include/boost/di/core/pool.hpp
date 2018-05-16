@@ -35,6 +35,6 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
   }
 };
 
-}  // core
+}  // namespace core
 
 #endif

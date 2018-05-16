@@ -84,6 +84,6 @@ struct scopable__ {
 template <class T>
 using scopable = typename scopable__<T>::type;
 
-}  // concepts
+}  // namespace concepts
 
 #endif

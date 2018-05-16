@@ -26,5 +26,5 @@ struct constructor_impl {
 template <class... TCtor>
 struct constructor : constructor_impl<TCtor...> {};
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

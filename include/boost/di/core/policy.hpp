@@ -68,6 +68,6 @@ class policy {
   }
 };
 
-}  // core
+}  // namespace core
 
 #endif

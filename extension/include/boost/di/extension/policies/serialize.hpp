@@ -177,5 +177,5 @@ auto deserialize = [](const auto& injector, auto& str) {
   });
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

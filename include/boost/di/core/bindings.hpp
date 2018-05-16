@@ -38,6 +38,6 @@ template <class... Ts>
 using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 #endif  // __pph__
 
-}  // core
+}  // namespace core
 
 #endif

@@ -37,4 +37,4 @@ test traits = [] {
   static_expect(std::is_same<scopes::unique, scope_traits_t<const int&&>>{});
 };
 
-}  // type_traits
+}  // namespace type_traits

@@ -95,4 +95,4 @@ test create = [] {
   expect(0 == injector_.create<int>());
 };
 
-}  // core
+}  // namespace core

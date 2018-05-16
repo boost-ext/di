@@ -21,7 +21,7 @@ struct wrapper {
   TWrapper wrapper_;
 };
 
-}  // successful
+}  // namespace successful
 
 template <class T, class TWrapper, class = int>
 struct wrapper_impl {
@@ -41,6 +41,6 @@ struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
 template <class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;
 
-}  // core
+}  // namespace core
 
 #endif

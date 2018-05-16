@@ -80,8 +80,8 @@ template <>
 struct ctor_traits<c_no_limits> {
   using boost_di_inject__ = di::inject<int, int, int, int, int, int, int, int, int, int, int>;
 };
-}
-}  // boost::di
+}  // namespace di
+}  // namespace boost
 
 test inject_traits_no_limits_via_ctor_traits = [] {
   auto injector = di::make_injector();

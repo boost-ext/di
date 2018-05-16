@@ -99,7 +99,7 @@ auto compail_fail(int id, const std::string& defines, const std::vector<std::str
     expect(false);
   }
 }
-}
+}  // namespace
 
 #define expect_compile_fail(defines, error, ...) compail_fail(__LINE__, defines, error, #__VA_ARGS__)
 

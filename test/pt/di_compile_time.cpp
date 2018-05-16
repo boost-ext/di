@@ -295,7 +295,7 @@ auto benchmark = [](const std::string& complexity, bool interfaces = false, int 
 };
 
 auto is_benchmark(const std::string& name) { return std::getenv("BENCHMARK") && std::string{std::getenv("BENCHMARK")} == name; }
-}
+}  // namespace
 
 test small_complexity = [] {
   if (is_benchmark("ON")) {

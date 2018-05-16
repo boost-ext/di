@@ -130,4 +130,4 @@ test exposed_many = [] {
   expect(0.0 == static_cast<double>(instance.create<double, name>(fake_provider<int>{})));
 };
 
-}  // scopes
+}  // namespace scopes

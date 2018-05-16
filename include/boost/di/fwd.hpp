@@ -37,16 +37,16 @@ struct injector_base {};
 
 template <class T>
 struct dependency__ : T {
-  using T::try_create;
-  using T::is_referable;
   using T::create;
+  using T::is_referable;
+  using T::try_create;
 };
 
 template <class T>
 struct injector__ : T {
+  using T::cfg;
   using T::create_impl;
   using T::create_successful_impl;
-  using T::cfg;
 
 #if defined(__MSVC__)  // __pph__
   template <class... Ts>
@@ -54,8 +54,8 @@ struct injector__ : T {
   template <class... Ts>
   using try_create = typename T::template try_create<Ts...>;
 #else   // __pph__
-  using T::try_create;
   using T::is_creatable;
+  using T::try_create;
 #endif  // __pph__
 };
 
@@ -66,13 +66,13 @@ struct deduced {};
 
 template <class, class TExpected = deduced, class = TExpected, class = no_name, class = void>
 class dependency;
-}  // core
+}  // namespace core
 
 namespace scopes {
 class deduce;
 class instance;
 class singleton;
 class unique;
-}  // scopes
+}  // namespace scopes
 
 #endif

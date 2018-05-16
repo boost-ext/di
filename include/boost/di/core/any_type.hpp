@@ -209,7 +209,7 @@ struct any_type_1st_ref {
   const TInjector& injector_;
 };
 
-}  // successful
+}  // namespace successful
 
 template <class>
 struct any_type_fwd {
@@ -265,6 +265,6 @@ struct any_type_1st_ref_fwd {
   operator const T&() const;
 };
 
-}  // core
+}  // namespace core
 
 #endif

@@ -175,4 +175,4 @@ test special_std_types = [] {
   test_ctor_traits<std::initializer_list<int>, direct>();
 };
 
-}  // type_traits
+}  // namespace type_traits

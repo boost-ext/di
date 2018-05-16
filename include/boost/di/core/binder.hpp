@@ -92,6 +92,6 @@ struct binder {
   using resolve_template_t = typename resolve_template_impl<TDeps, aux::remove_qualifiers_t<T>>::type;
 };
 
-}  // core
+}  // namespace core
 
 #endif

@@ -76,4 +76,4 @@ test to_unique_ptr_from_unique_ptr = [] {
   expect(i == *object);
 };
 
-}  // wrappers
+}  // namespace wrappers

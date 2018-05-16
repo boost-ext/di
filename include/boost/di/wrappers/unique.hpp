@@ -72,6 +72,6 @@ struct unique<TScope, T*> {
   T* object = nullptr;
 };
 
-}  // wrappers
+}  // namespace wrappers
 
 #endif

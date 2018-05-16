@@ -48,4 +48,4 @@ test is_concept_callable = [] {
   static_expect(!callable<callable_type_extended>::value);
 };
 
-}  // concepts
+}  // namespace concepts

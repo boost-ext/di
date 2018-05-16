@@ -24,7 +24,7 @@ static auto make_injector = [](auto injector) {
   };
   return i{static_cast<injector_t&&>(injector)};
 };
-}  // detail
+}  // namespace detail
 #define __BOOST_DI_MAKE_INJECTOR(...) detail::make_injector(__VA_ARGS__)  // __pph__
 #endif                                                                    // __pph__
 

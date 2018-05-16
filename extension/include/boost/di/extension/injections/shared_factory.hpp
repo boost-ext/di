@@ -103,5 +103,5 @@ auto conditional_shared_factory(TFunc condition_func) {
   });
 }
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

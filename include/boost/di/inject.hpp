@@ -45,7 +45,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 template <class T1, class T2>
 using combine_t = typename combine<T1, T2>::type;
 
-}  // detail
+}  // namespace detail
 
 template <class... Ts>
 using inject = aux::type_list<Ts...>;

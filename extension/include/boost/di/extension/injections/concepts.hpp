@@ -151,5 +151,5 @@ class concepts_provider_config : public config {
   static auto provider(...) noexcept { return concepts_provider{}; }
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

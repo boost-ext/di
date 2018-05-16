@@ -301,4 +301,4 @@ test is_empty_expr_types = [] {
   static_expect(!is_empty_expr<decltype(capture)>::value);
 };
 
-}  // aux
+}  // namespace aux

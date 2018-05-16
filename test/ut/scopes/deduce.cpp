@@ -32,4 +32,4 @@ test create_from_scope = [] {
   expect(1 == fake_scope<>::calls());
 };
 
-}  // scopes
+}  // namespace scopes

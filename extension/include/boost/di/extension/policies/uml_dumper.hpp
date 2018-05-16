@@ -53,5 +53,5 @@ class uml_dumper : public config {
   }
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

@@ -64,6 +64,6 @@ struct rebind_traits<boost::shared_ptr<T>, named<TName, _>> {
 template <class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
 
-}  // type_traits
+}  // namespace type_traits
 
 #endif

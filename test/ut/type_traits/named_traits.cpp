@@ -33,4 +33,4 @@ test named_decay_traits = [] {
   static_expect(std::is_same<named<no_name, int>, named_decay_t<named<no_name, int*>>>::value);
 };
 
-}  // type_traits
+}  // namespace type_traits

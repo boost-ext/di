@@ -18,4 +18,4 @@ test bindings_deps = [] {
                              bindings_t<fake_dependency<int>, fake_dependency<double>>>::value);
 };
 
-}  // core
+}  // namespace core

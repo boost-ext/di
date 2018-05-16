@@ -194,4 +194,4 @@ test pool_flatten = [] {
   expect(0 == static_cast<const trivial_ctor&>(p2).i);
 };
 
-}  // core
+}  // namespace core

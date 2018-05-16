@@ -35,7 +35,7 @@ struct bind<int, TScope, Ts...> {
   using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
 
-}  // detail
+}  // namespace detail
 
 template <class... Ts>
 #if defined(__cpp_variable_templates)  // __pph__

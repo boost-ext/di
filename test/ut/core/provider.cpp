@@ -32,4 +32,4 @@ test get_heap = [] {
   expect(ptr.get());
 };
 
-}  // core
+}  // namespace core

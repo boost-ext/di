@@ -42,6 +42,6 @@ struct providable__ {
 template <class T>
 using providable = typename providable__<T>::type;
 
-}  // concepts
+}  // namespace concepts
 
 #endif

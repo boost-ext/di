@@ -143,10 +143,11 @@ using boundable_impl__ = aux::conditional_t<
     aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
     typename type_<T>::template is_not_related_to<I>>;
 
-template <class I, class T>                                                                   // expected -> given
-auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value  // I is already verified
-                                                     ,
-                                                     boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
+template <class I, class T>  // expected -> given
+auto boundable_impl(I&&, T &&)
+    -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value || !aux::is_complete<I>::value  // I is already verified
+                          ,
+                          boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
 
 template <class I, class T>  // expected -> given
 auto boundable_impl(I&&, T&&, aux::valid<> &&)
