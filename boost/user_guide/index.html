@@ -1074,8 +1074,8 @@ template &lt;&gt;
 struct ctor_traits&lt;T&gt; {
   BOOST_DI_INJECT_TRAITS(int, double);
 };
-}
-}  // boost::di
+}  // namespace di
+}  // namespace boost
 
 int main() {
   auto injector = di::make_injector(
@@ -1211,8 +1211,8 @@ template &lt;&gt;
 struct ctor_traits&lt;T&gt; {
   BOOST_DI_INJECT_TRAITS((named = int1) int, (named = int2) int);
 };
-}
-}  // boost::di
+}  // namespace di
+}  // namespace boost
 
 int main() {
   auto injector = di::make_injector(
