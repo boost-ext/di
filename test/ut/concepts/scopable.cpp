@@ -115,4 +115,4 @@ test scopable_scopes = [] {
   static_expect(scopable<scopes::unique>::value);
 };
 
-}  // concepts
+}  // namespace concepts

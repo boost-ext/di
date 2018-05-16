@@ -26,8 +26,8 @@ template <>
 struct ctor_traits<T> {
   BOOST_DI_INJECT_TRAITS((named = int1) int, (named = int2) int);
 };
-}
-}  // boost::di
+}  // namespace di
+}  // namespace boost
 
 int main() {
   // clang-format off

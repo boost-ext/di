@@ -31,4 +31,4 @@ test join_types = [] {
   static_expect(std::is_same<type_list<float, double>, join_t<type_list<>, type_list<float, double>>>::value);
 };
 
-}  // aux
+}  // namespace aux

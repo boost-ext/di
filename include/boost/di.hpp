@@ -292,23 +292,23 @@ struct dependency_base {};
 struct injector_base {};
 template <class T>
 struct dependency__ : T {
-  using T::try_create;
-  using T::is_referable;
   using T::create;
+  using T::is_referable;
+  using T::try_create;
 };
 template <class T>
 struct injector__ : T {
+  using T::cfg;
   using T::create_impl;
   using T::create_successful_impl;
-  using T::cfg;
 #if defined(__MSVC__)
   template <class... Ts>
   using is_creatable = typename T::template is_creatable<Ts...>;
   template <class... Ts>
   using try_create = typename T::template try_create<Ts...>;
 #else
-  using T::try_create;
   using T::is_creatable;
+  using T::try_create;
 #endif
 };
 template <class, class...>
@@ -783,8 +783,8 @@ using boundable_impl__ = aux::conditional_t<
     aux::conditional_t<is_abstract<aux::is_complete<T>::value, T>::value, typename type_<T>::is_abstract, aux::true_type>,
     typename type_<T>::template is_not_related_to<I>>;
 template <class I, class T>
-auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value, boundable_impl__<I, T>,
-                                                     typename type_<T>::has_disallowed_qualifiers>;
+auto boundable_impl(I&&, T &&) -> aux::conditional_t<aux::is_same<T, aux::decay_t<T>>::value || !aux::is_complete<I>::value,
+                                                     boundable_impl__<I, T>, typename type_<T>::has_disallowed_qualifiers>;
 template <class I, class T>
 auto boundable_impl(I&&, T&&, aux::valid<> &&)
     -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
@@ -1704,8 +1704,8 @@ class dependency
   dependency& operator()() noexcept { return *this; }
 #endif
  protected:
-  using scope_t::is_referable;
   using scope_t::create;
+  using scope_t::is_referable;
   using scope_t::try_create;
   template <class, class>
   static void try_create(...);

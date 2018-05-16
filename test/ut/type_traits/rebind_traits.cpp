@@ -27,4 +27,4 @@ test traits = [] {
   static_expect(std::is_same<named<void, std::weak_ptr<int>>, rebind_traits_t<std::weak_ptr<int>, named<void>>>{});
 };
 
-}  // type_traits
+}  // namespace type_traits

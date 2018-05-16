@@ -45,7 +45,7 @@ struct is_expr
     : aux::integral_constant<
           bool, aux::is_invocable<TGiven, typename TProvider::injector, Ts...>::value && !has_result_type<TGiven>::value> {};
 
-}  // detail
+}  // namespace detail
 
 template <class T>
 struct wrapper {
@@ -291,6 +291,6 @@ class instance {
   };
 };
 
-}  // scopes
+}  // namespace scopes
 
 #endif

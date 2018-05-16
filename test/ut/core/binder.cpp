@@ -81,4 +81,4 @@ test resolve_types_found_priority_order = [] {
   expect(std::is_same<result, dependency<scopes::unique, int, int, no_name, override>>{});
 };
 
-}  // core
+}  // namespace core

@@ -51,6 +51,6 @@ struct named_decay<named<TName, T>> {
 template <class T>
 using named_decay_t = typename named_decay<T>::type;
 
-}  // type_traits
+}  // namespace type_traits
 
 #endif

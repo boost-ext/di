@@ -55,5 +55,5 @@ struct factory {
   }
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

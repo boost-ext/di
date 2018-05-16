@@ -87,4 +87,4 @@ class config_okay_type {
 
 test okay_type = [] { static_expect(configurable<config_okay_type>::value); };
 
-}  // concepts
+}  // namespace concepts

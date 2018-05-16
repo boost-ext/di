@@ -107,7 +107,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
 
   const TInjector* injector_;
 };
-}  // successful
-}  // core
+}  // namespace successful
+}  // namespace core
 
 #endif

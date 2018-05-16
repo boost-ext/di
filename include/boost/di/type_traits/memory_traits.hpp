@@ -55,6 +55,6 @@ struct memory_traits<T, __BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
   using type = heap;
 };
 
-}  // type_traits
+}  // namespace type_traits
 
 #endif

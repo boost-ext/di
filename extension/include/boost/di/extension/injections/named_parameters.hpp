@@ -143,5 +143,5 @@ auto ctor__(int) -> decltype(&T::ctor);
   };                                                                                                             \
   T(__VA_ARGS__)
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

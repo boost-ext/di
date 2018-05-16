@@ -63,7 +63,7 @@ class singleton {
   };
 };
 
-}  // scopes
+}  // namespace scopes
 
 static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 

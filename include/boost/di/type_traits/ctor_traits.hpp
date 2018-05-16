@@ -85,7 +85,7 @@ struct ctor_traits_impl<T, _, aux::true_type>
 template <class T, class _>
 struct ctor_traits_impl<T, _, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
 
-}  // type_traits
+}  // namespace type_traits
 
 template <class T, class>
 struct ctor_traits : type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>> {};

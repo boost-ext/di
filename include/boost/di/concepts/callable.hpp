@@ -68,6 +68,6 @@ struct is_callable<void> {  // auto
 template <class... Ts>
 using callable = typename is_callable<Ts...>::type;
 
-}  // concepts
+}  // namespace concepts
 
 #endif

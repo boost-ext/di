@@ -94,5 +94,5 @@ class assisted_injection_impl {
 template <class T>
 struct assisted_injection : assisted_injection_impl<T> {};
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

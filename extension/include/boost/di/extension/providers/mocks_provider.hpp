@@ -142,5 +142,5 @@ auto& expect(TInjector& injector, R (T::*)(TArgs...)) {
   return expectations;
 }
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

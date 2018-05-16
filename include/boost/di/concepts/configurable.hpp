@@ -73,6 +73,6 @@ struct configurable__ {
 template <class T>
 using configurable = typename configurable__<T>::type;
 
-}  // concepts
+}  // namespace concepts
 
 #endif

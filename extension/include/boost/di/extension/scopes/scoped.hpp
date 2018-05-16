@@ -53,9 +53,9 @@ class scoped {
     std::shared_ptr<T> *object_ = nullptr;
   };
 };
-}  // detail
+}  // namespace detail
 
 static constexpr detail::scoped scoped{};
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

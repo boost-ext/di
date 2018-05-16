@@ -59,12 +59,12 @@ class session {
     return is_in_session;
   }
 };
-}  // detail
+}  // namespace detail
 
 template <class TName, class TScope = scopes::singleton>
 auto session(const TName&, const TScope& = {}) {
   return detail::session<TName, TScope>{};
 }
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

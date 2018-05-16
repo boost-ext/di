@@ -49,4 +49,4 @@ test any_type_ref_create = [] {
   expect(0 == static_cast<int>(any_type_ref<void, fake_injector<>>{injector}));
 };
 
-}  // core
+}  // namespace core

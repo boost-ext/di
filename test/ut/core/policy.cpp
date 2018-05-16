@@ -71,4 +71,4 @@ test ignore_internal_types = [] {
   expect(2 == fake_policy_other::calls());
 };
 
-}  // core
+}  // namespace core

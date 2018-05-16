@@ -154,6 +154,6 @@ struct make_index_sequence_impl<10> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 
 template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 
-}  // aux
+}  // namespace aux
 
 #endif

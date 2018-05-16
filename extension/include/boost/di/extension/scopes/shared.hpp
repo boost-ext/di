@@ -78,7 +78,7 @@ class shared {
     std::shared_ptr<T> object_;  /// used by `in(shared)`, otherwise destroyed immediately
   };
 };
-}  // detail
+}  // namespace detail
 
 static constexpr detail::shared shared{};
 
@@ -127,5 +127,5 @@ class shared_config : public di::config {
   std::unordered_map<std::size_t, std::shared_ptr<void>> data_{};
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

@@ -63,5 +63,5 @@ auto make_extensible(TInjector& injector) {
   return make_extensible(typename TInjector::deps{}, injector);
 }
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

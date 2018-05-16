@@ -66,5 +66,5 @@ class contextual_bindings : public config {
   }
 };
 
-}  // extension
+}  // namespace extension
 BOOST_DI_NAMESPACE_END

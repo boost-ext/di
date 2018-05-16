@@ -70,4 +70,4 @@ test bind_injector = [] {
   static_expect(std::is_same<type_<double>::is_bound_more_than_once, boundable<aux::type<int, double, float, double>>>::value);
 };
 
-}  // concepts
+}  // namespace concepts
