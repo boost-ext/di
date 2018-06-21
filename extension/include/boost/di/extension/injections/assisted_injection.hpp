@@ -19,6 +19,12 @@ constexpr no_name assisted{};
 
 template <class T>
 class assisted_injection_impl {
+  template <class>
+  struct is_assisted : std::false_type {};
+
+  template <class TArg>
+  struct is_assisted<named<no_name, TArg>> : std::true_type {};
+
  public:
   template <class TInjector>
   auto operator()(const TInjector& injector) const {
@@ -42,8 +48,8 @@ class assisted_injection_impl {
     return std::make_unique<T>(create_impl<Ns>(injector, aux::type<TCtor>{}, std::forward<TArgs>(args)...)...);
   }
 
-  template <std::size_t, class TInjector, class TArg>
-  decltype(auto) create_impl(const TInjector& injector, const aux::type<TArg>&, ...) const {
+  template <std::size_t, class TInjector, class TArg, class... TArgs, std::enable_if_t<!is_assisted<TArg>::value, int> = 0>
+  decltype(auto) create_impl(const TInjector& injector, const aux::type<TArg>&, TArgs&&...) const {
     return injector.template create<TArg>();
   }
 
@@ -55,7 +61,7 @@ class assisted_injection_impl {
 
   template <class TInitialization, class... TCtor>
   static constexpr auto get_assisted_ctor_nr(std::size_t N, const aux::pair<TInitialization, aux::type_list<TCtor...>>&) {
-    return sum(0, N, is_assisted(aux::type<TCtor>{})...);
+    return sum(0, N, is_assisted<TCtor>::value...);
   }
 
   template <class... Args>
@@ -64,16 +70,6 @@ class assisted_injection_impl {
   }
 
   static constexpr auto sum(std::size_t, std::size_t) { return 0; }
-
-  template <class TArg>
-  static constexpr auto is_assisted(const aux::type<TArg>&) {
-    return false;
-  }
-
-  template <class TArg>
-  static constexpr auto is_assisted(const aux::type<named<no_name, TArg>>&) {
-    return true;
-  }
 
   template <class TCtor, std::size_t N, class TArg, class... TArgs, class = std::enable_if_t<(N > 1)>>
   decltype(auto) get(const std::integral_constant<std::size_t, N>&, TArg&&, TArgs&&... args) const {
