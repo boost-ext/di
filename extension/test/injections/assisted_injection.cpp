@@ -9,6 +9,7 @@
 #include <cassert>
 #include <functional>
 #include <memory>
+#include <string>
 
 namespace di = boost::di;
 
@@ -29,18 +30,21 @@ struct example {
                   ,
                   (named = di::extension::assisted) double factor /*from assisted_injection*/
                   ,
+                  (named = di::extension::assisted) std::string str /*from assisted_injection*/
+                  ,
                   int i /*from injector*/) {
     assert(i == 87);
     assert(dynamic_cast<implementation*>(up.get()));
     assert(date == 42);
     assert(factor == 123.0);
+    assert(str == "str");
   }
 };
 //->
 
 int main() {
   /*<<assisted_injection declaration using std function>>*/
-  using example_assisted_injection = std::function<std::unique_ptr<example>(int, double)>;
+  using example_assisted_injection = std::function<std::unique_ptr<example>(int, double, std::string)>;
 
   // clang-format off
   auto injector = di::make_injector(
@@ -52,5 +56,5 @@ int main() {
   // clang-format on
 
   auto f = injector.create<example_assisted_injection>();
-  f(42, 123.0);
+  f(42, 123.0, "str");
 }
