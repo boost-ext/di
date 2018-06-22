@@ -243,13 +243,14 @@ int main() {
 #include &lt;cassert&gt;
 #include &lt;functional&gt;
 #include &lt;memory&gt;
+#include &lt;string&gt;
 
 namespace di = boost::di;
 
 
 int main() {
   /*&lt;&lt;assisted_injection declaration using std function&gt;&gt;*/
-  using example_assisted_injection = std::function&lt;std::unique_ptr&lt;example&gt;(int, double)&gt;;
+  using example_assisted_injection = std::function&lt;std::unique_ptr&lt;example&gt;(int, double, std::string)&gt;;
 
   auto injector = di::make_injector(
       di::bind&lt;int&gt;().to(87)
@@ -259,7 +260,7 @@ int main() {
   );
 
   auto f = injector.create&lt;example_assisted_injection&gt;();
-  f(42, 123.0);
+  f(42, 123.0, &quot;str&quot;);
 }
 </code></pre>
 
