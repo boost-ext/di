@@ -1,0 +1,381 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>[Boost].DI - inject all the things!</title>
+
+		<link rel="stylesheet" href="reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="reveal.js/css/theme/league.css" id="theme">
+    <link rel="stylesheet" href="extensions/plugin/line-numbers/line-numbers.css">
+    <link rel="stylesheet" href="extensions/css/highlight-styles/zenburn.css">
+    <link rel="stylesheet" href="extensions/css/custom.css">
+
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<meta name="description" content="[Boost].DI - inject all the things!">
+		<meta name="author" content="Kris Jusiak">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+          <section data-markdown=""
+                   data-separator="^====+$"
+                   data-separator-vertical="^----+$">
+					<script type="text/template">
+
+#### CppCon, 2018
+
+---
+
+# [Boost].DI
+# Inject all the things!
+
+---
+
+Kris Jusiak, Quantlab Financial
+
+#### [kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
+
+---
+
+<!-- .element: style="margin-left:-13%; width:125%" -->
+
+----
+
+### Dependency Injection
+
+> "Don't call us, we'll call you", Hollywood principle
+
+```cpp
+                         No DI | DI
+-------------------------------+-------------------------------------------
+class cppcon_talk {            | class cppcon_talk {
+ private: /*tightly coupled*/  |  public: /*Dependency Injection!*/
+   room room_{'Eniac'};        |   cppcon_talk(room, speaker, attendees);
+   speaker speaker{"Kris"};    |
+   attendees attendees_{};     |  private:
+};                             |    room room_{};
+                               |    speaker speaker_{};
+                               |    attendees attendees_{};
+                               | };
+```
+<!-- .element: style="margin-left:0%; width:105%" -->
+
+----
+
+### C++ Dependency Injection Library - [[Boost].DI](https://github.com/boost-experimental/di)
+
+* One header - 3k LOC - ([boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)) / generated
+* Neither Boost nor STL is required
+* No 'if's, 'virtual's, 'exception's, macros, run-time errors
+* Non-intrusive
+* Exception / Thread safe
+* Supported compilers (C++14)
+  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+
+**Disclaimer** `[Boost].DI` is not an official Boost library
+
+----
+
+### Inject by default (create object graph)
+
+```cpp
+class room {}; class speaker {}; class attendees {};
+
+class cppcon_talk {
+ public:
+  cppcon_talk(const room&, const speaker&, attendees&);
+};
+```
+<!-- .element: style="margin-left:0%; width:105%" -->
+
+```cpp
+                           Manual DI | [Boost].DI
+-------------------------------------+-------------------------------------
+ auto room = room{};                 |
+ auto speaker = speaker{};           |
+ auto attendees = attendees{};       | auto talk =
+                                     |   di::create<cppcon_talk>();
+ auto talk = cppcon_talk{room,       |
+                         speaker,    |
+                         attendees}; |
+```
+<!-- .element: style="margin-left:0%; width:105%" -->
+
+----
+
+### Inject / refactor
+
+```cpp
+class room {}; class speaker {}; class attendees {};
+
+class cppcon_talk {
+ public:
+  cppcon_talk(room&&, std::unique_ptr<speaker>, attendees&);
+};
+```
+<!-- .element: style="margin-left:0%; width:105%" -->
+
+```cpp
+                           Manual DI | [Boost].DI
+-------------------------------------+-------------------------------------
+ auto room = room{};                 |
+ auto speaker =                      |
+   std::make_unique<speaker>();      | /*Same as before!*/
+ const auto attendees = attendees{}; |
+                                     | auto talk =
+ auto talk = cppcon_talk{            |   di::create<cppcon_talk>();
+   std::move(room),                  |
+   std::move(speaker),               |
+   attendees};                       |
+```
+<!-- .element: style="margin-left:0%; width:105%" -->
+
+----
+
+### Inject values
+
+```cpp
+class attendees {
+ public:
+   explicit attendees(const std::vector<name>& names) {
+     assert(3u == names.size());
+     assert("Lenny" == names[0]);
+     assert("Shea" == names[1]);
+     assert("Daniel" == names[2]);
+   }
+};
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+```cpp
+                          Manual DI | [Boost].DI
+------------------------------------+------------------------------------------
+ ...                                |
+ std::vector attendees_list = {     | auto injector = di::make_injector(
+   name{"Lenny"}, name{"Shea"}      |   ...,
+ };                                 |   di::bind<name[]>.to({name{"Lenny"},
+ const auto attendees =             |                        name{"Shea"})
+  attendees{attendees_list};        | );
+                                    |
+ cppcon_talk talk{std::move(room),  | auto talk = injector.create<cppcon_talk>();
+                  std::move(speaker)|
+                  attendees);       |
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+----
+
+### Inject abstractions
+
+```cpp
+struct ispeaker {
+  virtual ~ispeaker() noexcept = default;
+  virtual void present() = 0;
+};
+struct keynote_speaker : ispeaker;
+struct regular_speaker : ispeaker;
+
+struct cppcon_talk {
+  cppcon_talk(room&&, std::unique_ptr<ispeaker> speaker, attendees&) {
+    assert(dynamic_cast<regular_speaker*>(speaker.get()));
+  }
+};
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+```cpp
+                           Manual DI | [Boost].DI
+-------------------------------------+------------------------------------------
+ ...                                 |
+ auto speaker = std::make_unique     | auto injector = di::make_injector(
+   <regular_speaker>();              |   ...,
+ ...                                 |   di::bind<ispeaker>.to<regular_speaker>()
+ cppcon_talk talk{std::move(room),   | );
+                  std::move(speaker) | auto talk = injector.create<cppcon_talk>();
+                  attendees);        |
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+----
+
+### Inject templates/concepts
+
+```cpp
+class Eniac;
+
+template<class TRoom = class Room> // requires RoomLike<TRoom>
+class cppcon_talk {
+ public:
+  cppcon_talk(TRoom&& room, std::unique_ptr<ispeaker>, attendees&);
+};
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+```cpp
+                           Manual DI | [Boost].DI
+-------------------------------------+------------------------------------------
+ auto room = Eniac{};                | auto injector = di::make_injector(
+ ...                                 |   ...,
+ ...                                 |   di::bind<class Room>.to<Eniac>()
+ cppcon_talk talk{std::move(room),   | );
+                  std::move(speaker) | auto talk = injector.create<cppcon_talk>();
+                  attendees);        |
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+----
+
+### Inject mocks ([GUnit](https://github.com/cpp-testing/GUnit))
+
+```cpp
+"should present the talk"_test = [] {
+  auto [talk, mocks] = testing::make<cppcon_talk, StrictGMock>();
+
+  EXPECT_CALL(mocks.get<class Room>(), close).WillOnce(Return(true));
+  EXPECT_CALL(mocks.get<ispeaker>(), present);
+
+  talk.start();
+};
+```
+<!-- .element: style="margin-left:-5%; width:115%" -->
+
+----
+
+## Questions?
+
+| [Boost].DI |  |
+| ------- | ------------- |
+| Documentation | http://boost-experimental.github.io/di |
+| Source Code | https://github.com/boost-experimental/di |
+| Try it online! | http://boost-experimental.github.io/di/try_it |
+<!-- .element: style="margin-left:-13%; width:125%" -->
+
+-
+
+#### [kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
+					</script>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="reveal.js/lib/js/head.min.js"></script>
+		<script src="reveal.js/js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+
+        // Display controls in the bottom right corner
+        controls: true,
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Vertical centering of slides
+        center: true,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // Turns fragments on and off globally
+        fragments: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: true,
+
+        // Hides the address bar on mobile devices
+        hideAddressBar: true,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'default', // none/fade/slide/convex/concave/zoom
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Parallax background image
+        parallaxBackgroundImage: '', // e.g. "'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg'"
+
+        // Parallax background size
+        parallaxBackgroundSize: '', // CSS syntax, e.g. "2100px 900px"
+
+        // Number of pixels to move the parallax background per slide
+        // - Calculated automatically unless specified
+        // - Set to 0 to disable movement along an axis
+        parallaxBackgroundHorizontal: null,
+        parallaxBackgroundVertical: null,
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'reveal.js/plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+					{ src: 'reveal.js/plugin/notes/notes.js', async: true },
+          { src: 'extensions/plugin/line-numbers/line-numbers.js' }
+				]
+			});
+		</script>
+	</body>
+</html>
