@@ -268,7 +268,7 @@ struct make_index_sequence_impl<10> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 
 #endif
 template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
-}
+}  // namespace aux
 template <class, class = void>
 struct named {};
 struct no_name {
@@ -316,13 +316,13 @@ struct array;
 struct deduced {};
 template <class, class TExpected = deduced, class = TExpected, class = no_name, class = void>
 class dependency;
-}
+}  // namespace core
 namespace scopes {
 class deduce;
 class instance;
 class singleton;
 class unique;
-}
+}  // namespace scopes
 #define __BOOST_DI_REQUIRES(...) typename ::boost::di::v1_1_0::aux::enable_if<__VA_ARGS__, int>::type
 #define __BOOST_DI_REQUIRES_MSG(...) typename ::boost::di::v1_1_0::aux::concept_check<__VA_ARGS__>::type
 namespace aux {
@@ -655,7 +655,7 @@ struct function_traits<R (T::*)(TArgs...) const> {
 };
 template <class T>
 using function_traits_t = typename function_traits<T>::args;
-}
+}  // namespace aux
 namespace core {
 template <class T, class = typename aux::is_a<injector_base, T>::type>
 struct bindings_impl;
@@ -676,7 +676,7 @@ using bindings_t = typename bindings<Ts...>::type;
 template <class... Ts>
 using bindings_t = aux::join_t<typename bindings_impl<Ts>::type...>;
 #endif
-}
+}  // namespace core
 namespace concepts {
 template <class T, class...>
 struct type_ {
@@ -752,9 +752,9 @@ using boundable_bindings =
     aux::conditional_t<is_supported<TDeps...>::value, typename get_is_unique_error<core::bindings_t<TDeps...>>::type,
                        typename type_<typename get_not_supported<TDeps...>::type>::is_neither_a_dependency_nor_an_injector>;
 template <class... Ts>
-using get_any_of_error = aux::conditional_t<
-    aux::is_same<aux::bool_list<aux::always<Ts>::value...>, aux::bool_list<aux::is_same<aux::true_type, Ts>::value...>>::value,
-    aux::true_type, any_of<Ts...>>;
+struct get_any_of_error : aux::conditional<aux::is_same<aux::bool_list<aux::always<Ts>::value...>,
+                                                        aux::bool_list<aux::is_same<aux::true_type, Ts>::value...>>::value,
+                                           aux::true_type, any_of<Ts...>> {};
 template <bool, class...>
 struct is_related {
   static constexpr auto value = true;
@@ -798,8 +798,8 @@ auto boundable_impl(I[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_
 template <class... TDeps>
 auto boundable_impl(aux::type_list<TDeps...> &&) -> boundable_bindings<TDeps...>;
 template <class T, class... Ts>
-auto boundable_impl(concepts::any_of<Ts...>&&, T &&)
-    -> get_any_of_error<decltype(boundable_impl(aux::declval<Ts>(), aux::declval<T>()))...>;
+auto boundable_impl(concepts::any_of<Ts...>&&, T &&) ->
+    typename get_any_of_error<decltype(boundable_impl(aux::declval<Ts>(), aux::declval<T>()))...>::type;
 template <class... TDeps>
 auto boundable_impl(aux::type<TDeps...> &&) -> typename get_is_unique_error_impl<typename aux::is_unique<TDeps...>::type>::type;
 aux::true_type boundable_impl(...);
@@ -809,7 +809,7 @@ struct boundable__ {
 };
 template <class... Ts>
 using boundable = typename boundable__<Ts...>::type;
-}
+}  // namespace concepts
 namespace type_traits {
 struct stack {};
 struct heap {};
@@ -845,7 +845,7 @@ template <class T>
 struct memory_traits<T, __BOOST_DI_REQUIRES(aux::is_polymorphic<T>::value)> {
   using type = heap;
 };
-}
+}  // namespace type_traits
 namespace concepts {
 template <class...>
 struct scope {
@@ -904,7 +904,7 @@ struct scopable__ {
 };
 template <class T>
 using scopable = typename scopable__<T>::type;
-}
+}  // namespace concepts
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)
 #define BOOST_DI_CFG_CTOR_LIMIT_SIZE 10
 #endif
@@ -962,7 +962,7 @@ struct ctor_traits_impl<T, _, aux::true_type>
     : aux::pair<T, aux::pair<direct, typename ctor_traits<T>::boost_di_inject__::type>> {};
 template <class T, class _>
 struct ctor_traits_impl<T, _, aux::false_type> : aux::pair<T, typename ctor_traits<T>::type> {};
-}
+}  // namespace type_traits
 template <class T, class>
 struct ctor_traits : type_traits::ctor<T, type_traits::ctor_impl_t<aux::is_constructible, T>> {};
 template <class T>
@@ -1012,7 +1012,7 @@ struct named_decay<named<TName, T>> {
 };
 template <class T>
 using named_decay_t = typename named_decay<T>::type;
-}
+}  // namespace type_traits
 namespace type_traits {
 template <class, class T>
 struct rebind_traits {
@@ -1056,7 +1056,7 @@ struct rebind_traits<boost::shared_ptr<T>, named<TName, _>> {
 };
 template <class T, class U>
 using rebind_traits_t = typename rebind_traits<T, U>::type;
-}
+}  // namespace type_traits
 namespace core {
 template <class T, class... Ts>
 struct array_impl : _ {
@@ -1079,12 +1079,12 @@ template <class T>
 struct array<T()> : T {
   using boost_di_inject__ = aux::type_list<>;
 };
-}
+}  // namespace core
 namespace type_traits {
 template <class _, class T, class... Ts>
 struct ctor_traits__<core::array<_, Ts...>, T, aux::false_type>
     : type_traits::ctor_traits__<core::array<aux::remove_smart_ptr_t<aux::remove_qualifiers_t<T>>(), Ts...>> {};
-}
+}  // namespace type_traits
 namespace scopes {
 class deduce {
  public:
@@ -1106,7 +1106,7 @@ class deduce {
     }
   };
 };
-}
+}  // namespace scopes
 static constexpr __BOOST_DI_UNUSED scopes::deduce deduce{};
 namespace concepts {
 template <class T>
@@ -1248,7 +1248,7 @@ template <class TInitialization, class TName, class T, class... TArgs>
 T creatable_error() {
   return creatable_error_impl<TInitialization, TName, T, aux::type_list<TArgs...>>{};
 }
-}
+}  // namespace concepts
 namespace wrappers {
 template <class TScope, class T, class TObject = std::shared_ptr<T>>
 struct shared {
@@ -1297,7 +1297,7 @@ struct shared<TScope, T&> {
   inline operator T&() const noexcept { return *object; }
   T* object = nullptr;
 };
-}
+}  // namespace wrappers
 namespace wrappers {
 template <class TScope, class T>
 struct unique {
@@ -1345,7 +1345,7 @@ struct unique<TScope, T*> {
   }
   T* object = nullptr;
 };
-}
+}  // namespace wrappers
 namespace scopes {
 class instance;
 namespace detail {
@@ -1373,7 +1373,7 @@ template <class TGiven, class TProvider, class... Ts>
 struct is_expr
     : aux::integral_constant<
           bool, aux::is_invocable<TGiven, typename TProvider::injector, Ts...>::value && !has_result_type<TGiven>::value> {};
-}
+}  // namespace detail
 template <class T>
 struct wrapper {
   inline operator T() noexcept { return static_cast<T&&>(object); }
@@ -1569,7 +1569,7 @@ class instance {
     injector* injector_;
   };
 };
-}
+}  // namespace scopes
 namespace core {
 template <class, class>
 struct dependency_concept {};
@@ -1710,7 +1710,7 @@ class dependency
   template <class, class>
   static void try_create(...);
 };
-}
+}  // namespace core
 namespace core {
 template <class = aux::type_list<>>
 struct pool;
@@ -1730,7 +1730,7 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
     return *this;
   }
 };
-}
+}  // namespace core
 namespace concepts {
 struct call_operator_with_one_argument {};
 template <class>
@@ -1772,7 +1772,7 @@ struct is_callable<void> {
 };
 template <class... Ts>
 using callable = typename is_callable<Ts...>::type;
-}
+}  // namespace concepts
 namespace providers {
 class stack_over_heap {
  public:
@@ -1797,7 +1797,7 @@ class stack_over_heap {
     return T{static_cast<TArgs&&>(args)...};
   }
 };
-}
+}  // namespace providers
 namespace scopes {
 class singleton {
  public:
@@ -1842,7 +1842,7 @@ class singleton {
     }
   };
 };
-}
+}  // namespace scopes
 static constexpr __BOOST_DI_UNUSED scopes::singleton singleton{};
 namespace scopes {
 class unique {
@@ -1865,7 +1865,7 @@ class unique {
     }
   };
 };
-}
+}  // namespace scopes
 static constexpr __BOOST_DI_UNUSED scopes::unique unique{};
 namespace type_traits {
 template <class T>
@@ -1888,7 +1888,7 @@ template <class T>
 struct scope_traits<std::weak_ptr<T>> {
   using type = scopes::singleton;
 };
-}
+}  // namespace type_traits
 #if !defined(BOOST_DI_CFG)
 #define BOOST_DI_CFG ::boost::di::v1_1_0::config
 #endif
@@ -1925,7 +1925,7 @@ template <class TScope, class... Ts>
 struct bind<int, TScope, Ts...> {
   using type = core::dependency<TScope, concepts::any_of<Ts...>>;
 };
-}
+}  // namespace detail
 template <class... Ts>
 #if defined(__cpp_variable_templates)
 typename
@@ -1962,7 +1962,7 @@ struct providable__ {
 };
 template <class T>
 using providable = typename providable__<T>::type;
-}
+}  // namespace concepts
 namespace concepts {
 template <class>
 struct policies {};
@@ -2011,7 +2011,7 @@ struct configurable__ {
 };
 template <class T>
 using configurable = typename configurable__<T>::type;
-}
+}  // namespace concepts
 namespace core {
 struct binder {
   template <class TDefault, class>
@@ -2074,7 +2074,7 @@ struct binder {
   template <class TDeps, class T>
   using resolve_template_t = typename resolve_template_impl<TDeps, aux::remove_qualifiers_t<T>>::type;
 };
-}
+}  // namespace core
 namespace core {
 template <class T, class TInjector, class TError = aux::false_type>
 struct is_referable__ {
@@ -2236,7 +2236,7 @@ struct any_type_1st_ref {
   }
   const TInjector& injector_;
 };
-}
+}  // namespace successful
 template <class>
 struct any_type_fwd {
   template <class T>
@@ -2281,7 +2281,7 @@ struct any_type_1st_ref_fwd {
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator const T&() const;
 };
-}
+}  // namespace core
 namespace core {
 template <class...>
 struct arg_wrapper;
@@ -2326,7 +2326,7 @@ class policy {
     (void)aux::swallow{0, (call_impl<TArg, TPolicies>(policies), 0)...};
   }
 };
-}
+}  // namespace core
 namespace core {
 #if (BOOST_DI_CFG_DIAGNOSTICS_LEVEL >= 2)
 template <class T>
@@ -2402,8 +2402,8 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TInje
   auto& cfg() const { return ((injector__<TInjector>*)injector_)->cfg(); }
   const TInjector* injector_;
 };
-}
-}
+}  // namespace successful
+}  // namespace core
 namespace core {
 namespace successful {
 template <class T, class TWrapper>
@@ -2411,7 +2411,7 @@ struct wrapper {
   inline operator T() noexcept { return wrapper_; }
   TWrapper wrapper_;
 };
-}
+}  // namespace successful
 template <class T, class TWrapper, class = int>
 struct wrapper_impl {
   inline operator T() noexcept { return wrapper_; }
@@ -2427,7 +2427,7 @@ struct wrapper_impl<T, TWrapper<TScope, T_, Ts...>,
 };
 template <class T, class TWrapper>
 using wrapper = wrapper_impl<T, TWrapper>;
-}
+}  // namespace core
 namespace core {
 struct from_injector {};
 struct from_deps {};
@@ -2860,7 +2860,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, public pool<bindings_
   }
   config config_;
 };
-}
+}  // namespace core
 namespace detail {
 template <class>
 void create(const aux::true_type&) {}
@@ -2896,7 +2896,7 @@ create<T> (
     (void)_;
   }
 };
-}
+}  // namespace detail
 template <class T, class... Ts>
 using injector = detail::injector<
     BOOST_DI_CFG, __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
@@ -2977,7 +2977,7 @@ struct or_ : detail::type_op {
                                         !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
                                                       aux::bool_list<aux::never<Ts>::value...>>::value> {};
 };
-}
+}  // namespace detail
 template <class T>
 struct type {
   template <class TPolicy>
@@ -3027,7 +3027,7 @@ template <class T>
 inline auto operator!(const T&) {
   return detail::not_<T>{};
 }
-}
+}  // namespace operators
 template <bool, class T>
 struct constructible_impl {
   template <class TArg, __BOOST_DI_REQUIRES(TArg::is_root::value || T::template apply<TArg>::value) = 0>
@@ -3060,7 +3060,7 @@ template <bool IncludeRoot = false, class T = aux::never<_>,
 inline auto constructible(const T& = {}) {
   return constructible_impl<IncludeRoot, detail::or_<T>>{};
 }
-}
+}  // namespace policies
 #define __BOOST_DI_IF(cond, t, f) __BOOST_DI_IF_I(cond, t, f)
 #define __BOOST_DI_REPEAT(i, m, ...) __BOOST_DI_REPEAT_N(i, m, __VA_ARGS__)
 #define __BOOST_DI_CAT(a, ...) __BOOST_DI_PRIMITIVE_CAT(a, __VA_ARGS__)
@@ -3181,7 +3181,7 @@ struct combine<aux::type_list<T1...>, aux::type_list<T2...>> {
 };
 template <class T1, class T2>
 using combine_t = typename combine<T1, T2>::type;
-}
+}  // namespace detail
 template <class... Ts>
 using inject = aux::type_list<Ts...>;
 #define __BOOST_DI_HAS_NAME(i, ...) __BOOST_DI_IF(__BOOST_DI_IBP(__BOOST_DI_ELEM(i, __VA_ARGS__, )), 1, )
