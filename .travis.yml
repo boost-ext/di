@@ -32,8 +32,8 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: CHECK=ON CLANG_FORMAT=clang-format-4.0 CLANG_TIDY=clang-tidy-4.0
-    addons: { apt: { packages: ["clang-format-4.0", "clang-tidy-4.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+    env: CHECK=ON CLANG_FORMAT=clang-format-6.0 CLANG_TIDY=clang-tidy-6.0
+    addons: { apt: { packages: ["clang-format-6.0", "clang-tidy-6.0"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-6.0"] } }
 
 #
 # CMake
@@ -51,7 +51,7 @@ matrix:
   - os: linux
     dist: trusty
     env: BS=cmake CXX=clang++-3.8
-    addons: { apt: { packages: ["clang-3.8", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-precise-3.8"] } }
+    addons: { apt: { packages: ["clang-3.8", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain--3.8"] } }
 
   - os: linux
     dist: trusty
@@ -70,8 +70,13 @@ matrix:
 
   - os: linux
     dist: trusty
-    env: BS=cmake CXX=clang++-5.0 LIBCXX=ON
-    addons: { apt: { packages: ["clang-5.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+    env: BS=cmake CXX=clang++-6.0
+    addons: { apt: { packages: ["clang-6.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-6.0"] } }
+
+  - os: linux
+    dist: trusty
+    env: BS=cmake CXX=clang++-6.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-6.0", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-6.0"] } }
 
   - os: linux
     dist: trusty
@@ -100,6 +105,10 @@ matrix:
     osx_image: xcode9.1
     env: BS=cmake CXX=clang++
 
+  - os: osx
+    osx_image: xcode10
+    env: BS=cmake CXX=clang++
+
 #
 # Bjam
 #
@@ -122,8 +131,8 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: BS=cmake VARIANT=analyze CXX=clang++-5.0 LIBCXX=ON
-    addons: { apt: { packages: ["clang-5.0", "libstdc++-6-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-5.0"] } }
+    env: BS=cmake VARIANT=analyze CXX=clang++-6.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-6.0", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-6.0"] } }
 
   - os: linux
     dist: trusty
@@ -131,7 +140,7 @@ matrix:
     addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
-    osx_image: xcode9.1
+    osx_image: xcode10
     env: BS=cmake VARIANT=analyze CXX=clang++
 
 #
@@ -139,8 +148,8 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: BS=cmake MEMCHECK=valgrind CXX=clang++-4.0 LIBCXX=ON
-    addons: { apt: { packages: ["clang-4.0", "libstdc++-6-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
+    env: BS=cmake MEMCHECK=valgrind CXX=clang++-6.0 LIBCXX=ON
+    addons: { apt: { packages: ["clang-6.0", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-4.0"] } }
 
   - os: linux
     dist: trusty
@@ -148,7 +157,7 @@ matrix:
     addons: { apt: { packages: ["g++-7", "libstdc++-7-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
-    osx_image: xcode9.1
+    osx_image: xcode10
     env: BS=cmake MEMCHECK=valgrind CXX=clang++
 
 #

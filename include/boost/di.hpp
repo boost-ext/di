@@ -1370,9 +1370,8 @@ struct has_result_type : ::boost::di::v1_1_0::aux::false_type {};
 template <class T>
 struct has_result_type<T, ::boost::di::v1_1_0::aux::valid_t<typename T::result_type>> : ::boost::di::v1_1_0::aux::true_type {};
 template <class TGiven, class TProvider, class... Ts>
-struct is_expr
-    : aux::integral_constant<
-          bool, aux::is_invocable<TGiven, typename TProvider::injector, Ts...>::value && !has_result_type<TGiven>::value> {};
+struct is_expr : aux::integral_constant<bool, aux::is_invocable<TGiven, typename TProvider::injector, Ts...>::value &&
+                                                  !has_result_type<TGiven>::value> {};
 }  // namespace detail
 template <class T>
 struct wrapper {
@@ -1494,7 +1493,7 @@ class instance {
     template <class TName, class T>
     struct injector__<named<TName, T>> {
       T (*f)(const injector__*) = nullptr;
-      explicit injector__(const decltype(f) & ptr) : f(ptr) {}
+      explicit injector__(const decltype(f)& ptr) : f(ptr) {}
     };
     struct injector : injector__<Ts>... {
       void (*dtor)(injector*) = nullptr;
@@ -1599,8 +1598,8 @@ class dependency
   friend class dependency;
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
   template <class T>
-  using externable = aux::integral_constant<
-      bool, aux::always<T>::value && aux::is_same<TScope, scopes::deduce>::value && aux::is_same<TExpected, TGiven>::value>;
+  using externable = aux::integral_constant<bool, aux::always<T>::value && aux::is_same<TScope, scopes::deduce>::value &&
+                                                      aux::is_same<TExpected, TGiven>::value>;
   template <class T>
   struct ref_traits {
     using type = T;
@@ -2509,7 +2508,7 @@ class injector : injector_base, public pool<bindings_t<TDeps...>> {
             __BOOST_DI_REQUIRES(
                 is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
   binder::resolve_template_t<injector, aux::identity<T<>>>
-      // clang-format off
+  // clang-format off
   create()
       // clang-format on
       const {
@@ -2712,7 +2711,7 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, public pool<bindings_
             __BOOST_DI_REQUIRES(
                 is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
   binder::resolve_template_t<injector, aux::identity<T<>>>
-      // clang-format off
+  // clang-format off
   create()
       // clang-format on
       const {
@@ -2973,9 +2972,9 @@ struct and_ : detail::type_op {
 template <class... Ts>
 struct or_ : detail::type_op {
   template <class TArg>
-  struct apply : aux::integral_constant<bool,
-                                        !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
-                                                      aux::bool_list<aux::never<Ts>::value...>>::value> {};
+  struct apply
+      : aux::integral_constant<bool, !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
+                                                   aux::bool_list<aux::never<Ts>::value...>>::value> {};
 };
 }  // namespace detail
 template <class T>

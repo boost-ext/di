@@ -186,7 +186,7 @@ test any_of_with_scope = [] {
 #else
         di::bind<i2, i1>().in(scope).template to<impl1_2>()
 #endif
-            );
+    );
 
     auto object_1 = injector.template create<std::shared_ptr<i1>>();
     auto object_2 = injector.template create<std::shared_ptr<i2>>();
@@ -206,7 +206,7 @@ test any_of_with_scope_split = [] {
 #else
         di::bind<i1>().in(scope).template to<impl1_2>(), di::bind<i2>().in(scope).template to<impl1_2>()
 #endif
-            );
+    );
 
     auto object_1 = injector.template create<std::shared_ptr<i1>>();
     auto object_2 = injector.template create<std::shared_ptr<i2>>();

@@ -27,7 +27,7 @@ int main() {
 #else
       di::bind<i1>().to<impl1>()  // no variable templates
 #endif
-          );
+  );
 
   auto object = injector.create<std::unique_ptr<i1>>();
   assert(dynamic_cast<impl1*>(object.get()));

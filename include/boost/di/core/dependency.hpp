@@ -55,8 +55,8 @@ class dependency
   using scope_t = typename TScope::template scope<TExpected, TGiven>;
 
   template <class T>
-  using externable = aux::integral_constant<
-      bool, aux::always<T>::value && aux::is_same<TScope, scopes::deduce>::value && aux::is_same<TExpected, TGiven>::value>;
+  using externable = aux::integral_constant<bool, aux::always<T>::value && aux::is_same<TScope, scopes::deduce>::value &&
+                                                      aux::is_same<TExpected, TGiven>::value>;
 
   template <class T>
   struct ref_traits {

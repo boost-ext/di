@@ -159,7 +159,7 @@ test bind_in_not_scopable_type = [] {
 #else
              "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
 #endif
-             );
+      );
 
   expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(di::bind<int>().in(dummy{})); });
 };
@@ -173,7 +173,7 @@ test bind_in_not_scopable_type_v = [] {
 #else
              "scope<.*dummy>::requires_<.*scope<.*>::is_referable,.*scope<.*>::try_create,.*scope<.*>::create>"
 #endif
-             );
+      );
 
   expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(di::bind<int>.in(dummy{})); });
 };
@@ -234,7 +234,7 @@ test bind_narrowed_type = [] {
 #else
                         "type_<.*double>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to<double>()); });
 };
@@ -247,7 +247,7 @@ test bind_narrowed_type_v = [] {
 #else
                         "type_<.*double>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to<double>()); });
 };
@@ -260,7 +260,7 @@ test bind_not_compatible_types = [] {
 #else
                         "type_<.*impl>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct i{}; struct impl
                       : i{};
@@ -275,7 +275,7 @@ test bind_not_compatible_types_v = [] {
 #else
                         "type_<.*impl>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct i{}; struct impl : i{}; int main() { di::make_injector(di::bind<int>.to<impl>()); });
 };
@@ -288,7 +288,7 @@ test bind_not_compatible_instance = [] {
 #else
                         "type_<.*impl>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct i{}; struct impl
                       : i{};
@@ -303,7 +303,7 @@ test bind_not_compatible_instance_v = [] {
 #else
                         "type_<.*impl>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct i{}; struct impl : i{}; int main() { di::make_injector(di::bind<int>.to(impl{})); });
 };
@@ -318,7 +318,7 @@ test bind_not_compatible_narrowed_types = [] {
 #else
                         "type_<.*long.*int>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to(42l)); });
 };
@@ -333,7 +333,7 @@ test bind_not_compatible_narrowed_types_v = [] {
 #else
                         "type_<.*long.*int>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to(42l)); });
 };
@@ -346,7 +346,7 @@ test bind_not_compatible_initializer_list = [] {
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int[]>().to({"a", "b"})); });
 };
@@ -359,7 +359,7 @@ test bind_not_compatible_initializer_list_v = [] {
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int[]>.to({"a", "b"})); });
 };
@@ -372,7 +372,7 @@ test bind_any_of_not_related = [] {
 #else
                         "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct a{}; struct b
                       : a{};
@@ -387,7 +387,7 @@ test bind_any_of_not_related_v = [] {
 #else
                         "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct a{}; struct b
                       : a{};
@@ -402,7 +402,7 @@ test bind_deduced_not_related = [] {
 #else
                         "type_<.*a>::is_not_related_to<.*deduced>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct a{}; int main() { di::make_injector(di::bind<>().to<a>()); });
 };
@@ -415,7 +415,7 @@ test bind_deduced_not_related_v = [] {
 #else
                         "type_<.*a>::is_not_related_to<.*deduced>"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct a{}; int main() { di::make_injector(di::bind<>.to<a>()); });
 };
@@ -428,7 +428,7 @@ test bind_is_abstract_type = [] {
 #else
                         "type_<.*impl>::is_abstract"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_,
                       struct i {
@@ -448,7 +448,7 @@ test bind_is_abstract_type_v = [] {
 #else
                         "type_<.*impl>::is_abstract"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_,
                       struct i {
@@ -468,7 +468,7 @@ test bind_is_abstract_type_with_missing_error = [] {
 #else
                         "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
 #endif
-                        );
+  );
 
   expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                       struct i {
@@ -488,7 +488,7 @@ test bind_is_abstract_type_with_missing_error_v = [] {
 #else
                         "type_<.*impl>::is_abstract", "pure.*impl", "virtual void dummy().*=.*0"
 #endif
-                        );
+  );
 
   expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                       struct i {
@@ -508,7 +508,7 @@ test bind_is_abstract_type_named = [] {
 #else
                         "type_<.*impl>::is_abstract"
 #endif
-                        );
+  );
   expect_compile_fail("", errors_,
                       struct i {
                         virtual ~i() noexcept = default;
@@ -528,7 +528,7 @@ test bind_is_abstract_type_named_v = [] {
 #else
                         "type_<.*impl>::is_abstract"
 #endif
-                        );
+  );
   expect_compile_fail("", errors_,
                       struct i {
                         virtual ~i() noexcept = default;
@@ -548,7 +548,7 @@ test bind_deduced_instance_repeated = [] {
 #else
                         "type_<.*int>::is_bound_more_than_once"
 #endif
-                        );
+  );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<>().to(42), di::bind<>().to(42)); });
 };
 
@@ -560,7 +560,7 @@ test bind_deduced_instance_repeated_v = [] {
 #else
                         "type_<.*int>::is_bound_more_than_once"
 #endif
-                        );
+  );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<>.to(42), di::bind<>.to(42)); });
 };
 #endif
@@ -688,7 +688,7 @@ test make_injector_wrong_arg = [] {
 #else
                         "type_<.*dummy>::is_neither_a_dependency_nor_an_injector"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct dummy{}; int main() { di::make_injector(dummy{}); });
 };
@@ -714,7 +714,7 @@ test exposed_multiple_times = [] {
 #else
                         "type_<.*c>::is_bound_more_than_once"
 #endif
-                        );
+  );
 
   expect_compile_fail("", errors_, struct c{}; int main() { di::injector<c, c> injector = di::make_injector(); });
 };
@@ -732,7 +732,7 @@ test make_policies_with_non_const_policy = [] {
 #else
                         "policy<.*non_const_policy>::requires_<.*call_operator_with_one_argument>"
 #endif
-                        );
+  );
 
     expect_compile_fail("", errors_,
 	struct non_const_policy {
@@ -769,7 +769,7 @@ test config_wrong_policy = [] {
 #else
                         "policy<.*int>::requires_<.*call_operator_with_one_argument>"
 #endif
-                        );
+  );
 
     expect_compile_fail("", errors_,
         struct test_config : di::config {
@@ -789,7 +789,7 @@ int main() { di::make_injector<test_config>(); }
 #else
                             "policy<.*dummy>::requires_<.*call_operator_with_one_argument>"
 #endif
-                            );
+      );
 
       expect_compile_fail("", errors_,
         struct test_config : di::config {
@@ -809,7 +809,7 @@ int main() { di::make_injector<test_config>(); }
 #else
                             "provider<.*dummy>::requires_<.*get,.*is_creatable>"
 #endif
-                            );
+      );
 
       expect_compile_fail("", errors_,
         struct test_config : di::config {
@@ -832,7 +832,7 @@ int main() { di::make_injector<test_config>(); }
                             "..."
                             ")>"
 #endif
-                            );
+      );
 
     expect_compile_fail("", errors_,
         struct test_config : di::config {
@@ -877,7 +877,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_,
                           struct i {
@@ -897,7 +897,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_,
                           struct i {
@@ -917,7 +917,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("<include> memory <include> vector", errors_,
                           struct i {
@@ -940,7 +940,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("<include> memory <include> set", errors_,
                           struct i {
@@ -966,7 +966,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "type is not bound, did you forget to add: 'di::bind<interface>.named\\(name\\).to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_,
                           struct i {
@@ -987,7 +987,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<T>", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("<include> memory", errors_,
                           struct i {
@@ -1008,7 +1008,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<T>", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("<include> memory", errors_,
                           struct i {
@@ -1030,7 +1030,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<T>", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("<include> memory", errors_,
                           struct i1 {
@@ -1062,7 +1062,7 @@ int main() { di::make_injector<test_config>(); }
           "scoped object is not convertible to the requested type, did you mistake the scope: "
           "'di::bind<T>.in\\(scope\\)'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_, struct c{c(int*){}}; int main() {
         auto injector = di::make_injector(di::bind<int>().in(di::singleton));
@@ -1080,7 +1080,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_, struct c{c(int*){}}; int main() {
         auto injector = di::make_injector(di::bind<int>().to(42));
@@ -1098,11 +1098,11 @@ int main() { di::make_injector<test_config>(); }
           ,
           "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_, struct c{c(int&){}}; int main() {
         auto injector = di::make_injector(di::bind<int>().to(42)  // lvalue can't be converted to a reference
-                                          );
+        );
         injector.create<c>();
       });
     };
@@ -1117,11 +1117,11 @@ int main() { di::make_injector<test_config>(); }
           ,
           "instance is not convertible to the requested type, verify binding: 'di::bind<T>.to\\(value\\)'?"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_, struct dummy{}; struct c{BOOST_DI_INJECT(c, (named = dummy{}) int&){}}; int main() {
         auto injector = di::make_injector(di::bind<int>().named(dummy{}).to(42)  // lvalue can't be converted to a reference
-                                          );
+        );
         injector.create<c>();
       });
     };
@@ -1139,7 +1139,7 @@ int main() { di::make_injector<test_config>(); }
 #else
           "type<int>::not_allowed_by", "type<double>::not_allowed_by", "type<float>::not_allowed_by"
 #endif
-          );
+      );
 
     expect_compile_fail("", errors_,
         class config : public di::config {
@@ -1179,7 +1179,7 @@ int main() { di::make_injector<test_config>(); }
           ,
           "create<c>()", "type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?"
 #endif
-          );
+      );
 
       expect_compile_fail("-DBOOST_DI_CFG_DIAGNOSTICS_LEVEL=2", errors_,
                           struct i {
@@ -1211,7 +1211,7 @@ int main() { di::make_injector<test_config>(); }
 #else
           "type<.*c>::has_to_many_constructor_parameters::max<3>"
 #endif
-          );
+      );
 
       expect_compile_fail("-DBOOST_DI_CFG_CTOR_LIMIT_SIZE=3", errors_, struct c{c(int, int, int, int){}}; int main() {
         auto injector = di::make_injector();
@@ -1228,7 +1228,7 @@ int main() { di::make_injector<test_config>(); }
 #else
           "type<.*ctor>::has_to_many_constructor_parameters::max<10>"
 #endif
-          );
+      );
 
       expect_compile_fail("", errors_, struct ctor{ctor(int, double){} ctor(double, int){}};
                           int main() { di::make_injector().create<ctor>(); });
@@ -1243,7 +1243,7 @@ int main() { di::make_injector<test_config>(); }
 #else
           "type<.*c>::has_ambiguous_number_of_constructor_parameters::given<2>::expected<4>"
 #endif
-          );
+      );
 
       expect_compile_fail(
           "", errors_,

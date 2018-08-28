@@ -387,7 +387,7 @@ template <class TExpr>
 #if defined(__MSVC__)  // __pph__
 struct is_empty_expr<TExpr, valid_t<decltype(declval<TExpr>()())>> : integral_constant<bool, sizeof(TExpr) == 1> {
 };
-#else  // __pph__
+#else   // __pph__
 struct is_empty_expr<TExpr, valid_t<decltype(+declval<TExpr>()), decltype(declval<TExpr>()())>> : true_type {
 };
 #endif  // __pph__

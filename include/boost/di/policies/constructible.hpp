@@ -66,9 +66,9 @@ struct and_ : detail::type_op {
 template <class... Ts>
 struct or_ : detail::type_op {
   template <class TArg>
-  struct apply : aux::integral_constant<bool,
-                                        !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
-                                                      aux::bool_list<aux::never<Ts>::value...>>::value> {};
+  struct apply
+      : aux::integral_constant<bool, !aux::is_same<aux::bool_list<detail::apply_impl<Ts>::template apply<TArg>::value...>,
+                                                   aux::bool_list<aux::never<Ts>::value...>>::value> {};
 };
 
 }  // namespace detail
