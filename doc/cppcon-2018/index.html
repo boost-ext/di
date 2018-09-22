@@ -36,20 +36,12 @@
 
 #### CppCon, 2018
 
----
-
 # [Boost].DI
 # Inject all the things!
-
----
 
 Kris Jusiak, Quantlab Financial
 
 #### [kris@jusiak.net](mailto:kris@jusiak.net) | [@krisjusiak](https://twitter.com/krisjusiak) | [linkedin.com/in/kris-jusiak](https://www.linkedin.com/in/kris-jusiak)
-
----
-
-<!-- .element: style="margin-left:-13%; width:125%" -->
 
 ----
 
@@ -61,7 +53,7 @@ Kris Jusiak, Quantlab Financial
                          No DI | DI
 -------------------------------+-------------------------------------------
 class cppcon_talk {            | class cppcon_talk {
- private: /*tightly coupled*/  |  public: /*Dependency Injection!*/
+ private: /*Tightly coupled*/  |  public: /*Dependency Injection!*/
    room room_{'Eniac'};        |   cppcon_talk(room, speaker, attendees);
    speaker speaker{"Kris"};    |
    attendees attendees_{};     |  private:
