@@ -71,10 +71,6 @@ class cppcon_talk {            | class cppcon_talk {
 * One header - 3k LOC - ([boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)) / generated
 * Neither Boost nor STL is required
 * No 'if's, 'virtual's, 'exception's, macros, run-time errors
-* Non-intrusive
-* Exception / Thread safe
-* Supported compilers (C++14)
-  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 **Disclaimer** `[Boost].DI` is not an official Boost library
 
@@ -142,10 +138,9 @@ class cppcon_talk {
 class attendees {
  public:
    explicit attendees(const std::vector<name>& names) {
-     assert(3u == names.size());
+     assert(2u == names.size());
      assert("Lenny" == names[0]);
      assert("Shea" == names[1]);
-     assert("Daniel" == names[2]);
    }
 };
 ```
@@ -157,8 +152,8 @@ class attendees {
  ...                                |
  std::vector attendees_list = {     | auto injector = di::make_injector(
    name{"Lenny"}, name{"Shea"}      |   ...,
- };                                 |   di::bind<name[]>.to({name{"Lenny"},
- const auto attendees =             |                        name{"Shea"})
+ };                                 |   di::bind<name>.to({name{"Lenny"},
+ const auto attendees =             |                      name{"Shea"})
   attendees{attendees_list};        | );
                                     |
  cppcon_talk talk{std::move(room),  | auto talk = injector.create<cppcon_talk>();
@@ -191,8 +186,8 @@ struct cppcon_talk {
                            Manual DI | [Boost].DI
 -------------------------------------+------------------------------------------
  ...                                 |
- auto speaker = std::make_unique     | auto injector = di::make_injector(
-   <regular_speaker>();              |   ...,
+ auto speaker = std::make_unique<    | auto injector = di::make_injector(
+   regular_speaker>();               |   ...,
  ...                                 |   di::bind<ispeaker>.to<regular_speaker>()
  cppcon_talk talk{std::move(room),   | );
                   std::move(speaker) | auto talk = injector.create<cppcon_talk>();
@@ -220,7 +215,7 @@ class cppcon_talk {
 -------------------------------------+------------------------------------------
  auto room = Eniac{};                | auto injector = di::make_injector(
  ...                                 |   ...,
- ...                                 |   di::bind<class Room>.to<Eniac>()
+                                     |   di::bind<class Room>.to<Eniac>()
  cppcon_talk talk{std::move(room),   | );
                   std::move(speaker) | auto talk = injector.create<cppcon_talk>();
                   attendees);        |
