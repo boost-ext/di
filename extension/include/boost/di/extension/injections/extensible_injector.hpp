@@ -11,11 +11,11 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
+template <class TScope, class TExpected, class TGiven, class TName, class TPriority, class TCtor>
 class dependency_proxy : core::dependency_base,
                          public core::dependency_impl<core::dependency_concept<TExpected, TName>,
-                                                      dependency_proxy<TScope, TExpected, TGiven, TName, TPriority>> {
-  using dependency_t = core::dependency<TScope, TExpected, TGiven, TName, TPriority>;
+                                                      dependency_proxy<TScope, TExpected, TGiven, TName, TPriority, TCtor>> {
+  using dependency_t = core::dependency<TScope, TExpected, TGiven, TName, TPriority, TCtor>;
 
  public:
   using scope = TScope;
@@ -23,9 +23,9 @@ class dependency_proxy : core::dependency_base,
   using given = TGiven;
   using name = TName;
   using priority = TPriority;
+  using ctor = TCtor;
 
   dependency_proxy(dependency_t& orig_dependency) noexcept : orig_dependency_(orig_dependency) {}
-
   dependency_proxy(dependency_proxy& other) noexcept : orig_dependency_(other.orig_dependency_) {}
   dependency_proxy(dependency_proxy&& other) noexcept : orig_dependency_(other.orig_dependency_) {}
 
@@ -50,7 +50,7 @@ class dependency_proxy : core::dependency_base,
 template <class TDependency, class TInjector>
 auto make_extensible_impl(const aux::type<TDependency>&, TInjector& injector) {
   return dependency_proxy<typename TDependency::scope, typename TDependency::expected, typename TDependency::given,
-                          typename TDependency::name, typename TDependency::priority>{injector};
+                          typename TDependency::name, typename TDependency::priority, typename TDependency::ctor>{injector};
 }
 
 template <class... TDeps, class TInjector>
