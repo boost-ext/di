@@ -40,10 +40,8 @@ struct is_copy_ctor__ : aux::false_type {};
 template <class T>
 struct is_copy_ctor__<T, T> : aux::true_type {};
 
-#if defined(__GCC__) || defined(__MSVC__)  // __pph__
 template <class T>
 struct is_copy_ctor__<T, const T> : aux::true_type {};
-#endif  // __pph__
 
 template <class TParent, class TInjector, class TError = aux::false_type>
 struct any_type {
@@ -62,13 +60,11 @@ struct any_type_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 
-#if defined(__GCC__)  // __pph__
   template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = __BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
   }
-#endif  // __pph__
 
   template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
             class = __BOOST_DI_REQUIRES(is_creatable__<T&, TInjector, TError>::value)>
@@ -104,14 +100,12 @@ struct any_type_1st_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T>{});
   }
 
-#if defined(__GCC__)  // __pph__
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector, TRefError>::value),
             class = __BOOST_DI_REQUIRES(is_creatable__<T&&, TInjector, TError>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_impl(aux::type<T&&>{});
   }
-#endif  // __pph__
 
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector, TRefError>::value),
@@ -149,12 +143,10 @@ struct any_type_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 
-#if defined(__GCC__)  // __pph__
   template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
   }
-#endif  // __pph__
 
   template <class T, class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
   operator T&() const {
@@ -186,13 +178,11 @@ struct any_type_1st_ref {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T>{});
   }
 
-#if defined(__GCC__)  // __pph__
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&&, TInjector>::value)>
   operator T &&() const {
     return static_cast<const core::injector__<TInjector>&>(injector_).create_successful_impl(aux::type<T&&>{});
   }
-#endif  // __pph__
 
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value),
             class = __BOOST_DI_REQUIRES(is_referable__<T&, TInjector>::value)>
@@ -229,10 +219,8 @@ struct any_type_ref_fwd {
   template <class T>
   operator T&() const;
 
-#if defined(__GCC__)  // __pph__
   template <class T>
   operator T &&() const;
-#endif  // __pph__
 
   template <class T>
   operator const T&() const;
@@ -256,10 +244,8 @@ struct any_type_1st_ref_fwd {
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T&() const;
 
-#if defined(__GCC__)  // __pph__
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator T &&() const;
-#endif  // __pph__
 
   template <class T, class = __BOOST_DI_REQUIRES(!is_copy_ctor__<TParent, T>::value)>
   operator const T&() const;
