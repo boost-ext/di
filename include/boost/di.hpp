@@ -790,8 +790,8 @@ auto boundable_impl(I&&, T&&, aux::valid<> &&)
     -> aux::conditional_t<is_related<aux::is_complete<I>::value && aux::is_complete<T>::value, I, T>::value, aux::true_type,
                           typename type_<T>::template is_not_related_to<I>>;
 template <class I, class T>
-auto boundable_impl(I* [], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
-                                                       typename type_<I>::has_disallowed_qualifiers>;
+auto boundable_impl(I*[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
+                                                      typename type_<I>::has_disallowed_qualifiers>;
 template <class I, class T>
 auto boundable_impl(I[], T &&) -> aux::conditional_t<aux::is_same<I, aux::decay_t<I>>::value, boundable_impl__<I, T>,
                                                      typename type_<I>::has_disallowed_qualifiers>;
@@ -1493,7 +1493,7 @@ class instance {
     template <class TName, class T>
     struct injector__<named<TName, T>> {
       T (*f)(const injector__*) = nullptr;
-      explicit injector__(const decltype(f) & ptr) : f(ptr) {}
+      explicit injector__(const decltype(f)& ptr) : f(ptr) {}
     };
     struct injector : injector__<Ts>... {
       void (*dtor)(injector*) = nullptr;
