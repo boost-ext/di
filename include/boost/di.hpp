@@ -1799,6 +1799,21 @@ class stack_over_heap {
 }  // namespace providers
 namespace scopes {
 class singleton {
+  template<typename T>
+  static std::shared_ptr<T>& get_storage_impl() {
+    static std::shared_ptr<T> object;
+    return object;
+  }
+  template<typename T>
+  struct stack_storage {
+    bool initialized{false};
+    alignas(alignof(T)) char memory[sizeof(T)];
+  };
+  template<typename T>
+  static stack_storage<T>& get_stack_storage() {
+    static stack_storage<T> object;
+    return object;
+  }
  public:
   template <class, class T, class = decltype(aux::has_shared_ptr__(aux::declval<T>()))>
   class scope {
@@ -1816,8 +1831,12 @@ class singleton {
    private:
     template <class TProvider>
     wrappers::shared<singleton, T&> create_impl(const TProvider& provider) {
-      static auto object(provider.get(type_traits::stack{}));
-      return wrappers::shared<singleton, T&>(object);
+      auto& storage = get_stack_storage<T>();
+      if (!storage.initialized) {
+        new (storage.memory) T(provider.get(type_traits::stack{}));
+        storage.initialized = true;
+      }
+      return wrappers::shared<singleton, T&>(reinterpret_cast<T*>(storage.memory));
     }
   };
   template <class _, class T>
@@ -1836,8 +1855,10 @@ class singleton {
    private:
     template <class T_, class TProvider>
     auto create_impl(const TProvider& provider) {
-      static std::shared_ptr<T_> object{provider.get()};
-      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
+      auto& shared_storage = get_storage_impl<T_>();
+      if (!shared_storage)
+        shared_storage = std::shared_ptr<T_>{provider.get()};
+      return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{shared_storage};
     }
   };
 };

@@ -77,5 +77,4 @@ endif()
 test(ft/di_injector_except)
 
 test(pt/di_compile_time)
-set(CMAKE_BUILD_TYPE Release)
 test(pt/di_run_time)
