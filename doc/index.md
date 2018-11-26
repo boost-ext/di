@@ -152,7 +152,7 @@ class Model {
 };
 ```
 
-  * **Not using strong typedefs for consturctor parameters**
+  * **Not using strong typedefs for constructor parameters**
 
     Being explicit and declarative is always better than being impilicit.
     Using common types (ex. numbers) in order to define any common-like type may cause
