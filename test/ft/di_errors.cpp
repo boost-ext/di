@@ -408,7 +408,9 @@ test bind_any_of_not_related = [] {
 #if defined(__cpp_variable_templates)
 test bind_any_of_not_related_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>.*type_<.*>::is_not_related_to<.*b>", "=.*c", "=.*a"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<.*a>.*type_<.*>::is_not_related_to<.*b>", "=.*c"
 #else
                         "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
