@@ -1321,7 +1321,7 @@ struct unique<TScope, T*> {
       aux::owner<T*> ptr;
       ~scoped_ptr() noexcept { delete ptr; }
     };
-    return *scoped_ptr{object}.ptr;
+    return static_cast<T&&>(*scoped_ptr{object}.ptr);
   }
   template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T*, I*>::value) = 0>
   inline operator aux::owner<I*>() const noexcept {
