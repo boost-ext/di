@@ -425,7 +425,9 @@ test bind_any_of_not_related_v = [] {
 
 test bind_deduced_not_related = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*a", "=.*deduced"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<.*deduced>", "=.*a"
 #else
                         "type_<.*a>::is_not_related_to<.*deduced>"
@@ -438,7 +440,9 @@ test bind_deduced_not_related = [] {
 #if defined(__cpp_variable_templates)
 test bind_deduced_not_related_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*a", "=.*deduced"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<.*deduced>", "=.*a"
 #else
                         "type_<.*a>::is_not_related_to<.*deduced>"
