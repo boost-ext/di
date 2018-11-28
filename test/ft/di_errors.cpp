@@ -192,13 +192,25 @@ test bind_has_disallowed_qualifiers_expected_v = [] {
 #endif
 
 test bind_has_disallowed_qualifiers_given = [] {
-  auto errors_ = errors("constraint not satisfied", "type_<const.*int.*&>::has_disallowed_qualifiers");
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::has_disallowed_qualifiers", "=.*const.*int.*&"
+#else
+                        "type_<const.*int.*&>::has_disallowed_qualifiers"
+#endif
+                        );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>().to<const int&>()); });
 };
 
 #if defined(__cpp_variable_templates)
 test bind_has_disallowed_qualifiers_given_v = [] {
-  auto errors_ = errors("constraint not satisfied", "type_<const.*int.*&>::has_disallowed_qualifiers");
+  auto errors_ = errors("constraint not satisfied",
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::has_disallowed_qualifiers", "=.*const.*int.*&"
+#else
+                        "type_<const.*int.*&>::has_disallowed_qualifiers"
+#endif
+                        );
   expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int>.to<const int&>()); });
 };
 #endif
@@ -229,7 +241,9 @@ test bind_has_disallowed_qualifiers_given_complex_v = [] {
 
 test bind_narrowed_type = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*double", "=.*int"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<int>", "=.*double"
 #else
                         "type_<.*double>::is_not_related_to<int>"
@@ -242,7 +256,9 @@ test bind_narrowed_type = [] {
 #if defined(__cpp_variable_templates)
 test bind_narrowed_type_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*double", "=.*int"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<int>", "=.*double"
 #else
                         "type_<.*double>::is_not_related_to<int>"
@@ -255,7 +271,9 @@ test bind_narrowed_type_v = [] {
 
 test bind_not_compatible_types = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*impl", "=.*int"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
                         "type_<.*impl>::is_not_related_to<int>"
@@ -270,7 +288,9 @@ test bind_not_compatible_types = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_types_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*impl", "=.*int"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<int>", "=.*impl"
 #else
                         "type_<.*impl>::is_not_related_to<int>"
@@ -341,7 +361,9 @@ test bind_not_compatible_narrowed_types_v = [] {
 
 test bind_not_compatible_initializer_list = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*const.*char.*\\*", "=.*int"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
@@ -354,7 +376,9 @@ test bind_not_compatible_initializer_list = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_initializer_list_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>", "=.*const.*char.*\\*", "=.*int"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
@@ -367,7 +391,9 @@ test bind_not_compatible_initializer_list_v = [] {
 
 test bind_any_of_not_related = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER >= 1916
+                        "type_<.*>::is_not_related_to<.*>.*type_<.*>::is_not_related_to<.*b>", "=.*c", "=.*a"
+#elif defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_not_related_to<.*a>.*type_<.*>::is_not_related_to<.*b>", "=.*c"
 #else
                         "type_<.*c>::is_not_related_to<.*a>.*type_<.*c>::is_not_related_to<.*b>"
