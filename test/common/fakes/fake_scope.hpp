@@ -18,8 +18,8 @@ struct fake_scope {
   struct scope {
     template <class...>
     using is_referable = std::false_type;
-
-    explicit scope(const TExpected& = {}) { ++ctor_calls(); }
+    scope() {}
+    explicit scope(const TExpected&) { ++ctor_calls(); }
 
     template <class T, class, class TProvider>
     static T try_create(const TProvider&);
