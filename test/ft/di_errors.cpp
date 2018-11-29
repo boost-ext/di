@@ -715,7 +715,7 @@ test bind_in_not_scopable_v = [] {
 
 test make_injector_wrong_arg = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__)
+#if defined(__MSVC__) && _MSC_VER < 1916
                         "type_<.*>::is_neither_a_dependency_nor_an_injector", "=.*dummy"
 #else
                         "type_<.*dummy>::is_neither_a_dependency_nor_an_injector"
