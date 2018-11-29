@@ -44,9 +44,12 @@ struct archive {
   int offset;
 };
 struct context : std::vector<archive> {
+  context() {}
   int offset = 0;
 };
-struct serializable : std::vector<archive> {};
+struct serializable : std::vector<archive> {
+  serializable() {}
+};
 
 struct policy_guard {
   policy_guard() { check() = true; }

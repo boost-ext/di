@@ -1067,7 +1067,7 @@ struct array_impl : _ {
 };
 template <class T, class... Ts>
 struct array<T(), Ts...> : T {
-  using value_type = typename T::value_type;
+  using value_type = typename aux::identity<T>::type::value_type;
   using array_t = array_impl<value_type, type_traits::rebind_traits_t<value_type, Ts>...>;
   using boost_di_inject__ = aux::type_list<array_t&&>;
   template <__BOOST_DI_REQUIRES(
@@ -1079,6 +1079,8 @@ template <class T>
 struct array<T()> : T {
   using boost_di_inject__ = aux::type_list<>;
 };
+template <class T>
+struct array<T> {};
 }
 namespace type_traits {
 template <class _, class T, class... Ts>
