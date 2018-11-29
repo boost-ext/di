@@ -90,4 +90,12 @@ int main() {
   }
   //<<after death of extended dependency original dependency is still alive>>
   assert(im3_orig == orig_injector.create<std::shared_ptr<implementation3>>());
+
+  {
+    //<<make_extensible can be called with empty injector>>
+    auto empty_injector = di::make_injector();
+    auto empty_extended_injector = di::make_injector(di::extension::make_extensible(empty_injector));
+    auto instance = empty_extended_injector.create<implementation1>();
+    assert(1 == instance.num());
+  }
 }

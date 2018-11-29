@@ -55,6 +55,7 @@ auto make_extensible_impl(const aux::type<TDependency>&, TInjector& injector) {
 
 template <class... TDeps, class TInjector>
 auto make_extensible(const aux::type_list<TDeps...>&, TInjector& injector) {
+  (void)injector;
   return make_injector(make_extensible_impl(aux::type<TDeps>{}, injector)...);
 }
 
