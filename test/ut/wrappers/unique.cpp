@@ -15,10 +15,17 @@ namespace wrappers {
 
 struct interface {
   virtual ~interface() noexcept = default;
-  virtual void dummy() = 0;
+  virtual int get_f() = 0;
 };
-struct implementation : public interface {
-  void dummy() override{};
+struct implementation : interface {
+  implementation() = default;
+  explicit implementation(int f) : f(f) {}
+  implementation(implementation&& other) noexcept = default;
+  implementation(implementation&) = delete;
+  int get_f() override { return f; }
+
+ private:
+  int f = 0;
 };
 
 constexpr auto i = 42;
@@ -49,7 +56,12 @@ test to_const_ptr = [] {
   expect(i == *object);
 };
 
-test to_copy = [] {
+test to_move_no_copy_ctor = [] {
+  auto u = unique<fake_scope<>, implementation*>{new implementation{i}};
+  expect(static_cast<implementation>(u).get_f() == i);
+};
+
+test to_move = [] {
   auto object = static_cast<int>(unique<fake_scope<>, int*>{new int{i}});
   expect(i == object);
 };
