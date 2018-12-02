@@ -31,8 +31,12 @@ auto get_type() {
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-struct context_type : std::string {};
-struct contexts_list : std::vector<std::string> {};
+struct context_type : std::string {
+  context_type() {}
+};
+struct contexts_list : std::vector<std::string> {
+  contexts_list() {}
+};
 
 template <class TInjector>
 auto context(const TInjector& injector) noexcept {

@@ -54,6 +54,8 @@ std::string cxxflags(bool internal = false) {
     cppflags += "-std=c++1y";
 #elif defined(__GCC__)
     cppflags += "-std=c++1y";
+#elif defined(__MSVC__) && _MSVC_LANG >= 201703L
+    cppflags += "/std:c++17";
 #elif defined(__MSVC__)
     cppflags += "";
 #endif
