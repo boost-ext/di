@@ -1079,6 +1079,8 @@ template <class T>
 struct array<T()> : T {
   using boost_di_inject__ = aux::type_list<>;
 };
+template <class T>
+struct array<T> {};
 }
 namespace type_traits {
 template <class _, class T, class... Ts>
