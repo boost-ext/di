@@ -149,7 +149,16 @@ int main() {
   );
   // clang-format on
 
-  auto object = injector.create<example>();
-  assert(object.run());
+  /*<<create `example` - member function call>>*/
+  {
+    auto object = injector.create<example>();
+    assert(object.run());
+  }
+
+  /*<<create `example` - free function call>>*/
+  {
+    auto object = di::create<example>(injector);
+    assert(object.run());
+  }
 }
 //->

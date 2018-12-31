@@ -1139,10 +1139,19 @@ struct app3 {
 test bind_template_to_type_templates_type = [] {
   const auto injector = di::make_injector(di::bind<A>().to<classA>(), di::bind<B>().to<classB>(), di::bind<>().to(42));
 
-  auto object = injector.create<app3>();
-  static_expect(std::is_same<classA<classB>, std::decay_t<decltype(object.t)>>::value);
-  static_expect(std::is_same<classB, std::decay_t<typename decltype(object.t)::type>>::value);
-  expect(42 == object.t.i);
+  {
+    auto object = injector.create<app3>();
+    static_expect(std::is_same<classA<classB>, std::decay_t<decltype(object.t)>>::value);
+    static_expect(std::is_same<classB, std::decay_t<typename decltype(object.t)::type>>::value);
+    expect(42 == object.t.i);
+  }
+
+  {
+    auto object = di::create<app3>(injector);
+    static_expect(std::is_same<classA<classB>, std::decay_t<decltype(object.t)>>::value);
+    static_expect(std::is_same<classB, std::decay_t<typename decltype(object.t)::type>>::value);
+    expect(42 == object.t.i);
+  }
 };
 
 template <typename T = A>

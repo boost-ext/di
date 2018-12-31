@@ -47,5 +47,6 @@ int main() {
   );
   // clang-format off
 
-  injector.create<example>();
+  /*<<create `example`>>*/
+  injector.create<example>(); // or di::create<example>(injector)
 }

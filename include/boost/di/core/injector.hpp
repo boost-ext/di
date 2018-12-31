@@ -319,6 +319,17 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 #define __BOOST_DI_CORE_INJECTOR_POLICY_ELSE(...) __VA_ARGS__
 #include "boost/di/core/injector.hpp"
 }  // core
+
+template <class T, class TInjector>
+auto create(const TInjector& injector) -> decltype(injector.template create<T>()) {
+  return injector.template create<T>();
+}
+
+template <template <class...> class T, class TInjector>
+auto create(const TInjector& injector) -> decltype(injector.template create<T>()) {
+  return injector.template create<T>();
+}
+
 #endif
 
 #endif
