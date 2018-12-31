@@ -47,6 +47,7 @@ struct aggregate {
 };
 
 class example {
+ public:
   example(aggregate a, const ctor& c) {
     assert(87.0 == a.d);
     assert(42 == c.i);
