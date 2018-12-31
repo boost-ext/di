@@ -2849,6 +2849,14 @@ class injector<TConfig, pool<>, TDeps...> : injector_base, public pool<bindings_
   config config_;
 };
 }
+template <class T, class TInjector>
+auto create(const TInjector& injector) -> decltype(injector.template create<T>()) {
+  return injector.template create<T>();
+}
+template <template <class...> class T, class TInjector>
+auto create(const TInjector& injector) -> decltype(injector.template create<T>()) {
+  return injector.template create<T>();
+}
 namespace detail {
 template <class>
 void create(const aux::true_type&) {}

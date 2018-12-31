@@ -60,6 +60,11 @@ test empty_injector = [] {
   expect(0 == injector.create<int>());
 };
 
+test empty_injector_create = [] {
+  auto injector = di::make_injector();
+  expect(0 == di::create<int>(injector));
+};
+
 test move_injector = [] {
   auto module = di::make_injector();
   auto injector = di::make_injector(std::move(module));
@@ -117,8 +122,14 @@ test create_interface_when_impl_with_one_arg_ctor = [] {
 
 test injectors_mix = [] {
   auto injector = di::make_injector(di::make_injector(di::bind<i1>().to<impl1>()));
-  auto object = injector.create<std::shared_ptr<complex1>>();
-  expect(object->i1_.get());
+  {
+    auto object = injector.create<std::shared_ptr<complex1>>();
+    expect(object->i1_.get());
+  }
+  {
+    auto object = di::create<std::shared_ptr<complex1>>(injector);
+    expect(object->i1_.get());
+  }
 };
 
 test injector_move_ctor = [] {
