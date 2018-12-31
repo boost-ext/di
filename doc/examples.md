@@ -5,6 +5,7 @@
 * [Multiple Bindings](#multiple-bindings)
 * [Binding Non-owning Pointer](#binding-non-owning-pointer)
 * [Binding Templates](#binding-templates)
+* [Binding To Constructor](#binding-to-constructor)
 * [Automatic Injection](#automatic-injection)
 * [Constructor Signature](#constructor-signature)
 * [Constructor Injection](#constructor-injection)
@@ -48,6 +49,9 @@
 
 ###Binding Templates
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_templates.cpp)
+
+###Binding To Constructor
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_to_constructor.cpp)
 
 ###Automatic Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)

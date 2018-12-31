@@ -1245,7 +1245,66 @@ test bind_multiple_empty_injectors = [] {
   expect(0 == injector.create<int>());
 };
 
+test bind_to_ctor_long_notation = [] {
+  struct c {
+    c(int a, double b) : a{a}, b{b} {}
+
+    int a{};
+    double b{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>.to<c>(42, 87.0));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+  expect(87.0 == object.c_.b);
+};
+
+test bind_to_ctor_short_notation = [] {
+  struct c {
+    c(int a, int b) : a{a}, b{b} {}
+
+    int a{};
+    int b{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>()(42, 87));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+  expect(87 == object.c_.b);
+};
+
 #if defined(__cpp_variable_templates)
+test bind_to_ctor_short_notation_variable = [] {
+  struct c {
+    c(int a, int b) : a{a}, b{b} {}
+
+    int a{};
+    int b{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>(42, 87));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+  expect(87 == object.c_.b);
+};
 test bind_mix = [] {
   constexpr auto i = 42;
 

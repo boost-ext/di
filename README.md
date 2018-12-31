@@ -371,6 +371,7 @@ retq
     * [Multiple Bindings](http://boost-experimental.github.io/di/examples/index.html#multiple-bindings)
     * [Binding Non-owning Pointer](http://boost-experimental.github.io/di/examples/index.html#binding-non-owning-pointer)
     * [Binding Templates](http://boost-experimental.github.io/di/examples/index.html#binding-templates)
+    * [Binding To Constructor](http://boost-experimental.github.io/di/examples/index.html#binding-to-constructor)
     * [Automatic Injection](http://boost-experimental.github.io/di/examples/index.html#automatic-injection)
     * [Constructor Signature](http://boost-experimental.github.io/di/examples/index.html#constructor-signature)
     * [Constructor Injection](http://boost-experimental.github.io/di/examples/index.html#constructor-injection)

@@ -9,6 +9,7 @@
 
 #include "boost/di/aux_/type_traits.hpp"
 #include "boost/di/aux_/utility.hpp"
+#include "boost/di/core/pool.hpp"
 #include "boost/di/fwd.hpp"
 
 #if !defined(BOOST_DI_CFG_CTOR_LIMIT_SIZE)  // __pph__
@@ -66,17 +67,20 @@ struct ctor<T, aux::type_list<>> : aux::pair<uniform, ctor_impl_t<aux::is_braces
 template <class T, class... TArgs>
 struct ctor<T, aux::type_list<TArgs...>> : aux::pair<direct, aux::type_list<TArgs...>> {};
 
-template <class T, class = void, class = typename is_injectable<T>::type>
-struct ctor_traits__;
-
 template <class T, class, class = typename is_injectable<ctor_traits<T>>::type>
 struct ctor_traits_impl;
 
-template <class T, class _>
-struct ctor_traits__<T, _, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
+template <class T, class = void, class = void, class = typename is_injectable<T>::type>
+struct ctor_traits__;
 
-template <class T, class _>
-struct ctor_traits__<T, _, aux::false_type> : ctor_traits_impl<T, _> {};
+template <class T, class _1, class _2>
+struct ctor_traits__<T, _1, _2, aux::true_type> : aux::pair<T, aux::pair<direct, typename T::boost_di_inject__::type>> {};
+
+template <class T, class _1, class _2>
+struct ctor_traits__<T, _1, _2, aux::false_type> : ctor_traits_impl<T, _1> {};
+
+template <class T, class _1, class... Ts>
+struct ctor_traits__<T, _1, core::pool_t<Ts...>, aux::false_type> : aux::pair<T, aux::pair<uniform, aux::type_list<Ts...>>> {};
 
 template <class T, class _>
 struct ctor_traits_impl<T, _, aux::true_type>
