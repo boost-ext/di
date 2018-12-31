@@ -406,6 +406,7 @@ retq
     * [UML Dumper](http://boost-experimental.github.io/di/extensions/index.html#uml-dumper)
     * [Heap Provider](http://boost-experimental.github.io/di/extensions/index.html#heap-provider)
     * [Mocks Provider](http://boost-experimental.github.io/di/extensions/index.html#mocks-provider)
+    * [Runtime Provider](http://boost-experimental.github.io/di/extensions/index.html#runtime-provider)
     * [Scoped Scope](http://boost-experimental.github.io/di/extensions/index.html#scoped-scope)
     * [Session Scope](http://boost-experimental.github.io/di/extensions/index.html#session-scope)
     * [Shared Scope](http://boost-experimental.github.io/di/extensions/index.html#shared-scope)
