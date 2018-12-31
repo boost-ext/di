@@ -9,6 +9,9 @@
 
 #include "boost/di/fwd_ext.hpp"
 
+namespace placeholders {
+__BOOST_DI_UNUSED static struct arg { } _; }
+
 template <class, class = void>
 struct named {};
 struct no_name {
@@ -63,8 +66,9 @@ template <class, class...>
 struct array;
 
 struct deduced {};
+struct none {};
 
-template <class, class TExpected = deduced, class = TExpected, class = no_name, class = void>
+template <class, class TExpected = deduced, class = TExpected, class = no_name, class = void, class = none>
 class dependency;
 }  // namespace core
 
