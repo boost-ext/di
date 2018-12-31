@@ -13,6 +13,7 @@
 * [UML Dumper](#uml-dumper)
 * [Heap Provider](#heap-provider)
 * [Mocks Provider](#mocks-provider)
+* [Runtime Provider](#runtime-provider)
 * [Scoped Scope](#scoped-scope)
 * [Session Scope](#session-scope)
 * [Shared Scope](#shared-scope)
@@ -65,6 +66,9 @@
 
 ###Mocks Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp)
+
+###Runtime Provider
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/runtime_provider.cpp)
 
 ###Scoped Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp)

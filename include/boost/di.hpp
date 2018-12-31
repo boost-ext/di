@@ -1595,7 +1595,7 @@ struct override {};
 template <class TScope, class TExpected, class TGiven, class TName, class TPriority>
 class dependency
     : dependency_base,
-      __BOOST_DI_ACCESS_WKND TScope::template scope<TExpected, TGiven>,
+      public TScope::template scope<TExpected, TGiven>,
       public dependency_impl<dependency_concept<TExpected, TName>, dependency<TScope, TExpected, TGiven, TName, TPriority>> {
   template <class, class, class, class, class>
   friend class dependency;
