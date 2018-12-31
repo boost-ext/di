@@ -9,8 +9,10 @@
 #include <cassert>
 #include <functional>
 #include <memory>
+#include <type_traits>
 #include <typeindex>
 #include <unordered_map>
+#include <utility>
 
 #include "boost/di.hpp"
 
@@ -90,11 +92,16 @@ class injector : public core::injector<runtime_provider> {
  public:
   injector() : core::injector<runtime_provider>{core::init{}} {}
 
-  template <class T>
+  template <class T, std::enable_if_t<!std::is_base_of<injector_base, T>::value, int> = 0>
   void install(const T &binding) {
     cfg().bindings()[std::type_index(typeid(typename T::expected))] = [this, &binding] {
       return make<typename T::given>(binding);
     };
+  }
+
+  template <class T, std::enable_if_t<std::is_base_of<injector_base, T>::value, int> = 0>
+  void install(const T &injector) {
+    install(typename T::deps{}, injector);
   }
 
   template <class... TBindings>
@@ -103,19 +110,24 @@ class injector : public core::injector<runtime_provider> {
   }
 
  private:
-  template <class T, class TBinding, std::enable_if_t<std::is_class<T>::value, int> = 0>
-  auto make(const TBinding &) {
-    return make<T>(typename ctor_traits<T>::type{});
-  }
-
-  template <class T, class TBinding, std::enable_if_t<!std::is_class<T>::value, int> = 0>
-  auto make(const TBinding &binding) {
-    return new T{binding.object_};
+  template <class... Ts, class TInjector>
+  void install(aux::type_list<Ts...>, const TInjector &injector) {
+    (void)aux::swallow{0, (install(static_cast<const Ts &>(injector)), 0)...};
   }
 
   template <class T, class TInit, class... Ts>
-  auto make(aux::pair<TInit, aux::type_list<Ts...>>) {
+  auto make_impl(aux::pair<TInit, aux::type_list<Ts...>>) {
     return new T{typename any<Ts, injector>::type{*this}...};
+  }
+
+  template <class T, class TBinding>
+  auto make(const TBinding &) -> decltype(make_impl<T>(typename ctor_traits<T>::type{})) {
+    return make_impl<T>(typename ctor_traits<T>::type{});
+  }
+
+  template <class T, class TBinding>
+  auto make(const TBinding &binding) -> decltype(new T{binding.object_}) {
+    return new T{binding.object_};
   }
 };
 

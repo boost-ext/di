@@ -2448,7 +2448,7 @@ inline auto build(TInjector&& injector) noexcept {
 }
 #endif
 template <class TConfig, class TPolicies = pool<>, class... TDeps>
-class injector : injector_base, public pool<bindings_t<TDeps...>> {
+class injector : public injector_base, public pool<bindings_t<TDeps...>> {
   using pool_t = pool<bindings_t<TDeps...>>;
 
  protected:
@@ -2652,7 +2652,7 @@ class injector : injector_base, public pool<bindings_t<TDeps...>> {
   config config_;
 };
 template <class TConfig, class... TDeps>
-class injector<TConfig, pool<>, TDeps...> : injector_base, public pool<bindings_t<TDeps...>> {
+class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bindings_t<TDeps...>> {
   using pool_t = pool<bindings_t<TDeps...>>;
 
  protected:
