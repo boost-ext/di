@@ -1061,6 +1061,7 @@ int main() {
 <pre><code class="cpp">#include &quot;boost/di/extension/providers/runtime_provider.hpp&quot;
 
 #include &lt;cassert&gt;
+#include &lt;string&gt;
 
 namespace di = boost::di;
 
@@ -1074,23 +1075,57 @@ struct i2 {
   virtual int bar() const = 0;
 };
 
+struct i3 {
+  virtual ~i3() noexcept = default;
+  virtual int f() const = 0;
+};
+
+struct i4 {
+  virtual ~i4() noexcept = default;
+  virtual int foo() const = 0;
+};
+
+struct impl3 : i3 {
+  explicit impl3(const int&amp; i) { assert(i == 87); }
+  int f() const override { return 1234; }
+};
+
 struct impl2 : i2 {
+  explicit impl2(i3&amp; i, std::string str) {
+    assert(i.f() == 1234);
+    assert(str == &quot;text&quot;);
+  }
   int bar() const override { return 99; }
 };
 
 struct impl1 : i1 {
-  impl1(std::unique_ptr&lt;i2&gt; sp2) { assert(sp2-&gt;bar() == 99); }
-
+  explicit impl1(std::unique_ptr&lt;i2&gt; sp2) { assert(sp2-&gt;bar() == 99); }
   int foo() const override { return 42; }
 };
 
+struct impl4 : i4 {
+  int foo() const override { return 100; }
+};
+
+class module_example {
+ public:
+  explicit module_example(std::shared_ptr&lt;i4&gt; sp) : sp{sp} {}
+  auto get() const { return sp-&gt;foo() * 2; }
+
+ private:
+  std::shared_ptr&lt;i4&gt; sp{};
+};
+
 struct example {
-  example(std::shared_ptr&lt;i1&gt; sp, int i) {
+  example(std::shared_ptr&lt;i1&gt; sp, int i, module_example&amp; me) {
     assert(dynamic_cast&lt;impl1*&gt;(sp.get()));
     assert(sp-&gt;foo() == 42);
     assert(i == 87);
+    assert(me.get() == 2 * 100);
   }
 };
+
+auto module = [] { return di::make_injector(di::bind&lt;i4&gt;().to&lt;impl4&gt;()); };
 
 int main() {
   namespace di = boost::di;
@@ -1106,6 +1141,16 @@ int main() {
 
   /*&lt;&lt;more bindings&gt;&gt;*/
   injector.install(di::bind&lt;int&gt;().to(87));
+
+  /*&lt;&lt;injector bindings&gt;&gt;*/
+  auto component = di::make_injector(
+    di::bind&lt;i3&gt;().to&lt;impl3&gt;(),
+    di::bind&lt;std::string&gt;().to(&quot;text&quot;)
+  );
+  injector.install(component);
+
+  /*&lt;&lt;module bindings&gt;&gt;*/
+  injector.install(module());
 
   /*&lt;&lt;create example&gt;&gt;*/
   injector.create&lt;example&gt;();
