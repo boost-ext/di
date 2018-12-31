@@ -397,7 +397,7 @@
         }, 
         {
             "location": "/extensions/index.html", 
-            "text": "Constructor Bindings\n\n\nContextual Bindings\n\n\nAssisted Injection\n\n\nExtensible Injector\n\n\nConcepts\n\n\nFactory\n\n\nShared Factory\n\n\nLazy\n\n\nNamed Parameters\n\n\nXML Injection\n\n\nSerialize\n\n\nTypes Dumper\n\n\nUML Dumper\n\n\nHeap Provider\n\n\nMocks Provider\n\n\nScoped Scope\n\n\nSession Scope\n\n\nShared Scope\n\n\n\n\n\n\nConstructor Bindings\n\n\n\n\nContextual Bindings\n\n\n\n\nAssisted Injection\n\n\n\n\nExtensible Injector\n\n\n\n\nConcepts\n\n\n\n\nFactory\n\n\n\n\nShared Factory\n\n\n\n\nLazy\n\n\n\n\nNamed Parameters\n\n\n\n\nXML Injection\n\n\n\n\nSerialize\n\n\n\n\nTypes Dumper\n\n\n\n\nUML Dumper\n\n\n\n\n\n\nHeap Provider\n\n\n\n\nMocks Provider\n\n\n\n\nScoped Scope\n\n\n\n\nSession Scope\n\n\n\n\nShared Scope", 
+            "text": "Constructor Bindings\n\n\nContextual Bindings\n\n\nAssisted Injection\n\n\nExtensible Injector\n\n\nConcepts\n\n\nFactory\n\n\nShared Factory\n\n\nLazy\n\n\nNamed Parameters\n\n\nXML Injection\n\n\nSerialize\n\n\nTypes Dumper\n\n\nUML Dumper\n\n\nHeap Provider\n\n\nMocks Provider\n\n\nRuntime Provider\n\n\nScoped Scope\n\n\nSession Scope\n\n\nShared Scope\n\n\n\n\n\n\nConstructor Bindings\n\n\n\n\nContextual Bindings\n\n\n\n\nAssisted Injection\n\n\n\n\nExtensible Injector\n\n\n\n\nConcepts\n\n\n\n\nFactory\n\n\n\n\nShared Factory\n\n\n\n\nLazy\n\n\n\n\nNamed Parameters\n\n\n\n\nXML Injection\n\n\n\n\nSerialize\n\n\n\n\nTypes Dumper\n\n\n\n\nUML Dumper\n\n\n\n\n\n\nHeap Provider\n\n\n\n\nMocks Provider\n\n\n\n\nRuntime Provider\n\n\n\n\nScoped Scope\n\n\n\n\nSession Scope\n\n\n\n\nShared Scope", 
             "title": "Extensions"
         }, 
         {
@@ -474,6 +474,11 @@
             "location": "/extensions/index.html#mocks-provider", 
             "text": "", 
             "title": "Mocks Provider"
+        }, 
+        {
+            "location": "/extensions/index.html#runtime-provider", 
+            "text": "", 
+            "title": "Runtime Provider"
         }, 
         {
             "location": "/extensions/index.html#scoped-scope", 

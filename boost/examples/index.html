@@ -209,7 +209,8 @@ int main() {
    , di::bind&lt;class Greater&gt;().to&lt;hello&gt;()   // bind template to type
   );
 
-  injector.create&lt;example&gt;();
+  /*&lt;&lt;create `example`&gt;&gt;*/
+  injector.create&lt;example&gt;(); // or di::create&lt;example&gt;(injector)
 }
 </code></pre>
 

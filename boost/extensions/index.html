@@ -88,6 +88,10 @@
     
 
     
+        <dt><span class="section"><a href="#runtime-provider">Runtime Provider</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#scoped-scope">Scoped Scope</a></span></dt>
     
 
@@ -121,6 +125,7 @@
 <li><a href="#uml-dumper">UML Dumper</a></li>
 <li><a href="#heap-provider">Heap Provider</a></li>
 <li><a href="#mocks-provider">Mocks Provider</a></li>
+<li><a href="#runtime-provider">Runtime Provider</a></li>
 <li><a href="#scoped-scope">Scoped Scope</a></li>
 <li><a href="#session-scope">Session Scope</a></li>
 <li><a href="#shared-scope">Shared Scope</a></li>
@@ -1051,6 +1056,65 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp</a></li>
+</ul>
+<h3 id="runtime-provider">Runtime Provider</h3>
+<pre><code class="cpp">#include &quot;boost/di/extension/providers/runtime_provider.hpp&quot;
+
+#include &lt;cassert&gt;
+
+namespace di = boost::di;
+
+struct i1 {
+  virtual ~i1() noexcept = default;
+  virtual int foo() const = 0;
+};
+
+struct i2 {
+  virtual ~i2() noexcept = default;
+  virtual int bar() const = 0;
+};
+
+struct impl2 : i2 {
+  int bar() const override { return 99; }
+};
+
+struct impl1 : i1 {
+  impl1(std::unique_ptr&lt;i2&gt; sp2) { assert(sp2-&gt;bar() == 99); }
+
+  int foo() const override { return 42; }
+};
+
+struct example {
+  example(std::shared_ptr&lt;i1&gt; sp, int i) {
+    assert(dynamic_cast&lt;impl1*&gt;(sp.get()));
+    assert(sp-&gt;foo() == 42);
+    assert(i == 87);
+  }
+};
+
+int main() {
+  namespace di = boost::di;
+
+  /*&lt;&lt;create runtime injector&gt;&gt;*/
+  di::extension::injector injector{};
+
+  /*&lt;&lt;install bindings&gt;&gt;*/
+  injector.install(
+    di::bind&lt;i1&gt;().to&lt;impl1&gt;(),
+    di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+  );
+
+  /*&lt;&lt;more bindings&gt;&gt;*/
+  injector.install(di::bind&lt;int&gt;().to(87));
+
+  /*&lt;&lt;create example&gt;&gt;*/
+  injector.create&lt;example&gt;();
+
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/runtime_provider.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/runtime_provider.cpp</a></li>
 </ul>
 <h3 id="scoped-scope">Scoped Scope</h3>
 <pre><code class="cpp">#include &quot;boost/di/extension/scopes/scoped.hpp&quot;
