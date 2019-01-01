@@ -49,7 +49,19 @@ struct impl1 : i1 {
   int foo() const override { return 42; }
 };
 
+class ctor;
+class dtor;
+
 struct impl4 : i4 {
+  template <class>
+  static auto& calls() {
+    static auto i = 0;
+    return i;
+  }
+
+  impl4() { ++calls<ctor>(); }
+  ~impl4() { ++calls<dtor>(); }
+
   int foo() const override { return 100; }
 };
 
@@ -101,6 +113,23 @@ int main() {
 
   /*<<create example>>*/
   injector.create<example>();
+
+
+  // scoped injector
+  {
+    impl4::calls<ctor>() = {};
+    impl4::calls<dtor>() = {};
+
+    di::extension::injector injector{};
+    injector.install(di::bind<i4>().to<impl4>());
+    auto m = di::create<module_example>(injector);
+
+    assert(m.get() == 2 * 100);
+    assert(impl4::calls<ctor>() == 1);
+    assert(impl4::calls<dtor>() == 0);
+  }
+  assert(impl4::calls<ctor>() == 1);
+  assert(impl4::calls<dtor>() == 1);
 
   // clang-format on
 }
