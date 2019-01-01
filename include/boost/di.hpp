@@ -2515,6 +2515,7 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
         policy::template try_call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>, TPolicies>::value;
   };
   auto& cfg() { return config_; }
+  const auto& cfg() const { return config_; }
 
  public:
   using deps = bindings_t<TDeps...>;
@@ -2732,6 +2733,7 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
                             T>::value;
   };
   auto& cfg() { return config_; }
+  const auto& cfg() const { return config_; }
 
  public:
   using deps = bindings_t<TDeps...>;

@@ -92,6 +92,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
   };
 
   auto& cfg() { return config_; }
+  const auto& cfg() const { return config_; }
 
  public:
   using deps = bindings_t<TDeps...>;
