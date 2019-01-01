@@ -20,6 +20,7 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
+template <class TScopeTraits>
 class runtime_provider : public config {
   using bindings_t = std::unordered_map<std::type_index, std::function<void *()>>;
   using data_t = std::unordered_map<std::type_index, std::shared_ptr<void>>;
@@ -61,10 +62,11 @@ class runtime_provider : public config {
 
  public:
   template <class T>
-  using scope_traits = di::extension::shared_config::scope_traits<T>;
+  using scope_traits = typename TScopeTraits::template scope_traits<T>;
 
   auto provider(...) { return abstract_provider{bindings_}; }
   auto &bindings() { return bindings_; }
+  const auto &bindings() const { return bindings_; }
 
   template <class T>
   auto &data() {
@@ -76,7 +78,7 @@ class runtime_provider : public config {
   data_t data_{};
 };
 
-class injector : public core::injector<runtime_provider> {
+class injector : public core::injector<runtime_provider<di::extension::shared_config>> {
   template <class...>
   struct any;
 
@@ -101,7 +103,12 @@ class injector : public core::injector<runtime_provider> {
   };
 
  public:
-  injector() : core::injector<runtime_provider>{core::init{}} {}
+  injector() : core::injector<runtime_provider<di::extension::shared_config>>{core::init{}} {}
+
+  template <class T>
+  /*non explicit*/ injector(const T &bindings) : injector() {
+    install(bindings);
+  }
 
   template <class T, std::enable_if_t<!std::is_base_of<injector_base, T>::value, int> = 0>
   void install(const T &binding) {
@@ -112,7 +119,7 @@ class injector : public core::injector<runtime_provider> {
 
   template <class T, std::enable_if_t<std::is_base_of<injector_base, T>::value, int> = 0>
   void install(const T &injector) {
-    install(typename T::deps{}, injector);
+    install(typename T::deps{}, injector, aux::type<typename T::config>{});
   }
 
   template <class... TBindings>
@@ -121,8 +128,15 @@ class injector : public core::injector<runtime_provider> {
   }
 
  private:
-  template <class... Ts, class TInjector>
-  void install(aux::type_list<Ts...>, const TInjector &injector) {
+  template <class TInjector, class TScopeTraits>
+  void install(aux::type_list<>, const TInjector &injector, aux::type<runtime_provider<TScopeTraits>>) {
+    for (const auto &b : injector.cfg().bindings()) {
+      cfg().bindings()[b.first] = b.second;
+    }
+  }
+
+  template <class... Ts, class TInjector, class TConfig>
+  void install(aux::type_list<Ts...>, const TInjector &injector, aux::type<TConfig>) {
     (void)aux::swallow{0, (install(static_cast<const Ts &>(injector)), 0)...};
   }
 

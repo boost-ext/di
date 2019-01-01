@@ -83,7 +83,8 @@ struct example {
   }
 };
 
-auto module = [] { return di::make_injector(di::bind<i4>().to<impl4>()); };
+auto ct_module = [] { return di::make_injector(di::bind<i4>().to<impl4>()); };
+di::extension::injector rt_module() { return di::make_injector(di::bind<i4>().to<impl4>()); }
 
 int main() {
   // clang-format off
@@ -109,11 +110,10 @@ int main() {
   injector.install(component);
 
   /*<<module bindings>>*/
-  injector.install(module());
+  injector.install(ct_module());
 
   /*<<create example>>*/
   injector.create<example>();
-
 
   // scoped injector
   {
@@ -121,7 +121,7 @@ int main() {
     impl4::calls<dtor>() = {};
 
     di::extension::injector injector{};
-    injector.install(di::bind<i4>().to<impl4>());
+    injector.install(rt_module());
     auto m = di::create<module_example>(injector);
 
     assert(m.get() == 2 * 100);
