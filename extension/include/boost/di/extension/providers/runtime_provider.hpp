@@ -15,12 +15,14 @@
 #include <utility>
 
 #include "boost/di.hpp"
+#include "boost/di/extension/scopes/shared.hpp"
 
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
 class runtime_provider : public config {
   using bindings_t = std::unordered_map<std::type_index, std::function<void *()>>;
+  using data_t = std::unordered_map<std::type_index, std::shared_ptr<void>>;
 
   class abstract_provider {
    public:
@@ -58,11 +60,20 @@ class runtime_provider : public config {
   };
 
  public:
+  template <class T>
+  using scope_traits = di::extension::shared_config::scope_traits<T>;
+
   auto provider(...) { return abstract_provider{bindings_}; }
   auto &bindings() { return bindings_; }
 
+  template <class T>
+  auto &data() {
+    return data_[std::type_index(typeid(T))];
+  }
+
  private:
   bindings_t bindings_{};
+  data_t data_{};
 };
 
 class injector : public core::injector<runtime_provider> {
