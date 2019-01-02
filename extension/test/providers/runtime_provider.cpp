@@ -84,14 +84,14 @@ struct example {
 };
 
 auto ct_module = [] { return di::make_injector(di::bind<i4>().to<impl4>()); };
-di::extension::injector rt_module() { return di::make_injector(di::bind<i4>().to<impl4>()); }
+di::extension::runtime_injector rt_module() { return di::make_injector(di::bind<i4>().to<impl4>()); }
 
 int main() {
   // clang-format off
   namespace di = boost::di;
 
   /*<<create runtime injector>>*/
-  di::extension::injector injector{};
+  di::extension::runtime_injector injector{};
 
   /*<<install bindings>>*/
   injector.install(
@@ -120,7 +120,7 @@ int main() {
     impl4::calls<ctor>() = {};
     impl4::calls<dtor>() = {};
 
-    di::extension::injector injector{};
+    di::extension::runtime_injector injector{};
     injector.install(rt_module());
     auto m = di::create<module_example>(injector);
 

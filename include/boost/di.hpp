@@ -2973,11 +2973,25 @@ create<T> (
   }
 };
 }
+#if defined(__MSVC__)
+template <class T, class... Ts>
+struct injector
+    : detail::injector<
+          BOOST_DI_CFG, __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
+          core::dependency<scopes::instance, aux::unique_t<type_traits::named_decay_t<T>, type_traits::named_decay_t<Ts>...>,
+                           aux::type_list<type_traits::add_named_t<T>, type_traits::add_named_t<Ts>...>>> {
+  using detail::injector<
+      BOOST_DI_CFG, __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
+      core::dependency<scopes::instance, aux::unique_t<type_traits::named_decay_t<T>, type_traits::named_decay_t<Ts>...>,
+                       aux::type_list<type_traits::add_named_t<T>, type_traits::add_named_t<Ts>...>>>::injector;
+};
+#else
 template <class T, class... Ts>
 using injector = detail::injector<
     BOOST_DI_CFG, __BOOST_DI_REQUIRES_MSG(concepts::boundable<aux::type<T, Ts...>>),
     core::dependency<scopes::instance, aux::unique_t<type_traits::named_decay_t<T>, type_traits::named_decay_t<Ts>...>,
                      aux::type_list<type_traits::add_named_t<T>, type_traits::add_named_t<Ts>...>>>;
+#endif
 // clang-format off
 #define __BOOST_DI_EXPOSE_IMPL__(...) decltype(::boost::di::v1_1_0::detail::__VA_ARGS__),
 #define __BOOST_DI_EXPOSE_IMPL(...) ::boost::di::v1_1_0::named<__BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
