@@ -1257,7 +1257,7 @@ test bind_to_ctor_long_notation = [] {
     c &c_;
   };
 
-  const auto injector = di::make_injector(di::bind<c>.to<c>(42, 87.0));
+  const auto injector = di::make_injector(di::bind<c>().to<c>(42, 87.0));
 
   auto object = injector.create<app>();
 
@@ -1305,6 +1305,7 @@ test bind_to_ctor_short_notation_variable = [] {
   expect(42 == object.c_.a);
   expect(87 == object.c_.b);
 };
+
 test bind_mix = [] {
   constexpr auto i = 42;
 

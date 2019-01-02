@@ -58,4 +58,5 @@ test-suite tests :
     [ test test/scopes/scoped.cpp ]
     [ test test/scopes/session.cpp ]
     [ test test/scopes/shared.cpp ]
+    [ test test/injector.cpp ]
 ;

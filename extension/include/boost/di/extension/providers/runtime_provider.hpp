@@ -20,12 +20,19 @@
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
-template <class TScopeTraits>
+struct assert_error_policy {
+  template <class T>
+  void error() const {
+    assert(false && "Type not bound!");
+  }
+};
+
+template <class TErrorPolicy, class TScopeTraits>
 class runtime_provider : public config {
   using bindings_t = std::unordered_map<std::type_index, std::function<void *()>>;
   using data_t = std::unordered_map<std::type_index, std::shared_ptr<void>>;
 
-  class abstract_provider {
+  class abstract_provider : TErrorPolicy {
    public:
     explicit abstract_provider(const bindings_t &bindings) : bindings_{bindings} {}
 
@@ -53,7 +60,7 @@ class runtime_provider : public config {
 
     template <class T, class... TArgs>
     auto get(std::false_type, TArgs &&...) const {
-      assert(false && "Type not bound!");
+      this->template error<T>();
       return static_cast<T *>(nullptr);
     }
 
@@ -78,7 +85,9 @@ class runtime_provider : public config {
   data_t data_{};
 };
 
-class injector : public core::injector<runtime_provider<di::extension::shared_config>> {
+namespace detail {
+template <class TErrorPolicy, class TScopeTraits>
+class injector : public core::injector<runtime_provider<TErrorPolicy, TScopeTraits>> {
   template <class...>
   struct any;
 
@@ -103,23 +112,23 @@ class injector : public core::injector<runtime_provider<di::extension::shared_co
   };
 
  public:
-  injector() : core::injector<runtime_provider<di::extension::shared_config>>{core::init{}} {}
+  injector() : core::injector<runtime_provider<TErrorPolicy, TScopeTraits>>{core::init{}} {}
 
   template <class T>
   /*non explicit*/ injector(const T &bindings) : injector() {
     install(bindings);
   }
 
-  template <class T, std::enable_if_t<!std::is_base_of<injector_base, T>::value, int> = 0>
+  template <class T, std::enable_if_t<!std::is_base_of<core::injector_base, T>::value, int> = 0>
   void install(const T &binding) {
-    cfg().bindings()[std::type_index(typeid(typename T::expected))] = [this, &binding] {
+    this->cfg().bindings()[std::type_index(typeid(typename T::expected))] = [this, binding] {
       return make<typename T::given>(binding);
     };
   }
 
-  template <class T, std::enable_if_t<std::is_base_of<injector_base, T>::value, int> = 0>
+  template <class T, std::enable_if_t<std::is_base_of<core::injector_base, T>::value, int> = 0>
   void install(const T &injector) {
-    install(typename T::deps{}, injector, aux::type<typename T::config>{});
+    install(typename T::deps{}, injector, aux::identity<typename T::config>{});
   }
 
   template <class... TBindings>
@@ -128,15 +137,15 @@ class injector : public core::injector<runtime_provider<di::extension::shared_co
   }
 
  private:
-  template <class TInjector, class TScopeTraits>
-  void install(aux::type_list<>, const TInjector &injector, aux::type<runtime_provider<TScopeTraits>>) {
+  template <class TInjector, class TCfg, class TST>
+  void install(aux::type_list<>, const TInjector &injector, aux::identity<runtime_provider<TCfg, TST>>) {
     for (const auto &b : injector.cfg().bindings()) {
-      cfg().bindings()[b.first] = b.second;
+      this->cfg().bindings()[b.first] = b.second;
     }
   }
 
-  template <class... Ts, class TInjector, class TConfig>
-  void install(aux::type_list<Ts...>, const TInjector &injector, aux::type<TConfig>) {
+  template <class... Ts, class TInjector, class T>
+  void install(aux::type_list<Ts...>, const TInjector &injector, aux::identity<T>) {
     (void)aux::swallow{0, (install(static_cast<const Ts &>(injector)), 0)...};
   }
 
@@ -155,6 +164,9 @@ class injector : public core::injector<runtime_provider<di::extension::shared_co
     return new T{binding.object_};
   }
 };
+}  // detail
+
+using runtime_injector = detail::injector<assert_error_policy, di::extension::shared_config>;
 
 }  // namespace extension
 BOOST_DI_NAMESPACE_END

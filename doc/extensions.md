@@ -1,3 +1,4 @@
+* [Injector](#injector)
 * [Constructor Bindings](#constructor-bindings)
 * [Contextual Bindings](#contextual-bindings)
 * [Assisted Injection](#assisted-injection)
@@ -19,6 +20,9 @@
 * [Shared Scope](#shared-scope)
 
 ---
+
+###Injector
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injector.cpp)
 
 ###Constructor Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
