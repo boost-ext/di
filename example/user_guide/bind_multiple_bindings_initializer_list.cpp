@@ -30,8 +30,9 @@ struct impl1 : i1 {
 
 int main() {
   // clang-format off
+  auto il = {1, 2, 3};
   auto injector = di::make_injector(
-    di::bind<int[]>().to({1, 2, 3}) // or int*[]
+    di::bind<int[]>().to(il) // or di::bind<int*[]>.to(il)
   );
   // clang-format on
 

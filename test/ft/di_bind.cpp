@@ -806,7 +806,8 @@ test multi_bindings_with_initializer_list = [] {
     expect(*(std::next(it, 3)) == 4);
   };
 
-  auto injector = di::make_injector(di::bind<int[]>().to({1, 2, 3, 4}));
+  auto il = {1, 2, 3, 4};
+  auto injector = di::make_injector(di::bind<int[]>().to(il));
 
   test(injector.create<std::vector<int>>());
   test(injector.create<std::set<int>>());
@@ -822,7 +823,8 @@ test multi_bindings_with_initializer_list_with_ptr_type = [] {
     expect(*(std::next(it, 3)) == 4);
   };
 
-  auto injector = di::make_injector(di::bind<int *[]>().to({1, 2, 3, 4}));
+  auto il = {1, 2, 3, 4};
+  auto injector = di::make_injector(di::bind<int *[]>().to(il));
 
   test(injector.create<std::vector<int>>());
   test(injector.create<std::set<int>>());

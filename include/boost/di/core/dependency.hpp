@@ -159,10 +159,10 @@ class dependency : dependency_base,
   }
 
   template <class T, __BOOST_DI_REQUIRES_MSG(concepts::boundable<TExpected, T>) = 0>
-  auto to(std::initializer_list<T>&& object) noexcept {
+  auto to(std::initializer_list<T> il) noexcept {
     using type = aux::remove_pointer_t<aux::remove_extent_t<TExpected>>;
     using dependency = dependency<scopes::instance, array<type>, std::initializer_list<T>, TName, TPriority, TCtor>;
-    return dependency{object};
+    return dependency{il};
   }
 
   template <class T, __BOOST_DI_REQUIRES(externable<T>::value && !aux::is_callable<T>::value) = 0,
