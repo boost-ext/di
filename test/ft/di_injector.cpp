@@ -400,7 +400,8 @@ test exposed_named_ref = [] {
 };
 
 test exposed_multi_bindings = [] {
-  di::injector<std::set<int>, std::vector<int>> injector = di::make_injector(di::bind<int[]>().to({1, 2, 3}));
+  auto il = {1, 2, 3};
+  di::injector<std::set<int>, std::vector<int>> injector = di::make_injector(di::bind<int[]>().to(il));
   auto v = injector.create<std::vector<int>>();
   expect(3 == v.size());
   expect(1 == v[0]);
@@ -416,8 +417,9 @@ test exposed_multi_bindings = [] {
 };
 
 test exposed_multi_bindings_expose = [] {
+  auto il = {1, 2, 3};
   di::injector<BOOST_DI_EXPOSE(std::set<int>), BOOST_DI_EXPOSE(std::vector<int>)> injector =
-      di::make_injector(di::bind<int[]>().to({1, 2, 3}));
+      di::make_injector(di::bind<int[]>().to(il));
   expect(3 == injector.create<std::vector<int>>().size());
   expect(3 == injector.create<std::set<int>>().size());
 };

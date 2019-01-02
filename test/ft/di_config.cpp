@@ -197,7 +197,8 @@ test constructible_policy_must_be_bound_array = [] {
     c(std::vector<int>, const std::set<float>&, std::vector<std::unique_ptr<i1>>, double /*not bound*/) {}
   };
 
-  const auto injector = di::make_injector<must_be_bound>(di::bind<float[]>().to({1.f, 2.f, 3.f, 4.f}), di::bind<int>().to(42),
+  auto il = {1.f, 2.f, 3.f, 4.f};
+  const auto injector = di::make_injector<must_be_bound>(di::bind<float[]>().to(il), di::bind<int>().to(42),
                                                          di::bind<int[]>().to<int, int>(), di::bind<i1>().to<impl1>(),
                                                          di::bind<impl1>().in(di::unique), di::bind<i1* []>().to<i1, impl1>());
 

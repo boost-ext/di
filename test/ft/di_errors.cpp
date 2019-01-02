@@ -370,7 +370,10 @@ test bind_not_compatible_initializer_list = [] {
 #endif
                         );
 
-  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int[]>().to({"a", "b"})); });
+  expect_compile_fail("", errors_, int main() {
+    auto il = {"a", "b"};
+    di::make_injector(di::bind<int[]>().to(il));
+  });
 };
 
 #if defined(__cpp_variable_templates)
@@ -385,7 +388,10 @@ test bind_not_compatible_initializer_list_v = [] {
 #endif
                         );
 
-  expect_compile_fail("", errors_, int main() { di::make_injector(di::bind<int[]>.to({"a", "b"})); });
+  expect_compile_fail("", errors_, int main() {
+    auto il = {"a", "b"};
+    di::make_injector(di::bind<int[]>.to(il));
+  });
 };
 #endif
 

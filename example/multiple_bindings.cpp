@@ -51,8 +51,9 @@ struct example {
 
 int main() {
   // clang-format off
+  auto il = {1, 2, 3, 5, 8, 13, 21};
   auto injector = di::make_injector(
-    di::bind<int[]>().to({1, 2, 3, 5, 8, 13, 21})
+    di::bind<int[]>().to(il)
   , di::bind<interface* []>().to<implementation1, implementation2, interface, di::named<class Implementation2>>()
   , di::bind<interface>().to<implementation1>()  // <------------------/                         |
   , di::bind<interface>().named<class Implementation2>().to<implementation2>()  // <-------------/
