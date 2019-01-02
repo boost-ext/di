@@ -28,6 +28,10 @@
 <dl class="toc">
 
     
+        <dt><span class="section"><a href="#injector">Injector</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#constructor-bindings">Constructor Bindings</a></span></dt>
     
 
@@ -110,6 +114,7 @@
 
 <div class="section">
 <ul>
+<li><a href="#injector">Injector</a></li>
 <li><a href="#constructor-bindings">Constructor Bindings</a></li>
 <li><a href="#contextual-bindings">Contextual Bindings</a></li>
 <li><a href="#assisted-injection">Assisted Injection</a></li>
@@ -131,6 +136,76 @@
 <li><a href="#shared-scope">Shared Scope</a></li>
 </ul>
 <hr />
+<h3 id="injector">Injector</h3>
+<pre><code class="cpp">#include &quot;boost/di/extension/injector.hpp&quot;
+
+#include &lt;cassert&gt;
+#include &lt;memory&gt;
+
+namespace di = boost::di;
+
+struct i1 {
+  virtual ~i1() noexcept = default;
+  virtual int foo() const = 0;
+};
+
+struct i2 {
+  virtual ~i2() noexcept = default;
+  virtual int bar() const = 0;
+};
+
+struct impl2 : i2 {
+  int bar() const override { return 99; }
+};
+
+struct impl1 : i1 {
+  explicit impl1(std::unique_ptr&lt;i2&gt; sp2) { assert(sp2-&gt;bar() == 99); }
+  int foo() const override { return 42; }
+};
+
+struct app {
+  explicit app(std::shared_ptr&lt;i1&gt; sp1) { assert(sp1-&gt;foo() == 42); }
+};
+
+int main() {
+  namespace di = boost::di;
+
+  /*&lt;&lt;creates generic injector&gt;&gt;*/
+  {
+    auto injector = di::make_injector(
+      di::bind&lt;i1&gt;().to&lt;impl1&gt;(), /// missing binding -&gt; compile error
+      di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+    );
+    di::create&lt;app&gt;(injector);
+    di::create&lt;std::shared_ptr&lt;i1&gt;&gt;(injector); /// okay
+  }
+
+  /*&lt;&lt;creates exposed injector&gt;&gt;*/
+  {
+    di::extension::injector&lt;app&gt; injector = di::make_injector(
+      di::bind&lt;i1&gt;().to&lt;impl1&gt;(), /// missing binding -&gt; compile error
+      di::bind&lt;i2&gt;().to&lt;impl2&gt;()
+    );
+    di::create&lt;app&gt;(injector);
+    //di::create&lt;std::shared_ptr&lt;i1&gt;&gt;(injector); /// compile error, i1 is not exposed
+  }
+
+  /*&lt;&lt;creates runtime injector&gt;&gt;*/
+  {
+    di::extension::injector&lt;&gt; injector{};
+    injector.install(di::bind&lt;i1&gt;().to&lt;impl1&gt;()); /// missing binding -&gt; runtime error (Error policy)
+    injector.install(di::bind&lt;i2&gt;().to&lt;impl2&gt;());
+
+    di::create&lt;app&gt;(injector);
+    di::create&lt;std::shared_ptr&lt;i1&gt;&gt;(injector); /// okay
+  }
+
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injector.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injector.cpp</a></li>
+</ul>
 <h3 id="constructor-bindings">Constructor Bindings</h3>
 <pre><code class="cpp">#include &quot;boost/di/extension/bindings/constructor_bindings.hpp&quot;
 
@@ -1103,7 +1178,19 @@ struct impl1 : i1 {
   int foo() const override { return 42; }
 };
 
+class ctor;
+class dtor;
+
 struct impl4 : i4 {
+  template &lt;class&gt;
+  static auto&amp; calls() {
+    static auto i = 0;
+    return i;
+  }
+
+  impl4() { ++calls&lt;ctor&gt;(); }
+  ~impl4() { ++calls&lt;dtor&gt;(); }
+
   int foo() const override { return 100; }
 };
 
@@ -1125,13 +1212,14 @@ struct example {
   }
 };
 
-auto module = [] { return di::make_injector(di::bind&lt;i4&gt;().to&lt;impl4&gt;()); };
+auto ct_module = [] { return di::make_injector(di::bind&lt;i4&gt;().to&lt;impl4&gt;()); };
+di::extension::runtime_injector rt_module() { return di::make_injector(di::bind&lt;i4&gt;().to&lt;impl4&gt;()); }
 
 int main() {
   namespace di = boost::di;
 
   /*&lt;&lt;create runtime injector&gt;&gt;*/
-  di::extension::injector injector{};
+  di::extension::runtime_injector injector{};
 
   /*&lt;&lt;install bindings&gt;&gt;*/
   injector.install(
@@ -1150,10 +1238,26 @@ int main() {
   injector.install(component);
 
   /*&lt;&lt;module bindings&gt;&gt;*/
-  injector.install(module());
+  injector.install(ct_module());
 
   /*&lt;&lt;create example&gt;&gt;*/
   injector.create&lt;example&gt;();
+
+  // scoped injector
+  {
+    impl4::calls&lt;ctor&gt;() = {};
+    impl4::calls&lt;dtor&gt;() = {};
+
+    di::extension::runtime_injector injector{};
+    injector.install(rt_module());
+    auto m = di::create&lt;module_example&gt;(injector);
+
+    assert(m.get() == 2 * 100);
+    assert(impl4::calls&lt;ctor&gt;() == 1);
+    assert(impl4::calls&lt;dtor&gt;() == 0);
+  }
+  assert(impl4::calls&lt;ctor&gt;() == 1);
+  assert(impl4::calls&lt;dtor&gt;() == 1);
 
 }
 </code></pre>
