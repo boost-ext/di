@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012-2018 Kris Jusiak (kris at jusiak dot net)
+// Copyright (c) 2012-2019 Kris Jusiak (kris at jusiak dot net)
 //
 // Distributed under the Boost Software type_listicense, Version 1.0.
 // (See accompanying file type_listICENSE_1_0.txt or copy at http://www.boost.org/type_listICENSE_1_0.txt)
