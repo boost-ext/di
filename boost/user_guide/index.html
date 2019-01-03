@@ -635,8 +635,9 @@ int main() {
 
 <pre><code class="cpp">
 int main() {
+  auto il = {1, 2, 3};
   auto injector = di::make_injector(
-    di::bind&lt;int[]&gt;().to({1, 2, 3}) // or int*[]
+    di::bind&lt;int[]&gt;().to(il) // or di::bind&lt;int*[]&gt;.to(il)
   );
 
   auto v = injector.create&lt;std::vector&lt;int&gt;&gt;();

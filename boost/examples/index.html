@@ -400,8 +400,9 @@ struct example {
 };
 
 int main() {
+  auto il = {1, 2, 3, 5, 8, 13, 21};
   auto injector = di::make_injector(
-    di::bind&lt;int[]&gt;().to({1, 2, 3, 5, 8, 13, 21})
+    di::bind&lt;int[]&gt;().to(il)
   , di::bind&lt;interface* []&gt;().to&lt;implementation1, implementation2, interface, di::named&lt;class Implementation2&gt;&gt;()
   , di::bind&lt;interface&gt;().to&lt;implementation1&gt;()  // &lt;------------------/                         |
   , di::bind&lt;interface&gt;().named&lt;class Implementation2&gt;().to&lt;implementation2&gt;()  // &lt;-------------/
