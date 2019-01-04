@@ -15,9 +15,8 @@
 namespace scopes {
 
 class singleton {
- public:
-  template <class, class T, class = decltype(aux::has_shared_ptr__(aux::declval<T>()))>
-  class scope {
+  template <class T, class = decltype(aux::has_shared_ptr__(aux::declval<T>()))>
+  class scope_impl {
    public:
     template <class T_, class>
     using is_referable = typename wrappers::shared<singleton, T&>::template is_referable<T_>;
@@ -39,8 +38,8 @@ class singleton {
     }
   };
 
-  template <class _, class T>
-  class scope<_, T, aux::true_type> {
+  template <class T>
+  class scope_impl<T, aux::true_type> {
    public:
     template <class T_, class>
     using is_referable = typename wrappers::shared<singleton, T>::template is_referable<T_>;
@@ -61,6 +60,10 @@ class singleton {
       return wrappers::shared<singleton, T_, std::shared_ptr<T_>&>{object};
     }
   };
+
+ public:
+  template <class, class T>
+  using scope = scope_impl<T>;
 };
 
 }  // namespace scopes

@@ -215,7 +215,7 @@ test any_of_with_scope_split = [] {
   };
 
   test(di::unique, false);
-  test(di::singleton, false);
+  test(di::singleton, true);
 };
 
 test any_of_unique = [] {
