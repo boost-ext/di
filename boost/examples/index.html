@@ -414,7 +414,7 @@ int main() {
   assert(injector.create&lt;std::set&lt;int&gt;&gt;().size() == 7);
 
   assert(injector.create&lt;std::vector&lt;std::shared_ptr&lt;interface&gt;&gt;&gt;().size() == 4);
-  assert(injector.create&lt;std::set&lt;std::shared_ptr&lt;interface&gt;&gt;&gt;().size() == 4);
+  assert(injector.create&lt;std::set&lt;std::shared_ptr&lt;interface&gt;&gt;&gt;().size() == 2);  // unique instances
 }
 </code></pre>
 
