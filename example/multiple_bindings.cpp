@@ -66,5 +66,5 @@ int main() {
   assert(injector.create<std::set<int>>().size() == 7);
 
   assert(injector.create<std::vector<std::shared_ptr<interface>>>().size() == 4);
-  assert(injector.create<std::set<std::shared_ptr<interface>>>().size() == 4);
+  assert(injector.create<std::set<std::shared_ptr<interface>>>().size() == 2);  // unique instances
 }
