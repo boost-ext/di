@@ -1267,6 +1267,109 @@ test bind_to_ctor_long_notation = [] {
   expect(87.0 == object.c_.b);
 };
 
+test bind_to_ctor_ambigious_ctor = [] {
+  struct c {
+    c(int a, double b) : a{a}, b{b} {}
+    c(double b, int a) : a{a}, b{b} {}
+
+    int a{};
+    double b{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>()(42, 87.0));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+  expect(87.0 == object.c_.b);
+};
+
+test bind_to_ctor_ambigious_ctor_1_arg = [] {
+  struct c {
+    c(int a) : a(a) {}
+    c(double a) : a(a) {}
+    int a{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>()(42));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+};
+
+test bind_to_ctor_ambigious_ctor_1_arg_explicit = [] {
+  struct c {
+    explicit c(int a) : a(a) {}
+    explicit c(double a) : a(a) {}
+    int a{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>()(42));
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+};
+
+test bind_to_ctor_placeholders = [] {
+  struct c {
+    c(int a, double b) : a{a}, b{b} {}
+    c(double b, int a) : a{a}, b{b} {}
+
+    int a{};
+    double b{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<c>()(42, di::placeholders::_), di::bind<>().to(87.0));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+  expect(87.0 == object.c_.b);
+};
+
+test bind_to_ctor_multiple_placeholders = [] {
+  struct c {
+    explicit c(...) {}
+    c(int a, std::shared_ptr<i1> sp, double b, std::unique_ptr<i2> up) : a{a}, b{b}, sp{sp}, up{std::move(up)} {}
+
+    int a{};
+    double b{};
+    std::shared_ptr<i1> sp{};
+    std::unique_ptr<i2> up{};
+  };
+
+  struct app {
+    c &c_;
+  };
+
+  const auto injector = di::make_injector(di::bind<i1>().to<impl1>(), di::bind<i2>().to<impl2>(),
+                                          di::bind<c>()(42, di::placeholders::_, 87.0, di::placeholders::_));
+
+  auto object = injector.create<app>();
+
+  expect(42 == object.c_.a);
+  expect(87.0 == object.c_.b);
+  expect(dynamic_cast<impl1 *>(object.c_.sp.get()));
+  expect(dynamic_cast<impl2 *>(object.c_.up.get()));
+};
+
 test bind_to_ctor_short_notation = [] {
   struct c {
     c(int a, int b) : a{a}, b{b} {}

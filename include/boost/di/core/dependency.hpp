@@ -25,11 +25,6 @@ struct ctor_arg {
   explicit ctor_arg(T&& t) : value(static_cast<T&&>(t)) {}
   constexpr operator T() const { return value; }
 
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-  constexpr operator I() const {
-    return value;
-  }
-
  private:
   T value;
 };
@@ -107,15 +102,8 @@ class dependency : dependency_base,
   template <class T, class U>
   using deduce_traits_t = typename deduce_traits<T, U>::type;
 
-  template <class TP, int N, class T>
-  struct ctor_arg_traits {
-    using type = ctor_arg<TP, N, T>;
-  };
-
-  template <class TP, int N>
-  struct ctor_arg_traits<TP, N, placeholders::arg&> {
-    using type = any_type_1st_ref_fwd<TP>;
-  };
+  template <class TParent, int N, class T>
+  using ctor_arg_traits = ctor_arg<TParent, N, T>;
 
  public:
   using scope = TScope;
@@ -231,9 +219,9 @@ class dependency : dependency_base,
  private:
   template <class T, int... Ns, class... Ts>
   auto to_impl(aux::index_sequence<Ns...>, Ts&&... args) noexcept {
-    using ctor_t = core::pool_t<typename ctor_arg_traits<T, Ns, Ts>::type...>;
+    using ctor_t = core::pool_t<ctor_arg_traits<T, Ns, Ts>...>;
     using dependency = dependency<TScope, TExpected, T, TName, TPriority, ctor_t>;
-    return dependency{ctor_t{typename ctor_arg_traits<T, Ns, Ts>::type(static_cast<Ts&&>(args))...}};
+    return dependency{ctor_t{ctor_arg_traits<T, Ns, Ts>(static_cast<Ts&&>(args))...}};
   }
 };
 

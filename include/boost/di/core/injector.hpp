@@ -182,9 +182,14 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
 
-  template <class TP, int N, class T>
-  struct try_create<core::ctor_arg<TP, N, T>> {
-    using type = T;
+  template <class TParent, int N, class T>
+  struct try_create<core::ctor_arg<TParent, N, T&&>> {
+    using type = aux::conditional_t<is_creatable<T>::value, T, void>;
+  };
+
+  template <class TParent, int N>
+  struct try_create<core::ctor_arg<TParent, N, const placeholders::arg&>> {
+    using type = any_type_1st_ref<TParent, injector, with_error>;
   };
 
   template <class T>
@@ -222,10 +227,15 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     return create_impl__<TIsRoot, T, TName>();
   }
 
-  template <class TIsRoot = aux::false_type, class TP, int N, class T>
-  auto create_impl(const aux::type<core::ctor_arg<TP, N, T>>&) const {
-    auto& dependency = binder::resolve<TP>((injector*)this);
-    return static_cast<core::ctor_arg<TP, N, T>&>(dependency);
+  template <class TIsRoot = aux::false_type, class TParent, int N, class T>
+  auto create_impl(const aux::type<core::ctor_arg<TParent, N, T>>&) const {
+    auto& dependency = binder::resolve<TParent>((injector*)this);
+    return static_cast<core::ctor_arg<TParent, N, T>&>(dependency);
+  }
+
+  template <class TIsRoot = aux::false_type, class TParent, int N>
+  auto create_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
+    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class T>
@@ -258,10 +268,15 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
     return create_successful_impl__<TIsRoot, T, TName>();
   }
 
-  template <class TIsRoot = aux::false_type, class TP, int N, class T>
-  auto create_successful_impl(const aux::type<core::ctor_arg<TP, N, T>>&) const {
-    auto& dependency = binder::resolve<TP>((injector*)this);
-    return static_cast<core::ctor_arg<TP, N, T>&>(dependency);
+  template <class TIsRoot = aux::false_type, class TParent, int N, class T>
+  auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, T>>&) const {
+    auto& dependency = binder::resolve<TParent>((injector*)this);
+    return static_cast<core::ctor_arg<TParent, N, T>&>(dependency);
+  }
+
+  template <class TIsRoot = aux::false_type, class TParent, int N>
+  auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
+    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
 
   template <class TIsRoot = aux::false_type, class T>
