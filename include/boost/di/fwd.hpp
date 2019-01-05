@@ -10,7 +10,7 @@
 #include "boost/di/fwd_ext.hpp"
 
 namespace placeholders {
-__BOOST_DI_UNUSED static struct arg { } _; }
+__BOOST_DI_UNUSED static const struct arg { } _{}; }
 
 template <class, class = void>
 struct named {};

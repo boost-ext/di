@@ -275,7 +275,7 @@ template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
 }
 namespace placeholders {
-__BOOST_DI_UNUSED static struct arg { } _; }
+__BOOST_DI_UNUSED static const struct arg { } _{}; }
 template <class, class = void>
 struct named {};
 struct no_name {
@@ -1607,10 +1607,6 @@ template <class, int, class T>
 struct ctor_arg {
   explicit ctor_arg(T&& t) : value(static_cast<T&&>(t)) {}
   constexpr operator T() const { return value; }
-  template <class I, __BOOST_DI_REQUIRES(aux::is_convertible<T, I>::value) = 0>
-  constexpr operator I() const {
-    return value;
-  }
 
  private:
   T value;
@@ -1672,14 +1668,8 @@ class dependency : dependency_base,
   };
   template <class T, class U>
   using deduce_traits_t = typename deduce_traits<T, U>::type;
-  template <class TP, int N, class T>
-  struct ctor_arg_traits {
-    using type = ctor_arg<TP, N, T>;
-  };
-  template <class TP, int N>
-  struct ctor_arg_traits<TP, N, placeholders::arg&> {
-    using type = any_type_1st_ref_fwd<TP>;
-  };
+  template <class TParent, int N, class T>
+  using ctor_arg_traits = ctor_arg<TParent, N, T>;
 
  public:
   using scope = TScope;
@@ -1777,9 +1767,9 @@ class dependency : dependency_base,
  private:
   template <class T, int... Ns, class... Ts>
   auto to_impl(aux::index_sequence<Ns...>, Ts&&... args) noexcept {
-    using ctor_t = core::pool_t<typename ctor_arg_traits<T, Ns, Ts>::type...>;
+    using ctor_t = core::pool_t<ctor_arg_traits<T, Ns, Ts>...>;
     using dependency = dependency<TScope, TExpected, T, TName, TPriority, ctor_t>;
-    return dependency{ctor_t{typename ctor_arg_traits<T, Ns, Ts>::type(static_cast<Ts&&>(args))...}};
+    return dependency{ctor_t{ctor_arg_traits<T, Ns, Ts>(static_cast<Ts&&>(args))...}};
   }
 };
 }
@@ -2596,9 +2586,13 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
   struct try_create<::boost::di::v1_1_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
-  template <class TP, int N, class T>
-  struct try_create<core::ctor_arg<TP, N, T>> {
-    using type = T;
+  template <class TParent, int N, class T>
+  struct try_create<core::ctor_arg<TParent, N, T&&>> {
+    using type = aux::conditional_t<is_creatable<T>::value, T, void>;
+  };
+  template <class TParent, int N>
+  struct try_create<core::ctor_arg<TParent, N, const placeholders::arg&>> {
+    using type = any_type_1st_ref<TParent, injector, with_error>;
   };
   template <class T>
   struct try_create<self<T>> {
@@ -2628,10 +2622,14 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
   auto create_impl(const aux::type<::boost::di::v1_1_0::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
-  template <class TIsRoot = aux::false_type, class TP, int N, class T>
-  auto create_impl(const aux::type<core::ctor_arg<TP, N, T>>&) const {
-    auto& dependency = binder::resolve<TP>((injector*)this);
-    return static_cast<core::ctor_arg<TP, N, T>&>(dependency);
+  template <class TIsRoot = aux::false_type, class TParent, int N, class T>
+  auto create_impl(const aux::type<core::ctor_arg<TParent, N, T>>&) const {
+    auto& dependency = binder::resolve<TParent>((injector*)this);
+    return static_cast<core::ctor_arg<TParent, N, T>&>(dependency);
+  }
+  template <class TIsRoot = aux::false_type, class TParent, int N>
+  auto create_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
+    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T>
   auto create_successful_impl(const aux::type<T>&) const {
@@ -2657,10 +2655,14 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
   auto create_successful_impl(const aux::type<::boost::di::v1_1_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
-  template <class TIsRoot = aux::false_type, class TP, int N, class T>
-  auto create_successful_impl(const aux::type<core::ctor_arg<TP, N, T>>&) const {
-    auto& dependency = binder::resolve<TP>((injector*)this);
-    return static_cast<core::ctor_arg<TP, N, T>&>(dependency);
+  template <class TIsRoot = aux::false_type, class TParent, int N, class T>
+  auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, T>>&) const {
+    auto& dependency = binder::resolve<TParent>((injector*)this);
+    return static_cast<core::ctor_arg<TParent, N, T>&>(dependency);
+  }
+  template <class TIsRoot = aux::false_type, class TParent, int N>
+  auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
+    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T>
   decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
@@ -2814,9 +2816,13 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
   struct try_create<::boost::di::v1_1_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
-  template <class TP, int N, class T>
-  struct try_create<core::ctor_arg<TP, N, T>> {
-    using type = T;
+  template <class TParent, int N, class T>
+  struct try_create<core::ctor_arg<TParent, N, T&&>> {
+    using type = aux::conditional_t<is_creatable<T>::value, T, void>;
+  };
+  template <class TParent, int N>
+  struct try_create<core::ctor_arg<TParent, N, const placeholders::arg&>> {
+    using type = any_type_1st_ref<TParent, injector, with_error>;
   };
   template <class T>
   struct try_create<self<T>> {
@@ -2846,10 +2852,14 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
   auto create_impl(const aux::type<::boost::di::v1_1_0::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
-  template <class TIsRoot = aux::false_type, class TP, int N, class T>
-  auto create_impl(const aux::type<core::ctor_arg<TP, N, T>>&) const {
-    auto& dependency = binder::resolve<TP>((injector*)this);
-    return static_cast<core::ctor_arg<TP, N, T>&>(dependency);
+  template <class TIsRoot = aux::false_type, class TParent, int N, class T>
+  auto create_impl(const aux::type<core::ctor_arg<TParent, N, T>>&) const {
+    auto& dependency = binder::resolve<TParent>((injector*)this);
+    return static_cast<core::ctor_arg<TParent, N, T>&>(dependency);
+  }
+  template <class TIsRoot = aux::false_type, class TParent, int N>
+  auto create_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
+    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T>
   auto create_successful_impl(const aux::type<T>&) const {
@@ -2875,10 +2885,14 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
   auto create_successful_impl(const aux::type<::boost::di::v1_1_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
-  template <class TIsRoot = aux::false_type, class TP, int N, class T>
-  auto create_successful_impl(const aux::type<core::ctor_arg<TP, N, T>>&) const {
-    auto& dependency = binder::resolve<TP>((injector*)this);
-    return static_cast<core::ctor_arg<TP, N, T>&>(dependency);
+  template <class TIsRoot = aux::false_type, class TParent, int N, class T>
+  auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, T>>&) const {
+    auto& dependency = binder::resolve<TParent>((injector*)this);
+    return static_cast<core::ctor_arg<TParent, N, T>&>(dependency);
+  }
+  template <class TIsRoot = aux::false_type, class TParent, int N>
+  auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
+    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T>
   decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
