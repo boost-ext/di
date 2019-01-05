@@ -498,8 +498,8 @@ int main() {
 namespace di = boost::di;
 
 struct example {
-  example(int, double, float) {}            // don't pick this one
-  example(int i, double d) : d{d}, i{i} {}  // but pick this one
+  example(float, short) {}                  // ambiguous
+  example(int i, double d) : d{d}, i{i} {}  // constructors &lt;- pick this one
 
   double d{};
   int i{};
@@ -510,14 +510,53 @@ struct app {
 };
 
 int main() {
-  const auto injector = di::make_injector(
-    di::bind&lt;example&gt;().to&lt;example&gt;(42, 87.0) // or di::bind&lt;example&gt;(42, 87.0)
-  );
+  {
+    const auto injector = di::make_injector(
+      di::bind&lt;example&gt;()(42, 87.0) // or di::bind&lt;example&gt;().to&lt;example&gt;(42, 87.0)
+    );
 
-  auto object = di::create&lt;app&gt;(injector);
+    auto object = di::create&lt;app&gt;(injector);
 
-  assert(42 == object.ex.i);
-  assert(87.0 == object.ex.d);
+    assert(42 == object.ex.i);
+    assert(87.0 == object.ex.d);
+  }
+
+#if defined(__cpp_variable_templates)
+  {
+    const auto injector = di::make_injector(
+      di::bind&lt;example&gt;(42, 87.0)
+    );
+
+    auto object = di::create&lt;app&gt;(injector);
+
+    assert(42 == object.ex.i);
+    assert(87.0 == object.ex.d);
+  }
+#endif
+
+  {
+    const auto injector = di::make_injector(
+      di::bind&lt;example&gt;()(42, di::placeholders::_), // inject second argument
+      di::bind&lt;&gt;().to(87.0)
+    );
+
+    auto object = di::create&lt;app&gt;(injector);
+
+    assert(42 == object.ex.i);
+    assert(87.0 == object.ex.d);
+  }
+
+  {
+    const auto injector = di::make_injector(
+      di::bind&lt;example&gt;()(di::placeholders::_, 87.0), // inject first argument
+      di::bind&lt;&gt;().to(42)
+    );
+
+    auto object = di::create&lt;app&gt;(injector);
+
+    assert(42 == object.ex.i);
+    assert(87.0 == object.ex.d);
+  }
 }
 </code></pre>
 
