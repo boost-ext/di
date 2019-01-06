@@ -179,7 +179,7 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: BS=bjam TOOLSET=gcc GCOV=gcov-7 VARIANT=coverage CXX=g++-8
+    env: BS=bjam TOOLSET=gcc GCOV=gcov-8 VARIANT=coverage CXX=g++-8
     addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
 before_install:
