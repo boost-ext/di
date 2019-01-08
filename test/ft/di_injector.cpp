@@ -443,7 +443,7 @@ test exposed_by_lambda_expr_and_func = [] {
 
 test is_injector_creatable = [] {
   struct c {
-    c(int) {};
+    c(int){};
   };
 
   const auto injector = di::make_injector();
@@ -453,27 +453,24 @@ test is_injector_creatable = [] {
 
 class Inject;
 
-template<class T = Inject>
+template <class T = Inject>
 struct inject {
   explicit inject(T&) {}
 };
 
 test is_injector_creatable_template = [] {
-  const auto injector = di::make_injector(
-    di::bind<Inject>().to<int>()
-  );
+  const auto injector = di::make_injector(di::bind<Inject>().to<int>());
 
   static_expect(di::is_creatable<inject>(injector));
 };
 
 test is_injector_not_creatable = [] {
   struct c {
-    c(int&) {};
+    c(int&){};
   };
 
-  const auto injector = di::make_injector(
-    di::bind<int>().to(42) // not convertible to ref
-  );
+  const auto injector = di::make_injector(di::bind<int>().to(42)  // not convertible to ref
+                                          );
 
   static_expect(!di::is_creatable<c>(injector));
 };

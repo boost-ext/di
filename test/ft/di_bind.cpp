@@ -1236,6 +1236,12 @@ test bind_final_class_callable = [] {
   expect(42 == injector.create<int>());
 };
 
+test bind_final_class_instance_unique = [] {
+  auto injector = di::make_injector(di::bind<impl1_final>().to([]() { return std::make_unique<impl1_final>(); }));
+  auto object = injector.create<std::unique_ptr<impl1_final>>();
+  expect(dynamic_cast<impl1_final *>(object.get()));
+};
+
 test bind_multiple_empty_injectors = [] {
   auto i1 = di::make_injector();
   const auto module1 = [] { return [] {}; };
