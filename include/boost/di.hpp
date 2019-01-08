@@ -513,6 +513,8 @@ template <class T>
 struct is_abstract : integral_constant<bool, __is_abstract(T)> {};
 template <class T>
 struct is_polymorphic : integral_constant<bool, __is_polymorphic(T)> {};
+template <class T>
+struct is_final : integral_constant<bool, __is_final(T)> {};
 template <class...>
 using is_valid_expr = true_type;
 #if __has_extension(is_constructible) && !((__clang_major__ == 3) && (__clang_minor__ == 5))
@@ -623,7 +625,8 @@ struct callable_base_impl {
   void operator()(...) {}
 };
 template <class T>
-struct callable_base : callable_base_impl, aux::conditional_t<aux::is_class<T>::value, T, aux::none_type> {};
+struct callable_base : callable_base_impl,
+                       aux::conditional_t<aux::is_class<T>::value && !aux::is_final<T>::value, T, aux::none_type> {};
 template <typename T>
 aux::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(...), &T::operator()>* = 0);
 aux::true_type is_callable_impl(...);
