@@ -44,6 +44,10 @@
     
 
     
+        <dt><span class="section"><a href="#is-creatable">Is Creatable</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#multiple-bindings">Multiple Bindings</a></span></dt>
     
 
@@ -150,6 +154,7 @@
 <li><a href="#bindings">Bindings</a></li>
 <li><a href="#dynamic-bindings">Dynamic Bindings</a></li>
 <li><a href="#forward-bindings">Forward Bindings</a></li>
+<li><a href="#is-creatable">Is Creatable</a></li>
 <li><a href="#multiple-bindings">Multiple Bindings</a></li>
 <li><a href="#binding-non-owning-pointer">Binding Non-owning Pointer</a></li>
 <li><a href="#binding-templates">Binding Templates</a></li>
@@ -373,6 +378,41 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp</a></li>
+</ul>
+<h3 id="is-creatable">Is Creatable</h3>
+<pre><code class="cpp">#include &lt;boost/di.hpp&gt;
+#include &lt;cassert&gt;
+
+namespace di = boost::di;
+
+struct iworld {
+  virtual ~iworld() noexcept = default;
+  virtual void f() = 0;
+};
+
+struct world : iworld {
+  void f() override {}
+};
+
+struct hello {
+  explicit hello(iworld&amp;) {}
+};
+
+int main() {
+  {
+    const auto injector = di::make_injector(di::bind&lt;iworld&gt;().to&lt;world&gt;());
+    static_assert(di::is_creatable&lt;hello&gt;(injector), &quot;&quot;);
+  }
+
+  {
+    const auto injector = di::make_injector();
+    static_assert(!di::is_creatable&lt;hello&gt;(injector), &quot;iworld is not abstract!&quot;);
+  }
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/is_creatable.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/is_creatable.cpp</a></li>
 </ul>
 <h3 id="multiple-bindings">Multiple Bindings</h3>
 <pre><code class="cpp">#include &lt;boost/di.hpp&gt;
