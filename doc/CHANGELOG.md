@@ -18,8 +18,7 @@
     >
     - **Extensions**
         - [Runtime Provider](http://boost-experimental.github.io/di/extensions/index.html#runtime-provider)
-        - [Injector](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
-        - [Runtime Provider](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
+        - [Injector](http://boost-experimental.github.io/di/extensions/index.html#injector)
 >
 - **Bug Fixes**
     - [Issues](https://github.com/boost-experimental/di/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+closed%3A2018-01-05..2019-01-07+)
