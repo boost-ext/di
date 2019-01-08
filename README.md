@@ -368,6 +368,7 @@ retq
     * [Bindings](http://boost-experimental.github.io/di/examples/index.html#bindings)
     * [Dynamic Bindings](http://boost-experimental.github.io/di/examples/index.html#dynamic-bindings)
     * [Forward Bindings](http://boost-experimental.github.io/di/examples/index.html#forward-bindings)
+    * [Is Creatable](http://boost-experimental.github.io/di/examples/index.html#is-creatable)
     * [Multiple Bindings](http://boost-experimental.github.io/di/examples/index.html#multiple-bindings)
     * [Binding Non-owning Pointer](http://boost-experimental.github.io/di/examples/index.html#binding-non-owning-pointer)
     * [Binding Templates](http://boost-experimental.github.io/di/examples/index.html#binding-templates)

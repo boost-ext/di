@@ -2,6 +2,7 @@
 * [Bindings](#bindings)
 * [Dynamic Bindings](#dynamic-bindings)
 * [Forward Bindings](#forward-bindings)
+* [Is Creatable](#is-creatable)
 * [Multiple Bindings](#multiple-bindings)
 * [Binding Non-owning Pointer](#binding-non-owning-pointer)
 * [Binding Templates](#binding-templates)
@@ -40,6 +41,9 @@
 
 ###Forward Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp)
+
+###Is Creatable
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/is_creatable.cpp)
 
 ###Multiple Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)

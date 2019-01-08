@@ -2954,6 +2954,15 @@ template <template <class...> class T, class TInjector>
 auto create(const TInjector& injector) -> decltype(injector.template create<T>()) {
   return injector.template create<T>();
 }
+template <class T, class TInjector>
+constexpr auto is_creatable(const TInjector&) {
+  return core::injector__<TInjector>::template is_creatable<T, no_name, aux::true_type>::value;
+}
+template <template <class...> class T, class TInjector>
+constexpr auto is_creatable(const TInjector&) {
+  return core::injector__<TInjector>::template is_creatable<core::binder::resolve_template_t<TInjector, aux::identity<T<>>>,
+                                                            no_name, aux::true_type>::value;
+}
 namespace detail {
 template <class>
 void create(const aux::true_type&) {}
