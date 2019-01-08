@@ -1,6 +1,33 @@
-## [1.1.0] - YYYY-MM-DD
+## [1.1.0] - 2019-01-07
 - **Additions**
+    - Support for Clang-5.0/6.0/7.0
+    - Support for GCC-7/8
+    - Support for MSVC-2017 Preview
+    >
+    - **Core**
+        - [Is Creatable](http://boost-experimental.github.io/di/examples/index.html#is-creatable)
+        - [Binding To Constructor](http://boost-experimental.github.io/di/examples/index.html#binding-to-constructor)
+    >
+    - **Examples**
+        - [Polymorphism](http://boost-experimental.github.io/di/examples/index.html#polymorphism)
+        - [Inheritance](http://boost-experimental.github.io/di/examples/index.html#inheritance)
+        - [Type Erasure](http://boost-experimental.github.io/di/examples/index.html#type-erasure)
+        - [Variant](http://boost-experimental.github.io/di/examples/index.html#variant)
+        - [Templates](http://boost-experimental.github.io/di/examples/index.html#templates)
+        - [Concepts](http://boost-experimental.github.io/di/examples/index.html#concepts)
+    >
+    - **Extensions**
+        - [Runtime Provider](http://boost-experimental.github.io/di/extensions/index.html#runtime-provider)
+        - [Injector](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
+        - [Runtime Provider](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
+>
 - **Bug Fixes**
+    - [Issues](https://github.com/boost-experimental/di/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+closed%3A2018-01-05..2019-01-07+)
+>
+- **Contributions**
+    - [Kanstantsin Chernik](https://github.com/kanstantsin-chernik)
+    - [Jaak Ristioja](https://github.com/jaakristioja)
+    - [Gregor Jasny](https://github.com/gjasny)
 
 ## [1.0.2] - 2018-01-04
 - **Additions**
@@ -10,12 +37,10 @@
     - Fixed support for MSVC-2015 Update 3
     >
     - **Core**
-        - [Support for injecting
-templates/concepts](http://boost-experimental.github.io/di/examples/index.html#binding-templates)
+        - [Support for injecting templates/concepts](http://boost-experimental.github.io/di/examples/index.html#binding-templates)
     >
     - **Extensions**
-        - [Extensions are now available using header
-files](https://github.com/boost-experimental/di/tree/cpp14/extension/include/boost/di/extension)
+        - [Extensions are now available using header files](https://github.com/boost-experimental/di/tree/cpp14/extension/include/boost/di/extension)
         - [Extensible Injector](http://boost-experimental.github.io/di/extensions/index.html#extensible-injector)
         - [Shared Factory](http://boost-experimental.github.io/di/extensions/index.html#shared-factory)
 >
