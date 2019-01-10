@@ -8,7 +8,7 @@
 #include <memory>
 #include <sstream>
 
-#include "common/config.hpp"
+#include "example/polymorphism/common/config.hpp"
 
 /*<<Dynamic polymorphism - inheritance>>*/
 class Drawable {

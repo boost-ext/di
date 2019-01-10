@@ -10,7 +10,7 @@
 #include <sstream>
 #include <type_traits>
 
-#include "common/config.hpp"
+#include "example/polymorphism/common/config.hpp"
 
 /*<<Type erasure>>*/
 class Drawable {
