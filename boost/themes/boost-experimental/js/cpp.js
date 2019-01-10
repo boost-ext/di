@@ -78,6 +78,10 @@ function compile_and_run(id) {
       if (found != null) {
         code_files += ', { "file" : "' + found[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/include/" + found[1])) + ' }'
       }
+      var local = lines[line].match(/#include "(.*)"/);
+      if (local != null) {
+        code_files += ', { "file" : "' + local[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/" + local[1])) + ' }'
+      }
     }
     code_files += ']';
 
