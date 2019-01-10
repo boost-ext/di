@@ -7,7 +7,7 @@
 #include <cassert>
 #include <sstream>
 
-#include "common/config.hpp"
+#include "example/polymorphism/common/config.hpp"
 
 //<-
 #if defined(__cpp_concepts)

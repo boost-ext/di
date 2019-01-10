@@ -10,6 +10,8 @@ function(example example)
     add_test(example.${tmp} example.${tmp})
 endfunction()
 
+include_directories(..)
+
 example(annotations)
 example(automatic_injection)
 example(bind_non_owning_ptr)

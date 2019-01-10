@@ -9,7 +9,7 @@
 #include <sstream>
 #include <variant>
 
-#include "common/config.hpp"
+#include "example/polymorphism/common/config.hpp"
 
 struct Square {
   void draw(std::ostream& out) const { out << "Square"; }

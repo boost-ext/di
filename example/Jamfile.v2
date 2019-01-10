@@ -13,6 +13,7 @@ project boost.di :
     requirements
         <include>../include
         <include>.
+        <include>..
 ;
 
 rule example ( src + : cxxflags * : property * ) {
