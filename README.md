@@ -258,9 +258,14 @@ struct Streamable {
 template<class Exchange = Streamable(class ExchangeStream)
          class Engine   = Streamable(class EngineStream)>
 class example {
+public:
   example(Exchange exchange, Engine engine)
-    : exchange(exchange), engine(engine)
+    : exchange(std::move(exchange)), engine(std::move(engine))
   { }
+  
+private:
+  Streamable exchange;
+  Streamable engine;
 };
 
 int main() {
