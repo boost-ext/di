@@ -63,6 +63,7 @@ int main() {
   injector.create<example>();
 }
 ```
+[Run this example on Wandbox](https://wandbox.org/permlink/Dpz6Isld1wxp3p5X).
 
 <p align="center">
 <table>
@@ -126,6 +127,7 @@ int main() {
   injector.create<std::unique_ptr<example>>();
 }
 ```
+[Run this example on Wandbox](https://wandbox.org/permlink/4yBTlH1jvdrsRPes).
 
 <p align="center">
 <table>
@@ -264,8 +266,8 @@ public:
   { }
   
 private:
-  Streamable exchange;
-  Streamable engine;
+  Exchange exchange;
+  Engine engine;
 };
 
 int main() {
@@ -277,6 +279,7 @@ int main() {
   injector.create<example>();
 }
 ```
+[Run this example on Wandbox](https://wandbox.org/permlink/9QZTRsLkPNholmpj).
 
 <p align="center">
 <table>
