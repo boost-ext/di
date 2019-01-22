@@ -103,7 +103,7 @@ retq
 
 ```cpp
 struct interface {
-  virtual ~iworld() noexcept = default;
+  virtual ~interface() noexcept = default;
   virtual int get() const = 0;
 };
 
