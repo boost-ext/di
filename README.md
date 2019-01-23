@@ -174,17 +174,18 @@ retq
 #### Quick guide - Bind templates
 
 ```cpp
-template<class TPolicy = class TErrorPolicy>
-class simple_updater : TPolicy {
-  void update() {
-    TPolicy::on("update");
+template<class ErrorPolicy = class TErrorPolicy>
+class simple_updater {
+public:
+  void update() const {
+    ErrorPolicy::on("update");
   }
 };
 
-template<class T = class TUpdater>
+template<class Updater = class TUpdater>
 class example {
 public:
-  explicit example(const TUpdater& updater)
+  explicit example(const Updater& updater)
     : updater(updater)
   { }
 
@@ -193,23 +194,26 @@ public:
   }
 
 private:
-  const TUpdater& updater;
+  const Updater& updater;
 };
 
 int main() {
   struct throw_policy {
-    void on(std::string_view str) {
+    static void on(const std::string& str) {
       throw std::runtime_error(str);
     }
   };
+
   const auto injector = di::make_injector(
     di::bind<class TErrorPolicy>.to<throw_policy>(),
     di::bind<class TUpdater>.to<simple_updater>()
   );
 
   injector.create<example>().update();
+  // Terminates with an uncaught exception because of our bound error policy
 }
 ```
+[Run this example on Wandbox](https://wandbox.org/permlink/mAzJQD8cTwboIxIx).
 
 <p align="center">
 <table>
