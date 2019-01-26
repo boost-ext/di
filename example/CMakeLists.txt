@@ -37,6 +37,7 @@ example(multiple_interfaces)
 example(pool_provider)
 example(scopes)
 example(try_it)
+example(uml_dumper_2)
 
 example(polymorphism/concepts)
 example(polymorphism/inheritance)
