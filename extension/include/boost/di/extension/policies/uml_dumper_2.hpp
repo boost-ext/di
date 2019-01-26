@@ -15,11 +15,6 @@
 
 #include "boost/di.hpp"
 
-//#define LOG(STREAM) std::cout << "DEBUG " << STREAM << std::endl;
-
-#ifndef LOG
-#  define LOG(STREAM)
-#endif
 BOOST_DI_NAMESPACE_BEGIN
 namespace extension {
 
@@ -43,14 +38,8 @@ struct node_t
   nodes_t childs;
 };
 
-////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////
 
-items_t items;
-
-///////////////////
-
-auto print_tree_impl(const node_ptr_t& root, std::map<std::string, bool>& visited) -> void
+auto print_tree_impl(std::ostream& os, const node_ptr_t& root, std::map<std::string, bool>& visited) -> void
 {
   if(visited.find(root->name) != visited.cend())
   {
@@ -60,22 +49,24 @@ auto print_tree_impl(const node_ptr_t& root, std::map<std::string, bool>& visite
   visited[root->name] = true;
   for(const auto& c : root->childs)
   {
-    std::cout << "\"" << root->name << "\" ..> \"" << c->name << "\"" << std::endl;
+    os << "\"" << root->name << "\" -down-> \"" << c->name << "\"" << std::endl;
   }
 
   for(const auto& c : root->childs)
   {
-    print_tree_impl(c, visited);
+    print_tree_impl(os, c, visited);
   }
 }
 
-auto print_tree(const node_ptr_t& root) -> void
+auto print_tree(std::ostream& os, const node_ptr_t& root) -> void
 {
   std::map<std::string, bool> visited;
-  print_tree_impl(root, visited);
+  os << "@startuml uml_dumper.png" << std::endl;
+  print_tree_impl(os, root, visited);
+  os << "@enduml" << std::endl;
 }
 
-auto tree_find(node_ptr_t root, const std::string& name) -> node_ptr_t
+auto tree_find_element(node_ptr_t root, const std::string& name) -> node_ptr_t
 {
   if(root->name == name)
   {
@@ -83,7 +74,7 @@ auto tree_find(node_ptr_t root, const std::string& name) -> node_ptr_t
   }
   for(auto c : root->childs)
   {
-    auto found = tree_find(c, name);
+    auto found = tree_find_element(c, name);
     if(found != nullptr)
     {
       return found;
@@ -94,20 +85,20 @@ auto tree_find(node_ptr_t root, const std::string& name) -> node_ptr_t
 
 auto make_tree_impl(const items_t& items, int& idx, node_ptr_t root, node_ptr_t node) -> void
 {
-  if(items.empty() || idx >= (int)items.size()) return;
+  if(idx >= (int)items.size())
+  {
+    return;
+  }
 
   node->name = items[idx].name;
   node->max_childs = items[idx].max_childs;
-
-  LOG("make_tree_impl() idx: " << idx << " name: " << node->name)
 
   for(int i = 0; i < node->max_childs; i++)
   {
     idx++;
     auto child_node_name = items[idx].name;
-    auto existing_child = tree_find(root, child_node_name);
+    auto existing_child = tree_find_element(root, child_node_name);
 
-    LOG("make_tree_impl() node->name " << node->name << " child: idx: " << idx << " name: " << child_node_name << "  exists: " << ((existing_child != nullptr) ? "true" : "false"))
     if(existing_child != nullptr )
     {
       node->childs.push_back(existing_child);
@@ -118,10 +109,6 @@ auto make_tree_impl(const items_t& items, int& idx, node_ptr_t root, node_ptr_t 
       node->childs.push_back(child);
       make_tree_impl(items, idx, root, child);
     }
-  }
-  if(node->max_childs == 0)
-  {
-    LOG("make_tree_impl() no childs")
   }
 }
 
@@ -135,20 +122,33 @@ auto make_tree(const items_t& items) -> node_ptr_t
   return root;
 }
 
+struct defaut_traits
+{
+  inline static auto items() -> items_t&
+  {
+     static items_t _items{};
+     return _items;
+  }
 
+  inline static auto ostream() -> std::ostream&
+  {
+     return std::cout;
+  }
+};
 
-
+template<typename Traits>
 class uml_dumper_2 : public config {
  public:
-
   ~uml_dumper_2()
   {
-    auto tree = make_tree(items);
-    print_tree(tree);
+    if(Traits::items().size())
+    {
+      auto tree = make_tree(Traits::items());
+      print_tree(Traits::ostream(), tree);
+    }
   }
 
   static auto policies(...) noexcept {
-
     return make_policies([&](auto type) {
       using T = decltype(type);
       using given = typename T::given;
@@ -156,12 +156,13 @@ class uml_dumper_2 : public config {
       item_t item;
       item.name = std::string{typeid(given).name()};
       item.max_childs = T::arity::value;
-
-      //LOG("make_policies() name " << item.name << " childs " << item.max_childs)
-      items.push_back(item);
+      Traits::items().push_back(item);
     });
   }
 };
+
+using uml_dumper = uml_dumper_2<defaut_traits>;
+
 
 }  // namespace extension
 BOOST_DI_NAMESPACE_END

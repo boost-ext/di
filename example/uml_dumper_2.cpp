@@ -24,10 +24,10 @@ struct c{ c(g&, h&, i&){} };
 struct b{ b(e&, f&, g&){} };
 struct a{ a(b&, l&, c&, d&){} };
 
-auto get_injector()
+auto& get_injector()
 {
   // clang-format off
-  return di::make_injector<di::extension::uml_dumper_2>(
+  static auto ject{di::make_injector<di::extension::uml_dumper>(
          di::bind<n>().in(di::extension::shared)
        , di::bind<m>().in(di::extension::shared)
        , di::bind<l>().in(di::extension::shared)
@@ -42,8 +42,9 @@ auto get_injector()
        , di::bind<c>().in(di::extension::shared)
        , di::bind<b>().in(di::extension::shared)
        , di::bind<a>().in(di::extension::shared)
-      );
+      )};
       // clang-format off
+  return ject;
 }
 
 } //namespace complex
@@ -56,10 +57,11 @@ struct c{};
 struct b{};
 struct a{ a(b&, c&){} };
 
-auto get_injector()
+auto& get_injector()
 {
+
   // clang-format off
-  return di::make_injector<di::extension::uml_dumper_2>(
+  static auto ject = di::make_injector<di::extension::uml_dumper>(
          di::bind<e>().in(di::extension::shared)
        , di::bind<d>().in(di::extension::shared)
        , di::bind<c>().in(di::extension::shared)
@@ -67,6 +69,7 @@ auto get_injector()
        , di::bind<a>().in(di::extension::shared)
       );
       // clang-format off
+  return ject;
 }
 
 } //namespace complex
@@ -75,7 +78,7 @@ int main() {
   //using namespace simple;
   using namespace complex;
 
-  const auto injector = get_injector();
+  const auto& injector{get_injector()};
 
   //std::cout << "@startuml uml_dumper.png" << std::endl;
 
