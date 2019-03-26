@@ -1135,8 +1135,8 @@ injector.create&lt;double&gt;(); // COMPILE TIME ERROR, double is not exposed by
 <p>When exposing all types using <code>auto</code> modules have to be implemented in a header file.
 With <code>di::injector&lt;T...&gt;</code> a definition might be put in a cpp file as it’s just a regular type.</p>
 <p>Such approach has a few benefits:
-<em> It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
-</em> May also speed compilation times in case of extend usage of cpp files</p>
+* It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
+* May also speed compilation times in case of extend usage of cpp files</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 There is no performance (compile-time, run-time) overhead between exposing all types or just a specific ones.
 </span></p>
@@ -1252,8 +1252,8 @@ int main() {
 <a href="../images/uml_dumper.png"><img alt="UML Dumper" src="../images/uml_dumper.png" /></a></li>
 </ul>
 <p>See also.  <br /><br />
-<em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp"> Custom Policy Example</a>
-</em> <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp"> Types Dumper Extension</a></p>
+* <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp"> Custom Policy Example</a>
+* <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp"> Types Dumper Extension</a></p>
 <p><br /></p>
 <p>On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
 smart pointers and disallow raw pointers too. We may want to have a <code>view</code> only with const parameters being passed, etc.

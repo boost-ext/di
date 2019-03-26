@@ -948,8 +948,8 @@ injector.create&lt;double&gt;(); // COMPILE TIME ERROR, double is not exposed by
 <p>When exposing all types using <code>auto</code> modules have to be implemented in a header file.
 With <code>di::injector&lt;T...&gt;</code> a definition might be put in a cpp file as it’s just a regular type.</p>
 <p>Such approach has a few benefits:
-<em> It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
-</em> May also speed compilation times in case of extend usage of cpp files</p>
+* It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
+* May also speed compilation times in case of extend usage of cpp files</p>
 <p><span class="fa fa-eye wy-text-neutral warning"> <strong>Note</strong><br/><br/>
 There is no performance (compile-time, run-time) overhead between exposing all types or just a specific ones.
 </span></p>
