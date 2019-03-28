@@ -43,7 +43,9 @@ BOOST_DI_CFG_FWD
   {}
 #elif defined(_MSC_VER)
 #define __MSVC__
+#if !defined(_MSVC_LANG) || (_MSVC_LANG < 201703L)
 #define __has_include(...) 0
+#endif
 #define __BOOST_DI_UNUSED
 #define __BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))
 #define __BOOST_DI_TYPE_WKND(T) (T &&)

@@ -28,7 +28,9 @@
   {}
 #elif defined(_MSC_VER)  // msvc
 #define __MSVC__
+#if !defined(_MSVC_LANG) || (_MSVC_LANG < 201703L)
 #define __has_include(...) 0
+#endif
 #define __BOOST_DI_UNUSED
 #define __BOOST_DI_DEPRECATED(...) __declspec(deprecated(__VA_ARGS__))  // error C2059: syntax error: '<L_ATTRIBUTE_SPECIFIER>'
 #define __BOOST_DI_TYPE_WKND(T) (T &&)
