@@ -7,7 +7,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(Boost.DI CXX)
 set(CXX_STANDARD "c++14")
-enable_testing()
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
