@@ -8,7 +8,13 @@ cmake_minimum_required(VERSION 2.8)
 project(Boost.DI CXX)
 set(CXX_STANDARD "c++14")
 enable_testing()
-include_directories(include)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(
+        ${PROJECT_NAME} INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/extension/include
+)
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror")

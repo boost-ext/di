@@ -6,8 +6,11 @@
 #
 function(test test)
     string(REPLACE "/" "_" tmp ${test})
-    add_executable(test.${tmp} ${CMAKE_CURRENT_LIST_DIR}/${test}.cpp)
-    add_test(test.${tmp} test.${tmp})
+    set(TEST_NAME test.${tmp})
+    add_executable(${TEST_NAME} ${CMAKE_CURRENT_LIST_DIR}/${test}.cpp)
+    target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+    target_link_libraries(${TEST_NAME} PRIVATE Boost.DI)
+    add_test(${TEST_NAME} ${TEST_NAME})
 endfunction()
 
 test(bindings/constructor_bindings)

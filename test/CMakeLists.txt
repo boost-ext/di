@@ -4,12 +4,14 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-include_directories(${CMAKE_CURRENT_LIST_DIR})
 
 function(test test)
     string(REPLACE "/" "_" tmp ${test})
-    add_executable(test.${tmp} ${CMAKE_CURRENT_LIST_DIR}/${test}.cpp)
-    add_test(test.${tmp} test.${tmp})
+    set(TEST_NAME test.${tmp})
+    add_executable(${TEST_NAME} ${CMAKE_CURRENT_LIST_DIR}/${test}.cpp)
+    target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+    target_link_libraries(${TEST_NAME} PRIVATE Boost.DI)
+    add_test(${TEST_NAME} ${TEST_NAME})
 endfunction()
 
 if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
