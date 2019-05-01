@@ -132,6 +132,10 @@
     
 
     
+        <dt><span class="section"><a href="#function">Function</a></span></dt>
+    
+
+    
         <dt><span class="section"><a href="#variant">Variant</a></span></dt>
     
 
@@ -176,6 +180,7 @@
 <li><a href="#polymorphism">Polymorphism</a><ul>
 <li><a href="#inheritance">Inheritance</a></li>
 <li><a href="#type-erasure">Type-Erasure</a></li>
+<li><a href="#function">Function</a></li>
 <li><a href="#variant">Variant</a></li>
 <li><a href="#templates">Templates</a></li>
 <li><a href="#concepts">Concepts</a></li>
@@ -1362,6 +1367,49 @@ int main() {
 
 <ul>
 <li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp</a></li>
+</ul>
+<h3 id="function">Function</h3>
+<pre><code class="cpp">#include &lt;cassert&gt;
+#include &lt;functional&gt;
+#include &lt;memory&gt;
+#include &lt;sstream&gt;
+#include &lt;type_traits&gt;
+
+#include &quot;example/polymorphism/common/config.hpp&quot;
+
+/*&lt;&lt;function&gt;&gt;*/
+class Drawable : public std::function&lt;void(std::ostream&amp;)&gt; {
+ public:
+  using std::function&lt;void(std::ostream&amp;)&gt;::function;
+};
+
+class App {
+ public:
+  explicit App(const Drawable drawable) : drawable{drawable} {}
+  void draw(std::ostream&amp; out) const { drawable(out); }
+
+ private:
+  const Drawable drawable;
+};
+
+struct Square {
+  void operator()(std::ostream&amp; out) const { out &lt;&lt; &quot;Square&quot;; }
+};
+
+struct Circle {
+  void operator()(std::ostream&amp; out) const { out &lt;&lt; &quot;Circle&quot;; }
+};
+
+int main() {
+  std::stringstream str{};
+  auto example = config().create&lt;App&gt;();
+  example.draw(str);
+  assert(&quot;Square&quot; == str.str());
+}
+</code></pre>
+
+<ul>
+<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/function.cpp">https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/function.cpp</a></li>
 </ul>
 <h3 id="variant">Variant</h3>
 <pre><code class="cpp">#if defined(__cpp_lib_variant)
