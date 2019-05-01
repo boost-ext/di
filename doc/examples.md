@@ -24,6 +24,7 @@
 * [Polymorphism](#polymorphism)
     * [Inheritance](#inheritance)
     * [Type-Erasure](#type-erasure)
+    * [Function](#function)
     * [Variant](#variant)
     * [Templates](#templates)
     * [Concepts](#concepts)
@@ -108,6 +109,9 @@
 
 ###Type Erasure
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp)
+
+###Function
+![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/function.cpp)
 
 ###Variant
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/variant.cpp)
