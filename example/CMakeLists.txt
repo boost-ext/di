@@ -41,6 +41,7 @@ example(scopes)
 example(try_it)
 
 example(polymorphism/concepts)
+example(polymorphism/function)
 example(polymorphism/inheritance)
 example(polymorphism/templates)
 example(polymorphism/type_erasure)
