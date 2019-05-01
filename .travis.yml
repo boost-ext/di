@@ -104,10 +104,6 @@ matrix:
     addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
-    osx_image: xcode7.3
-    env: BS=cmake CXX=clang++
-
-  - os: osx
     osx_image: xcode8.3
     env: BS=cmake CXX=clang++
 
