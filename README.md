@@ -402,6 +402,7 @@ retq
     * [Polymorphism](http://boost-experimental.github.io/di/examples/index.html#polymorphism)
     * [Inheritance](http://boost-experimental.github.io/di/examples/index.html#inheritance)
     * [Type Erasure](http://boost-experimental.github.io/di/examples/index.html#type-erasure)
+    * [Function](http://boost-experimental.github.io/di/examples/index.html#function)
     * [Variant](http://boost-experimental.github.io/di/examples/index.html#variant)
     * [Templates](http://boost-experimental.github.io/di/examples/index.html#templates)
     * [Concepts](http://boost-experimental.github.io/di/examples/index.html#concepts)
