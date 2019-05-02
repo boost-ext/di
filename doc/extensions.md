@@ -21,64 +21,64 @@
 
 ---
 
-###Injector
+### Injector
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injector.cpp)
 
-###Constructor Bindings
+### Constructor Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
 
-###Contextual Bindings
+### Contextual Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/contextual_bindings.cpp)
 
-###Assisted Injection
+### Assisted Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/assisted_injection.cpp)
 
-###Extensible Injector
+### Extensible Injector
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/extensible_injector.cpp)
 
-###Concepts
+### Concepts
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/concepts.cpp)
 
-###Factory
+### Factory
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/factory.cpp)
 
-###Shared Factory
+### Shared Factory
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/shared_factory.cpp)
 
-###Lazy
+### Lazy
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/lazy.cpp)
 
-###Named Parameters
+### Named Parameters
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/named_parameters.cpp)
 
-###XML Injection
+### XML Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/xml_injection.cpp)
 
-###Serialize
+### Serialize
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/serialize.cpp)
 
-###Types Dumper
+### Types Dumper
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp)
 
-###UML Dumper
+### UML Dumper
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 [![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
 
-###Heap Provider
+### Heap Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/heap.cpp)
 
-###Mocks Provider
+### Mocks Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp)
 
-###Runtime Provider
+### Runtime Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/runtime_provider.cpp)
 
-###Scoped Scope
+### Scoped Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp)
 
-###Session Scope
+### Session Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp)
 
-###Shared Scope
+### Shared Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp)

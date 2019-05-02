@@ -19,7 +19,7 @@ Introduction
 <a href="../releases" class="btn btn-success" style="margin-bottom:8px;" role="button"><span class="fa fa-download"></span>&nbsp; <b>Download</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="CHANGELOG/index.html" class="btn btn-info" style="margin-bottom:8px;" role="button"><span class="fa fa-reorder"></span>&nbsp; <b>Changelog</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="tutorial/index.html" class="btn btn-warning" style="margin-bottom:8px;" role="button"><span class="fa fa-gear"></span>&nbsp; <b>Tutorial</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="examples/index.html" class="btn btn-danger" style="margin-bottom:8px;" role="button"><span class="fa fa-book"></span>&nbsp; <b>Examples</b></a>
 </div>
 
-#What is Dependency Injection?
+# What is Dependency Injection?
 > "Don't call us, we'll call you", Hollywood principle
 
 **[Dependency Injection](http://www.youtube.com/watch?v=IKD2-MAkXyQ) (DI)** involves passing (injecting) one or more dependencies (or services) to a dependent object (or client) which become part of the client’s state.
@@ -56,7 +56,7 @@ In short, DI is all about construction!
                                                               | };
 ```
 
-###Do I use a Dependency Injection already?
+### Do I use a Dependency Injection already?
 
 * If you are using constructors in your code then you are probably using some form of Dependency Injection too!
 
@@ -67,7 +67,7 @@ class Button {
 };
 ```
 
-###Do I use Dependency Injection correctly?
+### Do I use Dependency Injection correctly?
 
 Common mistakes when using Dependency Injection are:
 
@@ -170,13 +170,13 @@ class Board {
 };
 ```
 
-###Do I need a Dependency Injection?
+### Do I need a Dependency Injection?
 
 * DI provides loosely coupled code (separation of business logic and object creation)
 * DI provides easier to maintain code (different objects might be easily injected)
 * DI provides easier to test code (fakes objects might be injected)
 
-####STUPID vs SOLID - "Clean Code" Uncle Bob
+#### STUPID vs SOLID - "Clean Code" Uncle Bob
 
 <table>
   <tr><td><b>S</b></td><td>Singleton</td></tr>
@@ -197,7 +197,7 @@ class Board {
   <tr><td><b>D</b></td><td><b>Dependency inversion</b></td></tr>
 </table>
 
-###Do I need a DI Framework/Library?
+### Do I need a DI Framework/Library?
 
 Depending on a project and its scale you may put up with or without a DI library, however, in any project
 a DI framework may **free you** from maintaining a following (boilerplate) code...
@@ -214,7 +214,7 @@ app app_{controller_, user_};
 Notice that **ORDER** in which above dependencies are created is **IMPORTANT** as well as that
 **ANY** change in **ANY** of the objects constructor will **REQUIRE** a change in this code!
 
-####Manual DI - Wiring Mess (Avoid it by using [Boost].DI)
+#### Manual DI - Wiring Mess (Avoid it by using [Boost].DI)
 
 ```
 * Single Responsibility Principle
@@ -252,7 +252,7 @@ but also can help you with...
 * Understand code dependencies (See [UML Dumper](extensions.md#uml-dumper))
 * Restrict what types and how they should be created (See [Constructible Policy](user_guide.md#di_constructible))
 
-###Real Life examples?
+### Real Life examples?
 
 * [Match-3 Game](https://github.com/modern-cpp-examples/match3)
     * Simple web game in C++14 using SDL2 / Model View Controller / Meta State Machine / Dependency Injection / Range-V3 / Emscripten
@@ -268,7 +268,7 @@ but also can help you with...
 * [Experimental Boost.SML](http://boost-experimental.github.io/sml)
     * C++14 header only Meta State Machine library with no dependencies
 
-###Why [Boost].DI?
+### Why [Boost].DI?
 
 * [Boost].DI has none run-time overhead (See [Performance](overview.md#performance))
 * [Boost].DI compiles fast / **Faster than Java-[Dagger2]!** (See [Benchmarks](overview.md#benchmarks))
@@ -287,7 +287,7 @@ but also can help you with...
 
 <br /><br />
 
-###[Boost].DI design goals
+### [Boost].DI design goals
 
 * Be as fast as possible (See [Performance](overview.md#performance))
 * Compile as fast as possible (See [Benchmarks](overview.md#benchmarks))
@@ -296,13 +296,13 @@ but also can help you with...
 * Be as non-intrusive as possible (See [Injections](user_guide.md#injections))
 * Be easy to extend (See [Extensions](extensions.md))
 
-###Articles
+### Articles
 
 * [Inversion of Control Containers and the Dependency Injection pattern](http://martinfowler.com/articles/injection.html)
 * [DIP in the Wild](http://martinfowler.com/articles/dipInTheWild.html)
 * [Concepts driven design with Dependency Injection](http://boost-experimental.github.io/di/concepts-driven-design-with-di)
 
-###Videos
+### Videos
 
 * [Dependency Injection](https://www.youtube.com/watch?v=IKD2-MAkXyQ)
 * [The Clean Code Talks - Don't Look For Things!](https://www.youtube.com/watch?v=RlfLCWKxHJ0)
@@ -314,7 +314,7 @@ but also can help you with...
 * [The Future of Dependency Injection with Dagger 2](https://www.youtube.com/watch?v=plK0zyRLIP8)
 * [Design Patterns in C++: Creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
 
-###Acknowledgements
+### Acknowledgements
 
 * Thanks to **Bartosz Kalinczuk** for code review and tips how to improve `[Boost].DI`
 * Thanks to **Kanstantsin Chernik** for all his contributions to `[Boost].DI`

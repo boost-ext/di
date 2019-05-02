@@ -1,4 +1,4 @@
-##Performance
+## Performance
 
 * **Run-time performance**
     * Environment
@@ -50,7 +50,7 @@ Legend:
 * 10 modules
 ```
 
-##C++ Libraries
+## C++ Libraries
 
 | **Library** | [Boost].DI ([See Performance](overview.md#performance)) | [dicpp] | [Google.Fruit] |
 | ----------- | -------- | ----- | ------------ |
@@ -68,7 +68,7 @@ cd benchmark && make
 ```
 ---
 
-##C++ vs Java vs C# Libraries
+## C++ vs Java vs C# Libraries
 
 | **Library** | [Boost].DI | [Google.Guice] | [Dagger2] | [Ninject] |
 | ----------  | -------- | ------------ | ------- | ------- |
@@ -117,7 +117,7 @@ cd benchmark && make
 ```
 ---
 
-##Usage of C++ vs Java vs C# Libraries
+## Usage of C++ vs Java vs C# Libraries
 
 | Library | Bind Interface | Performance |
 | ------- | -------------- | ----------- |

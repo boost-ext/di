@@ -1,4 +1,4 @@
-###Quick Start
+### Quick Start
 
 * Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp) header
 ```sh
@@ -25,17 +25,17 @@ $CXX -std=c++14 ...
 git clone https://github.com/boost-experimental/di && cd di && make
 ```
 
-###Dependencies
+### Dependencies
 
 * No external dependencies are required (neither STL nor Boost)
 
-###Supported/Tested compilers
+### Supported/Tested compilers
 
 * [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
 * [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
 * [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
-###Configuration
+### Configuration
 | Macro                             | Description |
 | --------------------------------- | ----------- |
 | `BOOST_DI_VERSION`                | Current version of [Boost].DI (ex. 1'0'0) |
@@ -45,20 +45,20 @@ git clone https://github.com/boost-experimental/di && cd di && make
 | `BOOST_DI_NAMESPACE_BEGIN`        | `namespace boost { namespace di { inline namespace v_1_0_0 {` |
 | `BOOST_DI_NAMESPACE_END`          | `}}}` |
 
-###Exception Safety
+### Exception Safety
 
 * [Boost].DI is not using exceptions internally and therefore might be compiled with `-fno-exceptions`.
 * Check [User Guide](user_guide.md) to verify which API's are marked `noexcept`.
 
-###Thread Safety
+### Thread Safety
 
 * [Boost].DI is thread safe.
 
-###Error Messages
+### Error Messages
 
 * [Boost].DI is designed to give great diagnostic errors. The examples below will show you the actual error messages for different scenarios. Check [`Concepts`](user_guide.md#concepts) to check it out.
 
-###Performance
+### Performance
 
 * [Boost].DI has none run-time overhead and compiles faster than Java's DI frameworks. Check [`Benchmarks`](benchmarks.md) to see more.
 

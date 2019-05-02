@@ -31,93 +31,93 @@
 
 ---
 
-###Hello World
+### Hello World
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/try_it.cpp)
 
-###Bindings
+### Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
 
-###Dynamic Bindings
+### Dynamic Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
 
-###Forward Bindings
+### Forward Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp)
 
-###Is Creatable
+### Is Creatable
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/is_creatable.cpp)
 
-###Multiple Bindings
+### Multiple Bindings
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)
 
-###Binding Non-owning Pointer
+### Binding Non-owning Pointer
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_non_owning_ptr.cpp)
 
-###Binding Templates
+### Binding Templates
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_templates.cpp)
 
-###Binding To Constructor
+### Binding To Constructor
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bind_to_constructor.cpp)
 
-###Automatic Injection
+### Automatic Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)
 
-###Constructor Signature
+### Constructor Signature
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
 
-###Constructor Injection
+### Constructor Injection
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
 
-###Multiple Interface
+### Multiple Interface
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_interfaces.cpp)
 
-###Annotations
+### Annotations
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp)
 
-###Deduce Scope
+### Deduce Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp)
 
-###Custom Scope
+### Custom Scope
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp)
 
-###Eager Singletons
+### Eager Singletons
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp)
 
-###Modules
+### Modules
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
 
-###Modules (hpp/cpp)
+### Modules (hpp/cpp)
 
 * See [https://github.com/boost-experimental/di/tree/cpp14/example/modules](https://github.com/boost-experimental/di/tree/cpp14/example/modules)
 
-###Custom Policy
+### Custom Policy
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
 
-###Custom Provider
+### Custom Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
 
-###Pool Provider
+### Pool Provider
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
 
-###Configuration
+### Configuration
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
 
-###Polymorphism
+### Polymorphism
 * See [https://github.com/boost-experimental/di/tree/cpp14/example/polymorphism](https://github.com/boost-experimental/di/tree/cpp14/example/polymorphism)
 
-###Inheritance
+### Inheritance
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/inheritance.cpp)
 
-###Type Erasure
+### Type Erasure
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/type_erasure.cpp)
 
-###Function
+### Function
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/function.cpp)
 
-###Variant
+### Variant
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/variant.cpp)
 
-###Templates
+### Templates
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/templates.cpp)
 
-###Concepts
+### Concepts
 ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/polymorphism/concepts.cpp)
