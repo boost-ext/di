@@ -62,7 +62,7 @@ struct impl2 : i2 { void dummy2() override { } };
 struct impl : i1, i2 { void dummy1() override { } void dummy2() override { } };
 ```
 
-###Injector
+### Injector
 
 <a id="di_make_injector"></a>
 
@@ -215,7 +215,7 @@ conversion constructors `template<class I> T(I)` are not supported and have to b
 
 ---
 
-###Bindings
+### Bindings
 
 Bindings define dependencies configuration describing what types will be created
 and what values will be passed into them.
@@ -307,7 +307,7 @@ Check out also [instance] scope to read more about binding to values: `di::bind<
 
 <br /><br /><br /><hr />
 
-###Injections
+### Injections
 
 *Constructor Injection* is the most powerful of available injections.
 It guarantees initialized state of data members. [Boost].DI constructor injection is achieved without any additional work from the user.
@@ -500,7 +500,7 @@ It's useful for third party classes you don't have access to and which can't be 
 
 <br /><hr />
 
-###Annotations
+### Annotations
 
 Annotations are type properties specified in order to refer to a type by the name instead of the type it self.
 They are useful when constructor has more than one parameter of the same type.
@@ -561,7 +561,7 @@ Implementation of constructor doesn't require annotations, only constructor defi
 
 <br /><hr />
 
-###Scopes
+### Scopes
 
 ***Header***
 
@@ -865,7 +865,7 @@ Scope representing unique/per request value. A new instance will be provided eac
 
 <br /><hr />
 
-###Modules
+### Modules
 
 <a id="di_module"></a>
 
@@ -928,7 +928,7 @@ BOOST_DI_EXPOSE is a macro definition allowing to expose [named] parameters via 
 <br /><hr />
 
 
-###Providers
+### Providers
 
 ***Header***
 
@@ -1085,7 +1085,7 @@ Basic provider creates objects on the heap (always).
 
 <br /><br /><br /><hr />
 
-###Policies
+### Policies
 
 ***Header***
 
@@ -1219,7 +1219,7 @@ For example, `std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || 
 
 <br /><br /><br /><hr />
 
-###Concepts
+### Concepts
 
 Concepts are types constraints which ensure that only given types which are satisfied by the constraint will be allowed.
 If type doesn't satisfy the concept short and descriptive error message is provided.
@@ -1506,7 +1506,7 @@ Suggestions are not supported/displayed by MSVC-2015.
 
 ---
 
-###Configuration
+### Configuration
 
 <a id="di_config"></a>
 --- ***di::config*** ---
