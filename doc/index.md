@@ -304,12 +304,17 @@ but also can help you with...
 
 ### Videos
 
-* [Dependency Injection](https://www.youtube.com/watch?v=IKD2-MAkXyQ)
-* [The Clean Code Talks - Don't Look For Things!](https://www.youtube.com/watch?v=RlfLCWKxHJ0)
+#### [Boost].DI
+
 * [CppCon 2018: \[Boost\].DI - Inject all the things!](https://www.youtube.com/watch?v=8HmjM3G8jhQ)
 * [C++Now 2016: C++14 Dependency Injection Library](https://www.youtube.com/watch?v=comZthFv3PM) | [Slides](http://boost-experimental.github.io/di/cppnow-2016)
 * [Meeting C++ 2016: TDD/BDD and Dependency Injection](https://www.youtube.com/watch?v=T3uMcxhzRUE) | [Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
 * [Boost your design with C++14 dependency injection](https://skillsmatter.com/skillscasts/9830-boost-your-design-with-c-plus-plus14-dependency-injection) | [Slides](http://boost-experimental.github.io/di/cpp-london-2017)
+
+#### Dependency Injection In General
+
+* [Dependency Injection](https://www.youtube.com/watch?v=IKD2-MAkXyQ)
+* [The Clean Code Talks - Don't Look For Things!](https://www.youtube.com/watch?v=RlfLCWKxHJ0)
 * [A New Type of dependency injection](http://www.youtube.com/watch?v=oK_XtfXPkqw)
 * [The Future of Dependency Injection with Dagger 2](https://www.youtube.com/watch?v=plK0zyRLIP8)
 * [Design Patterns in C++: Creational](https://www.pluralsight.com/courses/design-patterns-cpp-creational)
