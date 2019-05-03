@@ -201,9 +201,9 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
-  const auto before = attendies_ask();
+  const auto before = attendees_ask();
   speaker_talk("Kris", "Dependency Injection");
-  const auto after = attendies_ask();
+  const auto after = attendees_ask();
   return after - before;
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -281,9 +281,9 @@ class cppnow_talk {
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-    const auto before = attendies_ask();
+    const auto before = attendees_ask();
     speaker_talk("Kris", "Dependency Injection");
-    const auto after = attendies_ask();
+    const auto after = attendees_ask();
     return after - before;
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
@@ -333,7 +333,7 @@ class cppnow_talk {
  public:
   auto run() {
     auto speaker = make_speaker();                                // 👎
-    auto attendies = make_attendies();
+    auto attendees = make_attendies();
   }
 };
 ```
@@ -382,7 +382,7 @@ class speaker {
 /**
  * Responsibility: Participate
  */
-class attendies {
+class attendees {
   std::vector names = {"Lenny", "Shea", ...};
 
  public:
@@ -575,7 +575,7 @@ int main() {
 
 ----
 
-### 👍 Consider seperating object creation from business logic
+### 👍 Consider separating object creation from business logic
 
 ----
 
@@ -718,7 +718,7 @@ class cppnow_talk {
 
 ----
 
-### 👍 Consider passing initialized objects instead of parameters to initilize them
+### 👍 Consider passing initialized objects instead of parameters to initialize them
 
 ```cpp
 explicit cppnow_talk(string_view name) : speaker{name} {};     // 👎
@@ -1047,7 +1047,7 @@ int main() {
 
 ----
 
-### 👍 Consider not using inheritance for dynamic polymorhpism
+### 👍 Consider not using inheritance for dynamic polymorphism
 
 ----
 
@@ -1110,7 +1110,7 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-  std::function ask  = attendies_ask;
+  std::function ask  = attendees_ask;
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
@@ -1392,7 +1392,7 @@ int main() {
 
 * #### Flexible?
 <!-- .element: class="fragment" -->
-  * ##### Yes: Loosley coupled
+  * ##### Yes: Loosely coupled
 <!-- .element: class="fragment" -->
 * #### Scalable?
 <!-- .element: class="fragment" -->
@@ -1433,7 +1433,7 @@ int main() {
 int main() {
   auto speaker = std::make_unique<regular_speaker>(
       first_name{"Kris"}, last_name{"Jusiak"});             // Wiring
-  auto attendees = std::make_shraed<awesome_attendees>(
+  auto attendees = std::make_shared<awesome_attendees>(
     "Lenny", "Shea", ...);                                  // Wiring
   auto track = cppnow_talk(std::move(speaker), attendees);  // Wiring
 }
@@ -1443,7 +1443,7 @@ int main() {
 ```cpp
 int main() {
   std::function talk = bind(speaker_talk, "Kris, "Jusiak"); // Wiring
-  std::function ask  = attendies_ask;                       // Wiring
+  std::function ask  = attendees_ask;                       // Wiring
   auto track = bind(cppnow_talk, talk, ask);                // Wiring
 }
 ```
@@ -1560,10 +1560,10 @@ int main() {
 
 ### Approaches
 
-* #### compile-time (compilte time error)
+* #### compile-time (compile time error)
 <!-- .element: class="fragment" -->
 
-* #### runtime/compile-time (sometimes compile time error/sometiemes exception)
+* #### runtime/compile-time (sometimes compile time error/sometimes exception)
 <!-- .element: class="fragment" -->
 
 * #### runtime (exception)
@@ -1595,7 +1595,7 @@ int main() {
 <!-- .element: class="fragment" -->
 * #### std: C++11
 <!-- .element: class="fragment" -->
-* #### Suported Approaches: Run-time
+* #### Supported Approaches: Run-time
 <!-- .element: class="fragment" -->
 
 ---
@@ -1614,7 +1614,7 @@ int main() {
 <!-- .element: class="fragment" -->
 * #### std: C++11
 <!-- .element: class="fragment" -->
-* #### Suported Approaches: Semi compile-time
+* #### Supported Approaches: Semi compile-time
 <!-- .element: class="fragment" -->
 
 ---
@@ -1633,7 +1633,7 @@ int main() {
 <!-- .element: class="fragment" -->
 * #### std: C++14
 <!-- .element: class="fragment" -->
-* #### Suported Approaches: Compile-time/Run-time
+* #### Supported Approaches: Compile-time/Run-time
 <!-- .element: class="fragment" -->
 
 ---
@@ -2022,7 +2022,7 @@ class cppnow_talk {
 
 ----
 
-### 👍 Consider avoidng global injector/containers
+### 👍 Consider avoiding global injector/containers
 
 ```cpp
 speaker_{container::instance().resolve<ispeaker>()} // 👎
