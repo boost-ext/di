@@ -306,7 +306,7 @@ but also can help you with...
 
 #### [Boost].DI
 
-* [CppCon 2018: \[Boost\].DI - Inject all the things!](https://www.youtube.com/watch?v=8HmjM3G8jhQ)
+* [CppCon 2018: \[Boost\].DI - Inject all the things!](https://www.youtube.com/watch?v=8HmjM3G8jhQ) | [Slides](https://boost-experimental.github.io/di/cppcon-2018)
 * [C++Now 2016: C++14 Dependency Injection Library](https://www.youtube.com/watch?v=comZthFv3PM) | [Slides](http://boost-experimental.github.io/di/cppnow-2016)
 * [Meeting C++ 2016: TDD/BDD and Dependency Injection](https://www.youtube.com/watch?v=T3uMcxhzRUE) | [Slides](http://boost-experimental.github.io/di/meetingcpp-2016)
 * [Boost your design with C++14 dependency injection](https://skillsmatter.com/skillscasts/9830-boost-your-design-with-c-plus-plus14-dependency-injection) | [Slides](http://boost-experimental.github.io/di/cpp-london-2017)
