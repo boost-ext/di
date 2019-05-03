@@ -47,10 +47,17 @@ struct pair {
   long end{};
 };
 
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wpedantic"
+#endif
 template <class T, T... Chars>
 constexpr auto operator""_s() {
   return aux::integral_constant<long, const_hash(chars<Chars...>{}, sizeof...(Chars) + 1)>{};
 }
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 
 long constexpr const_hash(char const* input, long m = 0, long i = 0) {
   return *input && i < m ? static_cast<long>(*input) + 33 * const_hash(input + 1, m, i + 1) : 5381;

@@ -56,10 +56,17 @@ annotations2::annotations2(int i1, int i2, int i3) {
 template <char...>
 struct string {};
 
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wpedantic"
+#endif
 template <class T, T... Chars>
 constexpr auto operator""_s() {
   return string<Chars...>{};
 }
+#if (__GNUC__ >= 9)
+#pragma GCC diagnostic pop
+#endif
 #endif
 //->
 
