@@ -62,27 +62,27 @@ Kris Jusiak, Quantlab Financial
 
 ### Scenario: Number of attendees willing to use DI should increase
 
-```
+```ghkerin
  Given There is a talk about DI at CppNow-2019 (✓)
 ```
 <!-- .element: class="fragment" -->
 
-```
+```ghkerin
    And The number of attendees is greater than zero (✓)
 ```
 <!-- .element: class="fragment" -->
 
-```
+```ghkerin
    And There are attendees not using DI (✓)
 ```
 <!-- .element: class="fragment" -->
 
-```
+```ghkerin
   When The talk has been given by a speaker (✓)
 ```
 <!-- .element: class="fragment" -->
 
-```
+```ghkerin
   Then The number of attendees willing to use DI should increase (?)
 ```
 <!-- .element: class="fragment" -->
@@ -115,7 +115,7 @@ Kris Jusiak, Quantlab Financial
 
 ---
 
-##### `darkblue background - something to remember`
+##### <p style="background-color:darkblue">`darkblue background - something to remember ✓`</p>
 <!-- .element: class="fragment" -->
 
 ==============================================================================
@@ -177,11 +177,6 @@ Kris Jusiak, Quantlab Financial
 
  </tr>
 </table>
-
-----
-
-### 👍 Consider following SOLID principles
-### SOLID >> 'STUPID'
 <!-- .element: class="fragment" -->
 
 ==============================================================================
@@ -353,7 +348,7 @@ int main() {
 
 ----
 
-### Single Responsibility Principle
+### Single Responsibility Principle (SRP)
 
 <img style="background:none; border:none; box-shadow:none;" src="images/single_responsibility_principle.jpg" width="50%" />
 <!-- .element: class="fragment" -->
@@ -363,7 +358,7 @@ int main() {
 
 ----
 
-### Single Responsibility Principle
+### Single Responsibility Principle (SRP)
 
 ```cpp
 /**
@@ -393,7 +388,7 @@ class attendees {
 
 ----
 
-### Single Responsibility Principle
+### Single Responsibility Principle (SRP)
 
 ```cpp
 class cppnow_talk {
@@ -424,13 +419,13 @@ class cppnow_talk {
 
 ----
 
-### 👍 Consider classes to have only one reason to change (Single Responsibility Principle)
+### 👍 Consider classes to have only one reason to change (SRP)
 
 ----
 
 ### Dependency Injection (DI) ?
 
-<img src="images/scared.jpeg" style="width: 40%; background:none; border:none; box-shadow:none;" />
+<img src="images/scared.jpeg" style="width: 60%; background:none; border:none; box-shadow:none;" />
 <!-- .element: class="fragment" -->
 
 ----
@@ -461,7 +456,7 @@ class cppnow_talk {
 
 ----
 
-### 👍 Whether DI it's being done right depends on what and how will be passed into them
+### 👍 Whether DI is done right depends on what and how will be passed into constructors
 
 ----
 
@@ -496,6 +491,24 @@ class cppnow_talk {
 
 ----
 
+### Tight coupling - No DI
+
+* #### Flexible?
+<!-- .element: class="fragment" -->
+  * ##### No: Tightly coupled
+<!-- .element: class="fragment" -->
+* #### Scalable?
+<!-- .element: class="fragment" -->
+  * ##### Not really: Not DRY (Don't Repeat Yourself, Although SRP)
+<!-- .element: class="fragment" -->
+* #### Testable?
+<!-- .element: class="fragment" -->
+  * ##### Not really: Hard to fake
+<!-- .element: class="fragment" -->
+
+
+----
+
 ### Less coupling - DI
 
 ```cpp
@@ -525,7 +538,7 @@ class cppnow_talk {
 
 ----
 
-### Constructor Dependency Injection
+### Constructor DI
 ```cpp
 class speaker {
   std::string name_{};
@@ -549,7 +562,7 @@ class speaker {
 
 ----
 
-### Constructor Dependency Injection
+### Constructor DI - Wiring
 
 ```cpp
 int main() {
@@ -575,11 +588,19 @@ int main() {
 
 ----
 
-### 👍 Consider separating object creation from business logic
+### Wiring
+
+### 👍 Separates the creation logic from the business logic
+<!-- .element: class="fragment" -->
+
+> No raw `new/make_unique/etc...` except in the wiring/composition root
+<!-- .element: class="fragment" -->
+
+<!-- .slide: data-background="darkblue" -->
 
 ----
 
-### Constructor Dependency Injection - benefits
+### Constructor DI - immediate benefits
 
 ```cpp
 int main() {
@@ -609,7 +630,7 @@ int main() {
 
 ----
 
-### Constructor Dependency Injection - gotchas
+### Constructor DI - gotchas
 
 <img src="images/traps.jpg" style="width: 40%; background:none; border:none; box-shadow:none;" />
 <!-- .element: class="fragment" -->
@@ -643,13 +664,13 @@ class cppnow_talk {
 ### 👍 Consider using constructor Dependency Injection
 
 ```cpp
-   cppnow_talk() : speaker_{"Kris"} {}                            // 👎
-// cppnow_talk() : speaker_{std::make_shared<speaker>("Kris")} {} // 👎
+  cppnow_talk() : speaker_{"Kris"} {}                            // 👎
+//cppnow_talk() : speaker_{std::make_shared<speaker>("Kris")} {} // 👎
 ```
 <!-- .element: class="fragment" -->
 
 ```cpp
-explicit cppnow_talk(speaker speaker) : speaker_{speaker} {};     // 👍
+cppnow_talk(speaker speaker) : speaker_{speaker} {};             // 👍
 ```
 <!-- .element: class="fragment" -->
 
@@ -666,7 +687,7 @@ class cppnow_talk {
 ```cpp
   auto run() {
     ...
-    speakers::instance().get("Kris").talk();
+    speakers::instance().get("Kris").talk(); // how to test?
     ...
   }
 ```
@@ -687,7 +708,7 @@ speakers::instance().get("Kris")                              // 👎
 <!-- .element: class="fragment" -->
 
 ```cpp
-explicit cppnow_talk(speaker speaker) : speaker_{speaker} {}; // 👍
+cppnow_talk(speaker speaker) : speaker_{speaker} {};          // 👍
 ```
 <!-- .element: class="fragment" -->
 
@@ -783,7 +804,7 @@ class cppnow_talk {
  public:
   explicit cppnow_talk(talk_manager& mgr)
       // 👎 Distant friends
-    : speaker_{mgr.get_speakers().get("Kris")};
+    : speaker_{mgr.get_speakers().get("Kris")}; // difficult to test
   { }
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -922,7 +943,7 @@ speaker(first_name, last_name);                             // 👍
 
 ----
 
-### Dependency Inversion Principle
+### Dependency Inversion Principle (DIP)
 
 <img style="background:none; border:none; box-shadow:none;" src="images/dependency_inversion_principle.jpg" width="50%" />
 <!-- .element: class="fragment" -->
@@ -951,16 +972,16 @@ speaker(first_name, last_name);                             // 👍
 ### Object oriented design with dynamic polymorphism
 
 ```cpp
-class ispeaker {
+class SpeakerLike {
  public:
-   virtual ~ispeaker() noexcept = default;
+   virtual ~SpeakerLike() noexcept = default;
    virtual void talk() = 0;
 };
 ```
 <!-- .element: class="fragment" -->
 
 ```cpp
-class regular_speaker : public ispeaker { // Coupling 👎
+class regular_speaker : public SpeakerLike { // Coupling 👎
  public:
   regular_speaker(first_name, last_name);
   void talk() override final;
@@ -970,19 +991,19 @@ class regular_speaker : public ispeaker { // Coupling 👎
 
 ----
 
-### Object oriented design with dynamic polymorphism
+### OO design with dynamic polymorphism
 
 ```cpp
 class cppnow_talk {
-  std::unique_ptr<ispeaker> speaker;
-  std::shared_ptr<iattendees> attendees;
+  std::unique_ptr<SpeakerLike> speaker;
+  std::shared_ptr<AttendeesLike> attendees;
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
  public:
-  cppnow_talk(std::unique_ptr<ispeaker> speaker,
-              std::shared_ptr<iattendees> attendees)
+  cppnow_talk(std::unique_ptr<SpeakerLike> speaker,
+              std::shared_ptr<AttendeesLike> attendees)
     : speaker_{std::move(speaker)}, attendees_{std::move(attendees)}
   { }
 ```
@@ -996,7 +1017,7 @@ class cppnow_talk {
 
 ----
 
-### Object oriented design with dynamic polymorphism - Wiring
+### OO design with dynamic polymorphism - Wiring
 
 ```cpp
 int main() {
@@ -1031,9 +1052,6 @@ int main() {
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
-
-> Wiring separates the creation logic from the business logic
-<!-- .element: class="fragment" data-fragment-index="6" -->
 
 ----
 
@@ -1105,17 +1123,19 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
-  std::function talk = bind(speaker_talk, "Kris, "Jusiak");
+  std::function talk = [first_name = "Kris", last_name = "Jusiak"] {
+    speaker_talk(first_name, last_name);
+  };
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-  std::function ask  = attendees_ask;
+  std::function ask = [] { return attendees_ask() };
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
 ```cpp
-  auto track = bind(cppnow_talk, talk, ask);
+  std::function track = [] { cppnow_talk(talk, ask); }
 ```
 <!-- .element: class="fragment" data-fragment-index="4" -->
 
@@ -1144,7 +1164,7 @@ class regular_speaker { // No inheritance 👍
 
 ----
 
-### Type-Erasure
+### Type-Erasure - Virtual Concepts
 
 ```cpp
 class cppnow_talk {
@@ -1203,6 +1223,9 @@ int main() {
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
+> Virtual Concepts aren't part of C++ ISO
+<!-- .element: class="fragment" data-fragment-index="6" -->
+
 -----
 
 ### Policy Design / Design by introspection
@@ -1215,7 +1238,7 @@ int main() {
 
 ----
 
-### Static polymorphism
+### Static Polymorphism
 
 ```cpp
 class regular_speaker { // No inheritance 👍
@@ -1231,7 +1254,7 @@ class regular_speaker { // No inheritance 👍
 
 ----
 
-### Static polymorphism
+### Static Polymorphism
 
 ```cpp
 template<class TSpeaker, class TAttendees>
@@ -1257,7 +1280,7 @@ class cppnow_talk {
 
 ----
 
-### Static polymorphism - Wiring
+### Static Polymorphism - Wiring
 
 ```cpp
 int main() {
@@ -1295,11 +1318,11 @@ int main() {
 
 ----
 
-### Concepts
+### Concepts (C++20)
 
 ```cpp
-template <class T>
-concept SpeakerLike = requires(const T speaker) {
+template <class TSpeaker>
+concept SpeakerLike = requires(TSpeaker speaker) {
   { speaker.talk() } -> void;
 };
 ```
@@ -1322,7 +1345,7 @@ class regular_speaker { // No inheritance 👍
 ### Concepts
 
 ```cpp
-template<SpeakerLike TSpeaker, AttendeeLike TAttendees>
+template<SpeakerLike TSpeaker, AttendeesLike TAttendees>
 ```
 <!-- .element: class="fragment" data-fragment-index="0" -->
 
@@ -1363,7 +1386,7 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-  AttendeeLike attendees = awesome_attendees{"Lenny", "Shea", ...};
+  AttendeesLike attendees = awesome_attendees{"Lenny", "Shea", ...};
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
@@ -1384,11 +1407,124 @@ int main() {
 
 ----
 
-<!--### Variant-->
+### Variant
 
-<!-------->
+```cpp
+class regular_speaker { // No inheritance 👍
+ public:
+  regular_speaker(first_name, last_name);
+  void talk() override final;
+};
+```
+<!-- .element: class="fragment" -->
 
-### Dependency Inversion
+> Same as with Type-Erasure/Templates/Concepts!
+<!-- .element: class="fragment" -->
+
+----
+
+### Variant
+
+```cpp
+using SpeakerLike =
+  std::variant<regular_speaker, keynote_speaker>;
+
+using AttendeesLike =
+  std::variant<regular_attendees, awesome_attendees>;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+class cppnow_talk {
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+ public:
+  cppnow_talk(SpeakerLike speaker, AttendeesLike attendees)
+    : speaker_{speaker}, attendees_{attendees}
+  { }
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  auto run(); // visit
+};
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### Variant - Wiring
+
+```cpp
+int main() {
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+  auto speaker =
+    regular_speaker{first_name{"Kris"}, last_name{"Jusiak"}};
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  auto attendees = awesome_attendees{"Lenny", "Shea", ...};
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+  auto track = cppnow_talk{speaker, attendees};
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
+
+```cpp
+  return track.run();
+```
+<!-- .element: class="fragment" data-fragment-index="5" -->
+
+```cpp
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### Dependency Inversion Princple - Testing
+
+```cpp
+"should return true if number of attendees
+ willing to using DI increased"_test = [] {
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+  fake_speaker speaker{};                   // Wiring
+  fake_attendees attendees{};               // Wiring
+  cppnow_talk track{speaker, attendees};    // Wiring
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+  EXPECT_CALL(speaker(talk)).Times(1);
+  EXPECT_CALL(attendees(ask)).Times(2).WilOnce(Return(1))
+                                      .WilOnce(Return(2));
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  EXPECT(track.run());
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+};
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+----
+
+### Dependency Inversion Princple
 
 * #### Flexible?
 <!-- .element: class="fragment" -->
@@ -1405,7 +1541,7 @@ int main() {
 
 ----
 
-### 👍 Consider using a proper abstractions for your project/module (Dependency Inversion Principle)
+### 👍 Consider using a proper abstractions for your project/module (DIP)
 
 * #### templates/concepts: known at compile time dependency
 <!-- .element: class="fragment" -->
@@ -1469,7 +1605,7 @@ int main() {
 int main() {
   SpeakerLike speaker = regular_speaker{
     first_name{"Kris"}, last_name{"Jusiak"}};               // Wiring
-  AttendeeLike attendees = awesome_attendees{
+  AttendeesLike attendees = awesome_attendees{
     "Lenny", "Shea", ...};                                  // Wiring
   auto track = cppnow_talk{speaker, attendees};             // Wiring
 }
@@ -1516,11 +1652,12 @@ int main() {
 ### Solution
 
 
-<img src="images/frameworks.png" style="width: 25%; background:none; border:none; box-shadow:none;" />
+<img src="images/frameworks.png" style="width: 30%; background:none; border:none; box-shadow:none;" />
 <!-- .element: class="fragment" -->
 
 #### Simplify/Remove the wiring mess by Automating dependency injection
 <!-- .element: class="fragment" -->
+
 ==============================================================================
 
 ### Dependency Injection Libraries
@@ -1528,15 +1665,18 @@ int main() {
 <img src="images/cpp_logo.png" style="width: 30%; background:none; border:none; box-shadow:none;" />
 
 > Often called `DI containers`
+<!-- .element: class="fragment" -->
 
 ----
 
-### Remove boilerplate/wiring mess by
-  * #### Constructor parameters deduction
+### Goal
+  * #### Remove boilerplate/wiring mess
 <!-- .element: class="fragment" -->
-  * #### Maintain/Deduce objects life time
+    * ##### Constructor parameters deduction
 <!-- .element: class="fragment" -->
-  * #### Create object graph
+    * ##### Maintain/Deduce objects life time
+<!-- .element: class="fragment" -->
+    * ##### Create object graph
 <!-- .element: class="fragment" -->
 
 ----
@@ -1563,10 +1703,10 @@ int main() {
 * #### compile-time (compile time error)
 <!-- .element: class="fragment" -->
 
-* #### runtime/compile-time (sometimes compile time error/sometimes exception)
+* #### runtime/compile-time (sometimes compile time error/sometimes exceptions)
 <!-- .element: class="fragment" -->
 
-* #### runtime (exception)
+* #### runtime (exceptions)
 <!-- .element: class="fragment" -->
 
 ----
@@ -1617,15 +1757,13 @@ int main() {
 * #### Supported Approaches: Semi compile-time
 <!-- .element: class="fragment" -->
 
----
-
 ----
 
 ### [Boost].DI
 
 ---
 
-* #### Header only (One header)
+* #### Header only (Single header)
 <!-- .element: class="fragment" -->
 * #### License: Boost 1.0
 <!-- .element: class="fragment" -->
@@ -1647,10 +1785,10 @@ int main() {
 
 -----
 
-### Hypodermic
+### Hypodermic - OO
 
 ```cpp
-class regular_speaker : public ispeaker {
+class regular_speaker : public SpeakerLike {
  public:
   regular_speaker(std::shared_ptr<first_name>,
                   std::shared_ptr<last_name>);
@@ -1661,15 +1799,15 @@ class regular_speaker : public ispeaker {
 
 ```cpp
 class cppnow_talk {
-  std::shared_ptr<ispeaker> speaker_;
-  std::shared_ptr<iattendees> attendees_;
+  std::shared_ptr<SpeakerLike> speaker_;
+  std::shared_ptr<AttendeesLike> attendees_;
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
  public:
-  cppnow_talk(const std::shared_ptr<ispeaker> speaker
-            , const std::shared_ptr<iattendees> attendees)
+  cppnow_talk(const std::shared_ptr<SpeakerLike> speaker
+            , const std::shared_ptr<AttendeesLike> attendees)
     : speaker_{speaker}, attendees_{attendees}
   { }
 ```
@@ -1683,7 +1821,7 @@ class cppnow_talk {
 
 ----
 
-### Hypodermic - Wiring
+### Hypodermic - OO - Wiring
 
 ```cpp
 int main() {
@@ -1696,8 +1834,8 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-  builder.registerType<ispeaker>().as<regular_speaker>();
-  builder.registerType<iattendees>().as<awesome_attendees>();
+  builder.registerType<SpeakerLike>().as<regular_speaker>();
+  builder.registerType<AttendeesLike>().as<awesome_attendees>();
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
@@ -1707,6 +1845,7 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ```cpp
+  // throws if not bound
   return container->resolve<cppnow_talk>()->run();
 ```
 <!-- .element: class="fragment" data-fragment-index="5" -->
@@ -1718,10 +1857,10 @@ int main() {
 
 ----
 
-### Google.Fruit
+### Google.Fruit - OO
 
 ```cpp
-class regular_speaker : public ispeaker {
+class regular_speaker : public SpeakerLike {
  public:
   INJECT(regular_speaker(first_name, last_name)) = default;
   void talk() override final;
@@ -1731,15 +1870,15 @@ class regular_speaker : public ispeaker {
 
 ```cpp
 class cppnow_talk {
-  std::shared_ptr<ispeaker> speaker_;
-  std::shared_ptr<iattendees> attendees_;
+  std::shared_ptr<SpeakerLike> speaker_;
+  std::shared_ptr<AttendeesLike> attendees_;
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
  public:
-  INJECT(cppnow_talk(const std::shared_ptr<ispeaker> speaker
-                   , const std::shared_ptr<iattendees> attendees))
+  INJECT(cppnow_talk(const std::shared_ptr<SpeakerLike> speaker
+                   , const std::shared_ptr<AttendeesLike> attendees))
     : speaker_{speaker}, attendees_{attendees}
   { }
 ```
@@ -1753,13 +1892,13 @@ class cppnow_talk {
 
 ----
 
-### Google.Fruit - Wiring
+### Google.Fruit - OO - Wiring
 
 ```cpp
 fruit::Component<cppnow_talk> get_component() {
   return fruit::createComponent()
-      .bind<ispeaker, regular_speaker>()
-      .bind<iattendees, awesome_attendees>();
+      .bind<SpeakerLike, regular_speaker>()
+      .bind<AttendeesLike, awesome_attendees>();
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -1770,6 +1909,7 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
+  // compile error if not bound
   fruit::Injector<cppnow_talk> injector(get_component);
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
@@ -1791,9 +1931,218 @@ int main() {
 
 ----
 
-### [Boost].DI - compile-time
+### [Boost].DI
 
-`speaker/attendees/cppnow_talk` - no changes
+```cpp
+class SpeakerLike;          // No changes required
+class AttendeesLike;        // No changes required
+class regular_speaker;      // No changes required
+class awesome_attendees;    // No changes required
+class cppnow_talk;          // No changes required
+...                         // No changes required
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+----
+
+### [Boost].DI - OO - run-time - Wiring
+
+```cpp
+int main() {
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+  extension::injector injector{};
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  injector.bind<SpeakerLike>.to<speaker>();
+  injector.bind<AttendeesLike>.to<awesome_attendees>();
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+  // throws if not bound
+  return di::create<cppnow_talk>(injector);
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
+
+```cpp
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### [Boost].DI - OO - compile-time - Wiring
+
+```cpp
+int main() {
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+  auto injector = di::make_injector(
+    di::bind<SpeakerLike>.to<speaker>(),
+    di::bind<AttendeesLike>.to<awesome_attendees>()
+  );
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+  // compile error if not bound
+  return di::create<cppnow_talk>(injector);
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+}
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+----
+
+### [Boost].DI - Static Polymorphism - Wiring
+
+```cpp
+template<class TSpeaker   = class SpeakerLike,
+         class TAttendees = class AttendeesLike>
+class cppnow_talk;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+int main() {
+  // 👍 Same as with OO Dynamic Polymorphism
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+-----
+
+### [Boost].DI - Concepts - Wiring
+
+```cpp
+template<SpeakerLike TSpeaker     = class SpeakerLike,
+         AttendeesLike TAttendees = class AttendeeLike>
+class cppnow_talk;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+int main() {
+  // 👍 Same as with OO Dynamic Polymorphism
+  //                 Static Polymorphism
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### [Boost].DI - Type-Erasure - Function
+
+```cpp
+struct regular_speaker {
+  auto operator()(); // talk
+};
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+class cppnow_talk {
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+ public:
+  cppnow_talk(speaker speaker, attendees attendees);
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  auto operator()(); // talk
+};
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### [Boost].DI - Type-Erasure - Function - Wiring
+
+```cpp
+int main() {
+  // 👍 Same as with OO Dynamic Polymorphism
+  //                 Static Polymorphism
+  //                 Concepts
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### [Boost].DI - Type-Erasure - Wiring
+
+```cpp
+using SpeakerLike   = te::poly<speaker>;    // Using [Boost].TE
+using AttendeesLike = te::poly<attendees>;  // Using [Boost].TE
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+cppnow_talk(SpeakerLike speaker, AttendeesLike attendees);
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+int main() {
+  // 👍 Same as with OO Dynamic Polymorphism
+  //                 Static Polymorphism
+  //                 Concepts
+  //                 Type-Erasure function
+}
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+----
+
+### [Boost].DI - Variant - Wiring
+
+```cpp
+using SpeakerLike =
+  std::variant<regular_speaker, keynote_speaker>;
+
+using AttendeesLike =
+  std::variant<regular_attendees, awesome_attendees>;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+int main() {
+  // 👍 Same as with OO Dynamic Polymorphism
+  //                 Static Polymorphism
+  //                 Concepts
+  //                 Type-Erasure function
+  //                 Type-Erasure
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+-----
+
+### DI libraries additional benefits
+
+<img src="images/more.jpg" style="width: 60%; background:none; border:none; box-shadow:none;" />
+<!-- .element: class="fragment" -->
+----
+
+### [Boost].DI - Refactoring for free
+
+```cpp
+cppnow_talk1(speaker, std::shared_ptr<attendees>);
+cppnow_talk2(attendees, std::unique_ptr<SpeakerLike>);
+```
 <!-- .element: class="fragment" data-fragment-index="0" -->
 
 ```cpp
@@ -1802,15 +2151,14 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
-  auto injector = di::make_injector(
-    di::bind<ispeaker>.to<speaker>(),
-    di::bind<iattendees>.to<awesome_attendees>()
-  );
+  auto injector = ...; /// same as ALWAYS!
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-  return di::create<cppnow_talk>(injector);
+  track0 = di::create<cppnow_talk>(injector);  // 👍 Still Okay
+  track1 = di::create<cppnow_talk1>(injector); // 👍 No problem
+  track2 = di::create<cppnow_talk2>(injector); // 👍 No problem
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
@@ -1821,164 +2169,144 @@ int main() {
 
 ----
 
-### [Boost].DI - run-time
+### Manual Wiring - Recap
 
 ```cpp
 int main() {
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```cpp
-  extension::injector injector{}.
-  injector.bind<ispeaker>.to<speaker>();
-  injector.bind<iattendees>.to<awesome_attendees>();
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-  return di::create<cppnow_talk>(injector);
-```
-<!-- .element: class="fragment" data-fragment-index="3" -->
-
-```cpp
+  auto speaker = regular_speaker();
+  auto attendees = awesome_attendees();
+  auto track0 = cppnow_talk(speaker, attendees);
 }
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-----
-
-### Static Polymorphism
-
-```cpp
-template<class TSpeaker = class Speaker, class TAttendees = class Attendee>
-class cppnow_talk;
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-int main() {
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```cpp
-  auto injector = di::make_injector(
-    di::bind<class Speaker>.to<speaker>(),
-    di::bind<class Attendee>.to<awesome_attendees>()
-  );
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-  return di::create<cppnow_talk>(injector);
-```
-<!-- .element: class="fragment" data-fragment-index="3" -->
-
-```cpp
-}
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
------
-
-### Concepts
-
-```cpp
-template<SpeakerLike TSpeaker = class Speaker, class TAttendees = class Attendee>
-class cppnow_talk;
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-----
-
-### Type-Erasure
-
-```cpp
-cppnow_talk(speaker speaker,
-            attendees attendees)
-  : speaker_{speaker}, attendees_{attendees}
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
------
-
-### DI libraries additional benefits
-
-----
-
-### Refactoring for free
-
-```cpp
-cppnow_talk1(speaker, attendees);
-cppnow_talk2(attendees, speaker);
 ```
 <!-- .element: class="fragment" -->
 
 ```cpp
 int main() {
+  auto speaker = regular_speaker();
+  auto attendees = std::make_share<awesome_attendees>();
+  auto track1 = cppnow_talk(speaker, attendees);
+}
 ```
-<!-- .element: class="fragment" data-fragment-index="1" -->
+<!-- .element: class="fragment" -->
 
 ```cpp
-  track1 = di::create<cppnow_talk>(injector);
-  track2 = di::create<cppnow_talk>(injector);
+int main() {
+  auto speaker = std::make_unique<regular_speaker>();
+  auto attendees = awesome_attendees();
+  auto track2 = cppnow_talk(std::move(speaker), attendees);
+}
+```
+<!-- .element: class="fragment" -->
+
+```cpp
+...
+```
+<!-- .element: class="fragment" -->
+
+----
+
+### [Boost].DI - Easy Mocking for Unit testing
+
+```cpp
+"should return true if number of attendees
+ willing to using DI increased"_test = [] {
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+  auto [track, mocks] = testing::make<cppnow_talk, StrictGMock>();
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+  EXPECT_CALL(mocks<speaker>(talk)).Times(1);
+  EXPECT_CALL(mocks<attendees>(ask)).Times(2).WilOnce(Return(1))
+                                             .WilOnce(Return(2));
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-}
+  EXPECT(track.run());
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-----
-
-### Easy Mocking for Unit testing
-
 ```cpp
-"should"_test = [] {
-  auto [track, mocks] = testing::make<cppnow_talk, StrictGMock>();
-
-  EXPECT_CALL(mocks.get<ispeaker>(), talk).Times(1);
-  EXPECT_CALL(mocks.get<iattendees>(), ask).Times(2);
-
-  track.run();
 };
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="fragment" data-fragment-index="0" -->
 
 ----
 
-### Easy Faking for Integration testing
+### [Boost].DI - Easy Faking for Integration testing
 
 ```cpp
-""_test = [] {
-  auto test_injector = di::make_injector(
-    std::move(production_injector),
-    di::bind<iattendees>.to<fake_attendees>() [di::override]
-  );
+"Number of attendees willing to use DI should increase"_test = [] {
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
 
-  // EXPECT...
+```cpp
+  auto test_injector = di::make_injector(
+    std::move(injector),
+    di::bind<AttendeesLike>.to<fake_attendees>() [di::override]
+  );
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  // EXPECT_CALL...
 
   auto track = di::create<cppnow_talk>(injector);
 
-  track.run();
+  EXPECT(track.run());
 }
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+};
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
 
 ----
 
-### Quality enforcement
+### [Boost].DI - Quality enforcement
+
+```cpp
+cppnow_talk3(speakerLike,  AttendeesLike);
+cppnow_talk4(speakerLike*, AttendeesLike);
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
 
 ```cpp
 int main() {
-  const auto injector = di::make_injector<no_raw_pointers>(
-    module()
-  );
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
 
-  injector.create<App>(); // Okay
+```cpp
+  auto injector = di::make_injector<no_raw_pointers_policy>(
+    ... // same as ALWAYS
+  );
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  track0 = di::create<cppnow_talk>(injector);  // 👍 Still Okay
+  track1 = di::create<cppnow_talk1>(injector); // 👍 No problem
+  track2 = di::create<cppnow_talk2>(injector); // 👍 No problem
+  track3 = di::create<cppnow_talk3>(injector); // 👍 No problem
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+  // 👍 Compile time error (policy not satisfied)
+  track4 = di::create<cppnow_talk4>(injector);
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
+
+```cpp
 }
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="fragment" data-fragment-index="1" -->
 
 ----
 
@@ -1999,8 +2327,8 @@ int main() {
 
 ```cpp
 class cppnow_talk {
-  std::unique_ptr<ispeaker> speaker_;
-  std::shared_ptr<iattendees> attendees_;
+  std::unique_ptr<SpeakerLike> speaker_;
+  std::shared_ptr<AttendeesLike> attendees_;
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -2008,9 +2336,9 @@ class cppnow_talk {
  public:
   cppnow_talk()
     : speaker_{
-        container::instance().resolve<std::unique_ptr<ispeaker>>()}
+        container::instance().resolve<std::unique_ptr<SpeakerLike>>()}
     , attendees_{
-        container::instance().resolve<std::shared_ptr<ispeaker>>()}
+        container::instance().resolve<std::shared_ptr<SpeakerLike>>()}
   { }
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -2025,12 +2353,12 @@ class cppnow_talk {
 ### 👍 Consider avoiding global injector/containers
 
 ```cpp
-speaker_{container::instance().resolve<ispeaker>()} // 👎
+speaker_{container::instance().resolve<SpeakerLike>()} // 👎
 ```
 <!-- .element: class="fragment" -->
 
 ```cpp
-speaker_{speaker}                                   // 👍
+speaker_{speaker}                                      // 👍
 ```
 <!-- .element: class="fragment" -->
 
@@ -2040,15 +2368,15 @@ speaker_{speaker}                                   // 👍
 
 ```cpp
 class cppnow_talk {
-  ispeaker& speaker_;       // Tightly coupled
-  iattendees& attendees_;   // Tightly coupled
+  SpeakerLike& speaker_;       // Tightly coupled
+  AttendeesLike& attendees_;   // Tightly coupled
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
  public:
   explicit cppnow_talk(ServiceLocator& container)
-    : speaker_{container.resolve<std::unique_ptr<ispeaker>>()}
+    : speaker_{container.resolve<std::unique_ptr<SpeakerLike>>()}
     , attendees_{container}
   { }
 ```
@@ -2190,24 +2518,23 @@ SOLID >> `STUPID`
 
 ### Scenario: Number of attendees willing to use DI should increase
 
-```
+```ghkerin
 ...
 ```
 <!-- .element: class="fragment" -->
 
-```
+```ghkerin
   When The talk has been given by a speaker (✓)
 ```
 <!-- .element: class="fragment" -->
 
-```
+```ghkerin
   Then The number of attendees willing to use DI should increase (?)
 ```
 <!-- .element: class="fragment" -->
 
 <img src="images/youre_welcome.jpg" style="width: 20%; background:none; border:none; box-shadow:none;" />
 <!-- .element: class="fragment" -->
-
 
 ==============================================================================
 
