@@ -1079,28 +1079,6 @@ int main() {
 
 ### 👍 Consider not using inheritance for dynamic polymorphism
 
-<!-------->
-
-<!--### Type-Erasure-->
-
-<!--* #### Standard-->
-  <!--* [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)-->
-<!--[> .element: class="fragment" <]-->
-  <!--* [Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) (???)-->
-<!--[> .element: class="fragment" <]-->
-
-<!--* #### Libraries-->
-  <!--* [Boost.TypeErasure](http://www.boost.org/doc/libs/1_66_0/doc/html/boost_typeerasure.html)-->
-<!--[> .element: class="fragment" <]-->
-  <!--* [[Boost].TE](https://github.com/boost-experimental/te)-->
-<!--[> .element: class="fragment" <]-->
-  <!--* [Adobe.Poly](http://stlab.adobe.com/classadobe_1_1poly.html)-->
-<!--[> .element: class="fragment" <]-->
-  <!--* [Folly.Poly](https://github.com/facebook/folly)-->
-<!--[> .element: class="fragment" <]-->
-  <!--* [Dyno](https://github.com/ldionne/dyno)-->
-<!--[> .element: class="fragment" <]-->
-
 ----
 
 ### Type-Erasure - std::function
@@ -1687,7 +1665,7 @@ int main() {
 
 <img src="images/cpp_logo.png" style="width: 30%; background:none; border:none; box-shadow:none;" />
 
-> Often called `DI containers`
+> Often called [`Inversion of Control Containers`](https://martinfowler.com/articles/injection.html)
 <!-- .element: class="fragment" -->
 
 ----
@@ -1750,7 +1728,7 @@ int main() {
 <!-- .element: class="fragment" -->
 * #### License: MIT
 <!-- .element: class="fragment" -->
-* #### Dependencies: Boost
+* #### Dependencies: STL, Boost
 <!-- .element: class="fragment" -->
 * #### std: C++11
 <!-- .element: class="fragment" -->
@@ -1769,7 +1747,7 @@ int main() {
 <!-- .element: class="fragment" -->
 * #### License: Apache-2
 <!-- .element: class="fragment" -->
-* #### Dependencies: Boost
+* #### Dependencies: STL, [Boost]
 <!-- .element: class="fragment" -->
 * #### std: C++11
 <!-- .element: class="fragment" -->
@@ -1803,6 +1781,9 @@ int main() {
 ----
 
 ### Let's make it scalable 👌
+
+> With IoC containers
+<!-- .element: class="fragment" -->
 
 -----
 
@@ -2226,7 +2207,7 @@ int main() {
 
 ----
 
-### [Boost].DI - Easy Mocking for Unit testing
+### [Boost].DI - Easy Mocking for Unit testing / [GUnit](https://github.com/cpp-testing/GUnit)
 
 ```cpp
 "should return true if number of attendees
@@ -2421,6 +2402,8 @@ explicit cppnow_talk(speaker& speaker)          // 👍
 ```
 <!-- .element: class="fragment" -->
 
+<!-- .slide: data-background="darkblue" -->
+
 ----
 
 ### Coupling to a specific DI library
@@ -2478,6 +2461,7 @@ cppnow_talk(speaker, attendees);                // 👍
 ```
 <!-- .element: class="fragment" -->
 
+<!-- .slide: data-background="darkblue" -->
 
 ==============================================================================
 
