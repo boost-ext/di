@@ -230,39 +230,52 @@ int main() {
 
 ----
 
-### Let's make it testable 👌
+### Let's make it `somewhat` testable 👌
 
 ----
 
-### Test Driven Development (TDD)
+### Behavior Driven Development (BDD) / [GUnit](https://github.com/cpp-testing/GUnit)
 
 ```cpp
-"should return true if the number of
- attendees using DI has increased"_test = [] {
+GSTEPS("Number of attendees willing to use DI should increase") {
+  auto result = 0;
 ```
+<!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
-  cppnow_talk sut{};
-```
-<!-- .element: class="fragment" data-fragment-index="4" -->
-
-```cpp
-  const auto increased = sut.run();
-```
-<!-- .element: class="fragment" data-fragment-index="3" -->
-
-```cpp
-  EXPECT(increased);
+  Given("There is a talk about DI at CppNow-2019") = [&] {
+    cppnow_talk sut{};
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-};
+    When("The talk has been given by a speaker") = [&] {
+      result = sut.run();
+    };
 ```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+    Then("Then The number of attendees willing
+          to use DI should increase") = [&] {
+      EXPECT(result > 0);
+    };
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
+
+```cpp
+  }
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
 
 ----
 
-### Test Driven Development (TDD)
+### BDD - REFACTOR
 
 ```cpp
 class cppnow_talk {
@@ -295,56 +308,17 @@ class cppnow_talk {
 
 ----
 
-### 👍 Consider Test Driving your code (TDD/BDD)
+### 👍 Consider Test Driving your code (BDD/TDD)
 
-----
-
-### Composition root
-
-```cpp
-int main(){
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```cpp
-  cppnow_talk{}.run();
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-}
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-> A unique location in an application where modules are composed together
-<!-- .element: class="fragment" data-fragment-index="3" -->
-
-----
-
-### 👍 Consider applying Composition Root for object creation
-
-```cpp
-class cppnow_talk {
- public:
-  auto run() {
-    auto speaker = make_speaker();                                // 👎
-    auto attendees = make_attendies();
-  }
-};
-```
+* #### BDD, uses automated examples to guide us towards **building the right thing**
 <!-- .element: class="fragment" -->
 
-```cpp
-int main() {
-  cppnow_talk track{};                                            // 👍
-}
-```
+* #### TDD uses unit tests to guides us towards **building it right**
 <!-- .element: class="fragment" -->
-
 
 ----
 
-### Let's make it flexible 👌
+### Let's make it `more` flexible 👌
 
 ----
 
@@ -577,7 +551,7 @@ int main() {
 
 ```cpp
   cppnow_talk track{speaker, attendees};
-  return track.talk();
+  return track.run();
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
@@ -593,10 +567,54 @@ int main() {
 ### 👍 Separates the creation logic from the business logic
 <!-- .element: class="fragment" -->
 
-> No raw `new/make_unique/etc...` except in the wiring/composition root
+> No raw `new/make_unique/etc...` except in the wiring
 <!-- .element: class="fragment" -->
 
 <!-- .slide: data-background="darkblue" -->
+
+----
+
+### Composition root
+
+> A unique location in an application where modules are composed together
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+<!-- .slide: data-background="darkblue" -->
+
+----
+
+### Composition root
+
+```cpp
+class cppnow_talk {
+ public:
+  explicit cppnow_talk(speaker);
+  auto run() {
+    const auto attendees = attendees{"Lenny", "Shea", ...}; // 👎
+  }
+};
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+int main() {
+  const auto speaker = speaker{"Kris"};
+  cppnow_talk track{speaker};
+  return track.run();
+}
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+---
+
+```cpp
+int main() {
+  const auto speaker = speaker{"Kris"};
+  const auto attendees = attendees{"Lenny", "Shea", ...};
+  cppnow_talk track{speaker, attendees};                    // 👍
+}
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
 
 ----
 
@@ -858,6 +876,7 @@ speaker{"Jusiak", "kris"}; // 👎 Oops
     <img src="images/strong_types_for_strong_interfaces.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
   </a>
 </center>
+<!-- .element: class="fragment" -->
 
 ----
 
@@ -885,35 +904,35 @@ speaker{last_name{"Jusiak"}, first_name{"Kris"}}; // 👍 Compile error
 ```
 <!-- .element: class="fragment" -->
 
-----
+<!-------->
 
-### Strong types for strong interfaces
+<!--### Strong types for strong interfaces-->
 
-```cpp
-struct speaker {
-  string first_name{};
-  string last_name{};
-};
-```
-<!-- .element: class="fragment" -->
+<!--```cpp-->
+<!--struct speaker {-->
+  <!--string first_name{};-->
+  <!--string last_name{};-->
+<!--};-->
+<!--```-->
+<!--[> .element: class="fragment" <]-->
 
-```cpp
-// Designated initialization (C++20)
-speaker{.first_name = "Kris", .last_name = "Jusiak"}; // 👍 Okay
-```
-<!-- .element: class="fragment" -->
+<!--```cpp-->
+<!--// Designated initialization (C++20)-->
+<!--speaker{.first_name = "Kris", .last_name = "Jusiak"}; // 👍 Okay-->
+<!--```-->
+<!--[> .element: class="fragment" <]-->
 
-```cpp
-// Aggregate initialization
-speaker{"Kris", "Jusiak"}; // 👍 Okay
-```
-<!-- .element: class="fragment" -->
+<!--```cpp-->
+<!--// Aggregate initialization-->
+<!--speaker{"Kris", "Jusiak"}; // 👍 Okay-->
+<!--```-->
+<!--[> .element: class="fragment" <]-->
 
-```cpp
-// Aggregate initialization
-speaker{"Jusiak", "Kris"}; // 👎 Oops
-```
-<!-- .element: class="fragment" -->
+<!--```cpp-->
+<!--// Aggregate initialization-->
+<!--speaker{"Jusiak", "Kris"}; // 👎 Oops-->
+<!--```-->
+<!--[> .element: class="fragment" <]-->
 
 ----
 
@@ -931,15 +950,7 @@ speaker(first_name, last_name);                             // 👍
 
 ----
 
-<!--### Not grouping common parameters-->
-
-<!--```cpp-->
-<!--speaker(-->
-<!--```-->
-
-<!-------->
-
-### Let's make it more flexible 👌
+### Let's make it `even more` flexible 👌
 
 ----
 
@@ -962,7 +973,7 @@ speaker(first_name, last_name);                             // 👍
 <!-- .element: class="fragment" -->
   * #### Templates
 <!-- .element: class="fragment" -->
-  * #### Concepts
+  * #### Concepts (C++20)
 <!-- .element: class="fragment" -->
   * #### ...
 <!-- .element: class="fragment" -->
@@ -975,7 +986,7 @@ speaker(first_name, last_name);                             // 👍
 class SpeakerLike {
  public:
    virtual ~SpeakerLike() noexcept = default;
-   virtual void talk() = 0;
+   constexpr virtual void talk() = 0; // C++20
 };
 ```
 <!-- .element: class="fragment" -->
@@ -1062,42 +1073,33 @@ int main() {
     <img src="images/runtime_polymorphism.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
   </a>
 </center>
+<!-- .element: class="fragment" -->
 
 ----
 
 ### 👍 Consider not using inheritance for dynamic polymorphism
 
-----
+<!-------->
 
-### Type-Erasure
+<!--### Type-Erasure-->
 
-* #### Standard
-  * [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)
-<!-- .element: class="fragment" -->
-  * [Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) (???)
-<!-- .element: class="fragment" -->
+<!--* #### Standard-->
+  <!--* [std::function](http://en.cppreference.com/w/cpp/utility/functional/function)-->
+<!--[> .element: class="fragment" <]-->
+  <!--* [Virtual concepts](https://github.com/andyprowl/virtual-concepts/blob/master/draft/Dynamic%20Generic%20Programming%20with%20Virtual%20Concepts.pdf) (???)-->
+<!--[> .element: class="fragment" <]-->
 
-* #### Libraries
-  * [Boost.TypeErasure](http://www.boost.org/doc/libs/1_66_0/doc/html/boost_typeerasure.html)
-<!-- .element: class="fragment" -->
-  * [[Boost].TE](https://github.com/boost-experimental/te)
-<!-- .element: class="fragment" -->
-  * [Adobe.Poly](http://stlab.adobe.com/classadobe_1_1poly.html)
-<!-- .element: class="fragment" -->
-  * [Folly.Poly](https://github.com/facebook/folly)
-<!-- .element: class="fragment" -->
-  * [Dyno](https://github.com/ldionne/dyno)
-<!-- .element: class="fragment" -->
-
-----
-
-### Functional programming design patterns, Scott Wlaschin
-
-<center>
-  <a href="https://www.youtube.com/watch?v=E8I19uA-wGY">
-    <img src="images/fp.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
-  </a>
-</center>
+<!--* #### Libraries-->
+  <!--* [Boost.TypeErasure](http://www.boost.org/doc/libs/1_66_0/doc/html/boost_typeerasure.html)-->
+<!--[> .element: class="fragment" <]-->
+  <!--* [[Boost].TE](https://github.com/boost-experimental/te)-->
+<!--[> .element: class="fragment" <]-->
+  <!--* [Adobe.Poly](http://stlab.adobe.com/classadobe_1_1poly.html)-->
+<!--[> .element: class="fragment" <]-->
+  <!--* [Folly.Poly](https://github.com/facebook/folly)-->
+<!--[> .element: class="fragment" <]-->
+  <!--* [Dyno](https://github.com/ldionne/dyno)-->
+<!--[> .element: class="fragment" <]-->
 
 ----
 
@@ -1109,8 +1111,24 @@ std::function speaker_talk = [](first_name, last_name);
 <!-- .element: class="fragment" -->
 
 ```cpp
+std::function attendees_ask = []();
+```
+<!-- .element: class="fragment" -->
+
+```cpp
 std::function cppnow_talk = [](auto talk, auto ask);
 ```
+<!-- .element: class="fragment" -->
+
+----
+
+### Functional programming design patterns, Scott Wlaschin
+
+<center>
+  <a href="https://www.youtube.com/watch?v=E8I19uA-wGY">
+    <img src="images/fp.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
+  </a>
+</center>
 <!-- .element: class="fragment" -->
 
 ----
@@ -1157,7 +1175,7 @@ int main() {
 class regular_speaker { // No inheritance 👍
  public:
   regular_speaker(first_name, last_name);
-  void talk() override final;
+  void talk();
 };
 ```
 <!-- .element: class="fragment" -->
@@ -1235,6 +1253,7 @@ int main() {
     <img src="images/design_by_introspection.png" style="width: 90%; background:none; border:none; box-shadow:none;" />
   </a>
 </center>
+<!-- .element: class="fragment" -->
 
 ----
 
@@ -1244,7 +1263,7 @@ int main() {
 class regular_speaker { // No inheritance 👍
  public:
   regular_speaker(first_name, last_name);
-  void talk() override final;
+  void talk();
 };
 ```
 <!-- .element: class="fragment" -->
@@ -1332,7 +1351,7 @@ concept SpeakerLike = requires(TSpeaker speaker) {
 class regular_speaker { // No inheritance 👍
  public:
   regular_speaker(first_name, last_name);
-  void talk() override final;
+  void talk();
 };
 ```
 <!-- .element: class="fragment" -->
@@ -1342,7 +1361,7 @@ class regular_speaker { // No inheritance 👍
 
 ----
 
-### Concepts
+### Concepts (C++20)
 
 ```cpp
 template<SpeakerLike TSpeaker, AttendeesLike TAttendees>
@@ -1372,7 +1391,7 @@ class cppnow_talk {
 
 ----
 
-### Concepts - Wiring
+### Concepts (C++20) - Wiring
 
 ```cpp
 int main() {
@@ -1407,13 +1426,13 @@ int main() {
 
 ----
 
-### Variant
+### std::variant
 
 ```cpp
 class regular_speaker { // No inheritance 👍
  public:
   regular_speaker(first_name, last_name);
-  void talk() override final;
+  void talk();
 };
 ```
 <!-- .element: class="fragment" -->
@@ -1423,7 +1442,7 @@ class regular_speaker { // No inheritance 👍
 
 ----
 
-### Variant
+### std::variant
 
 ```cpp
 using SpeakerLike =
@@ -1455,7 +1474,7 @@ class cppnow_talk {
 
 ----
 
-### Variant - Wiring
+### std::variant - Wiring
 
 ```cpp
 int main() {
@@ -1490,7 +1509,11 @@ int main() {
 
 ----
 
-### Dependency Inversion Princple - Testing
+### Let's make it testable 👌
+
+----
+
+### Test Driven Development (TDD + DIP)
 
 ```cpp
 "should return true if number of attendees
@@ -1715,10 +1738,6 @@ int main() {
 
 ----
 
-<img src="images/libraries.png" style="width: 100%; background:none; border:none; box-shadow:none;" />
-
-----
-
 ### Overview
 
 ----
@@ -1756,6 +1775,8 @@ int main() {
 <!-- .element: class="fragment" -->
 * #### Supported Approaches: Semi compile-time
 <!-- .element: class="fragment" -->
+
+---
 
 ----
 
@@ -2107,7 +2128,7 @@ int main() {
 
 ----
 
-### [Boost].DI - Variant - Wiring
+### [Boost].DI - std::variant - Wiring
 
 ```cpp
 using SpeakerLike =
@@ -2258,7 +2279,6 @@ int main() {
   auto track = di::create<cppnow_talk>(injector);
 
   EXPECT(track.run());
-}
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -2458,6 +2478,7 @@ cppnow_talk(speaker, attendees);                // 👍
 ```
 <!-- .element: class="fragment" -->
 
+
 ==============================================================================
 
 ## Summary
@@ -2582,7 +2603,7 @@ SOLID >> `STUPID`
         keyboard: true,
 
         // Enable the slide overview mode
-        overview: true,
+        overview: false,
 
         // Vertical centering of slides
         center: true,
@@ -2619,13 +2640,13 @@ SOLID >> `STUPID`
         autoSlideStoppable: true,
 
         // Enable slide navigation via mouse wheel
-        mouseWheel: true,
+        mouseWheel: false,
 
         // Hides the address bar on mobile devices
         hideAddressBar: true,
 
         // Opens links in an iframe preview overlay
-        previewLinks: true,
+        previewLinks: false,
 
         // Transition style
         transition: 'convex', // none/fade/slide/convex/concave/zoom
@@ -2663,6 +2684,20 @@ SOLID >> `STUPID`
 				]
 			});
 
+      window.addEventListener("mousedown", handleClick, false);
+      window.addEventListener("contextmenu", function(e) { e.preventDefault(); }, false);
+
+      function handleClick(e) {
+        if (1 >= outerHeight - innerHeight) {
+          document.querySelector( '.reveal' ).style.cursor = 'none';
+        } else {
+          document.querySelector( '.reveal' ).style.cursor = '';
+        }
+
+        e.preventDefault();
+        if(e.button === 0) Reveal.next();
+        if(e.button === 2) Reveal.prev();
+      }
 		</script>
 
 	</body>
