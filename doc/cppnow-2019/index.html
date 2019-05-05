@@ -309,10 +309,10 @@ class cppnow_talk {
 
 ### 👍 Consider Test Driving your code (BDD/TDD)
 
-* #### BDD, uses automated examples to guide us towards **building the right thing**
+* BDD, uses automated examples to guide us towards **building the right thing**
 <!-- .element: class="fragment" -->
 
-* #### TDD uses unit tests to guides us towards **building it right**
+* TDD uses unit tests to guides us towards **building it right**
 <!-- .element: class="fragment" -->
 
 ----
@@ -392,7 +392,24 @@ class cppnow_talk {
 
 ----
 
-### 👍 Consider classes to have only one reason to change (SRP)
+### Singleton Responsibility Principle (SRC)
+
+* #### Flexible?
+<!-- .element: class="fragment" -->
+  * ##### Not really: Tightly coupled
+<!-- .element: class="fragment" -->
+* #### Scalable?
+<!-- .element: class="fragment" -->
+  * ##### Not really: Not don't Repeat Yourself (DRY)
+<!-- .element: class="fragment" -->
+* #### Testable?
+<!-- .element: class="fragment" -->
+  * ##### Not really: Hard to fake
+<!-- .element: class="fragment" -->
+
+----
+
+### 👍 Consider classes to have only one reason to change
 
 ---
 
@@ -465,23 +482,6 @@ class cppnow_talk {
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
-
-----
-
-### Tight coupling - No DI
-
-* #### Flexible?
-<!-- .element: class="fragment" -->
-  * ##### No: Tightly coupled
-<!-- .element: class="fragment" -->
-* #### Scalable?
-<!-- .element: class="fragment" -->
-  * ##### Not really: Not DRY (Don't Repeat Yourself, Although SRP)
-<!-- .element: class="fragment" -->
-* #### Testable?
-<!-- .element: class="fragment" -->
-  * ##### Not really: Hard to fake
-<!-- .element: class="fragment" -->
 
 ----
 
@@ -1530,7 +1530,7 @@ int main() {
 
 ----
 
-### Dependency Inversion Princple
+### Dependency Inversion Principle
 
 * #### Flexible?
 <!-- .element: class="fragment" -->
