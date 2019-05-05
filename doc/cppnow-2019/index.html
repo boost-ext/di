@@ -1227,6 +1227,89 @@ int main() {
 
 -----
 
+### std::variant (C++17)
+
+```cpp
+class regular_speaker { // No inheritance 👍
+ public:
+  regular_speaker(first_name, last_name);
+  void talk();
+};
+```
+<!-- .element: class="fragment" -->
+
+> Same as with Type-Erasure/Templates/Concepts!
+<!-- .element: class="fragment" -->
+
+----
+
+### std::variant (C++17)
+
+```cpp
+using SpeakerLike =
+  std::variant<regular_speaker, keynote_speaker>;
+
+using AttendeesLike =
+  std::variant<regular_attendees, awesome_attendees>;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+class cppnow_talk {
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+ public:
+  cppnow_talk(SpeakerLike speaker, AttendeesLike attendees)
+    : speaker_{speaker}, attendees_{attendees}
+  { }
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  auto run(); // visit
+};
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### std::variant (C++17) - Wiring
+
+```cpp
+int main() {
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+```cpp
+  auto speaker =
+    regular_speaker{first_name{"Kris"}, last_name{"Jusiak"}};
+```
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+```cpp
+  auto attendees = awesome_attendees{"Lenny", "Shea", ...};
+```
+<!-- .element: class="fragment" data-fragment-index="3" -->
+
+```cpp
+  auto track = cppnow_talk{speaker, attendees};
+```
+<!-- .element: class="fragment" data-fragment-index="4" -->
+
+```cpp
+  return track.run();
+```
+<!-- .element: class="fragment" data-fragment-index="5" -->
+
+```cpp
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
 ### Policy Design / Design by introspection
 
 <center>
@@ -1409,89 +1492,6 @@ int main() {
 
 ----
 
-### std::variant (C++17)
-
-```cpp
-class regular_speaker { // No inheritance 👍
- public:
-  regular_speaker(first_name, last_name);
-  void talk();
-};
-```
-<!-- .element: class="fragment" -->
-
-> Same as with Type-Erasure/Templates/Concepts!
-<!-- .element: class="fragment" -->
-
-----
-
-### std::variant (C++17)
-
-```cpp
-using SpeakerLike =
-  std::variant<regular_speaker, keynote_speaker>;
-
-using AttendeesLike =
-  std::variant<regular_attendees, awesome_attendees>;
-```
-<!-- .element: class="fragment" data-fragment-index="0" -->
-
-```cpp
-class cppnow_talk {
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```cpp
- public:
-  cppnow_talk(SpeakerLike speaker, AttendeesLike attendees)
-    : speaker_{speaker}, attendees_{attendees}
-  { }
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-  auto run(); // visit
-};
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-----
-
-### std::variant (C++17) - Wiring
-
-```cpp
-int main() {
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```cpp
-  auto speaker =
-    regular_speaker{first_name{"Kris"}, last_name{"Jusiak"}};
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-  auto attendees = awesome_attendees{"Lenny", "Shea", ...};
-```
-<!-- .element: class="fragment" data-fragment-index="3" -->
-
-```cpp
-  auto track = cppnow_talk{speaker, attendees};
-```
-<!-- .element: class="fragment" data-fragment-index="4" -->
-
-```cpp
-  return track.run();
-```
-<!-- .element: class="fragment" data-fragment-index="5" -->
-
-```cpp
-}
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-----
-
 ### Let's make it testable 👌
 
 ----
@@ -1547,13 +1547,19 @@ int main() {
 
 ----
 
-### 👍 Consider using a proper abstractions for your project/module (DIP)
+### 👍 Consider using proper abstractions for your project/module (DIP)
 
-* #### templates/concepts: known at compile time dependency
+* Templates/Concepts:
 <!-- .element: class="fragment" -->
-* #### type-erasure: run-time dependency
+  * Dependencies known at compile time
 <!-- .element: class="fragment" -->
-* #### inheritance: never?
+* Type-Erasure:
+<!-- .element: class="fragment" -->
+  * Run-Time dependency
+<!-- .element: class="fragment" -->
+* Inheritance:
+<!-- .element: class="fragment" -->
+  * Never?
 <!-- .element: class="fragment" -->
 
 ----
@@ -2036,7 +2042,7 @@ class cppnow_talk;
 
 ```cpp
 int main() {
-  // 👍 Wiring as with OO Dynamic Polymorphism
+  // 👍 The same wiring as with Dynamic Polymorphism
 
   return di::create<cppnow_talk>(injector).run();
 }
@@ -2056,8 +2062,8 @@ class cppnow_talk;
 
 ```cpp
 int main() {
-  // 👍 Wiring same as with OO Dynamic Polymorphism
-  //                        Static Polymorphism
+  // 👍 The same wiring as with Dynamic Polymorphism,
+  //                            Static Polymorphism
 
   return di::create<cppnow_talk>(injector).run();
 }
@@ -2100,9 +2106,9 @@ class cppnow_talk {
 
 ```cpp
 int main() {
-  // 👍 Wiring same as with OO Dynamic Polymorphism
-  //                        Static Polymorphism
-  //                        Concepts
+  // 👍 The same wiring as with Dynamic Polymorphism,
+  //                            Static Polymorphism,
+  //                            Concepts
 
   return di::create<cppnow_talk>(injector)();
 }
@@ -2126,10 +2132,10 @@ cppnow_talk(SpeakerLike speaker, AttendeesLike attendees);
 
 ```cpp
 int main() {
-  // 👍 Wiring same as with OO Dynamic Polymorphism
-  //                        Static Polymorphism
-  //                        Concepts
-  //                        Type-Erasure function
+  // 👍 The same wiring as with Dynamic Polymorphism,
+  //                            Static Polymorphism,
+  //                            Concepts,
+  //                            Functions
 
   return di::create<cppnow_talk>(injector).run();
 }
@@ -2151,11 +2157,11 @@ using AttendeesLike =
 
 ```cpp
 int main() {
-  // 👍 Wiring same as with OO Dynamic Polymorphism
-  //                       Static Polymorphism
-  //                       Concepts
-  //                       Type-Erasure function
-  //                       Type-Erasure
+  // 👍 The same wiring as with Dynamic Polymorphism,
+  //                            Static Polymorphism,
+  //                            Concepts,
+  //                            Functions,
+  //                            Type-Erasure
 
   return di::create<cppnow_talk>(injector).run();
 }
