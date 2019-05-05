@@ -52,10 +52,6 @@ Kris Jusiak, Quantlab Financial
 
 ==============================================================================
 
-## "The only way to go fast is to go well", Uncle Bob
-
-==============================================================================
-
 ## Motivation/Goal/Requirement
 
 ----
@@ -73,12 +69,12 @@ Kris Jusiak, Quantlab Financial
 <!-- .element: class="fragment" -->
 
 ```gherkin
-   And There are attendees not using DI (✓)
+   And There are attendees not using DI (?)
 ```
 <!-- .element: class="fragment" -->
 
 ```gherkin
-  When The talk has been given by a speaker (✓)
+  When The talk has been given by a speaker (~)
 ```
 <!-- .element: class="fragment" -->
 
@@ -124,7 +120,10 @@ Kris Jusiak, Quantlab Financial
 
 ----
 
+### "The only way to go fast is to go well", Uncle Bob
+
 <img src="images/clean_code.jpg" style="width: 35%; background:none; border:none; box-shadow:none;" />
+<!-- .element: class="fragment" -->
 
 ----
 
@@ -2012,6 +2011,20 @@ int main() {
 
 ----
 
+### [Boost].DI - Power of the wiring
+
+```cpp
+auto injector = di::make_injector(
+  di::bind<SpeakerLike>.to<speaker>(),
+  di::bind<AttendeesLike>.to<awesome_attendees>()
+);
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+<!-- .slide: data-background="darkblue" -->
+
+----
+
 ### [Boost].DI - Static Polymorphism - Wiring
 
 ```cpp
@@ -2023,7 +2036,9 @@ class cppnow_talk;
 
 ```cpp
 int main() {
-  // 👍 Same as with OO Dynamic Polymorphism
+  // 👍 Wiring as with OO Dynamic Polymorphism
+
+  return di::create<cppnow_talk>(injector).run();
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -2041,8 +2056,10 @@ class cppnow_talk;
 
 ```cpp
 int main() {
-  // 👍 Same as with OO Dynamic Polymorphism
-  //                 Static Polymorphism
+  // 👍 Wiring same as with OO Dynamic Polymorphism
+  //                        Static Polymorphism
+
+  return di::create<cppnow_talk>(injector).run();
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -2052,7 +2069,9 @@ int main() {
 ### [Boost].DI - Type-Erasure - Function
 
 ```cpp
-struct regular_speaker {
+class regular_speaker {
+ public:
+  speaker(first_name, last_name);
   auto operator()(); // talk
 };
 ```
@@ -2081,9 +2100,11 @@ class cppnow_talk {
 
 ```cpp
 int main() {
-  // 👍 Same as with OO Dynamic Polymorphism
-  //                 Static Polymorphism
-  //                 Concepts
+  // 👍 Wiring same as with OO Dynamic Polymorphism
+  //                        Static Polymorphism
+  //                        Concepts
+
+  return di::create<cppnow_talk>(injector)();
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -2105,10 +2126,12 @@ cppnow_talk(SpeakerLike speaker, AttendeesLike attendees);
 
 ```cpp
 int main() {
-  // 👍 Same as with OO Dynamic Polymorphism
-  //                 Static Polymorphism
-  //                 Concepts
-  //                 Type-Erasure function
+  // 👍 Wiring same as with OO Dynamic Polymorphism
+  //                        Static Polymorphism
+  //                        Concepts
+  //                        Type-Erasure function
+
+  return di::create<cppnow_talk>(injector).run();
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -2128,11 +2151,13 @@ using AttendeesLike =
 
 ```cpp
 int main() {
-  // 👍 Same as with OO Dynamic Polymorphism
-  //                 Static Polymorphism
-  //                 Concepts
-  //                 Type-Erasure function
-  //                 Type-Erasure
+  // 👍 Wiring same as with OO Dynamic Polymorphism
+  //                       Static Polymorphism
+  //                       Concepts
+  //                       Type-Erasure function
+  //                       Type-Erasure
+
+  return di::create<cppnow_talk>(injector).run();
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -2145,20 +2170,29 @@ int main() {
 <!-- .element: class="fragment" -->
 ----
 
-### [Boost].DI - Refactoring for free
+### Refactoring with DI
+
+```cpp
+cppnow_talk(speaker, attendees);
+```
+<!-- .element: class="fragment" -->
 
 ```cpp
 cppnow_talk1(speaker, std::shared_ptr<attendees>);
+```
+<!-- .element: class="fragment" -->
+
+```cpp
 cppnow_talk2(attendees, std::unique_ptr<SpeakerLike>);
 ```
-<!-- .element: class="fragment" data-fragment-index="0" -->
+<!-- .element: class="fragment" -->
 
 ----
 
 ### Manual Wiring - Refactoring for $$$
 
 ```cpp
-int main() {
+{
   auto speaker = regular_speaker();
   auto attendees = awesome_attendees();
   auto track0 = cppnow_talk(speaker, attendees);
@@ -2167,51 +2201,35 @@ int main() {
 <!-- .element: class="fragment" -->
 
 ```cpp
-int main() {
+{
   auto speaker = regular_speaker();
   auto attendees = std::make_share<awesome_attendees>();
   auto track1 = cppnow_talk(speaker, attendees);
-  // ...
 }
 ```
 <!-- .element: class="fragment" -->
 
 ```cpp
-int main() {
+{
   auto speaker = std::make_unique<regular_speaker>();
   auto attendees = awesome_attendees();
   auto track2 = cppnow_talk(std::move(speaker), attendees);
-  // ...
 }
 ```
 <!-- .element: class="fragment" -->
 
-```cpp
-...
-```
-<!-- .element: class="fragment" -->
+----
+
+### [Boost].DI - Refactoring for free
 
 ```cpp
-int main() {
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-```cpp
-  auto injector = ...; /// same as ALWAYS!
+{
+  track0 = di::create<cppnow_talk>(injector);  // 👍 Okay
+  track1 = di::create<cppnow_talk1>(injector); // 👍 Okay
+  track2 = di::create<cppnow_talk2>(injector); // 👍  Okay
+}
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
-
-```cpp
-  track0 = di::create<cppnow_talk>(injector);  // 👍 Still Okay
-  track1 = di::create<cppnow_talk1>(injector); // 👍 No problem
-  track2 = di::create<cppnow_talk2>(injector); // 👍 No problem
-```
-<!-- .element: class="fragment" data-fragment-index="3" -->
-
-```cpp
-}
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
 
 ----
 
@@ -2282,40 +2300,37 @@ int main() {
 
 ```cpp
 cppnow_talk3(speakerLike,  AttendeesLike);
-cppnow_talk4(speakerLike*, AttendeesLike);
 ```
 <!-- .element: class="fragment" data-fragment-index="0" -->
 
 ```cpp
-int main() {
+cppnow_talk4(speakerLike*, AttendeesLike);
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
-```cpp
-  auto injector = di::make_injector<no_raw_pointers_policy>(
-    ... // same as ALWAYS
-  );
-```
-<!-- .element: class="fragment" data-fragment-index="2" -->
+---
 
 ```cpp
-  track0 = di::create<cppnow_talk>(injector);  // 👍 Still Okay
-  track1 = di::create<cppnow_talk1>(injector); // 👍 No problem
-  track2 = di::create<cppnow_talk2>(injector); // 👍 No problem
-  track3 = di::create<cppnow_talk3>(injector); // 👍 No problem
+auto policy_injector =
+  di::make_injector<no_raw_pointers_policy>(std::move(injector));
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
 ```cpp
-  // 👍 Compile time error (policy not satisfied)
-  track4 = di::create<cppnow_talk4>(injector);
+{
+  track0 = di::create<cppnow_talk>(policy_injector);  // 👍 Okay
+  track1 = di::create<cppnow_talk1>(policy_injector); // 👍 Okay
+  track2 = di::create<cppnow_talk2>(policy_injector); // 👍 Okay
+  track3 = di::create<cppnow_talk3>(policy_injector); // 👍 Okay
 ```
 <!-- .element: class="fragment" data-fragment-index="4" -->
 
 ```cpp
+  // 👍 Compile time error (policy not satisfied)
+  track4 = di::create<cppnow_talk4>(policy_injector);
 }
 ```
-<!-- .element: class="fragment" data-fragment-index="1" -->
+<!-- .element: class="fragment" data-fragment-index="5" -->
 
 ----
 
@@ -2514,7 +2529,7 @@ SOLID >> `STUPID`
 
 * #### DI is just a fancy term for using constructors (25 dollar concept...)
 <!-- .element: class="fragment" -->
-* #### DI can be easily missued
+* #### DI can be easily misused
 <!-- .element: class="fragment" -->
 * #### DI doesn't require a library/framework
 <!-- .element: class="fragment" -->
@@ -2522,34 +2537,6 @@ SOLID >> `STUPID`
 <!-- .element: class="fragment" -->
 
 <!-- .slide: data-background="darkblue" -->
-
-==============================================================================
-
-## Motivation/Goal/Requirement
--
-## Recap
-
-----
-
-### Scenario: Number of attendees willing to use DI should increase
-
-```gherkin
-...
-```
-<!-- .element: class="fragment" -->
-
-```gherkin
-  When The talk has been given by a speaker (✓)
-```
-<!-- .element: class="fragment" -->
-
-```gherkin
-  Then The number of attendees willing to use DI should increase (?)
-```
-<!-- .element: class="fragment" -->
-
-<img src="images/youre_welcome.jpg" style="width: 20%; background:none; border:none; box-shadow:none;" />
-<!-- .element: class="fragment" -->
 
 ==============================================================================
 
