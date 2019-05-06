@@ -386,7 +386,7 @@ class cppnow_talk {
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
 ```cpp
-}
+};
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -593,6 +593,7 @@ class cppnow_talk {
   explicit cppnow_talk(speaker);
   auto run() {
     const auto attendees = attendees{"Lenny", "Shea", ...}; // 👎
+    // ...
   }
 };
 ```
@@ -662,15 +663,13 @@ int main() {
 
 ```cpp
 class cppnow_talk {
-  speaker speaker_;                     // Tightly coupled
-  // std::shared_ptr<speaker> speaker_; // Tightly coupled
+  speaker speaker_;                     // Tightly coupled?
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
  public:
-  cppnow_talk() : speaker_{"Kris"} {}
-  // cppnow_talk() : speaker_{std::make_shared<speaker>("Kris")} {}
+  cppnow_talk() : speaker_{"Kris"} {}   // Tightly coupled
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
@@ -686,7 +685,6 @@ class cppnow_talk {
 
 ```cpp
   cppnow_talk() : speaker_{"Kris"} {}                            // 👎
-//cppnow_talk() : speaker_{std::make_shared<speaker>("Kris")} {} // 👎
 ```
 <!-- .element: class="fragment" -->
 
@@ -754,7 +752,7 @@ class cppnow_talk {
 
 ```cpp
   auto run();
-}
+};
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -779,13 +777,13 @@ explicit cppnow_talk(speaker speaker)  : speaker_{speaker} {}; // 👍
 ### Carrying dependencies with inheritance
 
 ```cpp
-class cppnow_talk : speaker {
+class cppnow_talk : speaker { // Tightly coupled to `speaker` API
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
  public:
-  cppnow_talk(string_view name)
+  explicit cppnow_talk(string_view name) // Common with CRTP?
    : speaker{name}
   {}
 ```
@@ -793,7 +791,7 @@ class cppnow_talk : speaker {
 
 ```cpp
   auto run();
-}
+};
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -1549,15 +1547,15 @@ int main() {
 
 ### 👍 Consider using proper abstractions for your project/module (DIP)
 
-* Templates/Concepts:
+* Templates/Concepts
 <!-- .element: class="fragment" -->
   * Dependencies known at compile time
 <!-- .element: class="fragment" -->
-* Type-Erasure:
+* Type-Erasure
 <!-- .element: class="fragment" -->
   * Run-Time dependency
 <!-- .element: class="fragment" -->
-* Inheritance:
+* Inheritance
 <!-- .element: class="fragment" -->
   * Never?
 <!-- .element: class="fragment" -->
@@ -1628,7 +1626,7 @@ int main() {
 
 ### Wiring mess
 
-<img src="images/wiring.png" style="width: 80%; background:none; border:none; box-shadow:none;" />
+<img src="images/wiring.png" style="width: 90%; background:none; border:none; box-shadow:none;" />
 <!-- .element: class="fragment" -->
 
 * #### Boilerplate / Tedious
@@ -2230,9 +2228,9 @@ cppnow_talk2(attendees, std::unique_ptr<SpeakerLike>);
 
 ```cpp
 {
-  track0 = di::create<cppnow_talk>(injector);  // 👍 Okay
+  track0 = di::create<cppnow_talk> (injector); // 👍 Okay
   track1 = di::create<cppnow_talk1>(injector); // 👍 Okay
-  track2 = di::create<cppnow_talk2>(injector); // 👍  Okay
+  track2 = di::create<cppnow_talk2>(injector); // 👍 Okay
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
@@ -2324,7 +2322,7 @@ auto policy_injector =
 
 ```cpp
 {
-  track0 = di::create<cppnow_talk>(policy_injector);  // 👍 Okay
+  track0 = di::create<cppnow_talk> (policy_injector); // 👍 Okay
   track1 = di::create<cppnow_talk1>(policy_injector); // 👍 Okay
   track2 = di::create<cppnow_talk2>(policy_injector); // 👍 Okay
   track3 = di::create<cppnow_talk3>(policy_injector); // 👍 Okay
