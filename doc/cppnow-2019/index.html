@@ -1085,7 +1085,7 @@ int main() {
 ### Type-Erasure - std::function
 
 ```cpp
-std::function speaker_talk = [](first_name, last_name) { ... };
+std::function speaker_talk  = [](first_name, last_name) { ... };
 ```
 <!-- .element: class="fragment" -->
 
@@ -1095,7 +1095,7 @@ std::function attendees_ask = [] { ... };
 <!-- .element: class="fragment" -->
 
 ```cpp
-std::function cppnow_talk = [](auto talk, auto ask) { ... };
+std::function cppnow_talk   = [](auto talk, auto ask) { ... };
 ```
 <!-- .element: class="fragment" -->
 
@@ -1120,14 +1120,14 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 ```cpp
-  std::function talk = [first_name = "Kris", last_name = "Jusiak"] {
+  std::function talk  = [first_name = "Kris", last_name = "Jusiak"] {
     speaker_talk(first_name, last_name);
   };
 ```
 <!-- .element: class="fragment" data-fragment-index="2" -->
 
 ```cpp
-  std::function ask = [] { return attendees_ask() };
+  std::function ask   = [] { return attendees_ask() };
 ```
 <!-- .element: class="fragment" data-fragment-index="3" -->
 
@@ -2165,6 +2165,12 @@ int main() {
 }
 ```
 <!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
+
+### 👍 IoC containers aren't only about OO design and don't imply performance overhead
+
+<!-- .slide: data-background="darkblue" -->
 
 ----
 
