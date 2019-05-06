@@ -1945,12 +1945,12 @@ int main() {
 ### [Boost].DI
 
 ```cpp
-class SpeakerLike;          // No changes required
-class AttendeesLike;        // No changes required
-class regular_speaker;      // No changes required
-class awesome_attendees;    // No changes required
-class cppnow_talk;          // No changes required
-...                         // No changes required
+class SpeakerLike;          // 👍 No changes required
+class AttendeesLike;        // 👍 No changes required
+class regular_speaker;      // 👍 No changes required
+class awesome_attendees;    // 👍 No changes required
+class cppnow_talk;          // 👍 No changes required
+...                         // 👍 No changes required
 ```
 <!-- .element: class="fragment" data-fragment-index="0" -->
 
@@ -2029,48 +2029,7 @@ auto injector = di::make_injector(
 
 ----
 
-### [Boost].DI - Static Polymorphism - Wiring
-
-```cpp
-template<class TSpeaker   = class SpeakerLike,
-         class TAttendees = class AttendeesLike>
-class cppnow_talk;
-```
-<!-- .element: class="fragment" data-fragment-index="0" -->
-
-```cpp
-int main() {
-  // 👍 The same wiring as with Dynamic Polymorphism
-
-  return di::create<cppnow_talk>(injector).run();
-}
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
------
-
-### [Boost].DI - Concepts - Wiring
-
-```cpp
-template<SpeakerLike TSpeaker     = class SpeakerLike,
-         AttendeesLike TAttendees = class AttendeeLike>
-class cppnow_talk;
-```
-<!-- .element: class="fragment" data-fragment-index="0" -->
-
-```cpp
-int main() {
-  // 👍 The same wiring as with Dynamic Polymorphism,
-  //                            Static Polymorphism
-
-  return di::create<cppnow_talk>(injector).run();
-}
-```
-<!-- .element: class="fragment" data-fragment-index="1" -->
-
-----
-
-### [Boost].DI - Type-Erasure - Function
+### [Boost].DI - Type-Erasure - std::function
 
 ```cpp
 class regular_speaker {
@@ -2100,13 +2059,11 @@ class cppnow_talk {
 
 ----
 
-### [Boost].DI - Type-Erasure - Function - Wiring
+### [Boost].DI - Type-Erasure - std::function - Wiring
 
 ```cpp
 int main() {
-  // 👍 The same wiring as with Dynamic Polymorphism,
-  //                            Static Polymorphism,
-  //                            Concepts
+  // 👍 The same wiring as with Dynamic Polymorphism
 
   return di::create<cppnow_talk>(injector)();
 }
@@ -2131,9 +2088,7 @@ cppnow_talk(SpeakerLike speaker, AttendeesLike attendees);
 ```cpp
 int main() {
   // 👍 The same wiring as with Dynamic Polymorphism,
-  //                            Static Polymorphism,
-  //                            Concepts,
-  //                            Functions
+  //                            std::function
 
   return di::create<cppnow_talk>(injector).run();
 }
@@ -2156,9 +2111,7 @@ using AttendeesLike =
 ```cpp
 int main() {
   // 👍 The same wiring as with Dynamic Polymorphism,
-  //                            Static Polymorphism,
-  //                            Concepts,
-  //                            Functions,
+  //                            std::function,
   //                            Type-Erasure
 
   return di::create<cppnow_talk>(injector).run();
@@ -2167,6 +2120,53 @@ int main() {
 <!-- .element: class="fragment" data-fragment-index="1" -->
 
 -----
+
+### [Boost].DI - Static Polymorphism - Wiring
+
+```cpp
+template<class TSpeaker   = class SpeakerLike,
+         class TAttendees = class AttendeesLike>
+class cppnow_talk;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+int main() {
+  // 👍 The same wiring as with Dynamic Polymorphism,
+  //                            std::function,
+  //                            Type-Erasure,
+  //                            std::variant
+
+  return di::create<cppnow_talk>(injector).run();
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+-----
+
+### [Boost].DI - Concepts - Wiring
+
+```cpp
+template<SpeakerLike TSpeaker     = class SpeakerLike,
+         AttendeesLike TAttendees = class AttendeeLike>
+class cppnow_talk;
+```
+<!-- .element: class="fragment" data-fragment-index="0" -->
+
+```cpp
+int main() {
+  // 👍 The same wiring as with Dynamic Polymorphism,
+  //                            std::function,
+  //                            Type-Erasure,
+  //                            std::variant,
+  //                            Templates
+
+  return di::create<cppnow_talk>(injector).run();
+}
+```
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+----
 
 ### DI libraries additional benefits
 
