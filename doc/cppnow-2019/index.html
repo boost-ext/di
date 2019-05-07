@@ -684,12 +684,12 @@ class cppnow_talk {
 ### 👍 Consider using constructor Dependency Injection consistently
 
 ```cpp
-  cppnow_talk() : speaker_{"Kris"} {}                            // 👎
+cppnow_talk() : speaker_{"Kris"} {}                     // 👎
 ```
 <!-- .element: class="fragment" -->
 
 ```cpp
-cppnow_talk(speaker speaker) : speaker_{speaker} {};             // 👍
+cppnow_talk(speaker speaker) : speaker_{speaker} {};    // 👍
 ```
 <!-- .element: class="fragment" -->
 
@@ -864,7 +864,7 @@ speaker{"Kris", "Jusiak"}; // 👍 Okay
 <!-- .element: class="fragment" -->
 
 ```cpp
-speaker{"Jusiak", "kris"}; // 👎 Oops
+speaker{"Jusiak", "Kris"}; // 👎 Oops
 ```
 <!-- .element: class="fragment" -->
 
