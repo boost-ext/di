@@ -237,8 +237,12 @@ struct index_sequence {
   using type = index_sequence;
 };
 #if defined(__cpp_lib_integer_sequence)
-template <int... Ns> index_sequence<Ns...> from_std(std::integer_sequence<int, Ns...>) { return {}; }
-template <int N> using make_index_sequence = decltype(from_std(std::make_integer_sequence<int, N>{}));
+template <int... Ns>
+index_sequence<Ns...> from_std(std::integer_sequence<int, Ns...>) {
+  return {};
+}
+template <int N>
+using make_index_sequence = decltype(from_std(std::make_integer_sequence<int, N>{}));
 #else
 #if __has_builtin(__make_integer_seq)
 template <class T, T...>
