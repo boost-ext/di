@@ -236,7 +236,7 @@ template <int...>
 struct index_sequence {
   using type = index_sequence;
 };
-#if defined(__cpp_lib_integer_sequence)
+#if defined(__cpp_lib_integer_sequence) && defined(__GNUC__)
 template <int... Ns>
 index_sequence<Ns...> from_std(std::integer_sequence<int, Ns...>) {
   return {};
