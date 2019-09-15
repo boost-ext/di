@@ -1,17 +1,19 @@
-copyright: Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)
+copyright: Copyright &copy; 2012-2019 Kris Jusiak (kris at jusiak net)
 site_name: "[Boost].DI"
 site_url: http://boost-experimental.github.io/di
 site_author: Kris Jusiak
 repo_url: https://github.com/boost-experimental/di
 repo_name: di
-docs_dir: .
+docs_dir: doc
+theme:
+  name: null
+  custom_dir: !!python/object/apply:os.getenv ["MKDOCS_THEME_DIR"]
 use_directory_urls: false
-theme_dir: themes/boost-experimental
 google_analytics: ['UA-73083568-1', 'auto']
 extra_javascript: []
 extra_css: []
 
-pages:
+nav:
 - Introduction: index.md
 - Overview: overview.md
 - Tutorial: tutorial.md
