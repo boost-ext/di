@@ -200,7 +200,7 @@ script:
     && cd di && rm -rf * && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && cd ..
     && MKDOCS_THEME=boost-experimental MKDOCS_SITE=site make doc
     && MKDOCS_THEME=boost-classic MKDOCS_SITE=site/boost make doc readme
-    && mv site/* di && mv site/boost/* di/boost &&
+    && mv site/* di && mv site/boost/* di/boost
     && cd di && git add -A . && git commit -am "doc update"
     && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-experimental/di"); fi
 
