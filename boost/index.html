@@ -3,9 +3,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII">
 
-<meta name="author" content="Kris Jusiak">
-<link rel="canonical" href="http://boost-experimental.github.io/di/index.html">
-<title>[Boost].DI</title>
+
+
+<title>Introduction - [Boost].DI</title>
 
 <link href="./css/boostbook.css" rel="stylesheet">
 <link href="./css/github.css" rel="stylesheet">
@@ -18,30 +18,13 @@
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="overview/index.html"><img src="./images/next.png" alt="Next"></a>
+<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href=""><img src="./images/up.png" alt="Up"></a><a accesskey="h" href=""><img src="./images/home.png" alt="Home"></a><a accesskey="n"  ><img src="./images/next.png" alt="Next"></a>
 </div>
 
 <div class="chapter">
 
 
-<div class="chapter">
-<div class="titlepage"><div>
-<div><h2 class="title">
-<a></a>[Boost].DI</h2></div>
-<div><div class="author"><h3 class="author">
-Kris Jusiak
-</h3></div></div>
-<div><p class="copyright">Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)</p></div>
-<div><div class="legalnotice">
-<a name="idm45555445986288"></a><p>Distributed under the Boost Software License, Version 1.0.
-      (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at
-      <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
-      </p>
-</div></div>
-</div></div>
-
 <div class="toc">
-<p><b>Table of Contents</b></p>
 <dl class="toc">
 
     
@@ -49,39 +32,39 @@ Kris Jusiak
     
 
     
-        <dt><span class="section"><a href="overview/index.html">Overview</a></span></dt>
+        <dt><span class="section"><a href="overview.html">Overview</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="tutorial/index.html">Tutorial</a></span></dt>
+        <dt><span class="section"><a href="tutorial.html">Tutorial</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="try_it/index.html">Try It Online!</a></span></dt>
+        <dt><span class="section"><a href="try_it.html">Try It Online!</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="benchmarks/index.html">Benchmarks</a></span></dt>
+        <dt><span class="section"><a href="benchmarks.html">Benchmarks</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="user_guide/index.html">User Guide</a></span></dt>
+        <dt><span class="section"><a href="user_guide.html">User Guide</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="examples/index.html">Examples</a></span></dt>
+        <dt><span class="section"><a href="examples.html">Examples</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="extensions/index.html">Extensions</a></span></dt>
+        <dt><span class="section"><a href="extensions.html">Extensions</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="FAQ/index.html">FAQ</a></span></dt>
+        <dt><span class="section"><a href="FAQ.html">FAQ</a></span></dt>
     
 
     
-        <dt><span class="section"><a href="CHANGELOG/index.html">CHANGELOG</a></span></dt>
+        <dt><span class="section"><a href="CHANGELOG.html">CHANGELOG</a></span></dt>
     
 
 </dl>
@@ -128,7 +111,7 @@ In short, DI is all about construction!</p>
 <blockquote>
 <p><strong>"Let's make some coffee!"</strong></p>
 </blockquote>
-<p><a href="./images/coffee_maker.png"><img alt="Coffee Maker" src="./images/coffee_maker.png" /></a>
+<p><a href="images/coffee_maker.png"><img alt="Coffee Maker" src="images/coffee_maker.png" /></a>
 </center></p>
 <pre><code class="cpp">                      No Dependency injection                 | Dependency Injection
                       ----------------------------------------|-------------------------------------------
@@ -320,10 +303,8 @@ app app_{controller_, user_};
           * Hacks/Workarounds (~~Single Responsibility~~)
 </code></pre>
 
-<ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp"> Motivation Example</a>
-<br /></li>
-</ul>
+<p><img alt="CPP(BTN)" src="Run_Motivation_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/motivation.cpp" />
+<br /></p>
 <p>Right now, imagine a project with hundreds or thousands of those dependencies and a critical issue
 which has to be fixed ASAP. Unfortunately, in order to fix the bug properly a new non-trivial dependency has to be
 introduced.</p>
@@ -333,13 +314,13 @@ of the changed object but no worries though, it might be refactored later on (me
 <p><strong>If that sounds familiar</strong>, take a look into DI library as it helps to solve developer dilemma by taking care
 of creating all required dependencies whereas dev may focus on fixing and testing the issue.</p>
 <hr />
-<p><strong>DI library</strong>, not only let you forget about maintaining dependencies creation (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>),
+<p><strong>DI library</strong>, not only let you forget about maintaining dependencies creation (See <a href="tutorial.html#1-basic-create-objects-tree">Create Objects Tree</a>),
 but also can help you with...</p>
 <ul>
-<li>Testing (See <a href="extensions/index.html#mocks-provider">Mocks Provider</a>)</li>
-<li>Serializing (See <a href="extensions/index.html#serialize">Serialize</a>)</li>
-<li>Understand code dependencies (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>)</li>
-<li>Restrict what types and how they should be created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>)</li>
+<li>Testing (See <a href="extensions.html#mocks-provider">Mocks Provider</a>)</li>
+<li>Serializing (See <a href="extensions.html#serialize">Serialize</a>)</li>
+<li>Understand code dependencies (See <a href="extensions.html#uml-dumper">UML Dumper</a>)</li>
+<li>Restrict what types and how they should be created (See <a href="user_guide.html#di_constructible">Constructible Policy</a>)</li>
 </ul>
 <h3 id="real-life-examples">Real Life examples?</h3>
 <ul>
@@ -367,32 +348,30 @@ but also can help you with...</p>
 </ul>
 <h3 id="why-boostdi">Why [Boost].DI?</h3>
 <ul>
-<li>[Boost].DI has none run-time overhead (See <a href="overview/index.html#performance">Performance</a>)</li>
-<li>[Boost].DI compiles fast / <strong>Faster than Java-<a href="https://github.com/google/dagger">Dagger2</a>!</strong> (See <a href="overview/index.html#benchmarks">Benchmarks</a>)</li>
-<li>[Boost].DI gives short diagnostic messages (See <a href="overview/index.html#error-messages">Error messages</a>)</li>
-<li>[Boost].DI is non-intrusive (See <a href="user_guide/index.html#injections">Injections</a>)</li>
-<li>[Boost].DI reduces boilerplate code (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
-<li>[Boost].DI reduces testing effort (See <a href="extensions/index.html#mocks-provider">Mocks Provider</a>)</li>
-<li>[Boost].DI gives better control of what and how is created (See <a href="user_guide/index.html#di_constructible">Constructible Policy</a>)</li>
-<li>[Boost].DI gives better understanding about objects hierarchy (See <a href="extensions/index.html#uml-dumper">UML Dumper</a>)</li>
+<li>[Boost].DI has none run-time overhead (See <a href="overview.html#performance">Performance</a>)</li>
+<li>[Boost].DI compiles fast / <strong>Faster than Java-<a href="https://github.com/google/dagger">Dagger2</a>!</strong> (See <a href="overview.html#benchmarks">Benchmarks</a>)</li>
+<li>[Boost].DI gives short diagnostic messages (See <a href="overview.html#error-messages">Error messages</a>)</li>
+<li>[Boost].DI is non-intrusive (See <a href="user_guide.html#injections">Injections</a>)</li>
+<li>[Boost].DI reduces boilerplate code (See <a href="tutorial.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
+<li>[Boost].DI reduces testing effort (See <a href="extensions.html#mocks-provider">Mocks Provider</a>)</li>
+<li>[Boost].DI gives better control of what and how is created (See <a href="user_guide.html#di_constructible">Constructible Policy</a>)</li>
+<li>[Boost].DI gives better understanding about objects hierarchy (See <a href="extensions.html#uml-dumper">UML Dumper</a>)</li>
 </ul>
 <blockquote>
 <p><a href="http://boost-experimental.github.io/di/try_it/index.html"><strong>Try it online!</strong></a></p>
 </blockquote>
-<ul>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp"> UML Dumper Extension</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/xml_injection.cpp"> XML Injection Extension</a></li>
-<li><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp"> Constructible Example</a></li>
-</ul>
+<p><img alt="CPP(BTN)" src="Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp" />
+<img alt="CPP(BTN)" src="Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/xml_injection.cpp" />
+<img alt="CPP(BTN)" src="Run_Constructible_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp" /></p>
 <p><br /><br /></p>
 <h3 id="boostdi-design-goals">[Boost].DI design goals</h3>
 <ul>
-<li>Be as fast as possible (See <a href="overview/index.html#performance">Performance</a>)</li>
-<li>Compile as fast as possible (See <a href="overview/index.html#benchmarks">Benchmarks</a>)</li>
-<li>Give short and intuitive error messages (See <a href="overview/index.html#error-messages">Error messages</a>)</li>
-<li>Guarantee object creation at compile-time (See <a href="tutorial/index.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
-<li>Be as non-intrusive as possible (See <a href="user_guide/index.html#injections">Injections</a>)</li>
-<li>Be easy to extend (See <a href="extensions/index.html">Extensions</a>)</li>
+<li>Be as fast as possible (See <a href="overview.html#performance">Performance</a>)</li>
+<li>Compile as fast as possible (See <a href="overview.html#benchmarks">Benchmarks</a>)</li>
+<li>Give short and intuitive error messages (See <a href="overview.html#error-messages">Error messages</a>)</li>
+<li>Guarantee object creation at compile-time (See <a href="tutorial.html#1-basic-create-objects-tree">Create Objects Tree</a>)</li>
+<li>Be as non-intrusive as possible (See <a href="user_guide.html#injections">Injections</a>)</li>
+<li>Be easy to extend (See <a href="extensions.html">Extensions</a>)</li>
 </ul>
 <h3 id="articles">Articles</h3>
 <ul>
@@ -432,8 +411,9 @@ but also can help you with...</p>
 hljs.configure({languages:['cpp']});
 hljs.initHighlightingOnLoad();
 </script>
+<script src="search/main.js"></script>
 
-<div class="copyright-footer">Copyright &copy; 2012-2018 Kris Jusiak (kris at jusiak net)
+<div class="copyright-footer">
       <p>Distributed under the Boost Software License, Version 1.0.
       (See accompanying file <code class="filename">LICENSE_1_0.txt</code> or copy at
       <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
@@ -444,7 +424,7 @@ hljs.initHighlightingOnLoad();
 
 <hr>
 <div class="spirit-nav">
-<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href="index.html"><img src="./images/up.png" alt="Up"></a><a accesskey="h" href="index.html"><img src="./images/home.png" alt="Home"></a><a accesskey="n"  href="overview/index.html"><img src="./images/next.png" alt="Next"></a>
+<a accesskey="p"  ><img src="./images/prev.png" alt="Prev"></a><a accesskey="u" href=""><img src="./images/up.png" alt="Up"></a><a accesskey="h" href=""><img src="./images/home.png" alt="Home"></a><a accesskey="n"  ><img src="./images/next.png" alt="Next"></a>
 </div>
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>

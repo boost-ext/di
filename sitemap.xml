@@ -1,84 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-    
     <url>
      <loc>http://boost-experimental.github.io/di/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/overview/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/overview.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/tutorial/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/tutorial.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/try_it/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/try_it.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/benchmarks/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/benchmarks.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/user_guide/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/user_guide.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/examples/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/examples.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/extensions/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/extensions.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/FAQ/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/FAQ.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
-    
     <url>
-     <loc>http://boost-experimental.github.io/di/CHANGELOG/index.html</loc>
-     <lastmod>2019-07-29</lastmod>
+     <loc>http://boost-experimental.github.io/di/CHANGELOG.html</loc>
+     <lastmod>2019-09-29</lastmod>
      <changefreq>daily</changefreq>
     </url>
-    
-
 </urlset>
