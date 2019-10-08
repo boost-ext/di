@@ -47,6 +47,7 @@ int main() {
     auto object = injector.create<example>();
     object.initialize();
   }
+#if defined(__EXCEPTIONS)
   {
     /*<<define injector>>*/
     // clang-format off
@@ -65,4 +66,5 @@ int main() {
     assert(exception_thrown);
     // clang-format on
   }
+#endif
 }
