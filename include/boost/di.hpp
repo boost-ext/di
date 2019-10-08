@@ -1546,15 +1546,15 @@ class instance {
       void (*dtor)(injector*) = nullptr;
       ~injector() noexcept { static_cast<injector*>(this)->dtor(this); }
       template <class TName, class T>
-      T create(const named<TName, T>&, const aux::true_type&) const noexcept {
+      T create(const named<TName, T>&, const aux::true_type&) const {
         return static_cast<const injector__<named<TName, T>>*>(this)->f(static_cast<const injector__<named<TName, T>>*>(this));
       }
       template <class T>
-      T create(const named<no_name, T>&, const aux::false_type&) const noexcept {
+      T create(const named<no_name, T>&, const aux::false_type&) const {
         return typename concepts::type<T>::is_not_exposed{};
       }
       template <class TName, class T>
-      T create(const named<TName, T>&, const aux::false_type&) const noexcept {
+      T create(const named<TName, T>&, const aux::false_type&) const {
         return typename concepts::type<T>::template named<TName>::is_not_exposed{};
       }
     };
@@ -1566,7 +1566,7 @@ class instance {
       struct create;
       template <class TName, class T>
       struct create<named<TName, T>, aux::true_type> {
-        static T impl(const injector__<named<TName, T>>* object) noexcept {
+        static T impl(const injector__<named<TName, T>>* object) {
           using type = aux::type<aux::conditional_t<aux::is_same<TName, no_name>::value, T, named<TName, T>>>;
           return static_cast<const core::injector__<TInjector>&>(static_cast<const injector_impl*>(object)->injector_)
               .create_successful_impl(type{});
@@ -1574,7 +1574,7 @@ class instance {
       };
       template <class TName, class T>
       struct create<named<TName, T>, aux::false_type> {
-        static T impl(const injector__<named<TName, T>>* object) noexcept {
+        static T impl(const injector__<named<TName, T>>* object) {
           using type = aux::type<aux::conditional_t<aux::is_same<TName, no_name>::value, T, named<TName, T>>>;
           return static_cast<const core::injector__<TInjector>&>(static_cast<const injector_impl*>(object)->injector_)
               .create_impl(type{});
