@@ -92,4 +92,3 @@ pph() {
 set -e
 cd ${0%/*}/../include && pph `head -1 ../doc/CHANGELOG.md  | sed "s/.*\[\(.*\)\].*/\1/" | tr '.' ' '` > "boost/di.hpp"
 ${CLANG_FORMAT:=clang-format} -i "boost/di.hpp"
-
