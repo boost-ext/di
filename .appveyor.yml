@@ -14,7 +14,6 @@ branches:
   - gh-pages
 
 cache:
-  - C:\ProgramData\chocolatey\lib\cmake.portable -> .appveyor.yml
   - C:\tools\mingw64                             -> .appveyor.yml
   - C:\Program Files (x86)\Dr. Memory            -> .appveyor.yml
 
@@ -54,7 +53,7 @@ matrix:
   fast_finish: true
 
 install:
-  - cinst -y mingw cmake.portable drmemory
+  - cinst -y mingw drmemory
   - refreshenv
   - call "%VSPATH%"\vcvarsall %PLATFORM%
 
