@@ -25,7 +25,7 @@ class lazy {
   template <class TInjector>
   explicit lazy(const TInjector &i) noexcept : injector_((void *)&i), f(create<TInjector>) {}
 
-  T get() const noexcept { return (*f)(injector_); }
+  T get() const { return (*f)(injector_); }
 
  private:
   const void *injector_ = nullptr;

@@ -35,14 +35,36 @@ class example {
 };
 
 int main() {
-  /*<<define injector>>*/
-  // clang-format off
-  auto injector = di::make_injector(
-    di::bind<interface>().to<type_expensive_to_create>()
-  );
-  // clang-format on
+  {
+    /*<<define injector>>*/
+    // clang-format off
+    auto injector = di::make_injector(
+      di::bind<interface>().to<type_expensive_to_create>()
+    );
+    // clang-format on
 
-  /*<<create `example`>>*/
-  auto object = injector.create<example>();
-  object.initialize();
+    /*<<create `example`>>*/
+    auto object = injector.create<example>();
+    object.initialize();
+  }
+#if defined(__EXCEPTIONS)
+  {
+    /*<<define injector>>*/
+    // clang-format off
+    auto injector = di::make_injector(
+        di::bind<int>().to([]()->int{ throw 0; })
+    );
+    auto exception_thrown = false;
+    try {
+        auto lazy = injector.create<di::extension::lazy<int>>();
+        /*<<call throws>>*/
+        lazy.get();
+    }
+    catch (...) {
+        exception_thrown = true;
+    }
+    assert(exception_thrown);
+    // clang-format on
+  }
+#endif
 }
