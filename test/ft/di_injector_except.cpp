@@ -7,14 +7,24 @@
 #include "boost/di.hpp"
 
 namespace di = boost::di;
+struct except {
+  except() { throw 0; }
+};
 
 test should_throw_when_ctor_throws = [] {
-  struct except {
-    except() { throw 0; }
-  };
-
   const auto injector = di::make_injector();
 
+  auto cought = false;
+  try {
+    injector.create<except>();
+  } catch (...) {
+    cought = true;
+  }
+  expect(cought);
+};
+
+test should_throw_when_ctor_throws_with_explicit_type = [] {
+  di::injector<except> injector = di::make_injector();
   auto cought = false;
   try {
     injector.create<except>();
