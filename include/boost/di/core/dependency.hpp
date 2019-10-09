@@ -213,6 +213,8 @@ class dependency : dependency_base,
   using scope_t::create;
   using scope_t::is_referable;
   using scope_t::try_create;
+  template <class, class>
+  static void try_create(...);
 
  private:
   template <class T, int... Ns, class... Ts>
