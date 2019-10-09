@@ -1775,8 +1775,6 @@ class dependency : dependency_base,
   using scope_t::create;
   using scope_t::is_referable;
   using scope_t::try_create;
-  template <class, class>
-  static void try_create(...);
 
  private:
   template <class T, int... Ns, class... Ts>
@@ -2705,33 +2703,31 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
-    using dependency_t = aux::remove_reference_t<decltype(dependency)>;
+    using dependency_t = typename aux::remove_reference<decltype(dependency)>::type;
     using ctor_t = typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T,
                                                        typename dependency_t::ctor>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
+    auto& creatable_dept = static_cast<dependency__<dependency_t>&>(dependency);
+    using wrapper_t = decltype(creatable_dept.template create<T, TName>(provider_t{this}));
     using ctor_args_t = typename ctor_t::second::second;
     policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(
         ((injector*)this)->cfg().policies(this));
-    return wrapper<T, wrapper_t>{
-        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
+    return wrapper<T, wrapper_t>{creatable_dept.template create<T, TName>(provider_t{this})};
   }
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_successful_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
-    using dependency_t = aux::remove_reference_t<decltype(dependency)>;
+    using dependency_t = typename aux::remove_reference<decltype(dependency)>::type;
     using ctor_t = typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T,
                                                        typename dependency_t::ctor>::type;
     using provider_t = successful::provider<ctor_t, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
+    auto& creatable_dept = static_cast<dependency__<dependency_t>&>(dependency);
+    using wrapper_t = decltype(creatable_dept.template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, config, dependency__<dependency_t>>;
     using ctor_args_t = typename ctor_t::second::second;
     policy::template call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>>(
         ((injector*)this)->cfg().policies(this));
-    return successful::wrapper<create_t, wrapper_t>{
-        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
+    return successful::wrapper<create_t, wrapper_t>{creatable_dept.template create<T, TName>(provider_t{this})};
   }
   config config_;
 };
@@ -2935,27 +2931,25 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
-    using dependency_t = aux::remove_reference_t<decltype(dependency)>;
+    using dependency_t = typename aux::remove_reference<decltype(dependency)>::type;
     using ctor_t = typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T,
                                                        typename dependency_t::ctor>::type;
     using provider_t = core::provider<ctor_t, TName, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
-    return wrapper<T, wrapper_t>{
-        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
+    auto& creatable_dept = static_cast<dependency__<dependency_t>&>(dependency);
+    using wrapper_t = decltype(creatable_dept.template create<T, TName>(provider_t{this}));
+    return wrapper<T, wrapper_t>{creatable_dept.template create<T, TName>(provider_t{this})};
   }
   template <class TIsRoot = aux::false_type, class T, class TName = no_name>
   auto create_successful_impl__() const {
     auto&& dependency = binder::resolve<T, TName>((injector*)this);
-    using dependency_t = aux::remove_reference_t<decltype(dependency)>;
+    using dependency_t = typename aux::remove_reference<decltype(dependency)>::type;
     using ctor_t = typename type_traits::ctor_traits__<binder::resolve_template_t<injector, typename dependency_t::given>, T,
                                                        typename dependency_t::ctor>::type;
     using provider_t = successful::provider<ctor_t, injector>;
-    using wrapper_t =
-        decltype(static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this}));
+    auto& creatable_dept = static_cast<dependency__<dependency_t>&>(dependency);
+    using wrapper_t = decltype(creatable_dept.template create<T, TName>(provider_t{this}));
     using create_t = referable_t<T, config, dependency__<dependency_t>>;
-    return successful::wrapper<create_t, wrapper_t>{
-        static_cast<dependency__<dependency_t>&>(dependency).template create<T, TName>(provider_t{this})};
+    return successful::wrapper<create_t, wrapper_t>{creatable_dept.template create<T, TName>(provider_t{this})};
   }
   config config_;
 };
