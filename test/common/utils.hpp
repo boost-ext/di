@@ -50,7 +50,7 @@ std::string cxxflags(bool internal = false) {
 
   if (internal) {
     cppflags += "-I../include -I../../include ";  // bjam, cmake
-    std::unordered_map<std::string, std::string> flags = {
+    static std::unordered_map<std::string, std::string> flags = {
         {"msvc14", "/std:c++14"},
         {"msvc17", "/std:c++17"},
         {"msvc20", "/std:c++latest"},
