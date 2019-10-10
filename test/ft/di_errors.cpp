@@ -361,9 +361,9 @@ test bind_not_compatible_narrowed_types_v = [] {
 
 test bind_not_compatible_initializer_list = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__) && _MSC_VER >= 1916
+#if defined(__MSVC__) && _MSC_VER >= 1916 && _MSC_VER < 1920
                         "type_<.*>::is_not_related_to<.*>", "=.*const.*char.*\\*", "=.*int"
-#elif defined(__MSVC__) && _MSC_VER < 1916
+#elif defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
@@ -379,9 +379,9 @@ test bind_not_compatible_initializer_list = [] {
 #if defined(__cpp_variable_templates)
 test bind_not_compatible_initializer_list_v = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__) && _MSC_VER >= 1916
+#if defined(__MSVC__) && _MSC_VER >= 1916 && _MSC_VER < 1920
                         "type_<.*>::is_not_related_to<.*>", "=.*const.*char.*\\*", "=.*int"
-#elif defined(__MSVC__) && _MSC_VER < 1916
+#elif defined(__MSVC__)
                         "type_<.*>::is_not_related_to<int>", "=.*const.*char.*\\*"
 #else
                         "type_<const.*char.*\\*>::is_not_related_to<int>"
