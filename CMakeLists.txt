@@ -6,7 +6,7 @@
 #
 cmake_minimum_required(VERSION 2.8)
 project(Boost.DI CXX)
-set(CXX_STANDARD "c++14")
+set(CXX_STANDARD 14 CACHE STRING "C++ Standard Version. [14|17|20]")
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
@@ -15,13 +15,24 @@ target_include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR}/extension/include
 )
 
-if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror")
-elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang OR ${CMAKE_CXX_COMPILER_ID} STREQUAL AppleClang)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror")
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU OR ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang OR ${CMAKE_CXX_COMPILER_ID} STREQUAL AppleClang)
+    string(REPLACE "14" "1y" COMPILER_SPECIFIC_CXX_STANDARD ${CXX_STANDARD})
+    string(REPLACE "17" "1z" COMPILER_SPECIFIC_CXX_STANDARD ${COMPILER_SPECIFIC_CXX_STANDARD})
+    string(REPLACE "20" "2a" COMPILER_SPECIFIC_CXX_STANDARD ${COMPILER_SPECIFIC_CXX_STANDARD})    
+    set(COMPILER_SPECIFIC_CXX_STANDARD "-std=c++${COMPILER_SPECIFIC_CXX_STANDARD}")
 elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-    set(MSVC_STD_FLAG "/std:c++14" CACHE STRING "Language Standard Version. /std:[c++14|c++17|c++latest]  ")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MSVC_STD_FLAG} /W3 /EHsc")
+    string(REPLACE "20" "latest" COMPILER_SPECIFIC_CXX_STANDARD ${CXX_STANDARD})
+    set(COMPILER_SPECIFIC_CXX_STANDARD "/std:c++${COMPILER_SPECIFIC_CXX_STANDARD}")
+endif()
+
+message("${COMPILER_SPECIFIC_CXX_STANDARD}")
+
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL GNU)    
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_SPECIFIC_CXX_STANDARD} -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror")
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL Clang OR ${CMAKE_CXX_COMPILER_ID} STREQUAL AppleClang)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_SPECIFIC_CXX_STANDARD} -fno-exceptions -pedantic -pedantic-errors -Wall -Wextra -Werror")
+elseif (${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)    
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_SPECIFIC_CXX_STANDARD} /W3 /EHsc")
 else()
     message(WARNING "Unsupported compiler!")
 endif()

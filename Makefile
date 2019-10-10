@@ -16,6 +16,7 @@ PYTHON?=python2
 MKDOCS?=mkdocs
 MKDOCS_THEME?=boost-experimental
 MKDOCS_SITE?=site
+CXX_STANDARD?=14
 
 .PHONY: all clean doc
 
@@ -28,7 +29,7 @@ all_bjam:
 
 all_cmake:
 	@-mkdir build
-	cd build && $(CMAKE) -G "$(CMAKE_GENERATOR)" -DCMAKE_VERBOSE_MAKEFILE=ON .. && $(CMAKE) --build . && ctest --output-on-failure
+	cd build && $(CMAKE) -G "$(CMAKE_GENERATOR)" -DCMAKE_VERBOSE_MAKEFILE=ON -DCXX_STANDARD=$(CXX_STANDARD) .. && $(CMAKE) --build . && ctest --output-on-failure
 
 clean: clean_$(BS)
 
