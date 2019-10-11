@@ -51,16 +51,9 @@ std::string cxxflags(bool internal = false) {
   if (internal) {
     cppflags += "-I../include -I../../include ";  // bjam, cmake
     static std::unordered_map<std::string, std::string> flags = {
-        {"msvc14", "/std:c++14"},
-        {"msvc17", "/std:c++17"},
-        {"msvc20", "/std:c++latest"},
-        {"clang14", "-std=c++1y"},
-        {"clang17", "-std=c++1z"},
-        {"clang20", "-std=c++2a"},
-        {"gcc14", "-std=c++1y"},
-        {"gcc17", "-std=c++1z"},
-        {"gcc20", "-std=c++2a"}
-    };
+        {"msvc14", "/std:c++14"},     {"clang14", "-std=c++1y"}, {"gcc14", "-std=c++1y"},
+        {"msvc17", "/std:c++17"},     {"clang17", "-std=c++1z"}, {"gcc17", "-std=c++1z"},
+        {"msvc20", "/std:c++latest"}, {"clang20", "-std=c++2a"}, {"gcc20", "-std=c++2a"}};
 
     std::string compiler = "";
 #if defined(__CLANG__)
@@ -69,21 +62,17 @@ std::string cxxflags(bool internal = false) {
     compiler = "gcc";
 #elif defined(__MSVC__)
     compiler = "msvc";
-#elif defined(__MSVC__)
-    cppflags += "";
 #endif
 
     std::string cxx_version = "";
-#if __cplusplus == 201402L
+#if __cplusplus <= 201402L
     cxx_version = "14";
 #elif __cplusplus == 201703L
     cxx_version = "17";
 #elif __cplusplus >= 201704L
     cxx_version = "20";
-#elif defined(__MSVC__)
-    cxx_version += "";
 #endif
-    cppflags = flags[compiler + cxx_version];
+    cppflags += flags[compiler + cxx_version];
   }
 
   if (auto flags = std::getenv("CXXFLAGS")) {
