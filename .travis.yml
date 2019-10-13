@@ -80,8 +80,13 @@ matrix:
 
   - os: linux
     dist: trusty
-    env: BS=cmake CXX=clang++-7 LIBCXX=ON
-    addons: { apt: { packages: ["clang-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-7"] } }
+    env: BS=cmake CXX=clang++-8
+    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
+
+  - os: linux
+    dist: trusty
+    env: BS=cmake CXX=clang++-8 LIBCXX=ON
+    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
 
   - os: linux
     dist: trusty
@@ -108,15 +113,15 @@ matrix:
     env: BS=cmake CXX=clang++
 
   - os: osx
-    osx_image: xcode9.1
+    osx_image: xcode9.4
     env: BS=cmake CXX=clang++
 
   - os: osx
-    osx_image: xcode10
+    osx_image: xcode10.3
     env: BS=cmake CXX=clang++
 
   - os: osx
-    osx_image: xcode10.1
+    osx_image: xcode11
     env: BS=cmake CXX=clang++
 
 #
@@ -133,7 +138,7 @@ matrix:
     addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
-    osx_image: xcode10.1
+    osx_image: xcode11
     env: BS=bjam TOOLSET=clang CXX=clang++
 
 #
@@ -141,8 +146,8 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: BS=cmake VARIANT=analyze CXX=clang++-7 LIBCXX=ON
-    addons: { apt: { packages: ["clang-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-7"] } }
+    env: BS=cmake VARIANT=analyze CXX=clang++-8 LIBCXX=ON
+    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
 
   - os: linux
     dist: trusty
@@ -150,7 +155,7 @@ matrix:
     addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
-    osx_image: xcode10.1
+    osx_image: xcode11
     env: BS=cmake VARIANT=analyze CXX=clang++
 
 #
@@ -158,8 +163,8 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: BS=cmake MEMCHECK=valgrind CXX=clang++-7 LIBCXX=ON
-    addons: { apt: { packages: ["clang-7", "libstdc++-7-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-7"] } }
+    env: BS=cmake MEMCHECK=valgrind CXX=clang++-8 LIBCXX=ON
+    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
 
   - os: linux
     dist: trusty
@@ -167,7 +172,7 @@ matrix:
     addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
-    osx_image: xcode10.1
+    osx_image: xcode11
     env: BS=cmake MEMCHECK=valgrind CXX=clang++
 
 #
