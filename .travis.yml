@@ -84,9 +84,32 @@ matrix:
     addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
 
   - os: linux
-    dist: trusty
-    env: BS=cmake CXX=clang++-8 LIBCXX=ON
-    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
+    dist: xenial
+    env: BS=cmake CXX=clang++-9
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+            key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+        packages:
+          - clang-9
+          - libstdc++-9-dev
+          - gdb
+
+  - os: linux
+    dist: xenial
+    env: BS=cmake CXX=clang++-9 LBCXX=ON
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+            key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+        packages:
+          - clang-9
+          - libstdc++-9-dev
+          - gdb
 
   - os: linux
     dist: trusty
@@ -145,9 +168,18 @@ matrix:
 # Static analysis
 #
   - os: linux
-    dist: trusty
-    env: BS=cmake VARIANT=analyze CXX=clang++-8 LIBCXX=ON
-    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
+    dist: xenial
+    env: BS=cmake VARIANT=analyze CXX=clang++-9 LIBCXX=ON
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+            key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+        packages:
+          - clang-9
+          - libstdc++-9-dev
+          - gdb
 
   - os: linux
     dist: trusty
@@ -162,9 +194,18 @@ matrix:
 # Dynamic analysis
 #
   - os: linux
-    dist: trusty
-    env: BS=cmake MEMCHECK=valgrind CXX=clang++-8 LIBCXX=ON
-    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
+    dist: xenial
+    env: BS=cmake MEMCHECK=valgrind CXX=clang++-9 LIBCXX=ON
+    addons:
+      apt:
+        sources:
+          - ubuntu-toolchain-r-test
+          - sourceline: 'deb https://apt.llvm.org/xenial/ llvm-toolchain-xenial-9 main'
+            key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+        packages:
+          - clang-9
+          - libstdc++-9-dev
+          - gdb
 
   - os: linux
     dist: trusty
