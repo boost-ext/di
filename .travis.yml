@@ -131,6 +131,11 @@ matrix:
     env: BS=cmake CXX=g++-8
     addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
+  - os: linux
+    dist: trusty
+    env: BS=cmake CXX=g++-9
+    addons: { apt: { packages: ["g++-9", "libstdc++-9-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+
   - os: osx
     osx_image: xcode8.3
     env: BS=cmake CXX=clang++
@@ -152,13 +157,13 @@ matrix:
 #
   - os: linux
     dist: trusty
-    env: BS=bjam TOOLSET=clang CXX=clang++-7
-    addons: { apt: { packages: ["clang-7", "libstdc++-7-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-7"] } }
+    env: BS=bjam TOOLSET=clang CXX=clang++-8
+    addons: { apt: { packages: ["clang-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test", "llvm-toolchain-trusty-8"] } }
 
   - os: linux
     dist: trusty
-    env: BS=bjam TOOLSET=gcc CXX=g++-8
-    addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+    env: BS=bjam TOOLSET=gcc CXX=g++-9
+    addons: { apt: { packages: ["g++-9", "libstdc++-9-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
     osx_image: xcode11
@@ -183,8 +188,8 @@ matrix:
 
   - os: linux
     dist: trusty
-    env: BS=cmake VARIANT=analyze CXX=g++-8
-    addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+    env: BS=cmake VARIANT=analyze CXX=g++-9
+    addons: { apt: { packages: ["g++-9", "libstdc++-9-dev", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
     osx_image: xcode11
@@ -209,8 +214,8 @@ matrix:
 
   - os: linux
     dist: trusty
-    env: BS=cmake MEMCHECK=valgrind CXX=g++-8
-    addons: { apt: { packages: ["g++-8", "libstdc++-8-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
+    env: BS=cmake MEMCHECK=valgrind CXX=g++-9
+    addons: { apt: { packages: ["g++-9", "libstdc++-9-dev", "valgrind", "gdb"], sources: ["ubuntu-toolchain-r-test"] } }
 
   - os: osx
     osx_image: xcode11
