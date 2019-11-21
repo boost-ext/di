@@ -29,12 +29,12 @@ class dependency_proxy : core::dependency_base,
   dependency_proxy(dependency_proxy& other) noexcept : orig_dependency_(other.orig_dependency_) {}
   dependency_proxy(dependency_proxy&& other) noexcept : orig_dependency_(other.orig_dependency_) {}
 
- protected:
   using scope_t = typename scope::template scope<expected, given>;
 
   template <class T, class TConfig>
   using is_referable = typename scope_t::template is_referable<T, TConfig>;
 
+protected:
   template <class T, class Name, class TProvider>
   static decltype(scope_t::template try_create<T, Name>(aux::declval<TProvider>())) try_create(const TProvider&);
 
