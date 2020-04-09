@@ -28,6 +28,9 @@
   {}
 #elif defined(_MSC_VER)  // msvc
 #define __MSVC__
+#if !defined(__has_extension)
+#define __has_extension(...) 1
+#endif
 #if !defined(__has_include)
 #define __has_include(...) 0
 #endif

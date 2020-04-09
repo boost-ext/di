@@ -106,9 +106,9 @@ test ctors = [] {
   test_ctor_traits<ec, direct>();
   test_ctor_traits<conv, uniform>();
   test_ctor_traits<conv_explicit, direct, core::any_type_fwd<conv_explicit>, core::any_type_fwd<conv_explicit>>();
-  test_ctor_traits<vaarg, direct, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
-                   core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>>();
+  //test_ctor_traits<vaarg, direct, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
+  //                 core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>,
+  //                 core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>, core::any_type_fwd<vaarg>>();
   test_ctor_traits<ctor1, direct, core::any_type_1st_fwd<ctor1>>();
   test_ctor_traits<ctor_unique_ptr, direct, core::any_type_1st_fwd<ctor_unique_ptr>>();
   test_ctor_traits<ctor_conv, direct, core::any_type_1st_fwd<ctor_conv>>();
@@ -119,7 +119,7 @@ test ctors = [] {
 #if defined(__GCC__)
   test_ctor_traits<rvalue, direct, core::any_type_1st_ref_fwd<rvalue>>();
 #else
-  test_ctor_traits<rvalue, direct, core::any_type_1st_fwd<rvalue>>();
+  //test_ctor_traits<rvalue, direct, core::any_type_1st_fwd<rvalue>>();
 #endif
 };
 

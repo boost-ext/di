@@ -87,7 +87,7 @@ struct pool_provider {
            ,
            TArgs&&... args) const {
     auto memory = pool_allocator::allocate<T>();
-    return std::unique_ptr<T, pool_deleter>{new (memory) T(std::forward<TArgs>(args)...)};
+    return new (memory) T(std::forward<TArgs>(args)...);
   }
 };
 

@@ -43,6 +43,9 @@ BOOST_DI_CFG_FWD
   {}
 #elif defined(_MSC_VER)
 #define __MSVC__
+#if !defined(__has_extension)
+#define __has_extension(...) 1
+#endif
 #if !defined(__has_include)
 #define __has_include(...) 0
 #endif
