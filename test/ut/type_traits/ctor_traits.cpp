@@ -119,7 +119,7 @@ test ctors = [] {
 #if defined(__GCC__)
   test_ctor_traits<rvalue, direct, core::any_type_1st_ref_fwd<rvalue>>();
 #else
-  //test_ctor_traits<rvalue, direct, core::any_type_1st_fwd<rvalue>>();
+  test_ctor_traits<rvalue, direct, core::any_type_1st_fwd<rvalue>>();
 #endif
 };
 
