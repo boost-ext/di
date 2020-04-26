@@ -85,7 +85,7 @@ struct pool_provider {
            ,
            const TMemory&  // stack/heap
            ,
-           TArgs&&... args) const {
+           TArgs&&... args) const -> std::unique_ptr<T, pool_deleter> {
     auto memory = pool_allocator::allocate<T>();
     return std::unique_ptr<T, pool_deleter>{new (memory) T(std::forward<TArgs>(args)...)};
   }
@@ -115,6 +115,8 @@ int main() {
   );
   // clang-format on
 
+  (void)injector;
+
   /*<<create `example` using configuration with `pool_provider`>>*/
-  injector.create<example>();
+ // injector.create<example>();
 }

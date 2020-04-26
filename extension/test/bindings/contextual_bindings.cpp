@@ -33,7 +33,7 @@ int main() {
   // clang-format off
   auto injector = di::make_injector<di::extension::contextual_bindings>(
       di::bind<>().to(123.f)
-    , di::bind<int>().to([](const auto& injector) {
+    , di::bind<int>().to([](const auto& injector) -> int {
         if (di::extension::context(injector) == "example->data") return 87;
         if (di::extension::context(injector) == "example->data->more_data") return 99;
         return 42;

@@ -49,7 +49,8 @@ struct factory_impl<TInjector, T, ifactory<I, TArgs...>> : ifactory<I, TArgs...>
 template <class T>
 struct factory {
   template <class TInjector, class TDependency>
-  auto operator()(const TInjector& injector, const TDependency&) const {
+  auto operator()(const TInjector& injector, const TDependency&) const
+      -> std::shared_ptr<factory_impl<TInjector, T, typename TDependency::expected>> {
     static auto sp = std::make_shared<factory_impl<TInjector, T, typename TDependency::expected>>(injector);
     return sp;
   }

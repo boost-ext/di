@@ -27,7 +27,7 @@ template <class... TImpl>
 class inject_from_xml {
  public:
   template <class TInjector, class T>
-  auto operator()(const TInjector& injector, const T&) const {
+  auto operator()(const TInjector& injector, const T&) const -> std::shared_ptr<typename T::expected> {
     auto parser = injector.template create<std::unique_ptr<ixml_parser>>();
     auto parsed = parser->parse(typeid(typename T::expected).name());
     return create_impl<typename T::expected>(injector, parsed, xml_list<TImpl...>{});
