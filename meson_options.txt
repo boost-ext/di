@@ -1,0 +1,2 @@
+option('BOOST_DI_OPT_BUILD_TESTS', type : 'boolean', value : false, description : 'Build and perform Boost.DI tests')
+option('BOOST_DI_OPT_BUILD_EXAMPLES', type : 'boolean', value : false, description : 'Build and perform Boost.DI examples')
