@@ -13,13 +13,13 @@ Moreover, interface for `modules` wasn't perfect due to missing return type dedu
 Therefore, I made a decision to reimplement the core using C++14 features which sped up compilation times dramatically
 and make the interface cleaner and easier to maintain. Nevertheless, effort was made to support the newest versions of
 popular C++ compilers including GCC/Clang and MSVC. If you are interested in C++03 version of the library, please, take
-a look into [cpp03](https://github.com/boost-experimental/di/tree/cpp03) branch. Please, also notice that this
+a look into [cpp03](https://github.com/boost-ext/di/tree/cpp03) branch. Please, also notice that this
 branch is not maintained anymore.
 
 >
 
 * ### How the constructor deduction works without reflection support in C++?
-Please check out [injection](overview.md#nutshell) design and http://boost-experimental.github.io/di/cppnow-2016/#/7/11.
+Please check out [injection](overview.md#nutshell) design and http://boost-ext.github.io/di/cppnow-2016/#/7/11.
 
 >
 

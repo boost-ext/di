@@ -18,8 +18,8 @@ pph() {
   echo "#error \"[Boost].DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)\""
   echo "#else"
   echo "#define BOOST_DI_VERSION ${version}'${revision}'${patch}"
-  echo "#define BOOST_DI_NAMESPACE_BEGIN namespace boost { namespace di { inline namespace v${version}_${revision}_${patch} {"
-  echo "#define BOOST_DI_NAMESPACE_END }}}"
+  echo "#define BOOST_DI_NAMESPACE_BEGIN namespace boost { inline namespace ext { namespace di { inline namespace v${version}_${revision}_${patch} {"
+  echo "#define BOOST_DI_NAMESPACE_END }}}}"
   echo "#if !defined(BOOST_DI_CFG_DIAGNOSTICS_LEVEL)"
   echo "#define BOOST_DI_CFG_DIAGNOSTICS_LEVEL 1"
   echo "#endif"
@@ -27,7 +27,7 @@ pph() {
   echo "BOOST_DI_CFG_FWD"
   echo "#endif"
   rm -rf tmp && mkdir tmp && cp -r boost tmp && cd tmp
-  find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::di::v${version}_${revision}_${patch}/g"
+  find . -iname "*.hpp" | xargs sed -i "s/BOOST_DI_NAMESPACE/::boost::ext::di::v${version}_${revision}_${patch}/g"
   find . -iname "*.hpp" | xargs sed -i "s/\(.*\)__pph__/\/\/\/\/\1/g"
   find . -iname "*.hpp" | xargs sed -i "s/.*\(clang-format.*\)/\/\/\/\/\1/g"
   tail -n +10 "boost/di/aux_/compiler.hpp" | head -n -2 | sed '/^$/d' | sed "s/ \/\/\\(.*\)//g" | sed "s/\/\/\/\///"
@@ -92,4 +92,3 @@ pph() {
 set -e
 cd ${0%/*}/../include && pph `head -1 ../doc/CHANGELOG.md  | sed "s/.*\[\(.*\)\].*/\1/" | tr '.' ' '` > "boost/di.hpp"
 ${CLANG_FORMAT:=clang-format} -i "boost/di.hpp"
-

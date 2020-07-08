@@ -5,12 +5,12 @@
         * x86\_64 Intel(R) Core(TM) i7-4770 CPU @ 3.40GHz GenuineIntel GNU/Linux
         * clang++3.4 -O2 -fno-exceptions / `gdb -batch -ex 'file ./a.out' -ex 'disassemble main'`
 
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_without_bindings.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_with_bound_instance.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_named_type.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_module.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_type_without_bindings.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_type_with_bound_instance.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_named_type.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_bound_interface.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_bound_interface_via_module.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp)
 
 * **Compile-time performance**
     * Environment
@@ -28,21 +28,21 @@ Legend:
     all     = all types exposed from module: auto configure();
     exposed = one type exposed from module: di::injector<T> configure();
 ```
-[![small complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png)
+[![small complexity](https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/small_complexity.png)](https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/small_complexity.png)
 ```cpp
 * 4248897537 instances created
 * 132 different types
 * 10 modules
 ```
 ---
-[![medium complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png)
+[![medium complexity](https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/medium_complexity.png)](https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/medium_complexity.png)
 ```cpp
 * 1862039751439806464 instances created
 * 200 different types
 * 10 modules
 ```
 ---
-[![big complexity](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png)
+[![big complexity](https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/big_complexity.png)](https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/big_complexity.png)
 ```cpp
 * 5874638529236910091 instances created
 * 310 different types
@@ -121,30 +121,30 @@ cd benchmark && make
 
 | Library | Bind Interface | Performance |
 | ------- | -------------- | ----------- |
-| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp) |
-| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp) |
-| [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.java) |
-| [Dagger2] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dagger2.java) |
-| [Ninject] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/ninject.cs) |
+| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/di.cpp) |
+| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/dicpp.cpp) |
+| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/fruit.cpp) |
+| [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/guice.java) |
+| [Dagger2] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/dagger2.java) |
+| [Ninject] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/ninject.cs) |
 
 | Library | Bind Value | Performance |
 | ------- | ---------- | ----------- |
-| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp) |
-| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp) |
-| [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.java) |
-| [Dagger2] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dagger2.java) |
-| [Ninject] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/ninject.cs) |
+| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/di.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/di.cpp) |
+| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/dicpp.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/dicpp.cpp) |
+| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/fruit.cpp) | [ASM x86-64](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/fruit.cpp) |
+| [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/guice.java) |
+| [Dagger2] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/dagger2.java) |
+| [Ninject] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/ninject.cs) |
 
 | Library | Missing Bindings Error |
 | ------- | ---------- |
-| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp) |
-| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp) |
-| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp) |
-| [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.java) |
-| [Dagger2] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.java) |
-| [Ninject] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/ninject.cs) |
+| [Boost].DI | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/di.cpp) |
+| [dicpp] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/dicpp.cpp) |
+| [Google.Fruit] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/fruit.cpp) |
+| [Google.Guice] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/guice.java) |
+| [Dagger2] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/dagger2.java) |
+| [Ninject] | ![CPP(SHOW)](https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/ninject.cs) |
 
 [dicpp]: https://bitbucket.org/cheez/dicpp/wiki/Home
 [Google.Fruit]: https://github.com/google/fruit

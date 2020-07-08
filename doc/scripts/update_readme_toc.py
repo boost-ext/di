@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#update_readme_toc.py doc .mkdocs.yml README.md http://boost-experimental.github.io/di
+#update_readme_toc.py doc .mkdocs.yml README.md https://boost-ext.github.io/di
 
 import fileinput, sys, os
 
@@ -13,7 +13,7 @@ for line in fileinput.input(sys.argv[3], inplace=True):
       for line in file:
         index = line.split(':')
         if index[0][0] == '-':
-          ext = ('.html' if index[1][1:-4] == 'index' else '/index.html')
+          ext = ('.html' if index[1][1:-4] == 'index' else '.html')
           print('* [' + index[0][2:] + '](' + sys.argv[4] +'/' + index[1][1:-4] + ext + ')')
           path = sys.argv[1]
           with open((path + '/' if path != '' else '') + index[1][1:-1], 'r') as md:

@@ -14,7 +14,7 @@ CLANG_FORMAT?=clang-format
 CLANG_TIDY?=clang-tidy
 PYTHON?=python2
 MKDOCS?=mkdocs
-MKDOCS_THEME?=boost-experimental
+MKDOCS_THEME?=boost-modern
 MKDOCS_SITE?=site
 CXX_STANDARD?=14
 
@@ -60,15 +60,15 @@ check_static_analysis:
 
 doc: readme doc_$(MKDOCS_THEME)
 
-doc_boost-experimental:
-	MKDOCS_THEME_DIR='doc/themes/boost-experimental' $(MKDOCS) build --quiet --config-file .$(MKDOCS).yml --clean --site-dir $(MKDOCS_SITE)
+doc_boost-modern:
+	MKDOCS_THEME_DIR='doc/themes/boost-modern' $(MKDOCS) build --quiet --config-file .$(MKDOCS).yml --clean --site-dir $(MKDOCS_SITE)
 
 doc_boost-classic:
-	$(PYTHON) doc/themes/boost-classic/scripts/update_markdown.py . https://raw.githubusercontent.com/boost-experimental/di/cpp14
+	$(PYTHON) doc/themes/boost-classic/scripts/update_markdown.py . https://raw.githubusercontent.com/boost-ext/di/cpp14
 	MKDOCS_THEME_DIR='doc/themes/boost-classic' $(MKDOCS) build --quiet --config-file .$(MKDOCS).yml --clean --site-dir $(MKDOCS_SITE)
 
 readme:
-	$(PYTHON) doc/scripts/update_readme_toc.py doc .$(MKDOCS).yml README.md http://boost-experimental.github.io/di
+	$(PYTHON) doc/scripts/update_readme_toc.py doc .$(MKDOCS).yml README.md https://boost-ext.github.io/di
 
 release: all check
 

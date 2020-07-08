@@ -1,8 +1,8 @@
 ### Quick Start
 
-* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp) header
+* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp) header
 ```sh
-wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
+wget https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp
 ```
 
 * Include the header and define `di` namespace alias
@@ -22,7 +22,7 @@ $CXX -std=c++14 ...
 
 * To run tests
 ```sh
-git clone https://github.com/boost-experimental/di && cd di && make
+git clone https://github.com/boost-ext/di && cd di && make
 ```
 
 ### Dependencies
@@ -31,8 +31,8 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 ### Supported/Tested compilers
 
-* [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
-* [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
+* [Clang-3.4+](https://travis-ci.org/boost-ext/di)
+* [GCC-5.2+](https://travis-ci.org/boost-ext/di)
 * [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 ### Configuration

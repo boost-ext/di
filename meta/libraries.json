@@ -1,6 +1,6 @@
 {
     "key": "di",
-    "name": "Boost.DI",
+    "name": "[Boost::ext].DI",
     "authors": [ "Kris Jusiak" ],
     "maintainers": [ "kris at jusiak dot net" ],
     "description": "C++14 Dependency Injection library",

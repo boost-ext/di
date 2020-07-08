@@ -242,19 +242,19 @@ script:
   - if [ "${CXX}" != "" ]; then (travis_wait make all); fi
   - if [ "${CHECK}" != "" ]; then (travis_wait make check); fi
   - if [ "${TRAVIS_PULL_REQUEST}" == "false" ] && [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
-    pip install mkdocs -U --user && git clone https://github.com/boost-experimental/di
+    pip install mkdocs -U --user && git clone https://github.com/boost-ext/di
     && cd di && rm -rf * && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && rm -rf * && cd ..
-    && MKDOCS_THEME=boost-experimental MKDOCS_SITE=site make doc
+    && MKDOCS_THEME=boost-ext MKDOCS_SITE=site make doc
     && MKDOCS_THEME=boost-classic MKDOCS_SITE=site/boost make doc readme
     && mv site/* di && cd di && git add -A . && git commit -am "doc update"
-    && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-experimental/di"); fi
+    && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-ext/di"); fi
 
 after_success:
   - if [ "${BENCHMARK}" != "" ]; then (
-      git clone https://github.com/boost-experimental/di benchmarks
+      git clone https://github.com/boost-ext/di benchmarks
       && cd benchmarks && git checkout -b benchmarks -t origin/benchmarks
       && find ../build/test ../test -iname "*.json" | xargs -I% cp % . && git add -A . && git commit -am "update"
-      && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-experimental/di"); fi
+      && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-ext/di"); fi
   - if [ "${VARIANT}" == "coverage" ]; then (bash <(curl -s https://codecov.io/bash)); fi
 
 notifications:
