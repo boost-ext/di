@@ -122,10 +122,10 @@ Similar mechanism is used by [Boost].DI to achieve [named] parameters which and 
 ###1. [Basic] Create objects tree
 
 Before we will get into creating objects tree, let's first create a 'dummy' example.
-In order to do so, firstly, we have to include (one and only) [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp) header
+In order to do so, firstly, we have to include (one and only) [boost/di.hpp](https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp) header
 
 ```sh
-wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
+wget https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp
 ```
 
 and declare a convenient `di` namespace alias.
@@ -214,13 +214,13 @@ Furthermore, there is no performance penalty for using `[Boost].DI` (see [Perfor
 </span>
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
 
 Check out also other examples. Please, notice that the diagram was also generated using `[Boost].DI` but we will get into that a bit later.
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
-![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)
-![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/hello_world.cpp)
+![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/automatic_injection.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 <br /><hr />
 
@@ -318,7 +318,7 @@ correctly. No runtime exceptions or runtime asserts, EVER!
 </span>
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp)
 
 That's nice but I don't want to be using a dynamic (virtual) dispatch. What about concepts/templates?
 Good news, `[Boost].DI` can inject concepts/templates too!
@@ -342,7 +342,7 @@ int main() {
 ```
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_template_bindings.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_template_bindings.cpp)
 
 Great, but my code is more dynamic than that! I mean that I want to choose `gui_view` or `text_view` at runtime.
 `[Boost].DI` can handle that too!
@@ -368,7 +368,7 @@ Notice, that [injector] was passed to lambda expression in order to create `gui_
 This way `[Boost].DI` can inject appropriate dependencies into chosen types. See [bindings] for more details.
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp)
 
 Okay, so what about the input. We have `user`, however, in the real life, we will have more clients.
 `[Boost].DI` allows multiple bindings to the same type for `array/vector/set`. Let's do it then!
@@ -403,7 +403,7 @@ di::bind<iclient*[]>.to<user, client>()
 ```
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp)
 
 The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
 With `[Boost].DI` you can easily do that with [override] specifier (Implemented using `operator[](override)`).
@@ -424,15 +424,15 @@ boost/di.hpp:2683:80: type<int>::is_bound_more_than_once
 ```
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_first_steps_with_bindings_override.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_bindings_override.cpp)
 
 Check out also.
 
-![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
-![CPP(BTN)](Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp)
-![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
-![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)
-![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
+![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/bindings.cpp)
+![CPP(BTN)](Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/fwd_bindings.cpp)
+![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/dynamic_bindings.cpp)
+![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/multiple_bindings.cpp)
+![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
 
 <br /><br /><br /><hr />
 
@@ -542,13 +542,13 @@ const auto injector = di::make_injector(
 ```
 
 Check out the full example here.
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp)
 
 See also.
 
-![CPP(BTN)](Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp)
-![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
-![CPP(BTN)](Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp)
+![CPP(BTN)](Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/deduce_scope.cpp)
+![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/scopes.cpp)
+![CPP(BTN)](Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/eager_singletons.cpp)
 
 <br /><br /><hr />
 
@@ -643,13 +643,13 @@ The same result might be accomplished with having different types for rows and c
 </span>
 
 Full example here.
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp)
 
 Check out also...
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
-![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
-![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_signature.cpp)
+![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/annotations.cpp)
 
 <br /><br /><hr />
 
@@ -696,7 +696,7 @@ Gluing many [injector]s into one is order independent.
 </span>
 
 And full example!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_split_your_configuration.cpp)
 
 But I would like to have a module in `cpp` file, how can I do that?
 Such design might be achieved with `[Boost].DI` using [injector] and exposing given types.
@@ -764,7 +764,7 @@ di::injector<app> app_module(const bool& use_gui_view) {
 Right now you can easily separate definition and declaration between `hpp` and `cpp` files.
 
 Check the full example here!
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp)
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 You can also expose named parameters using `di::injector<BOOST_DI_EXPOSE((named = Rows) int)>`.
@@ -773,9 +773,9 @@ Type erasure is used under the hood when types are exposed explicitly (`di::inje
 
 Check out more examples here!
 
-![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
-![CPP(BTN)](Run_Exposed_Annotated_Type_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
-![CPP(BTN)](Run_Exposed_Complex_Types_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp)
+![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/modules.cpp)
+![CPP(BTN)](Run_Exposed_Annotated_Type_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
+![CPP(BTN)](Run_Exposed_Complex_Types_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_complex_types.cpp)
 
 <br /><br />
 
@@ -791,12 +791,12 @@ The only thing we have to do is to implement how to dump our objects.
 
 Let's dump our dependencies using [Plant UML](http://plantuml.com) format.
 
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/uml_dumper.cpp)
 [![UML Dumper](images/uml_dumper.png)](images/uml_dumper.png)
 
 See also.  <br /><br />
-![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp)
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/types_dumper.cpp)
 
 <br />
 
@@ -804,11 +804,11 @@ On the other hand, it would be great to be able to limit types which might be co
 smart pointers and disallow raw pointers too. We may want to have a `view` only with const parameters being passed, etc.
 `[Boost].DI` allows you to do so by using [constructible] policy or writing a custom [policy].
 
-![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
+![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
 See also.
 
-![CPP(BTN)](Run_Constructible_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp)
+![CPP(BTN)](Run_Constructible_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_local.cpp)
 
 <br /><hr />
 
@@ -820,9 +820,9 @@ See also.
 * [providers] - to have custom way of creating objects, for example by using preallocated memory
 * [policies] - to have custom way of dumping types at run-time or limiting them at compile-time
 
-![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/pool_provider.cpp)
 
 <br /><hr />
 

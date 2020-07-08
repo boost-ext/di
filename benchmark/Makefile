@@ -27,7 +27,7 @@ $(FRAMEWORKS)/fruit:
 
 $(FRAMEWORKS)/di:
 	@-mkdir -p $(FRAMEWORKS) 2>/dev/null
-	git clone https://github.com/boost-experimental/di.git $(FRAMEWORKS)/di
+	git clone https://github.com/boost-ext/di.git $(FRAMEWORKS)/di
 
 $(FRAMEWORKS)/hypodermic:
 	@-mkdir -p $(FRAMEWORKS) 2>/dev/null

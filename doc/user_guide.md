@@ -128,11 +128,11 @@ Creates [injector] type.
 | `make_injector(TBindings...)` | [boundable]<TBindings...\> | Creates [injector] with given [Bindings] | [injector] |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/injector_empty.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/injector_empty.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/hello_world.cpp)
-![CPP(BTN)](Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
+![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/hello_world.cpp)
+![CPP(BTN)](Run_Create_Objects_Tree_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
 
 <br /><hr />
 
@@ -287,23 +287,23 @@ Check out also [instance] scope to read more about binding to values: `di::bind<
 | `di::bind<Interface>.to([](const auto& injector)`<br />`  { return injector.template create<Implementation>()})` | Allows to bind `Interface` depending on a run-time condition |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_interface_to_implementation.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_value.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_deduce_type_to_value.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_to_compile_time_value.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_interfaces.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_dynamic_bindings.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_multiple_bindings_initializer_list.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_type_override.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/bind_cross_platform.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_interface_to_implementation.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_type_to_value.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_deduce_type_to_value.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_type_to_compile_time_value.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_multiple_interfaces.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_dynamic_bindings.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_multiple_bindings.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_multiple_bindings_initializer_list.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_type_override.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/bind_cross_platform.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
-![CPP(BTN)](Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/fwd_bindings.cpp)
-![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/dynamic_bindings.cpp)
-![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/multiple_bindings.cpp)
-![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
+![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/bindings.cpp)
+![CPP(BTN)](Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/fwd_bindings.cpp)
+![CPP(BTN)](Run_Dynamic_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/dynamic_bindings.cpp)
+![CPP(BTN)](Run_Multiple_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/multiple_bindings.cpp)
+![CPP(BTN)](Run_Constructor_Bindings_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/bindings/constructor_bindings.cpp)
 
 <br /><br /><br /><hr />
 
@@ -346,16 +346,16 @@ Use [BOOST_DI_INJECT] or [BOOST_DI_INJECT_TRAITS] or [di::ctor_traits] or [di::i
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_direct.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_aggregate.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_multiple_constructors.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_vaargs.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_direct.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_aggregate.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_multiple_constructors.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_vaargs.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/automatic_injection.cpp)
-![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_signature.cpp)
-![CPP(BTN)](Run_Lazy_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/lazy.cpp)
-![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/xml_injection.cpp)
+![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/automatic_injection.cpp)
+![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_signature.cpp)
+![CPP(BTN)](Run_Lazy_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/injections/lazy.cpp)
+![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/injections/xml_injection.cpp)
 
 <br /><br /><br /><hr />
 
@@ -389,11 +389,11 @@ BOOST_DI_INJECT constructor parameters is limited to [BOOST_DI_CFG_CTOR_LIMIT_SI
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
-![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/concepts.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_injection.cpp)
+![CPP(BTN)](Run_Concepts_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/injections/concepts.cpp)
 
 <br /><hr />
 
@@ -424,11 +424,11 @@ BOOST_DI_INJECT_TRAITS constructor parameters is limited to [BOOST_DI_CFG_CTOR_L
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT_TRAITS.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_default_values.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_BOOST_DI_INJECT_TRAITS.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_default_values.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -462,11 +462,11 @@ For example, `template<class...> struct type_list{};` `using boost_di_inject__ =
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_inject.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_inject.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_long_parameter_list.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -493,10 +493,10 @@ It's useful for third party classes you don't have access to and which can't be 
     }}
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_ctor_traits.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/constructor_injection_ambiguous_constructors_via_ctor_traits.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/constructor_injection.cpp)
+![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_injection.cpp)
 
 <br /><hr />
 
@@ -549,15 +549,15 @@ Implementation of constructor doesn't require annotations, only constructor defi
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_constructor_definition.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_ctor_traits.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/annotated_constructor_injection_with_the_same_names.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/annotated_constructor_injection.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/annotated_constructor_injection_with_constructor_definition.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/annotated_constructor_injection_with_ctor_traits.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/annotated_constructor_injection_with_the_same_names.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/annotations.cpp)
-![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/named_parameters.cpp)
-![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/injections/assisted_injection.cpp)
+![CPP(BTN)](Run_Annotations_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/annotations.cpp)
+![CPP(BTN)](Run_Named_Parameters_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/injections/named_parameters.cpp)
+![CPP(BTN)](Run_Assisted_Injection_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/injections/assisted_injection.cpp)
 
 <br /><hr />
 
@@ -608,13 +608,13 @@ If no scope will be given, [deduce] scope will be assumed.
 | std::weak_ptr<T> | - | ✔ |  - / ✔ converted to |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_custom.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/scopes_custom.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_scope.cpp)
-![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/scoped.cpp)
-![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/session.cpp)
-![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/scopes/shared.cpp)
+![CPP(BTN)](Run_Custom_Scope_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_scope.cpp)
+![CPP(BTN)](Run_Scoped_Scope_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/scopes/scoped.cpp)
+![CPP(BTN)](Run_Session_Scope_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/scopes/session.cpp)
+![CPP(BTN)](Run_Shared_Scope_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/scopes/shared.cpp)
 
 <br /><br /><br /><hr />
 
@@ -671,11 +671,11 @@ Default scope which will be converted to one of the scopes depending on the type
 | `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_deduce_default.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/scopes_deduce_default.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/deduce_scope.cpp)
-![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
+![CPP(BTN)](Run_Deduce_Scope_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/deduce_scope.cpp)
+![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/scopes.cpp)
 
 <br /><hr />
 
@@ -731,11 +731,11 @@ Scope representing values - passed externally. The life time of the object depen
 | `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_instance.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/scopes_instance.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
-![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/bindings.cpp)
+![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/scopes.cpp)
+![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/bindings.cpp)
 
 <br /><hr />
 
@@ -797,11 +797,11 @@ Singleton scope will convert automatically between `std::shared_ptr` and `boost:
 | `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_singleton.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/scopes_singleton.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
-![CPP(BTN)](Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/eager_singletons.cpp)
+![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/scopes.cpp)
+![CPP(BTN)](Run_Eager_Singletons_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/eager_singletons.cpp)
 
 <br /><hr />
 
@@ -858,10 +858,10 @@ Scope representing unique/per request value. A new instance will be provided eac
 | `create<T, TName, TProvider>` | [providable]<TProvider\> | Creates type `T` | `T` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/scopes_unique.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/scopes_unique.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/scopes.cpp)
+![CPP(BTN)](Run_Scopes_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/scopes.cpp)
 
 <br /><hr />
 
@@ -889,12 +889,12 @@ Module might be installed by passing it into [make_injector].
 | `di::injector<Ts...> module = di::make_injector(...)` | Only `Ts...` types are exposed from `module` | `module.create<T>()` is allowed only for `T` <= `Ts...` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_type.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_many_types.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_type.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_many_types.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
+![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/modules.cpp)
 
 <br /><hr />
 
@@ -919,11 +919,11 @@ BOOST_DI_EXPOSE is a macro definition allowing to expose [named] parameters via 
 | `...` | - | More types to be exposed | - |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/module_exposed_complex_types.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_complex_types.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/modules.cpp)
+![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/modules.cpp)
 
 <br /><hr />
 
@@ -978,11 +978,11 @@ Provider used by [injector] might changed locally via [make_injector] or globall
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/providers_heap_no_throw.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/pool_provider.cpp)
 
 <br /><hr />
 
@@ -1034,11 +1034,11 @@ Creates objects on the stack whenever possible, otherwise on the heap.
 | `is_polymorphic<T>` | heap |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_stack_over_heap.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/providers_stack_over_heap.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/pool_provider.cpp)
 
 <br /><hr />
 
@@ -1076,12 +1076,12 @@ Basic provider creates objects on the heap (always).
 | `get(const TInit&, const TMemory&, TArgs&&...)` | `TInit` -> direct/uniform, `TMemory` -> heap/stack | Creates type `T` with `TArgs...` | `T` |
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/providers_heap_no_throw.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/providers_heap_no_throw.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
-![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/pool_provider.cpp)
-![CPP(BTN)](Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/providers/mocks_provider.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_provider.cpp)
+![CPP(BTN)](Run_Pool_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/pool_provider.cpp)
+![CPP(BTN)](Run_Mocks_Provider_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/providers/mocks_provider.cpp)
 
 <br /><br /><br /><hr />
 
@@ -1135,13 +1135,13 @@ or set it globally via [BOOST_DI_CFG].
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_types.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_print_type_extended.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_print_types.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_print_type_extended.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp)
-![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/types_dumper.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 <br /><br /><br /><hr />
 
@@ -1203,8 +1203,8 @@ In order to allow logic operators using namespace `boost::di::policies::operator
 </span>
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_local.cpp)
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_local.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 STL type traits are supported and might be combined with [Boost].DI traits in order to limit constructor types
@@ -1213,9 +1213,9 @@ For example, `std::is_same<_, int>{} || std::is_constructible<_, int, int>{} || 
 
 ***Example***
 
-![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/types_dumper.cpp)
-![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/test/policies/uml_dumper.cpp)
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Types_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/types_dumper.cpp)
+![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/uml_dumper.cpp)
 
 <br /><br /><br /><hr />
 
@@ -1265,28 +1265,28 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 | Error | `type<T>::has_disallowed_qualifiers` |
 | ---------- | ----------- |
 | Description | type `T` has disallowed qualifiers |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/boundable_type_has_disallowed_qualifiers.cpp) |
 
 | Error | `type<T>::is_abstract` |
 | ---------- | ----------- |
 | Description | type `T` is abstract |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0, 1 -> no additional info, 2 -> info about why type `T` is abstract |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_abstract.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/boundable_type_is_abstract.cpp) |
 
 | Error | `type<T>::is_not_related_to` |
 | ---------- | ----------- |
 | Description | type `T` is not related to type `U` |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/boundable_type_is_not_related_to.cpp) |
 
 | Error | `type<T>::is_bound_more_than_once` |
 | ---------- | ----------- |
 | Description | type `T` is bound more than once |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/boundable_type_is_bound_more_than_once.cpp) |
 
 | Error | `type<T>::is_neither_a_dependency_nor_an_injector` |
 | ---------- | ----------- |
 | Description | type `T` is neither a dependency nor an injector |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/boundable_type_is_neither_a_dependency_nor_an_injector.cpp) |
 
 ---
 
@@ -1319,7 +1319,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 | Error | `policy<TPolicy>::requires_<call_operator>` |
 | ---------- | ----------- |
 | Description | policy `TPolicy` requires a call operator |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/callable_requires_call_operator.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/callable_requires_call_operator.cpp) |
 
 ---
 
@@ -1352,7 +1352,7 @@ If type doesn't satisfy the concept short and descriptive error message is provi
 | Error | `config<TConfig>::requires_<provider<providable_type (...)>>` |
 | ---------- | ----------- |
 | Description | config `T` requires only providable and callable types |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/configurable_requires_callable_and_providable.cpp) |
 
 ---
 
@@ -1391,36 +1391,36 @@ Requirement for type `T` which is going to be created via [injector]`.create<T>(
 | Description | abstract type `T` is not bound |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
 | Suggestion  | 'type is not bound, did you forget to add: 'di::bind<interface>.to<implementation>()'?' |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/creatable_abstract_type_is_not_bound.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/creatable_expose_abstract_type_is_not_bound.cpp) |
 
 | Error | `type<T>::has_ambiguous_number_of_constructor_parameters::given<Given>::expected<Expected>` |
 | ---------- | ----------- |
 | Description | type `T` has ambiguous number of constructor parameters where `Given` were provided but `Expected` were expected |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
 | Suggestion  | 'verify BOOST_DI_INJECT_TRAITS or di::ctor_traits' |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/creatable_type_has_ambiguous_number_of_constructor_parameters.cpp) |
 
 | Error | `type<T>::has_to_many_constructor_parameters::max<Max>` |
 | ---------- | ----------- |
 | Description | type `T` has to many constructor parameter where maximum number is `Max` |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
 | Suggestion  | 'increase BOOST_DI_CFG_CTOR_LIMIT_SIZE value or reduce number of constructor parameters' |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/creatable_type_has_to_many_constructor_parameters.cpp) |
 
 | Error | `scoped<TScope>::is_not_convertible_to<T>` |
 | ---------- | ----------- |
 | Description | scope `TScope` is not convertible to type `T` |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
 | Suggestion  | 'scoped object is not convertible to the requested type, did you mistake the scope: 'di::bind<T>.in(scope)'?' |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/creatable_scoped_is_not_convertible_to.cpp) |
 
 | Error | `scoped<instance>::is_not_convertible_to<T>` |
 | ---------- | ----------- |
 | Description | instance is not convertible to type `T` |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL` | 0 -> 'constraint not satisfied', 1 -> (0) + abstract type is not bound, 2 -> (1) + creation tree |
 | Suggestion  | 'instance is not convertible to the requested type, verify binding: 'di::bind<T>.to(value)'?' |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/creatable_instance_is_not_convertible_to.cpp) |
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
 Suggestions are not supported/displayed by MSVC-2015.
@@ -1465,7 +1465,7 @@ Suggestions are not supported/displayed by MSVC-2015.
 | Error | `provider<TProvider>::requires_<get>` |
 | ---------- | ----------- |
 | Description | provider `TProvider` requires `get` method |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/providable_requires_get.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/providable_requires_get.cpp) |
 
 ---
 
@@ -1502,7 +1502,7 @@ Suggestions are not supported/displayed by MSVC-2015.
 | Error | `scope<TScope>::requires_<create>` |
 | ---------- | ----------- |
 | Description | scope `TScope` requires `create` method |
-| Expression  | ![CPP](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/errors/scopable_requires_create.cpp) |
+| Expression  | ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/errors/scopable_requires_create.cpp) |
 
 ---
 
@@ -1543,12 +1543,12 @@ Suggestions are not supported/displayed by MSVC-2015.
     di::make_injector(...)
 
 ***Test***
-![CPP(SPLIT)](https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/user_guide/policies_constructible_global.cpp)
+![CPP(SPLIT)](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 ***Example***
 
-![CPP(BTN)](Run_Configuration_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/configuration.cpp)
-![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_policy.cpp)
-![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/custom_provider.cpp)
+![CPP(BTN)](Run_Configuration_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/configuration.cpp)
+![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_policy.cpp)
+![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_provider.cpp)
 
 <br /><hr />
 
