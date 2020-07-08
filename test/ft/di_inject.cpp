@@ -74,6 +74,7 @@ struct c_no_limits {
 };
 
 namespace boost {
+inline namespace ext {
 namespace di {
 
 template <>
@@ -81,6 +82,7 @@ struct ctor_traits<c_no_limits> {
   using boost_di_inject__ = di::inject<int, int, int, int, int, int, int, int, int, int, int>;
 };
 }  // namespace di
+}  // namespace ext
 }  // namespace boost
 
 test inject_traits_no_limits_via_ctor_traits = [] {

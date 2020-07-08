@@ -39,6 +39,7 @@ struct ctor_di_traits {
 };
 
 namespace boost {
+inline namespace ext {
 namespace di {
 
 template <>
@@ -48,6 +49,7 @@ struct ctor_traits<ctor_di_traits> {
 };
 
 }  // namespace di
+}  // namespace ext
 }  // namespace boost
 
 struct ctor_inject_traits_no_limits {
