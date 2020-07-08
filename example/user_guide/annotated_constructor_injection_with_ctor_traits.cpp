@@ -21,12 +21,14 @@ struct T {
 };
 
 namespace boost {
+inline namespace ext {
 namespace di {
 template <>
 struct ctor_traits<T> {
   BOOST_DI_INJECT_TRAITS((named = int1) int, (named = int2) int);
 };
 }  // namespace di
+}  // namespace ext
 }  // namespace boost
 
 int main() {

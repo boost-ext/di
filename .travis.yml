@@ -244,7 +244,7 @@ script:
   - if [ "${TRAVIS_PULL_REQUEST}" == "false" ] && [ "${TRAVIS_BRANCH}" == "cpp14" ] && [ "${DOCUMENTATION}" != "" ]; then (
     pip install mkdocs -U --user && git clone https://github.com/boost-ext/di
     && cd di && rm -rf * && git checkout -b gh-pages -t origin/gh-pages && git reset --hard && rm -rf * && cd ..
-    && MKDOCS_THEME=boost-ext MKDOCS_SITE=site make doc
+    && MKDOCS_THEME=boost-modern MKDOCS_SITE=site make doc
     && MKDOCS_THEME=boost-classic MKDOCS_SITE=site/boost make doc readme
     && mv site/* di && cd di && git add -A . && git commit -am "doc update"
     && git push --force --quiet "https://${GH_TOKEN}@github.com/boost-ext/di"); fi
