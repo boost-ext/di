@@ -47,12 +47,12 @@ class contextual_bindings : public config {
  public:
   template <class TInjector>
   static auto policies(const TInjector* injector) noexcept {
-    return make_policies([&](auto type) {
-      if (std::is_same<typename decltype(type)::type, context_type&>::value ||
-          std::is_same<typename decltype(type)::type, contexts_list&>::value) {
+    return make_policies([&](auto type) -> void {
+      using type_t = decltype(type);
+      using value_type_t = typename type_t::type;
+      if (std::is_same<value_type_t, context_type&>::value || std::is_same<value_type_t, contexts_list&>::value) {
         return;
       }
-      using T = decltype(type);
       auto& v = injector->template create<contexts_list&>();
       using given = aux::decay_t<typename decltype(type)::type>;
       std::string element;
@@ -62,7 +62,7 @@ class contextual_bindings : public config {
         context.assign(v.back());
         v.pop_back();
       }
-      auto ctor_size = T::arity::value;
+      auto ctor_size = type_t::arity::value;
       while (ctor_size--) {
         v.push_back(element + get_type<given>());
       }
