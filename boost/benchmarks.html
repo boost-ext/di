@@ -5,7 +5,7 @@
 
 
 
-<title>Benchmarks - [Boost].DI</title>
+<title>Benchmarks - [Boost::ext].DI</title>
 
 <link href="./css/boostbook.css" rel="stylesheet">
 <link href="./css/github.css" rel="stylesheet">
@@ -84,12 +84,12 @@
 </ul>
 </li>
 </ul>
-<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_without_bindings.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_type_with_bound_instance.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_named_type.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_module.cpp" />
-<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp" /></p>
+<p><img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_type_without_bindings.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_type_with_bound_instance.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_named_type.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_bound_interface.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_bound_interface_via_module.cpp" />
+<img alt="CPP(SPLIT)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/example/performance/create_bound_interface_via_exposed_module.cpp" /></p>
 <ul>
 <li><strong>Compile-time performance</strong><ul>
 <li>Environment<ul>
@@ -121,21 +121,21 @@
     exposed = one type exposed from module: di::injector&lt;T&gt; configure();
 </code></pre>
 
-<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png"><img alt="small complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/small_complexity.png" /></a></p>
+<p><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/small_complexity.png"><img alt="small complexity" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/small_complexity.png" /></a></p>
 <pre><code class="cpp">* 4248897537 instances created
 * 132 different types
 * 10 modules
 </code></pre>
 
 <hr />
-<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png"><img alt="medium complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/medium_complexity.png" /></a></p>
+<p><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/medium_complexity.png"><img alt="medium complexity" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/medium_complexity.png" /></a></p>
 <pre><code class="cpp">* 1862039751439806464 instances created
 * 200 different types
 * 10 modules
 </code></pre>
 
 <hr />
-<p><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png"><img alt="big complexity" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/doc/images/big_complexity.png" /></a></p>
+<p><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/big_complexity.png"><img alt="big complexity" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/doc/images/big_complexity.png" /></a></p>
 <pre><code class="cpp">* 5874638529236910091 instances created
 * 310 different types
 * 100 different interfaces
@@ -488,32 +488,32 @@
 <tbody>
 <tr>
 <td>[Boost].DI</td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/di.cpp">ASM x86-64</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/di.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/di.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dicpp.cpp">ASM x86-64</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/dicpp.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/dicpp.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/fruit.cpp">ASM x86-64</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/fruit.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/fruit.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/guice">Google.Guice</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/guice.java" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/guice.java" /></td>
 <td></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/dagger">Dagger2</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/dagger2.java" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/dagger2.java" /></td>
 <td></td>
 </tr>
 <tr>
 <td><a href="https://github.com/ninject/ninject">Ninject</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_interface/ninject.cs" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_interface/ninject.cs" /></td>
 <td></td>
 </tr>
 </tbody>
@@ -529,32 +529,32 @@
 <tbody>
 <tr>
 <td>[Boost].DI</td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/di.cpp">ASM x86-64</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/di.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/di.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dicpp.cpp">ASM x86-64</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/dicpp.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/dicpp.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp" /></td>
-<td><a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/fruit.cpp">ASM x86-64</a></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/fruit.cpp" /></td>
+<td><a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/fruit.cpp">ASM x86-64</a></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/guice">Google.Guice</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/guice.java" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/guice.java" /></td>
 <td></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/dagger">Dagger2</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/dagger2.java" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/dagger2.java" /></td>
 <td></td>
 </tr>
 <tr>
 <td><a href="https://github.com/ninject/ninject">Ninject</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_value/ninject.cs" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_value/ninject.cs" /></td>
 <td></td>
 </tr>
 </tbody>
@@ -569,27 +569,27 @@
 <tbody>
 <tr>
 <td>[Boost].DI</td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/di.cpp" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/di.cpp" /></td>
 </tr>
 <tr>
 <td><a href="https://bitbucket.org/cheez/dicpp/wiki/Home">dicpp</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dicpp.cpp" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/dicpp.cpp" /></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/fruit">Google.Fruit</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/fruit.cpp" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/fruit.cpp" /></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/guice">Google.Guice</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/guice.java" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/guice.java" /></td>
 </tr>
 <tr>
 <td><a href="https://github.com/google/dagger">Dagger2</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/dagger2.java" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/dagger2.java" /></td>
 </tr>
 <tr>
 <td><a href="https://github.com/ninject/ninject">Ninject</a></td>
-<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-experimental/di/cpp14/benchmark/bind_error/ninject.cs" /></td>
+<td><img alt="CPP(SHOW)" src="https://raw.githubusercontent.com/boost-ext/di/cpp14/benchmark/bind_error/ninject.cs" /></td>
 </tr>
 </tbody>
 </table>
@@ -619,8 +619,8 @@ hljs.initHighlightingOnLoad();
 
 <script async defer id="github-bjs" src="https://buttons.github.io/buttons.js"></script>
 <select onChange="window.location.href=this.value" style="position: absolute; top: 20px; right: 30px; z-index: 10;">
-    <option value="https://boost-experimental.github.io/di">Theme: Boost Experimental</option>
-    <option value="https://boost-experimental.github.io/di/boost" selected>Theme: Boost Classic</option>
+    <option value="https://boost-ext.github.io/di">Theme: Modern</option>
+    <option value="https://boost-ext.github.io/di/boost" selected>Theme: Classic</option>
 </select>
 </body>
 </html>

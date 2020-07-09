@@ -816,11 +816,11 @@ https://godbolt.org/g/e8olYN
 ####Simplify/Remove the wiring mess
   ####By Automating dependency injection?
 =>
-### [[Boost].DI](https://github.com/boost-experimental/di)
+### [[Boost].DI](https://github.com/boost-ext/di)
 
 ==============================================================================
 
-###[[Boost].DI](https://github.com/boost-experimental/di)
+###[[Boost].DI](https://github.com/boost-ext/di)
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
@@ -828,13 +828,13 @@ https://godbolt.org/g/e8olYN
 * Non-intrusive (constructor parameters deduction)
 * Compile-time creation guarantee (no run-time errors)
 * Supported compilers (C++14)
-  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+  * [Clang-3.4+](https://travis-ci.org/boost-ext/di), [XCode-6.1+](https://travis-ci.org/boost-ext/di), [GCC-5.2+](https://travis-ci.org/boost-ext/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 > [Boost].DI is not an official Boost library, yet!
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - API
+###[[Boost].DI](https://github.com/boost-ext/di) - API
 
 #####Injector
 ```cpp
@@ -859,7 +859,7 @@ constexpr auto make_injector(TDeps&&...) noexcept;
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Hello World
+###[[Boost].DI](https://github.com/boost-ext/di) - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -885,7 +885,7 @@ int main() {                                   |   |
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Performance
+###[[Boost].DI](https://github.com/boost-ext/di) - Performance
 
 ```sh
 time $CXX -std=c++14 app.cpp # 0.092s
@@ -913,7 +913,7 @@ return make_unique<App>(...);
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Benchmarks (GCC-7/Java8)
+###[[Boost].DI](https://github.com/boost-ext/di) - Benchmarks (GCC-7/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -929,7 +929,7 @@ return make_unique<App>(...);
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Compile-time errors
+###[[Boost].DI](https://github.com/boost-ext/di) - Compile-time errors
 
 ```cpp
 const auto injector = di::make_injector(
@@ -955,7 +955,7 @@ error: inline function 'abstract_type<IPrinter>::is_not_bound::error'
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Let's come back to our example (V3)
+###[[Boost].DI](https://github.com/boost-ext/di) - Let's come back to our example (V3)
 
 ####Automatic Injection
 
@@ -978,7 +978,7 @@ public:
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Injection
+###[[Boost].DI](https://github.com/boost-ext/di) - Automatic Injection
 
 #####Manual DI - Wiring mess
 ```cpp
@@ -1000,7 +1000,7 @@ int main() {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
+###[[Boost].DI](https://github.com/boost-ext/di) - Refactoring for free!
 
 ####Let's change `App` constructor
 
@@ -1023,7 +1023,7 @@ App(Printer& printer, std::unique_ptr<Reader> reader)
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
+###[[Boost].DI](https://github.com/boost-ext/di) - Refactoring for free!
 
 #####Manual DI - Wiring mess
 ```cpp
@@ -1045,7 +1045,7 @@ int main() {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+###[[Boost].DI](https://github.com/boost-ext/di) - Implementing features by wiring
 
 ```
 Scenario 2: Value from an input file is displayed on the QtWindow
@@ -1058,7 +1058,7 @@ Scenario 2: Value from an input file is displayed on the QtWindow
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+###[[Boost].DI](https://github.com/boost-ext/di) - Implementing features by wiring
 #####Weak interface
 
 ```cpp
@@ -1090,7 +1090,7 @@ QtPrinter{500, 800};                // Compile error, YAY
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Implementing features by wiring
+###[[Boost].DI](https://github.com/boost-ext/di) - Implementing features by wiring
 #####Configuration
 ```cpp
 const auto config = [](std::string_view printer) {
@@ -1120,7 +1120,7 @@ int main(int argc, char** argv) {
 
 ----
 
-## [[Boost].DI](https://github.com/boost-experimental/di) - Test Driven Development (TDD)
+## [[Boost].DI](https://github.com/boost-ext/di) - Test Driven Development (TDD)
 
 ####Unit Tests
 
@@ -1142,7 +1142,7 @@ int main(int argc, char** argv) {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD)
+###[[Boost].DI](https://github.com/boost-ext/di) - Behaviour Driven Development (BDD)
 
 ####Integration/Acceptance Tests
 
@@ -1168,11 +1168,11 @@ int main(int argc, char** argv) {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - features
+###[[Boost].DI](https://github.com/boost-ext/di) - features
 
-* Core ([Examples](http://boost-experimental.github.io/di/examples))
+* Core ([Examples](http://boost-ext.github.io/di/examples))
     * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies
-* Extensions ([Examples](http://boost-experimental.github.io/di/extensions))
+* Extensions ([Examples](http://boost-ext.github.io/di/extensions))
     * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, Automatic POD Serialization, ...
 
 ==============================================================================
@@ -1221,7 +1221,7 @@ int main(int argc, char** argv) {
   * Loosely coupled code
   * Easy to test code (TDD/BDD)
 
-* [[Boost].DI](https://github.com/boost-experimental/di)
+* [[Boost].DI](https://github.com/boost-ext/di)
   * Removes/Cleanup the wiring mess (boilerplate code)
   * Simplify refactoring (constructor parameters deduction)
   * Make testing easier (automatic mocks injection)
@@ -1232,9 +1232,9 @@ int main(int argc, char** argv) {
 
 | [Boost].DI |  |
 | ------- | ------------- |
-| Documentation | http://boost-experimental.github.io/di |
-| Source Code | https://github.com/boost-experimental/di |
-| Try it online! | http://boost-experimental.github.io/di/try_it |
+| Documentation | http://boost-ext.github.io/di |
+| Source Code | https://github.com/boost-ext/di |
+| Try it online! | http://boost-ext.github.io/di/try_it |
 |                | https://godbolt.org/g/dvjJFI |
 <!-- .element: style="margin-left:-13%; width:125%" -->
 

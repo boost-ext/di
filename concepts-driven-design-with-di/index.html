@@ -671,11 +671,11 @@ int main() {
 ####Simplify/Remove the wiring mess
   ####By Automating dependency injection?
 =>
-### [[Boost].DI](https://github.com/boost-experimental/di)
+### [[Boost].DI](https://github.com/boost-ext/di)
 
 ==============================================================================
 
-###[[Boost].DI](https://github.com/boost-experimental/di)
+###[[Boost].DI](https://github.com/boost-ext/di)
 
 * One header - 3k LOC - (boost/di.hpp) / generated
 * Neither Boost nor STL is required
@@ -683,13 +683,13 @@ int main() {
 * Non-intrusive (constructor/templates parameters deduction)
 * Compile-time creation guarantee (no run-time errors)
 * Supported compilers (C++14)
-  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+  * [Clang-3.4+](https://travis-ci.org/boost-ext/di), [XCode-6.1+](https://travis-ci.org/boost-ext/di), [GCC-5.2+](https://travis-ci.org/boost-ext/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 > [Boost].DI is not an official Boost library, yet!
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - API
+###[[Boost].DI](https://github.com/boost-ext/di) - API
 
 ####Injector
 ```cpp
@@ -721,7 +721,7 @@ di::bind<Interfaces...>.to<Implementation>()
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Hello World
+###[[Boost].DI](https://github.com/boost-ext/di) - Hello World
 
 ```cpp
 #include <boost/di.hpp>
@@ -748,7 +748,7 @@ int main() {                                      |   |
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Performance
+###[[Boost].DI](https://github.com/boost-ext/di) - Performance
 
 ```sh
 time $CXX -std=c++14 app.cpp # 0.092s
@@ -776,7 +776,7 @@ return make_unique<App>(...);
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Benchmarks (GCC-7/Java8)
+###[[Boost].DI](https://github.com/boost-ext/di) - Benchmarks (GCC-7/Java8)
 
 | 64 types, 1-4 ctor params, 1024 iterations | **[Boost].DI** | **Guice** | **Dagger2** |
 | --------------------- | ------------ | ---------------- | ------------- |
@@ -792,7 +792,7 @@ return make_unique<App>(...);
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Compile-time errors
+###[[Boost].DI](https://github.com/boost-ext/di) - Compile-time errors
 
 ```cpp
 const auto injector = di::make_injector(
@@ -818,7 +818,7 @@ error: inline function 'abstract_type<IPrinter>::is_not_bound::error'
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Let's come back to our example (V1)
+###[[Boost].DI](https://github.com/boost-ext/di) - Let's come back to our example (V1)
 
 ####Automatic Injection
 
@@ -841,7 +841,7 @@ public:
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Injection
+###[[Boost].DI](https://github.com/boost-ext/di) - Automatic Injection
 
 #####Manual DI - Wiring mess
 ```cpp
@@ -862,7 +862,7 @@ int main() {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
+###[[Boost].DI](https://github.com/boost-ext/di) - Refactoring for free!
 
 ####Let's change `App` constructor
 
@@ -885,7 +885,7 @@ App(Printer& printer, std::unique_ptr<Reader> reader)
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Refactoring for free!
+###[[Boost].DI](https://github.com/boost-ext/di) - Refactoring for free!
 
 #####Manual DI - Wiring mess
 ```cpp
@@ -906,7 +906,7 @@ int main() {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Automatic Mocks Injector
+###[[Boost].DI](https://github.com/boost-ext/di) - Automatic Mocks Injector
 
 ####[GUnit.GMock](https://github.com/cpp-testing/GUnit)
 ```cpp
@@ -932,7 +932,7 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Behaviour Driven Development (BDD)
+###[[Boost].DI](https://github.com/boost-ext/di) - Behaviour Driven Development (BDD)
 
 ####Acceptance Tests
 
@@ -959,7 +959,7 @@ EXPECT_CALL(readerMock, read(_)).WillOnce(Return(42));
 
 ##The story so far - Virtual functions/interfaces
 
->[[Boost].DI](https://github.com/boost-experimental/di)
+>[[Boost].DI](https://github.com/boost-ext/di)
 ```
 Automatic constructor injection
 ```
@@ -974,7 +974,7 @@ Automatic mocking injection
 
 ----
 
-##Concepts driven design with [[Boost].DI](https://github.com/boost-experimental/di)
+##Concepts driven design with [[Boost].DI](https://github.com/boost-ext/di)
 
 ###Idea
 
@@ -1121,7 +1121,7 @@ int main() {
 
 ----
 
-###[[Boost].DI](https://github.com/boost-experimental/di) - Concepts driven design - Compile-time errors
+###[[Boost].DI](https://github.com/boost-ext/di) - Concepts driven design - Compile-time errors
 
 ```cpp
 const auto injector = di::make_injector(
@@ -1280,7 +1280,7 @@ int main() {
 
 ----
 
-###Concepts driven design with [[Boost].DI](https://github.com/boost-experimental/di)
+###Concepts driven design with [[Boost].DI](https://github.com/boost-ext/di)
 
 |  |  |
 | ------- | ------------- |
@@ -1306,7 +1306,7 @@ int main() {
   * Loosely coupled code
   * Easy to test code (TDD/BDD)
 
-* [[Boost].DI](https://github.com/boost-experimental/di)
+* [[Boost].DI](https://github.com/boost-ext/di)
   * Removes/Cleanup the wiring mess (boilerplate code)
   * Simplify refactoring (constructor parameters deduction)
   * Make testing easier (automatic mocks injection)
@@ -1324,9 +1324,9 @@ int main() {
 
 | [Boost].DI |  |
 | ------- | ------------- |
-| Documentation | http://boost-experimental.github.io/di |
-| Source Code | https://github.com/boost-experimental/di |
-| Try it online! | http://boost-experimental.github.io/di/try_it |
+| Documentation | http://boost-ext.github.io/di |
+| Source Code | https://github.com/boost-ext/di |
+| Try it online! | http://boost-ext.github.io/di/try_it |
 |                | https://godbolt.org/g/dvjJFI |
 <!-- .element: style="margin-left:-13%; width:125%" -->
 

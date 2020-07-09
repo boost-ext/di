@@ -8,7 +8,7 @@
   
   <meta name="author" content="Kris Jusiak">
   
-  <title>Overview - [Boost].DI</title>
+  <title>Overview - [Boost::ext].DI</title>
   
 
   <link rel="shortcut icon" href="./img/favicon.ico">
@@ -48,7 +48,7 @@
 	<nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
 
       <img src="./img/boost.png" />
-      <a href="" class="icon icon-home" style="font-weight:bold;text-align:left;padding:0.809em;color:#fcfcfc;margin-bottom:0.809em"> </a>
+      <a href="" class="icon icon-home" style="font-weight:bold;text-align:left;padding:0.809em;color:#fcfcfc;margin-bottom:0.809em"> [Boost::ext].DI</a>
 
       <div class="wy-side-nav-search">
 		<div role="search">
@@ -132,6 +132,8 @@
     </li>
 <li>
           
+          <br />
+          <a class="github-button" href="https://github.com/boost-ext/di" data-style="mega" data-count-href="/boost-ext/di/stargazers" data-count-api="/repos/boost-ext/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-ext/di on GitHub">GitHub</a>
         </ul>
       </div>
 
@@ -142,7 +144,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="">[Boost].DI</a>
+        <a href="">[Boost::ext].DI</a>
       </nav>
 
       
@@ -164,9 +166,9 @@
               
                 <h3 id="quick-start">Quick Start</h3>
 <ul>
-<li>Get <a href="https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp">boost/di.hpp</a> header</li>
+<li>Get <a href="https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp">boost/di.hpp</a> header</li>
 </ul>
-<pre><code class="sh">wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
+<pre><code class="sh">wget https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp
 </code></pre>
 
 <ul>
@@ -188,7 +190,7 @@ namespace di = boost::di;
 <ul>
 <li>To run tests</li>
 </ul>
-<pre><code class="sh">git clone https://github.com/boost-experimental/di &amp;&amp; cd di &amp;&amp; make
+<pre><code class="sh">git clone https://github.com/boost-ext/di &amp;&amp; cd di &amp;&amp; make
 </code></pre>
 
 <h3 id="dependencies">Dependencies</h3>
@@ -197,9 +199,9 @@ namespace di = boost::di;
 </ul>
 <h3 id="supportedtested-compilers">Supported/Tested compilers</h3>
 <ul>
-<li><a href="https://travis-ci.org/boost-experimental/di">Clang-3.4+</a></li>
-<li><a href="https://travis-ci.org/boost-experimental/di">GCC-5.2+</a></li>
-<li><a href="https://ci.appveyor.com/project/krzysztof-jusiak/di">MSVC-2015+</a></li>
+<li><a href="https://travis-ci.org/boost-ext/di">Clang-3.4+</a></li>
+<li><a href="https://travis-ci.org/boost-ext/di">GCC-5.2+</a></li>
+<li><a href="https://ci.appveyor.com/project/boost-ext/di">MSVC-2015+</a></li>
 </ul>
 <h3 id="configuration">Configuration</h3>
 <table>
@@ -212,7 +214,7 @@ namespace di = boost::di;
 <tbody>
 <tr>
 <td><code>BOOST_DI_VERSION</code></td>
-<td>Current version of [Boost].DI (ex. 1'0'0)</td>
+<td>Current version of [Boost::ext].DI (ex. 1'0'0)</td>
 </tr>
 <tr>
 <td><code>BOOST_DI_CFG</code></td>
@@ -228,11 +230,11 @@ namespace di = boost::di;
 </tr>
 <tr>
 <td><code>BOOST_DI_NAMESPACE_BEGIN</code></td>
-<td><code>namespace boost { namespace di { inline namespace v_1_0_0 {</code></td>
+<td><code>namespace boost::inline ext::di::inline v_{version}_{revision}_{patch} {</code></td>
 </tr>
 <tr>
 <td><code>BOOST_DI_NAMESPACE_END</code></td>
-<td><code>}}}</code></td>
+<td><code>}</code></td>
 </tr>
 </tbody>
 </table>
@@ -260,8 +262,8 @@ namespace di = boost::di;
           <footer>
 
   <select onChange="window.location.href=this.value" style="position: absolute; top: 20px; right: 30px; z-index: 10;">
-    <option value="https://boost-experimental.github.io/di" selected>Theme: Boost Experimental</option>
-    <option value="https://boost-experimental.github.io/di/boost">Theme: Boost Classic</option>
+    <option value="https://boost-ext.github.io/di" selected>Theme: Modern</option>
+    <option value="https://boost-ext.github.io/di/boost">Theme: Classic</option>
   </select>
 
   

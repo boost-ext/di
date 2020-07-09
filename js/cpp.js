@@ -70,17 +70,17 @@ function compile_and_run(id) {
 
     code = cpp_code[id].getValue();
     code_files = '[';
-    code_files += '{ "file" : "boost/di.hpp", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp")) + ' }';
+    code_files += '{ "file" : "boost/di.hpp", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp")) + ' }';
 
     var lines = code.split('\n');
     for(var line = 0; line < lines.length; line++){
       var found = lines[line].match(/(boost\/di\/.*)[">]/);
       if (found != null) {
-        code_files += ', { "file" : "' + found[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/extension/include/" + found[1])) + ' }'
+        code_files += ', { "file" : "' + found[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/include/" + found[1])) + ' }'
       }
       var local = lines[line].match(/#include "(.*)"/);
       if (local != null) {
-        code_files += ', { "file" : "' + local[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-experimental/di/cpp14/" + local[1])) + ' }'
+        code_files += ', { "file" : "' + local[1] + '", "code" : ' + JSON.stringify(get_cpp_file("https://raw.githubusercontent.com/boost-ext/di/cpp14/" + local[1])) + ' }'
       }
     }
     code_files += ']';
