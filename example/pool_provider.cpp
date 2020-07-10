@@ -106,7 +106,9 @@ struct example {
   }
 };
 
-#if not defined(_MSC_VER)
+#if defined(_MSC_VER)
+int main() {}
+#else
 int main() {
   /*<<make injector with simple configuration>>*/
   // clang-format off
