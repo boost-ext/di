@@ -18,7 +18,7 @@ cache:
   - C:\Program Files (x86)\Dr. Memory            -> .appveyor.yml
 
 environment:
-  fast_finish: true
+  #fast_finish: true
 
   matrix:
   - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
@@ -77,8 +77,8 @@ environment:
     PLATFORM: amd64
     CXX_STANDARD: 17
 
-matrix:
-  fast_finish: true
+#matrix:
+  #fast_finish: true
 
 install:
   - cinst -y mingw drmemory
