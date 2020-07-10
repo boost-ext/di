@@ -387,7 +387,7 @@ test scopes_instance_lambda_injector = [] {
 test scopes_instance_lambda_injector_mix = [] {
   auto injector = di::make_injector(
       di::bind<short>().to([] { return 42; }), di::bind<long>().to(87l),
-      di::bind<int>().to([](const auto &injector) { return static_cast<int>(injector.template create<long>()); }));
+      di::bind<int>().to([](const auto &injector) -> int { return static_cast<int>(injector.template create<long>()); }));
 
   expect(42 == injector.create<short>());
   expect(87 == injector.create<int>());
@@ -596,7 +596,7 @@ test runtime_factory_call_operator_impl = [] {
 
 test scopes_injector_lambda_injector = [] {
   constexpr double d = 42.0;
-  auto injector = di::make_injector(di::bind<double>().to(d), di::bind<int>().to([](const auto &injector) {
+  auto injector = di::make_injector(di::bind<double>().to(d), di::bind<int>().to([](const auto &injector) -> int {
     return static_cast<int>(injector.template create<double>());
   }));
 
@@ -1297,7 +1297,7 @@ test bind_to_ctor_ambigious_ctor = [] {
 test bind_to_ctor_ambigious_ctor_1_arg = [] {
   struct c {
     c(int a) : a(a) {}
-    c(double a) : a(a) {}
+    c(double a) : a(int(a)) {}
     int a{};
   };
 
@@ -1315,7 +1315,7 @@ test bind_to_ctor_ambigious_ctor_1_arg = [] {
 test bind_to_ctor_ambigious_ctor_1_arg_explicit = [] {
   struct c {
     explicit c(int a) : a(a) {}
-    explicit c(double a) : a(a) {}
+    explicit c(double a) : a(int(a)) {}
     int a{};
   };
 
