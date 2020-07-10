@@ -3,7 +3,7 @@
 <a href="https://travis-ci.org/boost-ext/di" target="_blank">![Build Status](https://img.shields.io/travis/boost-ext/di/cpp14.svg?label=linux/osx)</a>
 <a href="https://ci.appveyor.com/project/boost-ext/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/boost-ext/di/cpp14.svg?label=windows)</a>
 <a href="https://codecov.io/gh/boost-ext/di" target="_blank">![Coveralls](https://codecov.io/gh/boost-ext/di/branch/cpp14/graph/badge.svg)</a>
-<a href="http://github.com/boost-ext/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/boost-ext/di.svg)</a>
+<a href="https://github.com/boost-ext/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/boost-ext/di.svg)</a>
 
 ---------------------------------------
 
@@ -12,7 +12,7 @@ Introduction
 
 | **[Boost::ext].DI** | |
 | - | - |
-| Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](http://boost-ext.github.io/di/try_it/index.html)) | <a class="github-button" href="https://github.com/boost-ext/di" data-style="mega" data-count-href="/boost-ext/di/stargazers" data-count-api="/repos/boost-ext/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-ext/di on GitHub">GitHub</a> |
+| Your C++14 header only Dependency Injection library with no dependencies ([__Try it online!__](https://boost-ext.github.io/di/try_it.html)) | <a class="github-button" href="https://github.com/boost-ext/di" data-style="mega" data-count-href="/boost-ext/di/stargazers" data-count-api="/repos/boost-ext/di#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star boost-ext/di on GitHub">GitHub</a> |
 
 <div class="important">
 <a href="../releases" class="btn btn-success" style="margin-bottom:8px;" role="button"><span class="fa fa-download"></span>&nbsp; <b>Download</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="CHANGELOG/index.html" class="btn btn-info" style="margin-bottom:8px;" role="button"><span class="fa fa-reorder"></span>&nbsp; <b>Changelog</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="tutorial/index.html" class="btn btn-warning" style="margin-bottom:8px;" role="button"><span class="fa fa-gear"></span>&nbsp; <b>Tutorial</b></a> &nbsp;&nbsp;&nbsp;&nbsp; <a href="examples/index.html" class="btn btn-danger" style="margin-bottom:8px;" role="button"><span class="fa fa-book"></span>&nbsp; <b>Examples</b></a>
@@ -255,7 +255,7 @@ but also can help you with...
 
 * [Match-3 Game](https://github.com/modern-cpp-examples/match3)
     * Simple web game in C++14 using SDL2 / Model View Controller / Meta State Machine / Dependency Injection / Range-V3 / Emscripten
-        * [Play it online!](http://modern-cpp-examples.github.io/match3)
+        * [Play it online!](https://modern-cpp-examples.github.io/match3)
 
 >
 
@@ -264,7 +264,7 @@ but also can help you with...
 
 >
 
-* [Experimental Boost.SML](http://boost-ext.github.io/sml)
+* [Experimental Boost.SML](https://boost-ext.github.io/sml)
     * C++14 header only Meta State Machine library with no dependencies
 
 ### Why [Boost].DI?
@@ -278,7 +278,7 @@ but also can help you with...
 * [Boost].DI gives better control of what and how is created (See [Constructible Policy](user_guide.md#di_constructible))
 * [Boost].DI gives better understanding about objects hierarchy (See [UML Dumper](extensions.md#uml-dumper))
 
-> [__Try it online!__](http://boost-ext.github.io/di/try_it/index.html)
+> [__Try it online!__](https://boost-ext.github.io/di/try_it.html)
 
 ![CPP(BTN)](Run_UML_Dumper_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/policies/uml_dumper.cpp)
 ![CPP(BTN)](Run_XML_Injection_Extension|https://raw.githubusercontent.com/boost-ext/di/cpp14/extension/test/injections/xml_injection.cpp)
@@ -299,16 +299,17 @@ but also can help you with...
 
 * [Inversion of Control Containers and the Dependency Injection pattern](http://martinfowler.com/articles/injection.html)
 * [DIP in the Wild](http://martinfowler.com/articles/dipInTheWild.html)
-* [Concepts driven design with Dependency Injection](http://boost-ext.github.io/di/concepts-driven-design-with-di)
 
 ### Videos
 
 #### [Boost::ext].DI
 
+* [C++Now 2019: Dependency Injection - a 25-dollar term for a 5-cent concept](https://www.youtube.com/watch?v=yVogS4NbL6U) | [Slides](https://boost-ext.github.io/di/cppnow-2019)
 * [CppCon 2018: \[Boost\].DI - Inject all the things!](https://www.youtube.com/watch?v=8HmjM3G8jhQ) | [Slides](https://boost-ext.github.io/di/cppcon-2018)
-* [C++Now 2016: C++14 Dependency Injection Library](https://www.youtube.com/watch?v=comZthFv3PM) | [Slides](http://boost-ext.github.io/di/cppnow-2016)
-* [Meeting C++ 2016: TDD/BDD and Dependency Injection](https://www.youtube.com/watch?v=T3uMcxhzRUE) | [Slides](http://boost-ext.github.io/di/meetingcpp-2016)
-* [Boost your design with C++14 dependency injection](https://skillsmatter.com/skillscasts/9830-boost-your-design-with-c-plus-plus14-dependency-injection) | [Slides](http://boost-ext.github.io/di/cpp-london-2017)
+* [C++Now 2017: Concepts driven design with Dependency Injection](https://www.youtube.com/watch?v=50VIYIHlUJE) | [Slides](https://boost-ext.github.io/di/concepts-driven-design-with-di)
+* [C++Now 2016: C++14 Dependency Injection Library](https://www.youtube.com/watch?v=comZthFv3PM) | [Slides](https://boost-ext.github.io/di/cppnow-2016)
+* [Meeting C++ 2016: TDD/BDD and Dependency Injection](https://www.youtube.com/watch?v=T3uMcxhzRUE) | [Slides](https://boost-ext.github.io/di/meetingcpp-2016)
+* [Boost your design with C++14 dependency injection](https://skillsmatter.com/skillscasts/9830-boost-your-design-with-c-plus-plus14-dependency-injection) | [Slides](https://boost-ext.github.io/di/cpp-london-2017)
 
 #### Dependency Injection In General
 
