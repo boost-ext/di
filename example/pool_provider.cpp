@@ -106,6 +106,7 @@ struct example {
   }
 };
 
+#if not defined(_MSC_VER)
 int main() {
   /*<<make injector with simple configuration>>*/
   // clang-format off
@@ -118,3 +119,4 @@ int main() {
   /*<<create `example` using configuration with `pool_provider`>>*/
   injector.create<example>();
 }
+#endif
