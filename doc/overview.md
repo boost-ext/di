@@ -1,8 +1,8 @@
 ### Quick Start
 
-* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp) header
+* Get [boost/di.hpp](https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp) header
 ```sh
-wget https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp
+wget https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp
 ```
 
 * Include the header and define `di` namespace alias
@@ -22,7 +22,7 @@ $CXX -std=c++14 ...
 
 * To run tests
 ```sh
-git clone https://github.com/boost-experimental/di && cd di && make
+git clone https://github.com/boost-ext/di && cd di && make
 ```
 
 ### Dependencies
@@ -31,19 +31,19 @@ git clone https://github.com/boost-experimental/di && cd di && make
 
 ### Supported/Tested compilers
 
-* [Clang-3.4+](https://travis-ci.org/boost-experimental/di)
-* [GCC-5.2+](https://travis-ci.org/boost-experimental/di)
-* [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+* [Clang-3.4+](https://travis-ci.org/boost-ext/di)
+* [GCC-5.2+](https://travis-ci.org/boost-ext/di)
+* [MSVC-2015+](https://ci.appveyor.com/project/boost-ext/di)
 
 ### Configuration
 | Macro                             | Description |
 | --------------------------------- | ----------- |
-| `BOOST_DI_VERSION`                | Current version of [Boost].DI (ex. 1'0'0) |
+| `BOOST_DI_VERSION`                | Current version of [Boost::ext].DI (ex. 1'0'0) |
 | `BOOST_DI_CFG`                    | Global configuration allows to customize provider and policies (See [Config](user_guide.md#di_config)) |
 | `BOOST_DI_CFG_CTOR_LIMIT_SIZE`    | Limits number of allowed constructor parameters [0-10, default=10] (See [Injections](user_guide.md#injections)) |
 | `BOOST_DI_CFG_DIAGNOSTICS_LEVEL`  | Gives more information with error messages (See [Error messages](#error-messages)) |
-| `BOOST_DI_NAMESPACE_BEGIN`        | `namespace boost { namespace di { inline namespace v_1_0_0 {` |
-| `BOOST_DI_NAMESPACE_END`          | `}}}` |
+| `BOOST_DI_NAMESPACE_BEGIN`        | `namespace boost::inline ext::di::inline v_{version}_{revision}_{patch} {` |
+| `BOOST_DI_NAMESPACE_END`          | `}` |
 
 ### Exception Safety
 

@@ -82,7 +82,7 @@ Kris Jusiak, Quantlab Financial
 ### Agenda
 
 * #### ... with Dependency Injection
-    * [[Boost].DI](https://github.com/boost-experimental/di)
+    * [[Boost].DI](https://github.com/boost-ext/di)
       * Overview / Design / Benchmarks
       * Boost your design by example
       * Showcase
@@ -721,15 +721,15 @@ int main() {
 #### Simplify/Remove the wiring mess
   #### By Automating dependency injection?
 =>
-### [[Boost].DI](https://github.com/boost-experimental/di)
+### [[Boost].DI](https://github.com/boost-ext/di)
 
 ==============================================================================
 
-### [[Boost].DI](https://github.com/boost-experimental/di)
+### [[Boost].DI](https://github.com/boost-ext/di)
 
 > C++ Dependency Injection Library
 
-https://github.com/boost-experimental/di
+https://github.com/boost-ext/di
 
 ---
 
@@ -739,13 +739,13 @@ https://github.com/boost-experimental/di
 
 ### Overview
 
-* One header - 3k LOC - ([boost/di.hpp](https://raw.githubusercontent.com/boost-experimental/di/cpp14/include/boost/di.hpp)) / generated
+* One header - 3k LOC - ([boost/di.hpp](https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp)) / generated
 * Neither Boost nor STL is required
 * No 'if's, 'virtual's, 'exception's, macros, run-time errors
 * Non-intrusive
 * Exception / Thread safe
 * Supported compilers (C++14)
-  * [Clang-3.4+](https://travis-ci.org/boost-experimental/di), [XCode-6.1+](https://travis-ci.org/boost-experimental/di), [GCC-5.2+](https://travis-ci.org/boost-experimental/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
+  * [Clang-3.4+](https://travis-ci.org/boost-ext/di), [XCode-6.1+](https://travis-ci.org/boost-ext/di), [GCC-5.2+](https://travis-ci.org/boost-ext/di), [MSVC-2015+](https://ci.appveyor.com/project/krzysztof-jusiak/di)
 
 ----
 
@@ -765,9 +765,9 @@ https://github.com/boost-experimental/di
 
 * Unit tests (99% test code coverage)
 * Functional tests
-* Performance tests / [Benchmarks](https://github.com/boost-experimental/di/tree/cpp14/benchmark)
-* Compilation-error tests ([Validates error message](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di_compile_time.cpp))
-* Run-time performance tests ([Compares generated assembler opcodes](https://github.com/boost-experimental/di/blob/cpp14/test/pt/di_run_time.cpp))
+* Performance tests / [Benchmarks](https://github.com/boost-ext/di/tree/cpp14/benchmark)
+* Compilation-error tests ([Validates error message](https://github.com/boost-ext/di/blob/cpp14/test/pt/di_compile_time.cpp))
+* Run-time performance tests ([Compares generated assembler opcodes](https://github.com/boost-ext/di/blob/cpp14/test/pt/di_run_time.cpp))
 
 ---
 
@@ -803,11 +803,11 @@ https://github.com/boost-experimental/di
 
 | | |
 |-|-|
-| [Bindings](http://boost-experimental.github.io/di/user_guide/index.html#bindings) | Wiring Domain Specific Language |
-| [Scopes]((http://boost-experimental.github.io/di/user_guide/index.html#scopes) | Responsible for maintaining objects life time |
-| [Providers](http://boost-experimental.github.io/di/user_guide/index.html#providers) | Responsible for creating objects |
-| [Policies](http://boost-experimental.github.io/di/user_guide/index.html#policies) | Compile-time limitations for types / Run-time types visitor |
-| [Config](http://boost-experimental.github.io/di/user_guide/index.html#configuration) | Configuration for Policies and Providers |
+| [Bindings](http://boost-ext.github.io/di/user_guide/index.html#bindings) | Wiring Domain Specific Language |
+| [Scopes]((http://boost-ext.github.io/di/user_guide/index.html#scopes) | Responsible for maintaining objects life time |
+| [Providers](http://boost-ext.github.io/di/user_guide/index.html#providers) | Responsible for creating objects |
+| [Policies](http://boost-ext.github.io/di/user_guide/index.html#policies) | Compile-time limitations for types / Run-time types visitor |
+| [Config](http://boost-ext.github.io/di/user_guide/index.html#configuration) | Configuration for Policies and Providers |
 
 ----
 
@@ -825,7 +825,7 @@ Types = 512 | Constructor parameters <= 6
 
 ----
 
-## [[Boost].DI](https://github.com/boost-experimental/di) by example
+## [[Boost].DI](https://github.com/boost-ext/di) by example
 
 ```cpp
 #include <boost/di.hpp>
@@ -975,7 +975,7 @@ error: inline function 'abstract_type<Printable>::is_not_bound::error'
 
 ----
 
-## Boost your design with [[Boost].DI](https://github.com/boost-experimental/di)
+## Boost your design with [[Boost].DI](https://github.com/boost-ext/di)
 
 ## By example
 
@@ -1472,11 +1472,11 @@ error: inline function 'policies::type<Readable*>::
 
 ----
 
-### [[Boost].DI](https://github.com/boost-experimental/di) - More Features
+### [[Boost].DI](https://github.com/boost-ext/di) - More Features
 
-* [Examples](http://boost-experimental.github.io/di/examples)
+* [Examples](http://boost-ext.github.io/di/examples)
     * Automatic Injection, Bindings (Multiple Bindings, Dynamic Bindings), Scopes (Scope Deduction), Named Parameters (Annotations), Modules, Providers, Policies, ...
-* [Extensions](http://boost-experimental.github.io/di/extensions)
+* [Extensions](http://boost-ext.github.io/di/extensions)
     * Automatic Mocks injection, Smart Factories, Assisted Injection, XML Injection, Dependencies Diagram Generation, ...
 
 ==============================================================================
@@ -1499,7 +1499,7 @@ SOLID >> `STUPID`
 
 ----
 
-### [[Boost].DI](https://github.com/boost-experimental/di)
+### [[Boost].DI](https://github.com/boost-ext/di)
 
 * (+) Promotes loosely coupled code
 * (+) Removes / Cleanup the wiring mess
@@ -1513,9 +1513,9 @@ SOLID >> `STUPID`
 
 | [Boost].DI |  |
 | ------- | ------------- |
-| Documentation | http://boost-experimental.github.io/di |
-| Source Code | https://github.com/boost-experimental/di |
-| Try it online! | http://boost-experimental.github.io/di/try_it |
+| Documentation | http://boost-ext.github.io/di |
+| Source Code | https://github.com/boost-ext/di |
+| Try it online! | http://boost-ext.github.io/di/try_it |
 
 -
 
