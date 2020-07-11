@@ -17,8 +17,8 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "common/utils.hpp"
 
+#if !defined(_MSC_VER) || (defined(_MSC_VER) && (_MSC_VER < 1925))
 namespace {
-
 template <class... TArgs>
 auto errors(const TArgs&... args) {
   return std::vector<std::string>{(".*" + std::string{args} + ".*")...};
@@ -1387,4 +1387,5 @@ int main() { di::make_injector<test_config>(); }
       expect_compile_fail("<include> type_traits", errors(),
                           int main() { using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>; });
     };
+#endif
 #endif
