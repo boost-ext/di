@@ -17,8 +17,8 @@
 #include "boost/di/aux_/compiler.hpp"
 #include "common/utils.hpp"
 
+#if !defined(_MSC_VER) || (defined(_MSC_VER) && (_MSC_VER < 1925))
 namespace {
-
 template <class... TArgs>
 auto errors(const TArgs&... args) {
   return std::vector<std::string>{(".*" + std::string{args} + ".*")...};
@@ -765,7 +765,7 @@ test not_configurable_config = [] {
 
 test make_policies_with_non_const_policy = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__) && _MSC_VER < 1912
+#if defined(__MSVC__) && ((_MSC_VER < 1912) || (_MSC_VER > 1925))
                         "policy<.*>::requires_<.*call_operator_with_one_argument>", "=.*non_const_policy"
 #else
                         "policy<.*non_const_policy>::requires_<.*call_operator_with_one_argument>"
@@ -802,7 +802,7 @@ test make_policies_with_non_movable_policy = [] {
 
 test config_wrong_policy = [] {
   auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__) && _MSC_VER < 1912
+#if defined(__MSVC__) && ((_MSC_VER < 1912) || (_MSC_VER > 1925))
                         "policy<.*>::requires_<.*call_operator_with_one_argument>", "=.*int"
 #else
                         "policy<.*int>::requires_<.*call_operator_with_one_argument>"
@@ -822,7 +822,7 @@ int main() { di::make_injector<test_config>(); }
 
     test config_policy_not_callable = [] {
       auto errors_ = errors("constraint not satisfied",
-#if defined(__MSVC__) && _MSC_VER < 1912
+#if defined(__MSVC__) && ((_MSC_VER < 1912) || (_MSC_VER > 1925))
                             "policy<.*>::requires_<.*call_operator_with_one_argument>", "=.*dummy"
 #else
                             "policy<.*dummy>::requires_<.*call_operator_with_one_argument>"
@@ -1387,4 +1387,5 @@ int main() { di::make_injector<test_config>(); }
       expect_compile_fail("<include> type_traits", errors(),
                           int main() { using type = std::remove_reference_t<decltype(di::bind<int>())>::is_referable<int>; });
     };
+#endif
 #endif
