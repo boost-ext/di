@@ -2554,28 +2554,24 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
       () const {
     return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <template <class...> class T,
-            __BOOST_DI_REQUIRES(
-                is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
-  binder::resolve_template_t<injector, aux::identity<T<>>>
+  template <template <class...> class T, class R = binder::resolve_template_t<injector, aux::identity<T<>>>,
+            __BOOST_DI_REQUIRES(is_creatable<R, no_name, aux::true_type>::value) = 0>
+  R
       // clang-format off
   create()
       // clang-format on
       const {
-    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type) create_successful_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(R) create_successful_impl<aux::true_type>(aux::type<R>{});
   }
-  template <template <class...> class T,
-            __BOOST_DI_REQUIRES(
-                !is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  template <template <class...> class T, class R = binder::resolve_template_t<injector, aux::identity<T<>>>,
+            __BOOST_DI_REQUIRES(!is_creatable<R, no_name, aux::true_type>::value) = 0>
   __BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  binder::resolve_template_t<injector, aux::identity<T<>>>
+  R
       // clang-format off
   create()
       // clang-format on
       const {
-    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type) create_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(R) create_impl<aux::true_type>(aux::type<R>{});
   }
 
  protected:
@@ -2782,28 +2778,24 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
       () const {
     return __BOOST_DI_TYPE_WKND(T) create_impl<aux::true_type>(aux::type<T>{});
   }
-  template <template <class...> class T,
-            __BOOST_DI_REQUIRES(
-                is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
-  binder::resolve_template_t<injector, aux::identity<T<>>>
+  template <template <class...> class T, class R = binder::resolve_template_t<injector, aux::identity<T<>>>,
+            __BOOST_DI_REQUIRES(is_creatable<R, no_name, aux::true_type>::value) = 0>
+  R
       // clang-format off
   create()
       // clang-format on
       const {
-    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type) create_successful_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(R) create_successful_impl<aux::true_type>(aux::type<R>{});
   }
-  template <template <class...> class T,
-            __BOOST_DI_REQUIRES(
-                !is_creatable<binder::resolve_template_t<injector, aux::identity<T<>>>, no_name, aux::true_type>::value) = 0>
+  template <template <class...> class T, class R = binder::resolve_template_t<injector, aux::identity<T<>>>,
+            __BOOST_DI_REQUIRES(!is_creatable<R, no_name, aux::true_type>::value) = 0>
   __BOOST_DI_DEPRECATED("creatable constraint not satisfied")
-  binder::resolve_template_t<injector, aux::identity<T<>>>
+  R
       // clang-format off
   create()
       // clang-format on
       const {
-    using type = binder::resolve_template_t<injector, aux::identity<T<>>>;
-    return __BOOST_DI_TYPE_WKND(type) create_impl<aux::true_type>(aux::type<type>{});
+    return __BOOST_DI_TYPE_WKND(R) create_impl<aux::true_type>(aux::type<R>{});
   }
 
  protected:
