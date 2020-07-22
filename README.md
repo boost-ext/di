@@ -4,12 +4,13 @@
 <a href="https://ci.appveyor.com/project/boost-ext/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/boost-ext/di/cpp14.svg?label=windows)</a>
 <a href="https://codecov.io/gh/boost-ext/di" target="_blank">![Coveralls](https://codecov.io/gh/boost-ext/di/branch/cpp14/graph/badge.svg)</a>
 <a href="http://github.com/boost-ext/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/boost-ext/di.svg)</a>
+<a href="https://godbolt.org/z/5qTKhf">![Try it online](https://img.shields.io/badge/try%20it-online-blue.svg)</a>
 
 ---------------------------------------
 
 # [Boost::ext].DI
 
-Your C++14 **one header only** Dependency Injection library with no dependencies ([__Try it online!__](http://boost-ext.github.io/di/try_it/index.html))
+Your C++14 **one header only** Dependency Injection library with no dependencies
 
 ### Quick start
 
