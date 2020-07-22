@@ -2000,7 +2000,7 @@ By default constructible policy disables creation of any constructor parameters.
 <pre><code>namespace policies {
   struct _ { }; // placeholder
 
-  constexpr auto include_root = true;
+  static constexpr auto include_root = true;
 
   template&lt;class T&gt;
   struct is_root; // true when is the root type (`create&lt;RooType&gt;()`)
