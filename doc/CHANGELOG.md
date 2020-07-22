@@ -1,3 +1,22 @@
+## [1.2.0] - 2020-07-21
+- **Additions**
+    - Support for Clang-9/Clang-10/XCode-11
+    - Support for GCC-9/10
+    - Support for MSVC-2019
+    - Support for Meson build system
+>
+- **Bug Fixes**
+    - [Issues](https://github.com/boost-ext/di/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+closed%3A2019-01-07..2020-07-21+)
+>
+- **Contributions**
+    - [Kanstantsin Chernik](https://github.com/kanstantsin-chernik)
+    - [Reza Housseini](Reza Housseini)
+    - [Paul Kunysch](https://github.com/pck)
+    - [James P. Harvey](https://github.com/jamespharvey20)
+    - [Anes Belfodil](https://github.com/abelfodil)
+    - [Alexey-Bogomolov](https://github.com/Alexey-Bogomolov)
+    - [mlimber](https://github.com/mlimber)
+
 ## [1.1.0] - 2019-01-07
 - **Additions**
     - Support for Clang-5.0/6.0/7.0
@@ -88,6 +107,7 @@
 
 ---
 
+[1.2.0]: https://github.com/boost-ext/di/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/boost-ext/di/compare/v1.0.2...v1.1.0
 [1.0.2]: https://github.com/boost-ext/di/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/boost-ext/di/compare/v1.0.0...v1.0.1
