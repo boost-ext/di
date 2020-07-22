@@ -3134,7 +3134,7 @@ struct is_injected : detail::type_op {
   template <class TArg, class U = aux::decay_t<aux::conditional_t<aux::is_same<T, _>::value, typename TArg::type, T>>>
   struct apply : aux::conditional_t<aux::is_class<U>::value, typename type_traits::is_injectable<U>::type, aux::true_type> {};
 };
-constexpr auto include_root = true;
+static constexpr auto include_root = true;
 namespace operators {
 template <class X, class Y>
 inline auto operator||(const X&, const Y&) {

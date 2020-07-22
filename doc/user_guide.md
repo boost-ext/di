@@ -1165,7 +1165,7 @@ By default constructible policy disables creation of any constructor parameters.
     namespace policies {
       struct _ { }; // placeholder
 
-      constexpr auto include_root = true;
+      static constexpr auto include_root = true;
 
       template<class T>
       struct is_root; // true when is the root type (`create<RooType>()`)
