@@ -431,6 +431,7 @@ retq
     * [Shared Scope](https://boost-ext.github.io/di/extensions.html#shared-scope)
 * [FAQ](https://boost-ext.github.io/di/FAQ.html)
 * [CHANGELOG](https://boost-ext.github.io/di/CHANGELOG.html)
+    * [[1.2.0] - 2020-07-21](https://boost-ext.github.io/di/CHANGELOG.html#120-2020-07-21)
     * [[1.1.0] - 2019-01-07](https://boost-ext.github.io/di/CHANGELOG.html#110-2019-01-07)
     * [[1.0.2] - 2018-01-04](https://boost-ext.github.io/di/CHANGELOG.html#102-2018-01-04)
     * [[1.0.1] - 2016-05-04](https://boost-ext.github.io/di/CHANGELOG.html#101-2016-05-04)

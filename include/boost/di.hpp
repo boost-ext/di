@@ -8,12 +8,12 @@
 #if (__cplusplus < 201305L && _MSC_VER < 1900)
 #error "[Boost::ext].DI requires C++14 support (Clang-3.4+, GCC-5.1+, MSVC-2015+)"
 #else
-#define BOOST_DI_VERSION 1'1'0
+#define BOOST_DI_VERSION 1'2'0
 #define BOOST_DI_NAMESPACE_BEGIN \
   namespace boost {              \
   inline namespace ext {         \
   namespace di {                 \
-  inline namespace v1_1_0 {
+  inline namespace v1_2_0 {
 #define BOOST_DI_NAMESPACE_END \
   }                            \
   }                            \
@@ -344,8 +344,8 @@ class instance;
 class singleton;
 class unique;
 }
-#define __BOOST_DI_REQUIRES(...) typename ::boost::ext::di::v1_1_0::aux::enable_if<__VA_ARGS__, int>::type
-#define __BOOST_DI_REQUIRES_MSG(...) typename ::boost::ext::di::v1_1_0::aux::concept_check<__VA_ARGS__>::type
+#define __BOOST_DI_REQUIRES(...) typename ::boost::ext::di::v1_2_0::aux::enable_if<__VA_ARGS__, int>::type
+#define __BOOST_DI_REQUIRES_MSG(...) typename ::boost::ext::di::v1_2_0::aux::concept_check<__VA_ARGS__>::type
 namespace aux {
 template <class T>
 T&& declval();
@@ -627,11 +627,11 @@ template <class T>
 auto has_shared_ptr__(T &&) -> is_valid_expr<decltype(std::shared_ptr<T>{})>;
 #endif
 template <class T, class... TArgs>
-decltype(::boost::ext::di::v1_1_0::aux::declval<T>().operator()(::boost::ext::di::v1_1_0::aux::declval<TArgs>()...),
-         ::boost::ext::di::v1_1_0::aux::true_type())
+decltype(::boost::ext::di::v1_2_0::aux::declval<T>().operator()(::boost::ext::di::v1_2_0::aux::declval<TArgs>()...),
+         ::boost::ext::di::v1_2_0::aux::true_type())
 is_invocable_impl(int);
 template <class, class...>
-::boost::ext::di::v1_1_0::aux::false_type is_invocable_impl(...);
+::boost::ext::di::v1_2_0::aux::false_type is_invocable_impl(...);
 template <class T, class... TArgs>
 struct is_invocable : decltype(is_invocable_impl<T, TArgs...>(0)) {};
 struct callable_base_impl {
@@ -954,10 +954,10 @@ struct pool<aux::type_list<TArgs...>> : TArgs... {
 #endif
 namespace type_traits {
 template <class, class = int>
-struct is_injectable : ::boost::ext::di::v1_1_0::aux::false_type {};
+struct is_injectable : ::boost::ext::di::v1_2_0::aux::false_type {};
 template <class T>
-struct is_injectable<T, ::boost::ext::di::v1_1_0::aux::valid_t<typename T::boost_di_inject__>>
-    : ::boost::ext::di::v1_1_0::aux::true_type {};
+struct is_injectable<T, ::boost::ext::di::v1_2_0::aux::valid_t<typename T::boost_di_inject__>>
+    : ::boost::ext::di::v1_2_0::aux::true_type {};
 struct direct {};
 struct uniform {};
 template <class T, int>
@@ -1414,10 +1414,10 @@ struct wrapper_traits<std::shared_ptr<T>> {
 template <class T>
 using wrapper_traits_t = typename wrapper_traits<T>::type;
 template <class, class = int>
-struct has_result_type : ::boost::ext::di::v1_1_0::aux::false_type {};
+struct has_result_type : ::boost::ext::di::v1_2_0::aux::false_type {};
 template <class T>
-struct has_result_type<T, ::boost::ext::di::v1_1_0::aux::valid_t<typename T::result_type>>
-    : ::boost::ext::di::v1_1_0::aux::true_type {};
+struct has_result_type<T, ::boost::ext::di::v1_2_0::aux::valid_t<typename T::result_type>>
+    : ::boost::ext::di::v1_2_0::aux::true_type {};
 template <class TGiven, class TProvider, class... Ts>
 struct is_expr
     : aux::integral_constant<
@@ -1952,7 +1952,7 @@ struct scope_traits<std::weak_ptr<T>> {
 };
 }
 #if !defined(BOOST_DI_CFG)
-#define BOOST_DI_CFG ::boost::ext::di::v1_1_0::config
+#define BOOST_DI_CFG ::boost::ext::di::v1_2_0::config
 #endif
 template <class... TPolicies, __BOOST_DI_REQUIRES_MSG(concepts::callable<TPolicies...>) = 0>
 inline auto make_policies(TPolicies... args) noexcept {
@@ -2596,7 +2596,7 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
     using type = any_type_1st_ref<TParent, injector, with_error>;
   };
   template <class TName, class T>
-  struct try_create<::boost::ext::di::v1_1_0::named<TName, T>> {
+  struct try_create<::boost::ext::di::v1_2_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
   template <class TParent, int N, class T>
@@ -2632,7 +2632,7 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
     return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<::boost::ext::di::v1_1_0::named<TName, T>>&) const {
+  auto create_impl(const aux::type<::boost::ext::di::v1_2_0::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class TParent, int N, class T>
@@ -2665,7 +2665,7 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
     return successful::any_type_1st_ref<TParent, injector>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<::boost::ext::di::v1_1_0::named<TName, T>>&) const {
+  auto create_successful_impl(const aux::type<::boost::ext::di::v1_2_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class TParent, int N, class T>
@@ -2820,7 +2820,7 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
     using type = any_type_1st_ref<TParent, injector, with_error>;
   };
   template <class TName, class T>
-  struct try_create<::boost::ext::di::v1_1_0::named<TName, T>> {
+  struct try_create<::boost::ext::di::v1_2_0::named<TName, T>> {
     using type = aux::conditional_t<is_creatable<T, TName>::value, T, void>;
   };
   template <class TParent, int N, class T>
@@ -2856,7 +2856,7 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
     return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_impl(const aux::type<::boost::ext::di::v1_1_0::named<TName, T>>&) const {
+  auto create_impl(const aux::type<::boost::ext::di::v1_2_0::named<TName, T>>&) const {
     return create_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class TParent, int N, class T>
@@ -2889,7 +2889,7 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
     return successful::any_type_1st_ref<TParent, injector>{*this};
   }
   template <class TIsRoot = aux::false_type, class T, class TName>
-  auto create_successful_impl(const aux::type<::boost::ext::di::v1_1_0::named<TName, T>>&) const {
+  auto create_successful_impl(const aux::type<::boost::ext::di::v1_2_0::named<TName, T>>&) const {
     return create_successful_impl__<TIsRoot, T, TName>();
   }
   template <class TIsRoot = aux::false_type, class TParent, int N, class T>
@@ -3024,8 +3024,8 @@ using injector = detail::injector<
                      aux::type_list<type_traits::add_named_t<T>, type_traits::add_named_t<Ts>...>>>;
 #endif
 // clang-format off
-#define __BOOST_DI_EXPOSE_IMPL__(...) decltype(::boost::ext::di::v1_1_0::detail::__VA_ARGS__),
-#define __BOOST_DI_EXPOSE_IMPL(...) ::boost::ext::di::v1_1_0::named<__BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
+#define __BOOST_DI_EXPOSE_IMPL__(...) decltype(::boost::ext::di::v1_2_0::detail::__VA_ARGS__),
+#define __BOOST_DI_EXPOSE_IMPL(...) ::boost::ext::di::v1_2_0::named<__BOOST_DI_EXPOSE_IMPL__ __VA_ARGS__>
 #define BOOST_DI_EXPOSE(...) __BOOST_DI_IF(__BOOST_DI_IBP(__VA_ARGS__), __BOOST_DI_EXPOSE_IMPL, __BOOST_DI_EXPAND)(__VA_ARGS__)
 // clang-format on
 #if defined(__MSVC__)
@@ -3288,7 +3288,7 @@ struct named_impl {
 static constexpr __BOOST_DI_UNUSED named_impl named{};
 template <class T, class TName>
 struct combine_impl {
-  using type = ::boost::ext::di::v1_1_0::named<TName, T>;
+  using type = ::boost::ext::di::v1_2_0::named<TName, T>;
 };
 template <class T>
 struct combine_impl<T, aux::none_type> {
@@ -3312,23 +3312,23 @@ using inject = aux::type_list<Ts...>;
   __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT)() __BOOST_DI_IF(__BOOST_DI_IBP(p), __BOOST_DI_EAT p, p)
 #define __BOOST_DI_GEN_CTOR(i, ...) __BOOST_DI_GEN_CTOR_IMPL(__BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
 #define __BOOST_DI_GEN_ARG_NAME(p) __BOOST_DI_GEN_ARG_NAME_IMPL p )
-#define __BOOST_DI_GEN_NONE_TYPE(p) ::boost::ext::di::v1_1_0::aux::none_type
-#define __BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::ext::di::v1_1_0::detail::p) __BOOST_DI_EAT(
+#define __BOOST_DI_GEN_NONE_TYPE(p) ::boost::ext::di::v1_2_0::aux::none_type
+#define __BOOST_DI_GEN_ARG_NAME_IMPL(p) decltype(::boost::ext::di::v1_2_0::detail::p) __BOOST_DI_EAT(
 #define __BOOST_DI_GEN_NAME_IMPL(p, i)               \
   __BOOST_DI_IF(i, __BOOST_DI_COMMA, __BOOST_DI_EAT) \
   () __BOOST_DI_IF(__BOOST_DI_IBP(p), __BOOST_DI_GEN_ARG_NAME, __BOOST_DI_GEN_NONE_TYPE)(p)
 #define __BOOST_DI_GEN_NAME(i, ...) __BOOST_DI_GEN_NAME_IMPL(__BOOST_DI_ELEM(i, __VA_ARGS__, ), i)
 #define __BOOST_DI_INJECT_TRAITS_IMPL_0(...)                                                           \
   static void ctor(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_CTOR, __VA_ARGS__)); \
-  using type __BOOST_DI_UNUSED = ::boost::ext::di::v1_1_0::aux::function_traits_t<decltype(ctor)>;
+  using type __BOOST_DI_UNUSED = ::boost::ext::di::v1_2_0::aux::function_traits_t<decltype(ctor)>;
 #define __BOOST_DI_INJECT_TRAITS_IMPL_1(...)                                                                        \
   static void ctor(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_CTOR, __VA_ARGS__));              \
   static void name(__BOOST_DI_REPEAT(__BOOST_DI_SIZE(__VA_ARGS__), __BOOST_DI_GEN_NAME, __VA_ARGS__));              \
   using type __BOOST_DI_UNUSED =                                                                                    \
-      ::boost::ext::di::v1_1_0::detail::combine_t<::boost::ext::di::v1_1_0::aux::function_traits_t<decltype(ctor)>, \
-                                                  ::boost::ext::di::v1_1_0::aux::function_traits_t<decltype(name)>>;
+      ::boost::ext::di::v1_2_0::detail::combine_t<::boost::ext::di::v1_2_0::aux::function_traits_t<decltype(ctor)>, \
+                                                  ::boost::ext::di::v1_2_0::aux::function_traits_t<decltype(name)>>;
 #define __BOOST_DI_INJECT_TRAITS_EMPTY_IMPL(...) \
-  using boost_di_inject__ __BOOST_DI_UNUSED = ::boost::ext::di::v1_1_0::aux::type_list<>
+  using boost_di_inject__ __BOOST_DI_UNUSED = ::boost::ext::di::v1_2_0::aux::type_list<>
 #define __BOOST_DI_INJECT_TRAITS_IMPL(...)                                                                             \
   struct boost_di_inject__ {                                                                                           \
     __BOOST_DI_CAT(__BOOST_DI_INJECT_TRAITS_IMPL_, __BOOST_DI_HAS_NAMES(__VA_ARGS__))                                  \
