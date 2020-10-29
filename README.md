@@ -12,6 +12,12 @@
 
 Your C++14 **one header only** Dependency Injection library with no dependencies
 
+<p align="center"><a href="https://www.youtube.com/watch?v=yVogS4NbL6U"><img src="doc/images/di_concept.png" alt="Dependency Injection"/></a></p>
+
+> https://www.youtube.com/watch?v=yVogS4NbL6U
+
+---
+
 ### Quick start
 
 #### Download
