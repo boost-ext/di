@@ -7,6 +7,10 @@
 #ifndef BOOST_DI_AUX_UTILITY_HPP
 #define BOOST_DI_AUX_UTILITY_HPP
 
+#if defined(__cpp_lib_integer_sequence)
+#include <utility>
+#endif
+
 struct _ {
   _(...) {}
 };
@@ -102,7 +106,7 @@ struct index_sequence {
   using type = index_sequence;
 };
 
-#if defined(__cpp_lib_integer_sequence) && defined(__GNUC__)  // __pph__
+#if defined(__cpp_lib_integer_sequence)  // __pph__
 template <int... Ns>
 index_sequence<Ns...> from_std(std::integer_sequence<int, Ns...>) {
   return {};

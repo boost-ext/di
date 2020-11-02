@@ -102,6 +102,10 @@ class shared_ptr;
 }  // namespace boost
 #endif                           // __pph__
 
+#if defined(__cpp_lib_integer_sequence)  // __pph__
+#include <utility>                       // __pph__
+#endif                                   // __pph__
+
 #undef NAMESPACE_STD_BEGIN  // __pph__
 #undef NAMESPACE_STD_END    // __pph__
 
