@@ -21,6 +21,9 @@ test index_sequence_types = [] {
   static_expect(std::is_same<index_sequence<0, 1, 2, 3, 4, 5, 6, 7>, make_index_sequence<8>>::value);
   static_expect(std::is_same<index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8>, make_index_sequence<9>>::value);
   static_expect(std::is_same<index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 9>, make_index_sequence<10>>::value);
+  static_expect(std::is_same<index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10>, make_index_sequence<11>>::value);
+  static_expect(
+      std::is_same<index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15>, make_index_sequence<16>>::value);
 };
 
 test join_types = [] {

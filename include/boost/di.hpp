@@ -238,19 +238,9 @@ template <int...>
 struct index_sequence {
   using type = index_sequence;
 };
-#if defined(__cpp_lib_integer_sequence) && defined(__GNUC__)
-template <int... Ns>
-index_sequence<Ns...> from_std(std::integer_sequence<int, Ns...>) {
-  return {};
-}
-template <int N>
-using make_index_sequence = decltype(from_std(std::make_integer_sequence<int, N>{}));
-#else
 #if __has_builtin(__make_integer_seq)
-template <class T, T...>
-struct integer_sequence;
-template <int... Ns>
-struct integer_sequence<int, Ns...> {
+template <class T, T... Ns>
+struct integer_sequence {
   using type = index_sequence<Ns...>;
 };
 template <int N>
@@ -258,8 +248,17 @@ struct make_index_sequence_impl {
   using type = typename __make_integer_seq<integer_sequence, int, N>::type;
 };
 #else
-template <int>
-struct make_index_sequence_impl;
+template <class...>
+struct build_index_sequence;
+template <int... Cs1, int... Cs2>
+struct build_index_sequence<index_sequence<Cs1...>, index_sequence<Cs2...>> {
+  using type = index_sequence<Cs1..., sizeof...(Cs1) + Cs1..., 2 * sizeof...(Cs1) + Cs2...>;
+};
+template <int N>
+struct make_index_sequence_impl {
+  using type = typename build_index_sequence<typename make_index_sequence_impl<N / 2>::type,
+                                             typename make_index_sequence_impl<N % 2>::type>::type;
+};
 template <>
 struct make_index_sequence_impl<0> : index_sequence<> {};
 template <>
@@ -285,7 +284,6 @@ struct make_index_sequence_impl<10> : index_sequence<0, 1, 2, 3, 4, 5, 6, 7, 8, 
 #endif
 template <int N>
 using make_index_sequence = typename make_index_sequence_impl<N>::type;
-#endif
 }
 namespace placeholders {
 __BOOST_DI_UNUSED static const struct arg { } _{}; }
