@@ -83,14 +83,6 @@ class shared {
 static constexpr detail::shared shared{};
 
 class shared_config : public di::config {
-  template <class T>
-  struct type {
-    static void id() {}
-  };
-  template <class T>
-  static auto type_id() {
-    return reinterpret_cast<std::size_t>(&type<T>::id);
-  }
 
  public:
   template <class T>
@@ -120,11 +112,11 @@ class shared_config : public di::config {
 
   template <class T>
   auto& data() {
-    return data_[type_id<T>()];
+    return data_[std::type_index(typeid(T))];
   }
 
  private:
-  std::unordered_map<std::size_t, std::shared_ptr<void>> data_{};
+  std::unordered_map<std::type_index, std::shared_ptr<void>> data_{};
 };
 
 }  // namespace extension
