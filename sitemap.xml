@@ -2,52 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
      <loc>http://boost-ext.github.io/di/index.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/overview.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/tutorial.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/try_it.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/benchmarks.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/user_guide.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/examples.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/extensions.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/FAQ.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
     <url>
      <loc>http://boost-ext.github.io/di/CHANGELOG.html</loc>
-     <lastmod>2021-03-15</lastmod>
+     <lastmod>2021-03-17</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
