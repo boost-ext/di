@@ -304,6 +304,7 @@ but also can help you with...
 
 #### [Boost::ext].DI
 
+* [Utah C++ Programmers: Dependency Injection with Boost.DI](https://www.youtube.com/watch?v=zMTAc8WHIgo)
 * [C++Now 2019: Dependency Injection - a 25-dollar term for a 5-cent concept](https://www.youtube.com/watch?v=yVogS4NbL6U) | [Slides](https://boost-ext.github.io/di/cppnow-2019)
 * [CppCon 2018: \[Boost\].DI - Inject all the things!](https://www.youtube.com/watch?v=8HmjM3G8jhQ) | [Slides](https://boost-ext.github.io/di/cppcon-2018)
 * [C++Now 2017: Concepts driven design with Dependency Injection](https://www.youtube.com/watch?v=50VIYIHlUJE) | [Slides](https://boost-ext.github.io/di/concepts-driven-design-with-di)
