@@ -2897,7 +2897,7 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
   }
   template <class TIsRoot = aux::false_type, class TParent, int N>
   auto create_successful_impl(const aux::type<core::ctor_arg<TParent, N, const placeholders::arg&>>&) const {
-    return any_type_1st_ref<TParent, injector, aux::false_type, aux::true_type>{*this};
+    return successful::any_type_1st_ref<TParent, injector>{*this};
   }
   template <class TIsRoot = aux::false_type, class T>
   decltype(auto) create_successful_impl(const aux::type<self<T>>&) const {
