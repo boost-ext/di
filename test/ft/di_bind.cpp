@@ -1385,6 +1385,34 @@ test bind_to_ctor_multiple_placeholders = [] {
   expect(dynamic_cast<impl2 *>(object.c_.up.get()));
 };
 
+
+test bind_to_const_ref_sharedptr_via_placeholder = [] {
+  struct i {
+    virtual ~i() noexcept = default;
+    virtual int get_value() = 0;
+  };
+
+  struct impl : i {
+    int get_value() override { return 5; }
+  };
+
+  struct app {
+    explicit app(const std::shared_ptr<i>& p)
+    : value {p->get_value()}
+    {}
+    int value;
+  };
+
+  const auto injector = di::make_injector(
+     di::bind<i>().to<impl>(),
+     di::bind<app>(di::placeholders::_)
+    );
+
+  auto object = injector.create<app>();
+
+  expect(5 == object.value);
+};
+
 test bind_to_ctor_short_notation = [] {
   struct c {
     c(int a, int b) : a{a}, b{b} {}
