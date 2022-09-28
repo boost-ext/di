@@ -1,7 +1,6 @@
 <a href="http://www.boost.org/LICENSE_1_0.txt" target="_blank">![Boost Licence](http://img.shields.io/badge/license-boost-blue.svg)</a>
 <a href="https://github.com/boost-ext/di/releases" target="_blank">![Version](https://badge.fury.io/gh/boost-ext%2Fdi.svg)</a>
-<a href="https://travis-ci.org/boost-ext/di" target="_blank">![Build Status](https://img.shields.io/travis/boost-ext/di/cpp14.svg?label=linux/osx)</a>
-<a href="https://ci.appveyor.com/project/boost-ext/di" target="_blank">![Build Status](https://img.shields.io/appveyor/ci/boost-ext/di/cpp14.svg?label=windows)</a>
+<a href="https://github.com/boost-ext/di/actions/workflows/build.yml" target="_blank">![Linux](https://github.com/boost-ext/di/actions/workflows/build.yml/badge.svg)</a>
 <a href="https://codecov.io/gh/boost-ext/di" target="_blank">![Coveralls](https://codecov.io/gh/boost-ext/di/branch/cpp14/graph/badge.svg)</a>
 <a href="http://github.com/boost-ext/di/issues" target="_blank">![Github Issues](https://img.shields.io/github/issues/boost-ext/di.svg)</a>
 <a href="https://godbolt.org/z/5qTKhf">![Try it online](https://img.shields.io/badge/try%20it-online-blue.svg)</a>
