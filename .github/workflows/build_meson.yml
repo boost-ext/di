@@ -1,0 +1,77 @@
+name: build_meson
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build_meson:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+        - {
+            name: "windows MinGW",
+            os: windows-latest,
+            build_type: "Debug",
+            cxx: "g++",
+            generators: "Ninja"
+          }
+        - {
+            name: "ubuntu g++",
+            os: ubuntu-latest,
+            build_type: "Debug",
+            cxx: "g++",
+            generators: "Ninja"
+          }
+        - {
+            name: "macos clang++",
+            os: macos-latest,
+            build_type: "Debug",
+            cxx: "clang++",
+            generators: "Ninja"
+          }
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies on windows
+        if: startsWith(matrix.config.os, 'windows')
+        run: |
+          choco install ninja meson
+          ninja --version
+          meson --version
+
+      - name: Install dependencies on ubuntu
+        if: startsWith(matrix.config.name, 'ubuntu')
+        run: |
+          sudo apt-get update
+          sudo apt-get install ninja-build meson
+          ninja --version
+          meson --version
+          gcc --version
+
+      - name: Install dependencies on macos
+        if: startsWith(matrix.config.os, 'macos')
+        run: |
+          brew install meson ninja
+          ninja --version
+          meson --version
+
+      - name: Configure
+        shell: bash
+        run: |
+          CXX=${{ matrix.config.cxx }} \
+          meson setup build \
+          -DBOOST_DI_OPT_BUILD_TESTS=true \
+          -DBOOST_DI_OPT_BUILD_EXAMPLES=true
+
+      - name: Build
+        shell: bash
+        run: meson compile -C build
+
+      - name: Test
+        shell: bash
+        run: meson test -C build
