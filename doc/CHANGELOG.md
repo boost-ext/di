@@ -1,3 +1,7 @@
+## [1.3.0] - 2023-05-23
+- **Bug Fixes**
+    - [Issues](https://github.com/boost-ext/di/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+closed%3A2020-07-21..2023-05-23+)
+>
 ## [1.2.0] - 2020-07-21
 - **Additions**
     - Support for Clang-9/Clang-10/XCode-11
