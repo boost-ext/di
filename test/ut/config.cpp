@@ -27,8 +27,8 @@ test make_policies_types = [] {
 };
 
 test default_config = [] {
-  expect(std::is_same<providers::stack_over_heap, decltype(std::declval<config>().provider((fake_injector<>*)0))>{});
-  expect(std::is_same<core::pool<aux::type_list<>>, decltype(std::declval<config>().policies((fake_injector<>*)0))>{});
+  expect(std::is_same<providers::stack_over_heap, decltype(std::declval<config>().provider(std::declval<fake_injector<>*>()))>{});
+  expect(std::is_same<core::pool<aux::type_list<>>, decltype(std::declval<config>().policies(std::declval<fake_injector<>*>()))>{});
 };
 
 struct c {};

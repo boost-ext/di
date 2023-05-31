@@ -29,7 +29,7 @@ struct arg_wrapper<T, TName, TIsRoot, TList<TCtor...>, TDependency, TDeps> {
   using is_root __BOOST_DI_UNUSED = TIsRoot;
 
   template <class T_, class TName_, class TDefault_>
-  using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
+  using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>(aux::declval<TDeps*>()));
 };
 
 template <class T>

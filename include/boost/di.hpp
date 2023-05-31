@@ -644,7 +644,7 @@ template <typename T>
 aux::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(...), &T::operator()>* = 0);
 aux::true_type is_callable_impl(...);
 template <class T>
-struct is_callable : decltype(is_callable_impl((callable_base<T>*)0)) {};
+struct is_callable : decltype(is_callable_impl(aux::declval<callable_base<T>*>())) {};
 template <class, class = int>
 struct is_empty_expr : false_type {};
 template <class TExpr>
@@ -2043,8 +2043,8 @@ struct injector {
 };
 aux::false_type configurable_impl(...);
 template <class T>
-auto configurable_impl(T&&) -> aux::is_valid_expr<decltype(aux::declval<T>().provider((injector<T>*)0)),
-                                                  decltype(aux::declval<T>().policies((injector<T>*)0))>;
+auto configurable_impl(T&&) -> aux::is_valid_expr<decltype(aux::declval<T>().provider(aux::declval<injector<T>*>())),
+                                                  decltype(aux::declval<T>().policies(aux::declval<injector<T>*>()))>;
 template <class T1, class T2>
 struct get_configurable_error : aux::type_list<T1, T2> {};
 template <class T>
@@ -2059,8 +2059,8 @@ template <>
 struct get_configurable_error<aux::true_type, aux::true_type> : aux::true_type {};
 template <class T>
 auto is_configurable(const aux::true_type&) {
-  return typename get_configurable_error<decltype(providable<decltype(aux::declval<T>().provider((injector<T>*)0))>()),
-                                         decltype(callable<decltype(aux::declval<T>().policies((injector<T>*)0))>())>::type{};
+  return typename get_configurable_error<decltype(providable<decltype(aux::declval<T>().provider(aux::declval<injector<T>*>()))>()),
+                                         decltype(callable<decltype(aux::declval<T>().policies(aux::declval<injector<T>*>()))>())>::type{};
 }
 template <class T>
 auto is_configurable(const aux::false_type&) {
@@ -2099,7 +2099,7 @@ struct binder {
       aux::pair<TConcept, TDependency<TScope, TExpected, TGiven, TName, override, TCtor>>*);
   template <class TDeps, class T, class TName, class TDefault>
   struct resolve__ {
-    using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>((TDeps*)0));
+    using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>(aux::declval<TDeps*>()));
   };
 #if (defined(__CLANG__) && __CLANG__ >= 3'9)  //
   template <class TDeps, class T>
@@ -2125,7 +2125,7 @@ struct binder {
   static decltype(auto) resolve(TDeps* deps) noexcept {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
 #if (defined(__CLANG__) && __CLANG__ >= 3'9)  //
-    return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>{});
+    return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>(aux::declval<TDeps*>()))>{});
 #else
     return resolve_impl<TDefault, dependency>(deps);
 #endif
@@ -2342,7 +2342,7 @@ struct arg_wrapper<T, TName, TIsRoot, TList<TCtor...>, TDependency, TDeps> {
   using scope __BOOST_DI_UNUSED = typename TDependency::scope;
   using is_root __BOOST_DI_UNUSED = TIsRoot;
   template <class T_, class TName_, class TDefault_>
-  using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>((TDeps*)0));
+  using resolve = decltype(core::binder::resolve<T_, TName_, TDefault_>(aux::declval<TDeps*>()));
 };
 template <class T>
 struct allow_void : T {};
@@ -2407,7 +2407,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
   using config = typename TInjector::config;
   template <class, class... TArgs>
   struct is_creatable {
-    using type = decltype(aux::declval<injector__<TInjector>>().cfg().provider((TInjector*)0));
+    using type = decltype(aux::declval<injector__<TInjector>>().cfg().provider(aux::declval<TInjector*>()));
     static constexpr auto value = type::template is_creatable<TInitialization, T, TArgs...>::value;
   };
   template <class TMemory = type_traits::heap>
@@ -2519,7 +2519,7 @@ class injector : public injector_base, public pool<bindings_t<TDeps...>> {
     using ctor_args_t = typename ctor_t::second::second;
     static constexpr auto value =
         aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
-                                try_provider<ctor_t, injector, decltype(aux::declval<TConfig>().provider((injector*)0))>{})),
+                                try_provider<ctor_t, injector, decltype(aux::declval<TConfig>().provider(aux::declval<injector*>()))>{})),
                             T>::value &&
         policy::template try_call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>, TPolicies>::value;
   };
@@ -2747,7 +2747,7 @@ class injector<TConfig, pool<>, TDeps...> : public injector_base, public pool<bi
     using ctor_args_t = typename ctor_t::second::second;
     static constexpr auto value =
         aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
-                                try_provider<ctor_t, injector, decltype(aux::declval<TConfig>().provider((injector*)0))>{})),
+                                try_provider<ctor_t, injector, decltype(aux::declval<TConfig>().provider(aux::declval<injector*>()))>{})),
                             T>::value;
   };
   auto& cfg() { return config_; }
@@ -3052,7 +3052,7 @@ template <class TConfig = BOOST_DI_CFG, class... TDeps,
           __BOOST_DI_REQUIRES_MSG(concepts::configurable<TConfig>) = 0>
 inline auto make_injector(TDeps... args) noexcept {
   return __BOOST_DI_MAKE_INJECTOR(
-      core::injector<TConfig, decltype(((TConfig*)0)->policies((concepts::injector<TConfig>*)0)), TDeps...>{
+      core::injector<TConfig, decltype(aux::declval<TConfig*>()->policies(aux::declval<concepts::injector<TConfig>*>())), TDeps...>{
           core::init{}, static_cast<TDeps&&>(args)...});
 }
 namespace policies {

@@ -45,7 +45,7 @@ struct binder {
 
   template <class TDeps, class T, class TName, class TDefault>
   struct resolve__ {
-    using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>((TDeps*)0));
+    using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>(aux::declval<TDeps*>()));
   };
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
@@ -79,7 +79,7 @@ struct binder {
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
 #if (defined(__CLANG__) && __CLANG__ >= 3'9)  // __pph__
-    return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>((TDeps*)0))>{});
+    return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>(aux::declval<TDeps*>()))>{});
 #else   // __pph__
     return resolve_impl<TDefault, dependency>(deps);
 #endif  // __pph__
