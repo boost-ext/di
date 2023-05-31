@@ -64,7 +64,7 @@ class mocks_provider : public config {
     static std::true_type resolve_impl(TKey*);
 
     template <class TKey, class T>
-    struct resolve : decltype(resolve_impl<TKey>((T*)0)) {};
+    struct resolve : decltype(resolve_impl<TKey>(aux::declval<T*>())) {};
 
     template <class>
     struct transform;

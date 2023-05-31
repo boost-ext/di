@@ -382,7 +382,7 @@ aux::false_type is_callable_impl(T*, aux::non_type<void (callable_base_impl::*)(
 aux::true_type is_callable_impl(...);
 
 template <class T>
-struct is_callable : decltype(is_callable_impl((callable_base<T>*)0)) {};
+struct is_callable : decltype(is_callable_impl(aux::declval<callable_base<T>*>())) {};
 
 template <class, class = int>
 struct is_empty_expr : false_type {};

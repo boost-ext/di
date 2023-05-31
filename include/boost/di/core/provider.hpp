@@ -54,7 +54,7 @@ struct provider<aux::pair<T, aux::pair<TInitialization, TList<TCtor...>>>, TName
 
   template <class, class... TArgs>
   struct is_creatable {
-    using type = decltype(aux::declval<injector__<TInjector>>().cfg().provider((TInjector*)0));
+    using type = decltype(aux::declval<injector__<TInjector>>().cfg().provider(aux::declval<TInjector*>()));
     static constexpr auto value = type::template is_creatable<TInitialization, T, TArgs...>::value;
   };
 

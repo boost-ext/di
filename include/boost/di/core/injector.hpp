@@ -84,7 +84,7 @@ class injector __BOOST_DI_CORE_INJECTOR_POLICY()(<TConfig, pool<>, TDeps...>)
 
     static constexpr auto value =
         aux::is_convertible<decltype(dependency__<dependency_t>::template try_create<T, TName>(
-                                try_provider<ctor_t, injector, decltype(aux::declval<TConfig>().provider((injector*)0))>{})),
+                                try_provider<ctor_t, injector, decltype(aux::declval<TConfig>().provider(aux::declval<injector*>()))>{})),
                             T>::value
             __BOOST_DI_CORE_INJECTOR_POLICY(
                 &&policy::template try_call<arg_wrapper<T, TName, TIsRoot, ctor_args_t, dependency_t, pool_t>,
