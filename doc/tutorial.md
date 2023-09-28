@@ -1,17 +1,17 @@
 ###0. [Pre] Refactor towards DI
 
-If you write a new application you can skip this step and go directly to [step 1](#1-basic-create-objects-tree).
-However, if you have a lot code which is not using DI and you wonder what can it be refactored,
+If you are writing a new application, you can skip this step and go directly to [step 1](#1-basic-create-objects-tree).
+However, if you have a lot of code which is not using DI and you wonder what can it be refactored,
 then you are in the right place.
 
-Basically, there is a only one (big) step to get all benefits of Dependency Injection.
+Basically, there is only one (big) step to get all benefits of Dependency Injection.
 You have to separate creation logic from business logic, which means that your code
 should be free of object creation inside other objects...
 
 ```cpp
 class controller {
 public:
-  controller(config c) 
+  controller(config c)
     : model_(std::make_unique<model>(c))
   { }
 
@@ -46,7 +46,7 @@ int main() {
 }
 ```
 
-So, what happened here? We just took the responsibility of creation `model` out from the `controller`. In other words,
+So, what happened here? We just took the responsibility of creating `model` out from the `controller`. In other words,
 we have split the creation logic and the business logic.
 
 That's basically everything you have to remember in order to create applications using DI.
@@ -73,25 +73,25 @@ int main() {
 }
 ```
 
-Additionally, you can consider using `strong typedefs` which will make your constructor interface cleaner/stronger.
+Additionally, you can consider using strong type definitions which will make your constructor interface cleaner/stronger.
 
 ```cpp
 class button {
 public:
-  button(int, int); // weak constructor interface (cpp file has to checked in order to figure out the meaning of int's)
+  button(int, int); // weak constructor interface (cpp file has to be checked in order to figure out the meaning of 'int's)
 };
 ```
 
-`button` constructor is not clear because `int's` are ambiguous and both present just a number.
+`button` constructor is not clear because `int`s are ambiguous and both present just a number.
 It can be seen more clearly in the following example.
 
 ```cpp
-button{10, 15}; // OK, but what's 10? what's 15? Can I swap them?
-button{15, 10}; // Hmm, potenial missue of the constructor
+button{10, 15}; // OK, but what's 10? What's 15? Can I swap them?
+button{15, 10}; // Hmm, potential misuse of the constructor
 ```
 
-A better approach would be to introduce a strong typedefs for both numbers
-in order to avoid potential misuse of the constructor, especially when used by other/external teams.
+A better approach would be to introduce strong type definitions for both numbers in order to avoid potential misuse of
+the constructor, especially when used by other/external teams.
 
 ```cpp
 struct width {
@@ -112,12 +112,12 @@ Right now, `button` constructor is much easier to follow (no need to check cpp f
 it expresses the intention.
 
 ```cpp
-button{width{10}, height{15}}; // OK, declartive approach
+button{width{10}, height{15}}; // OK, declarative approach
 button{height{10}, with{15}}; // Compile Error
 button{10, 15}; // Compile Error
 ```
 
-Similar mechanism is used by [Boost].DI to achieve [named] parameters which and it will be presented in this tutorial later on.
+A similar mechanism is used by [Boost].DI to achieve [named] parameters, which will be covered later on in this tutorial.
 
 ###1. [Basic] Create objects tree
 
@@ -128,16 +128,16 @@ In order to do so, firstly, we have to include (one and only) [boost/di.hpp](htt
 wget https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp
 ```
 
-and declare a convenient `di` namespace alias.
+We also declare a `di` namespace alias for convenience.
 
 ```cpp
 #include <boost/di.hpp>
 namespace di = boost::di;
 ```
 
-That is enough to try out `[Boost].DI`!
+This is enough to try out `[Boost].DI`!
 
-To have a first complete and working example we just have to add `main` function as usual.
+To have an initial complete, working example we just have to add a `main` function as usual.
 
 ```cpp
 int main() {}
@@ -158,7 +158,7 @@ which have to be instantiated. For example, let's consider a simplified Model Vi
 
 [![Create objects tree](images/tutorial_create_objects_tree.png)](images/tutorial_create_objects_tree.png)
 
-The usual approach to create `app` would be following...
+The usual approach to create `app` would be as follows...
 
 ```cpp
 renderer renderer_;
@@ -169,16 +169,16 @@ user user_;
 app app_{controller_, user_};
 ```
 
-Which is alright for a really small applications. However, it's really tedious to maintain.
-Just imagine, that we have to change something here. For instance, `view` may need a new object `window`
-or, even worse, we refactored the code and dependencies order has changed - yea **ORDER** of above is important!
-**ANY** change in these classes constructors require developer input to maintain above boilerplate code!
-Not fun, not fun at all :(
+which is alright for really small applications. However, it's really tedious to maintain.
+Suppose we need to change something here - for instance, `view` needs a new object `window` or, even worse, we
+refactored the code and the order of dependencies changed. All of these changes require corresponding changes to object
+creation. **ORDER** of constructor parameters are important! **ANY** change in these class constructors requires
+developer input to maintain the above boilerplate code! Not fun, not fun at all :(
 
-Right now imagine that your maintain effort will be minimized almost to none. How does it sound?
+Right now, imagine that your maintain effort will be minimized almost to none. How does it sound?
 Well, that might be simply achieved with `[Boost].DI`!
 
-The same result might be achieved with [Boost].DI. All, non-ambiguous, dependencies will be automatically
+The same result might be achieved with [Boost].DI. All non-ambiguous dependencies will be automatically
 resolved and injected properly. It doesn't matter how big the hierarchy will be and/or if the order of constructor parameters will be changed in the future.
 We just have to create [injector] using [make_injector], create the `app` and DI will take care of injecting proper types for us.
 
@@ -213,10 +213,10 @@ Furthermore, there is no performance penalty for using `[Boost].DI` (see [Perfor
 [Boost].DI can [inject] dependencies using direct initialization `T(...)` or uniform initialization `T{...}` for aggregate types.
 </span>
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_create_objects_tree.cpp)
 
-Check out also other examples. Please, notice that the diagram was also generated using `[Boost].DI` but we will get into that a bit later.
+Also check out the other examples. Please, notice that the diagram was also generated using `[Boost].DI` but we will get into that a bit later.
 
 ![CPP(BTN)](Run_Hello_World_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/hello_world.cpp)
 ![CPP(BTN)](Run_Automatic_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/automatic_injection.cpp)
@@ -226,10 +226,10 @@ Check out also other examples. Please, notice that the diagram was also generate
 
 ###2. [Basic] First steps with bindings
 
-But objects tree is not everything. A lot of classes uses interfaces or required a value to be passed.
-`[Boost].DI` solution for this are [bindings].
+But the object tree is not everything. A lot of the classes use interfaces or require a value to be passed.
+`[Boost].DI` solution for this is [bindings].
 
-For purpose of this tutorial, let's change `view` class into interface `iview` in order to support `text_view` and `gui_view`.
+For the purpose of this tutorial, let's change `view` class into interface `iview` in order to support `text_view` and `gui_view`.
 
 ```cpp
 class iview {
@@ -250,9 +250,9 @@ public:
 };
 ```
 
-Please, notice that `text_view` doesn't require any constructor parameters, whilst `gui_view` does.
+Please notice that `text_view` doesn't require any constructor parameters, whilst `gui_view` does.
 
-So, what will happen right now, when we try to create an `app`?
+So what happens now, when we try to create an `app`?
 
 ```cpp
 auto app = make_injector().create<app>();
@@ -269,11 +269,11 @@ boost/di.hpp:870:2: error: 'boost::di::v1_0_0::concepts::abstract_type<iview>::i
 ```
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-You can get more info about error by increasing [BOOST_DI_CFG_DIAGNOSTICS_LEVEL] [0-2] value (default=1).
+You can get more information about error by increasing [BOOST_DI_CFG_DIAGNOSTICS_LEVEL] [0-2] value (default=1).
 </span>
 
-Ah, okay, we haven't bound `iview` which means that `BOOST.DI` can't figure out whether we want `text_view` or `gui_view`?
-Well, it's really simple to fix it, we just follow suggestion provided.
+Ah, okay, we haven't bound `iview`, which means that `BOOST.DI` can't figure out whether we want `text_view` or
+`gui_view`? Well, it's really simple to fix it, we just follow the suggestion provided.
 
 ```cpp
 const auto injector = di::make_injector(
@@ -284,7 +284,7 @@ const auto injector = di::make_injector(
 Let's try again. Yay! It's compiling.
 
 But what about `render.device` value? So far, it was value initialized by default(=0).
-What, if you we want to initialize it with a user defined value instead?
+What if you want to initialize it with a user defined value instead?
 We've already seen how to bind interface to implementation.
 The same approach might be used in order to bind a type to a value.
 
@@ -301,7 +301,7 @@ struct renderer {
 ```
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-If you want change the default behaviour and be sure that all required dependencies are bound and not value initialized
+If you want change the default behaviour and be sure that all required dependencies are bound and not value initialized,
 take a look at [constructible] policy.
 </span>
 
@@ -313,19 +313,19 @@ const auto injector = di::make_injector(
 ```
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-[Boost].DI is a compile time beast which means that it guarantees that if your code compiles, all dependencies will be resolved
+[Boost].DI is a compile-time beast which means that it guarantees that if your code compiles, all dependencies will be resolved
 correctly. No runtime exceptions or runtime asserts, EVER!
 </span>
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_bindings.cpp)
 
-That's nice but I don't want to be using a dynamic (virtual) dispatch. What about concepts/templates?
+That's nice, but I don't want to be using a dynamic (virtual) dispatch. What about concepts/templates?
 Good news, `[Boost].DI` can inject concepts/templates too!
 
 ```cpp
 template <class T = class Greater>
-struct example { 
+struct example {
   using type = T;
 };
 
@@ -341,10 +341,10 @@ int main() {
 }
 ```
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_template_bindings.cpp)
 
-Great, but my code is more dynamic than that! I mean that I want to choose `gui_view` or `text_view` at runtime.
+Great, but my code is more dynamic than that! What if I want to choose between `gui_view` and `text_view` at runtime?
 `[Boost].DI` can handle that too!
 
 ```cpp
@@ -361,16 +361,16 @@ const auto injector = di::make_injector(
 );
 ```
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-It is safe to throw exceptions from lambda. It will be passed through.
+It is safe to throw exceptions from a lambda. It will be passed through.
 </span>
 
-Notice, that [injector] was passed to lambda expression in order to create `gui_view` / `text_view`.
+Notice that an [injector] was passed to lambda expression in order to create one of `gui_view` and `text_view`.
 This way `[Boost].DI` can inject appropriate dependencies into chosen types. See [bindings] for more details.
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_dynamic_bindings.cpp)
 
-Okay, so what about the input. We have `user`, however, in the real life, we will have more clients.
+Okay, so what about the input? We have `user`, however, in real life we will have more clients.
 `[Boost].DI` allows multiple bindings to the same type for `array/vector/set`. Let's do it then!
 
 ```cpp
@@ -402,10 +402,10 @@ And our bindings...
 di::bind<iclient*[]>.to<user, client>()
 ```
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_multiple_bindings.cpp)
 
-The last but not least, sometimes, it's really useful to override some bindings. For example, for testing purposes.
+Last but not least, sometimes it's really useful to override some bindings, say, for testing purposes.
 With `[Boost].DI` you can easily do that with [override] specifier (Implemented using `operator[](override)`).
 
 ```cpp
@@ -415,7 +415,7 @@ const auto injector = di::make_injector(
 );
 ```
 
-Without the `di::override` following compilation error will occur...
+Without the `di::override`, the following compilation error will occur...
 
 ```cpp
 boost/di.hpp:281:3: error: static_assert failed "constraint not satisfied"
@@ -423,10 +423,10 @@ boost/di.hpp:2683:80: type<int>::is_bound_more_than_once
   inline auto make_injector(TDeps... args) noexcept
 ```
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_first_steps_with_bindings_override.cpp)
 
-Check out also.
+Also check out:
 
 ![CPP(BTN)](Run_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/bindings.cpp)
 ![CPP(BTN)](Run_Forward_Bindings_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/fwd_bindings.cpp)
@@ -436,19 +436,19 @@ Check out also.
 
 <br /><br /><br /><hr />
 
-###3. [Basic] Decide the life times
+###3. [Basic] Decide the lifetimes
 
-So far so good but where are these objects stored?
-Well, `[Boost].DI` supports [scopes] which are response for maintaining the life time of created objects.
-By default there are 4 scopes
+So far so good, but where are these objects stored?
+Well, `[Boost].DI` supports [scopes] which are responsible for maintaining the lifetime of created objects.
+By default there are 4 scopes:
 
 * [deduce] scope (default)
 * [instance] scope (bind<>.to(value) where value is maintained by the user)
 * [unique] scope (one instance per request)
 * [singleton] scope (shared instance)
 
-By default [deduce] scope is used which means that scope is deduced based on a constructor parameter.
-For instance, reference, shared_ptr will be deduced as [singleton] scope and pointer, unique_ptr will be deduced as [unique] scope.
+By default the [deduce] scope is used which means that scope is deduced based on constructor parameter.
+For instance, reference and `shared_ptr` will be deduced as [singleton] scope, and pointer and `unique_ptr` will be deduced as [unique] scope.
 
 | Type | Scope |
 |------|-------|
@@ -478,7 +478,7 @@ di::make_injector().create<example>(); // scopes will be deduced based on constr
 ```
 
 
-Coming back to our example, we got quite a few `singletons` there as we just needed one instance per application life time.
+Coming back to our example, we got quite a few `singletons` there as we just needed one instance per application lifetime.
 Although scope deduction is very useful, it's not always what we need and therefore `[Boost].DI` allows changing the scope for a given type.
 
 ```cpp
@@ -487,7 +487,7 @@ const auto injector = di::make_injector(
 );
 ```
 
-What if I want to change `gui_view` to be a different instance per each request. Let's change the scope to [unique] then.
+What if I want to change `gui_view` to be a different instance per each request? Let's change the scope to [unique] then.
 
 ```cpp
 const auto injector = di::make_injector(
@@ -541,7 +541,7 @@ const auto injector = di::make_injector(
 );
 ```
 
-Check out the full example here.
+See the full example here:
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_decide_the_life_times.cpp)
 
 See also.
@@ -623,8 +623,8 @@ Please, notice that we have separated `model` constructor definition and declara
 require named annotations.
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-If you happen to use clang/gcc compiler you can use string literals instead of creating objects,
-for example `(named = "Rows"_s)`.
+If you happen to use `clang`/`gcc`` compiler you can use string literals instead of creating objects.
+For example `(named = "Rows"_s)`.
 </span>
 
 Finally, we have to bind our values.
@@ -642,10 +642,10 @@ That's all.
 The same result might be accomplished with having different types for rows and cols.
 </span>
 
-Full example here.
+See the full example here:
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_annotations_to_the_rescue.cpp)
 
-Check out also...
+Also check out ...
 
 ![CPP(BTN)](Run_Constructor_Injection_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_injection.cpp)
 ![CPP(BTN)](Run_Constructor_Signature_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/constructor_signature.cpp)
@@ -695,7 +695,7 @@ And glue them into one injector the same way...
 Gluing many [injector]s into one is order independent.
 </span>
 
-And full example!
+And the full example!
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_split_your_configuration.cpp)
 
 But I would like to have a module in `cpp` file, how can I do that?
@@ -725,15 +725,15 @@ injector.create<int>(); OK
 injector.create<double>(); // COMPILE TIME ERROR, double is not exposed by the injector
 ```
 
-When exposing all types using `auto` modules have to be implemented in a header file.
-With `di::injector<T...>` a definition might be put in a cpp file as it’s just a regular type.
+When exposing all types using `auto`, modules have to be implemented in a header file.
+With `di::injector<T...>`, a definition might be put in a cpp file as it’s just a regular type.
 
-Such approach has a few benefits:
+Such an approach has a few benefits:
 * It’s useful for encapsulation (ex. Another team provides a module but they don't want to expose an ability to create implementation details)
 * May also speed compilation times in case of extend usage of cpp files
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
-There is no performance (compile-time, run-time) overhead between exposing all types or just a specific ones.
+There is no performance (compile-time and run-time) overhead between exposing all types and just a few specific ones.
 </span>
 
 Moving back to our example. Let's refactor it then.
@@ -761,9 +761,9 @@ di::injector<app> app_module(const bool& use_gui_view) {
 }
 ```
 
-Right now you can easily separate definition and declaration between `hpp` and `cpp` files.
+Now you can easily separate definition and declaration between `hpp` and `cpp` files.
 
-Check the full example here!
+See the full example here:
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/tutorial/basic_split_your_configuration_expose.cpp)
 
 <span class="fa fa-eye wy-text-neutral warning"> **Note**<br/><br/>
@@ -771,7 +771,7 @@ You can also expose named parameters using `di::injector<BOOST_DI_EXPOSE((named 
 Different variations of the same type have to be exposed explicitly using `di::injector<model&, std::unique_ptr<model>>`.
 Type erasure is used under the hood when types are exposed explicitly (`di::injector<T…>`).
 
-Check out more examples here!
+Check out more examples at the links below!
 
 ![CPP(BTN)](Run_Modules_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/modules.cpp)
 ![CPP(BTN)](Run_Exposed_Annotated_Type_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/module_exposed_annotated_type.cpp)
@@ -780,14 +780,13 @@ Check out more examples here!
 <br /><br />
 
 Congrats! You have finished the basic part of the tutorial.
-Hopefully, you have noticed potential of DI and `[Boost].DI` but if are still not convinced check out the [Advanced](#6-advanced-dumplimit-your-types) part.
+Hopefully you have noticed the potential of DI and `[Boost].DI` but if are still not convinced, check out the [Advanced](#6-advanced-dumplimit-your-types) section.
 
 ###6. [Advanced] Dump/Limit your types
 
-It's often a case that we would like to generate object diagram of our application in order to see code dependencies
-more clear. Usually, it's a really hard task as creation of objects may happen anywhere in the code. However,
-if the responsibility for creation  objects will be given to `[Boost].DI` we get such functionality for free.
-The only thing we have to do is to implement how to dump our objects.
+It's often the case that we would like to generate an object diagram of our application to see code dependencies more clear. Usually, it's a really hard task as the creation of objects may happen anywhere in the code. However,
+if the responsibility for creating objects is given to `[Boost].DI`, we get such functionality for free.
+The only thing we have to do is to descibe _how_ to dump our objects.
 
 Let's dump our dependencies using [Plant UML](http://plantuml.com) format.
 
@@ -800,13 +799,13 @@ See also.  <br /><br />
 
 <br />
 
-On the other hand, it would be great to be able to limit types which might be constructed. For example, we just want to allow
-smart pointers and disallow raw pointers too. We may want to have a `view` only with const parameters being passed, etc.
-`[Boost].DI` allows you to do so by using [constructible] policy or writing a custom [policy].
+On the other hand, it would be great to be able to limit the types which might be constructed. For example, we want to
+allow smart pointers and disallow raw pointers. We may also want to have a `view` only with `const` parameters being
+passed. `[Boost].DI` allows you to do so by using the [constructible] policy or writing a custom [policy].
 
 ![CPP](https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_global.cpp)
 
-See also.
+See also:
 
 ![CPP(BTN)](Run_Constructible_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/user_guide/policies_constructible_local.cpp)
 
@@ -816,9 +815,9 @@ See also.
 
 `[Boost].DI` was design having extensibility in mind. You can easily customize
 
-* [scopes] - to have custom life time of an object
-* [providers] - to have custom way of creating objects, for example by using preallocated memory
-* [policies] - to have custom way of dumping types at run-time or limiting them at compile-time
+* [scopes] - to customize object lifetime
+* [providers] - to customize object creation, for example using preallocated memory
+* [policies] - to customize dumping of types at run-time or limiting them to compile-time
 
 ![CPP(BTN)](Run_Custom_Policy_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_policy.cpp)
 ![CPP(BTN)](Run_Custom_Provider_Example|https://raw.githubusercontent.com/boost-ext/di/cpp14/example/custom_provider.cpp)
