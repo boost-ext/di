@@ -71,4 +71,9 @@ if(BOOST_DI_OPT_INSTALL)
         DIRECTORY ${CMAKE_SOURCE_DIR}/include/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
+
+    install(
+        DIRECTORY ${CMAKE_SOURCE_DIR}/extension/include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
 endif()
