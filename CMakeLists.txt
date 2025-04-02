@@ -4,19 +4,8 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.10)
 project(Boost.DI LANGUAGES CXX)
-
-if(CMAKE_VERSION VERSION_LESS 3.21)
-    # Emulates CMake 3.21+ behavior.
-    if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-        set(PROJECT_IS_TOP_LEVEL ON)
-        set(${PROJECT_NAME}_IS_TOP_LEVEL ON)
-    else()
-        set(PROJECT_IS_TOP_LEVEL OFF)
-        set(${PROJECT_NAME}_IS_TOP_LEVEL OFF)
-    endif()
-endif()
 
 include(GNUInstallDirs)
 
