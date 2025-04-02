@@ -94,4 +94,3 @@ ninject: gen_ninject
 	cd .ninject && time $(SC) -o+ /r:Ninject.dll ninject.cs
 	cd .ninject && time mono --aot=full ./ninject.exe
 	cd .ninject && time mono ./ninject.exe || exit 1
-

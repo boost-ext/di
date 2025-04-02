@@ -4,12 +4,10 @@
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 project(Boost.DI LANGUAGES CXX)
 
 include(GNUInstallDirs)
-
-find_package(Boost REQUIRED COMPONENTS headers)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -25,13 +23,10 @@ target_include_directories(
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extension/include>
 )
-target_link_libraries(${PROJECT_NAME} INTERFACE Boost::headers)
-
 option(BOOST_DI_OPT_BUILD_TESTS "Build and perform Boost.DI tests" ${PROJECT_IS_TOP_LEVEL})
 
 if(BOOST_DI_OPT_BUILD_TESTS)
     enable_testing()
-    add_subdirectory(extension/test)
     add_subdirectory(test)
 endif()
 
