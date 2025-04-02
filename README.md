@@ -6,7 +6,7 @@
 
 ---------------------------------------
 
-# [Boost::ext].DI
+# boost-ext.di
 
 Your C++14 **one header only** Dependency Injection library with no dependencies
 
@@ -19,7 +19,7 @@ Your C++14 **one header only** Dependency Injection library with no dependencies
 ### Quick start
 
 #### Download
-> [Boost::ext].DI requires only one file. Get the latest header [here!](https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp)
+> boost-ext.di requires only one file. Get the latest header [here!](https://raw.githubusercontent.com/boost-ext/di/cpp14/include/boost/di.hpp)
 
 #### Include
 ```cpp
@@ -273,7 +273,7 @@ public:
   example(Exchange exchange, Engine engine)
     : exchange(std::move(exchange)), engine(std::move(engine))
   { }
-  
+
 private:
   Exchange exchange;
   Engine engine;
@@ -448,4 +448,4 @@ retq
 
 ---
 
-**Disclaimer** `[Boost::ext].DI` is not an official Boost library.
+**Disclaimer** `boost-ext.di` is not an official Boost library.
