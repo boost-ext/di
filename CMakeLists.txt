@@ -23,7 +23,7 @@ add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
     ${PROJECT_NAME} INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<$<BOOL:${USE_EXTENSION}>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extension/include>>
+    $<$<BOOL:${BOOST_DI_OPT_EXTENSION}>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extension/include>>
 )
 option(BOOST_DI_OPT_BUILD_TESTS "Build and perform Boost.DI tests" ${PROJECT_IS_TOP_LEVEL})
 
