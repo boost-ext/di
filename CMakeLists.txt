@@ -17,11 +17,13 @@ elseif(CMAKE_CXX_STANDARD LESS 14)
     message(FATAL_ERROR "Boost.DI requires at least C++14")
 endif()
 
+option(BOOST_DI_OPT_EXTENSION "Enable Boost.DI extensions" ON)
+
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(
     ${PROJECT_NAME} INTERFACE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extension/include>
+    $<$<BOOL:${USE_EXTENSION}>:$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/extension/include>>
 )
 option(BOOST_DI_OPT_BUILD_TESTS "Build and perform Boost.DI tests" ${PROJECT_IS_TOP_LEVEL})
 
@@ -56,8 +58,10 @@ if(BOOST_DI_OPT_INSTALL)
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     )
 
-    install(
-        DIRECTORY ${CMAKE_SOURCE_DIR}/extension/include/
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    )
+    if(BOOST_DI_OPT_EXTENSION)
+        install(
+            DIRECTORY ${CMAKE_SOURCE_DIR}/extension/include/
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+    endif()
 endif()
