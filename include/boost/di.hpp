@@ -2101,7 +2101,7 @@ struct binder {
   struct resolve__ {
     using type = decltype(resolve_impl__<TDefault, dependency_concept<aux::decay_t<T>, TName>>(aux::declval<TDeps*>()));
   };
-#if (defined(__CLANG__) && __CLANG__ >= 3'9)  //
+#if (defined(__CLANG__) && __CLANG__ >= 39)  //
   template <class TDeps, class T>
   static T& resolve_(TDeps* deps, const aux::type<T&>&) noexcept {
     return static_cast<T&>(*deps);
@@ -2124,7 +2124,7 @@ struct binder {
   template <class T, class TName = no_name, class TDefault = dependency<scopes::deduce, aux::decay_t<T>>, class TDeps>
   static decltype(auto) resolve(TDeps* deps) noexcept {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
-#if (defined(__CLANG__) && __CLANG__ >= 3'9)  //
+#if (defined(__CLANG__) && __CLANG__ >= 39)  //
     return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>(aux::declval<TDeps*>()))>{});
 #else
     return resolve_impl<TDefault, dependency>(deps);
