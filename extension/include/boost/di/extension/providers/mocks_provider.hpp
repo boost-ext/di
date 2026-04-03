@@ -10,6 +10,7 @@
 #include <functional>
 #include <memory>
 #include <typeindex>
+#include <type_traits>
 #include <unordered_map>
 
 #include "boost/di.hpp"
