@@ -49,7 +49,7 @@ struct binder {
   };
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
-#if (defined(__CLANG__) && __CLANG__ >= 3'9)  // __pph__
+#if (defined(__CLANG__) && __CLANG__ >= 39)  // __pph__
   template <class TDeps, class T>
   static T& resolve_(TDeps* deps, const aux::type<T&>&) noexcept {
     return static_cast<T&>(*deps);
@@ -78,7 +78,7 @@ struct binder {
     using dependency = dependency_concept<aux::decay_t<T>, TName>;
 
 /// Wknd for https://llvm.org/bugs/show_bug.cgi?id=28844
-#if (defined(__CLANG__) && __CLANG__ >= 3'9)  // __pph__
+#if (defined(__CLANG__) && __CLANG__ >= 39)  // __pph__
     return resolve_(deps, aux::type<decltype(resolve_impl<TDefault, dependency>(aux::declval<TDeps*>()))>{});
 #else   // __pph__
     return resolve_impl<TDefault, dependency>(deps);
