@@ -3037,13 +3037,14 @@ using injector = detail::injector<
 #define __BOOST_DI_MAKE_INJECTOR(...) __VA_ARGS__
 #else
 namespace detail {
-static auto make_injector = [](auto injector) {
+template<typename T>
+auto make_injector(T injector) {
   using injector_t = decltype(injector);
   struct i : injector_t {
     explicit i(injector_t&& other) : injector_t(static_cast<injector_t&&>(other)) {}
   };
   return i{static_cast<injector_t&&>(injector)};
-};
+}
 }
 #define __BOOST_DI_MAKE_INJECTOR(...) detail::make_injector(__VA_ARGS__)
 #endif
